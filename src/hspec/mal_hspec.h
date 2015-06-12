@@ -76,6 +76,8 @@
 
 #define mal_hspec_i2c_master_init(init) mal_hspec_stm32f0_i2c_master_init(init)
 
+#define mal_hspec_i2c_transfer(interface, msg) mal_hspec_stm32f0_i2c_transfer(interface, msg)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif

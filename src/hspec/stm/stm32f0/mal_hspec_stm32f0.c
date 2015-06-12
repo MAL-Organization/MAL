@@ -63,6 +63,24 @@ extern unsigned int __bss_end__;
 
 extern void mal_clock_set_system_clock(uint64_t clock);
 
+typedef enum {
+	I2C_STATE_START,
+	I2C_STATE_RECEIVING,
+	I2C_STATE_ERROR,
+	I2C_STATE_WAITING_TRANSFER_COMPLETE,
+	I2C_STATE_TRANSMITTING,
+	I2C_STATE_WAIT_STOP
+} i2c_states_e;
+
+typedef struct {
+	mal_hspec_i2c_msg_t *msg;
+	bool is_active;
+	volatile i2c_states_e state;
+	volatile uint8_t data_ptr;
+	volatile mal_hspec_i2c_cmd_e cmd;
+	I2C_TypeDef *stm_handle;
+} i2c_handle_s;
+
 static void initialise_memory(void);
 
 static GPIO_TypeDef* get_gpio_typedef(mal_hspec_port_e port);
@@ -78,6 +96,16 @@ static uint32_t get_rcc_timer(mal_hspec_timer_e timer);
 static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer);
 
 static mal_error_e get_pin_af(mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
+
+static void i2c_start_transfer(i2c_handle_s *i2c_handle);
+
+static void i2c_interrupt_transmit_handler(i2c_handle_s *handle);
+
+static void i2c_interrupt_receive_handler(i2c_handle_s *handle);
+
+static void i2c_common_errors(i2c_handle_s *handle);
+
+static void i2c_common(i2c_handle_s *handle);
 
 static const uint32_t hse_prediv_values[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
@@ -99,6 +127,16 @@ RCC_CFGR_PLLMULL12, RCC_CFGR_PLLMULL13, RCC_CFGR_PLLMULL14,
 RCC_CFGR_PLLMULL15, RCC_CFGR_PLLMULL16 };
 
 static volatile uint64_t *tick_handles[MAL_HSPEC_TIMER_SIZE];
+
+static i2c_handle_s i2c_handle_1 = {
+	.is_active = false,
+	.stm_handle = I2C1
+};
+
+static i2c_handle_s i2c_handle_2 = {
+	.is_active = false,
+	.stm_handle = I2C2
+};
 
 mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
 	mal_error_e result;
@@ -723,6 +761,14 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	i2c_init.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 	i2c_init.I2C_Timing = (presc << 28) | (scldel << 20) | (sdadel << 16) | (scllh << 8) | scllh;
 	I2C_Init(i2c_typedef, &i2c_init);
+	// Enable interrupt
+	if (MAL_HSPEC_I2C_1 == init->interface) {
+		NVIC_EnableIRQ(I2C1_IRQn);
+	} else {
+		NVIC_EnableIRQ(I2C2_IRQn);
+	}
+	I2C_ITConfig(i2c_typedef, I2C_IT_RXI|I2C_IT_TXI|I2C_IT_TCI|I2C_IT_NACKI|I2C_IT_ERRI|I2C_IT_STOPI, ENABLE);
+	// Enable I2C, finally!
 	I2C_Cmd(i2c_typedef, ENABLE);
 
 	return MAL_ERROR_OK;
@@ -751,13 +797,181 @@ mal_error_e get_pin_af(mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_
 }
 
 mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_t *msg) {
+	i2c_handle_s *i2c_handle;
+	// Fetch I2C handle
+	if (MAL_HSPEC_I2C_1 == interface) {
+		i2c_handle = &i2c_handle_1;
+	} else if (MAL_HSPEC_I2C_2 == interface) {
+		i2c_handle = &i2c_handle_2;
+	} else {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Make sure I2C is free
+	if (i2c_handle->is_active) {
+		return MAL_ERROR_HARDWARE_UNAVAILABLE;
+	}
+	// Save msg
+	i2c_handle->msg = msg;
 
+	i2c_start_transfer(i2c_handle);
+
+	return MAL_ERROR_OK;
+}
+
+void i2c_start_transfer(i2c_handle_s *i2c_handle) {
+	i2c_handle->cmd = i2c_handle->msg->packet.cmd;
+	// Start transfer
+	uint32_t transfer_type = I2C_Generate_Start_Read;
+	if (MAL_HSPEC_I2C_WRITE == i2c_handle->cmd) {
+		transfer_type = I2C_Generate_Start_Write;
+	}
+	I2C_TransferHandling(i2c_handle->stm_handle, i2c_handle->msg->packet.address, i2c_handle->msg->packet.packet_size, I2C_SoftEnd_Mode, transfer_type);
 }
 
 void I2C1_IRQHandler(void) {
+	if (MAL_HSPEC_I2C_WRITE == i2c_handle_1.cmd) {
+		i2c_interrupt_transmit_handler(&i2c_handle_1);
+	} else {
 
+	}
 }
 
 void I2C2_IRQHandler(void) {
+	if (MAL_HSPEC_I2C_WRITE == i2c_handle_2.cmd) {
+		i2c_interrupt_transmit_handler(&i2c_handle_2);
+	} else {
 
+	}
+}
+
+void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
+	// Common errors
+	i2c_common_errors(handle);
+	// Nack event
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_NACKF) == SET) {
+		// Clear interrupt
+		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_NACKF);
+		if (handle->state == I2C_STATE_TRANSMITTING) {
+			mal_hspec_i2c_result_e result;
+			// Check if write is complete
+			if (handle->data_ptr >= handle->msg->packet.packet_size) {
+				// Change state
+				result = MAL_HSPEC_I2C_NACK_COMPLETE;
+			} else {
+				// Transfer is incomplete
+				result = MAL_HSPEC_I2C_NACK_INCOMPLETE;
+			}
+			handle->msg->callback(&handle->msg->packet, result, &handle->msg);
+			// Next state
+			handle->state = I2C_STATE_WAIT_STOP;
+		} else {
+			// Unknown sate for nack
+			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_NACK_INCOMPLETE, &handle->msg);
+			// Next state
+			handle->state = I2C_STATE_WAIT_STOP;
+		}
+	}
+	// Transmitter status
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_TXIS) == SET) {
+		// Make sure we are receiving
+		if (I2C_STATE_TRANSMITTING != handle->state) {
+			// Stop receiving
+			I2C_GenerateSTOP(handle->stm_handle, ENABLE);
+			// We are in error
+			handle->state = I2C_STATE_ERROR;
+			// Clear interrupt
+			I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_TXIS);
+		} else {
+			// Check if there still data to be sent
+			if (handle->data_ptr >= handle->msg->packet.packet_size) {
+				// Clear interrupt
+				I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_TXIS);
+				// Flag error
+				handle->state = I2C_STATE_WAITING_TRANSFER_COMPLETE;
+			} else {
+				// Transmit next data
+				I2C_SendData(handle->stm_handle, handle->msg->packet.buffer[handle->data_ptr++]);
+			}
+		}
+	}
+	// Common states
+	i2c_common(handle);
+}
+
+void i2c_interrupt_receive_handler(i2c_handle_s *handle) {
+	// Common errors
+	i2c_common_errors(handle);
+	// Receiver status
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_RXNE) == SET) {
+		// Make sure we are receiving
+		if (I2C_STATE_RECEIVING != handle->state) {
+			// Clear interrupt
+			I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_RXNE);
+			// Stop receiving
+			I2C_GenerateSTOP(handle->stm_handle, ENABLE);
+			// We are in error
+			handle->state = I2C_STATE_ERROR;
+		} else {
+			// Read data, also clears interrupt
+			handle->msg->packet.buffer[handle->data_ptr++] = I2C_ReceiveData(handle->stm_handle);
+			// Check if data is complete
+			if (handle->data_ptr >= handle->msg->packet.packet_size) {
+				// Change state
+				handle->state = I2C_STATE_WAITING_TRANSFER_COMPLETE;
+			}
+		}
+	}
+	// Common states
+	i2c_common(handle);
+}
+
+void i2c_common_errors(i2c_handle_s *handle) {
+	// Bus error
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_BERR) == SET) {
+		// Clear interrupt
+		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_BERR);
+		// Stop bus
+		I2C_GenerateSTOP(handle->stm_handle, ENABLE);
+		// Start or stop out of place switch to error state
+		handle->state = I2C_STATE_ERROR;
+	}
+	// Arbitration loss error
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_ARLO) == SET) {
+		// Clear interrupt
+		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_ARLO);
+		// Start or stop out of place switch to error state
+		handle->state = I2C_STATE_ERROR;
+	}
+}
+
+void i2c_common(i2c_handle_s *handle) {
+	// Check if transmission is complete
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_TCR) == SET) {
+		// Transmit complete, stop transfer, clear interrupt with stop
+		I2C_GenerateSTOP(handle->stm_handle, ENABLE);
+		// Make sure it was expected
+		if (I2C_STATE_WAITING_TRANSFER_COMPLETE != handle->state) {
+			// We are in error
+			handle->state = I2C_STATE_ERROR;
+		} else {
+			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_SUCCESS, &handle->msg);
+			// Next state
+			handle->state = I2C_STATE_WAIT_STOP;
+		}
+	}
+	// Check for stop
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_STOPF) == SET) {
+		// Clear interrupt
+		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_STOPF);
+		// Check if stop is expected
+		if (I2C_STATE_WAIT_STOP != handle->state) {
+			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_BUS_ERROR, &handle->msg);
+		}
+		// Check if a new message can be started
+		if (handle->msg != NULL) {
+			i2c_start_transfer(handle);
+		} else {
+			handle->is_active = false;
+		}
+	}
 }

@@ -30,6 +30,8 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec_cmn.h"
 
+#define mal_i2c_transfer(interface, msg) mal_hspec_i2c_transfer(interface, msg)
+
 mal_error_e mal_i2c_init_master(mal_hspec_i2c_init_s *init);
 
 #endif /* I2C_MAL_I2C_H_ */

@@ -140,15 +140,24 @@ typedef enum {
 } mal_hspec_i2c_cmd_e;
 
 typedef struct {
-	uint8_t address;
-	uint8_t *buffer;
-	uint8_t buffer_size;
+	volatile uint8_t address;
+	volatile uint8_t *buffer;
+	volatile uint8_t packet_size;
 	mal_hspec_i2c_cmd_e cmd;
 } mal_hspec_i2c_packet_t;
 
-typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_packet_t *packet);
+typedef enum {
+	MAL_HSPEC_I2C_SUCCESS,
+	MAL_HSPEC_I2C_NACK_COMPLETE,
+	MAL_HSPEC_I2C_NACK_INCOMPLETE,
+	MAL_HSPEC_I2C_BUS_ERROR
+} mal_hspec_i2c_result_e;
 
-typedef struct {
+typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_t;
+
+typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_packet_t *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_t **next_msg);
+
+typedef struct MAL_HSPEC_I2C_MSG {
 	mal_hspec_i2c_packet_t packet;
 	mal_hspec_i2c_callback_t callback;
 } mal_hspec_i2c_msg_t;
