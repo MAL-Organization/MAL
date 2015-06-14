@@ -125,7 +125,35 @@ typedef enum {
 	MAL_HSPEC_STM32F0_AF_SPI2_MISO,
 	MAL_HSPEC_STM32F0_AF_TSC_G6_IO4,
 	MAL_HSPEC_STM32F0_AF_SPI2_MOSI,
-	MAL_HSPEC_STM32F0_AF_TIM15_CH1N
+	MAL_HSPEC_STM32F0_AF_TIM15_CH1N,
+	MAL_HSPEC_STM32F0_AF_USART4_TX,
+	MAL_HSPEC_STM32F0_AF_USART4_RX,
+	MAL_HSPEC_STM32F0_AF_USART3_CTS,
+	MAL_HSPEC_STM32F0_AF_CRS_SYNC,
+	MAL_HSPEC_STM32F0_AF_CAN_RX,
+	MAL_HSPEC_STM32F0_AF_CAN_TX,
+	MAL_HSPEC_STM32F0_AF_USB_NOE,
+	MAL_HSPEC_STM32F0_AF_USART4_RTS,
+	MAL_HSPEC_STM32F0_AF_USART3_CK,
+	MAL_HSPEC_STM32F0_AF_USART3_RTS,
+	MAL_HSPEC_STM32F0_AF_USART4_CTS,
+	MAL_HSPEC_STM32F0_AF_I2S2_WS,
+	MAL_HSPEC_STM32F0_AF_USART3_TX,
+	MAL_HSPEC_STM32F0_AF_I2S2_CK,
+	MAL_HSPEC_STM32F0_AF_USART3_RX,
+	MAL_HSPEC_STM32F0_AF_I2S2_MCK,
+	MAL_HSPEC_STM32F0_AF_I2S2_SD,
+	MAL_HSPEC_STM32F0_AF_TSC_G3_IO1,
+	MAL_HSPEC_STM32F0_AF_USART4_CK,
+	MAL_HSPEC_STM32F0_AF_TIM3_ETR,
+	MAL_HSPEC_STM32F0_AF_TSC_G8_IO1,
+	MAL_HSPEC_STM32F0_AF_TSC_G8_IO2,
+	MAL_HSPEC_STM32F0_AF_TSC_G8_IO3,
+	MAL_HSPEC_STM32F0_AF_TSC_G8_IO4,
+	MAL_HSPEC_STM32F0_AF_TSC_G7_IO1,
+	MAL_HSPEC_STM32F0_AF_TSC_G7_IO2,
+	MAL_HSPEC_STM32F0_AF_TSC_G7_IO3,
+	MAL_HSPEC_STM32F0_AF_TSC_G7_IO4
 } mal_hspec_stm32f0_af_e;
 
 // Device specific function mapping section.
@@ -158,6 +186,26 @@ typedef enum {
 #define mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f051r8_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f051r8_get_port_afs(port, afs)
+
+#elif defined(MAL_STM32F072RB)
+
+#include "stm32f072rb/mal_hspec_stm32f072rb.h"
+
+#define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
+
+#define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f072rb_get_valid_ports(ports, size)
+
+#define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f072rb_get_valid_pins(pins)
+
+#define mal_hspec_stm32f0_get_valid_timers(timers, size) mal_hspec_stm32f072rb_get_valid_timers(timers, size)
+
+#define mal_hspec_stm32f0_get_timer_update_irq(timer) mal_hspec_stm32f072rb_get_timer_update_irq(timer)
+
+#define mal_hspec_stm32f0_get_valid_i2c_interfaces(interfaces, size) mal_hspec_stm32f072rb_get_valid_i2c_interfaces(interfaces, size)
+
+#define mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072rb_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
+
+#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
 
 #elif defined(MAL_STM32F030K6)
 #else
