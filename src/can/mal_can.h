@@ -1,7 +1,7 @@
 /*
- * mal_erno.h
+ * mal_can.h
  *
- *  Created on: May 3, 2015
+ *  Created on: Jun 14, 2015
  *      Author: Olivier
  */
 /*
@@ -23,15 +23,12 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STD_MAL_ERNO_H_
-#define STD_MAL_ERNO_H_
+#ifndef CAN_MAL_CAN_H_
+#define CAN_MAL_CAN_H_
 
-typedef enum {
-	MAL_ERROR_OK = 0,
-	MAL_ERROR_HARDWARE_INVALID = -1,
-	MAL_ERROR_CLOCK_ERROR = -2,
-	MAL_ERROR_HARDWARE_UNAVAILABLE = -3,
-	MAL_ERROR_INIT_FAILED = -4
-} mal_error_e;
+#include "std/mal_error.h"
+#include "hspec/mal_hspec.h"
 
-#endif /* STD_MAL_ERNO_H_ */
+mal_error_e mal_can_init(mal_hspec_can_init_s *init);
+
+#endif /* CAN_MAL_CAN_H_ */

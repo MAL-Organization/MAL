@@ -207,6 +207,8 @@ typedef enum {
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
 
+#define mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072rb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
+
 #elif defined(MAL_STM32F030K6)
 #else
 #error No valid hardware specfic device symbol specified...
@@ -246,7 +248,7 @@ mal_error_e mal_hspec_stm32f0_get_timer_input_clk(mal_hspec_timer_e timer, uint6
 
 mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init);
 
-mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_t *msg);
+mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
 
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F0_H_ */

@@ -73,7 +73,7 @@ typedef enum {
 } i2c_states_e;
 
 typedef struct {
-	mal_hspec_i2c_msg_t *msg;
+	mal_hspec_i2c_msg_s *msg;
 	bool is_active;
 	volatile i2c_states_e state;
 	volatile uint8_t data_ptr;
@@ -137,6 +137,9 @@ static i2c_handle_s i2c_handle_2 = {
 	.is_active = false,
 	.stm_handle = I2C2
 };
+
+static mal_hspec_can_tx_callback_t can_tx_callback = NULL;
+static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
 
 mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
 	mal_error_e result;
@@ -796,7 +799,7 @@ mal_error_e get_pin_af(mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_
 	return MAL_ERROR_HARDWARE_INVALID;
 }
 
-mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_t *msg) {
+mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg) {
 	i2c_handle_s *i2c_handle;
 	// Fetch I2C handle
 	if (MAL_HSPEC_I2C_1 == interface) {
@@ -973,5 +976,146 @@ void i2c_common(i2c_handle_s *handle) {
 		} else {
 			handle->is_active = false;
 		}
+	}
+}
+
+mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
+	// Enable GPIO clocks
+	RCC_AHBPeriphClockCmd(get_rcc_gpio_port(init->tx_gpio->port), ENABLE);
+	RCC_AHBPeriphClockCmd(get_rcc_gpio_port(init->rx_gpio->port), ENABLE);
+	// Configure alternate function
+	mal_error_e result;
+	uint8_t function;
+	result = get_pin_af(init->tx_gpio, MAL_HSPEC_STM32F0_AF_CAN_TX, &function);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	GPIO_PinAFConfig(get_gpio_typedef(init->tx_gpio->port), init->tx_gpio->pin, function);
+
+	result = get_pin_af(init->rx_gpio, MAL_HSPEC_STM32F0_AF_CAN_RX, &function);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	GPIO_PinAFConfig(get_gpio_typedef(init->rx_gpio->port), init->rx_gpio->pin, function);
+	// Configure GPIOs
+	GPIO_InitTypeDef gpio_init;
+	gpio_init.GPIO_Pin = GET_GPIO_PIN(init->tx_gpio->pin);
+	gpio_init.GPIO_Mode = GPIO_Mode_AF;
+	gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
+	gpio_init.GPIO_OType = GPIO_OType_PP;
+	gpio_init.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(get_gpio_typedef(init->tx_gpio->port), &gpio_init);
+
+	gpio_init.GPIO_Pin = GET_GPIO_PIN(init->rx_gpio->pin);
+	GPIO_Init(get_gpio_typedef(init->rx_gpio->port), &gpio_init);
+	// Enable CAN clock
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN, ENABLE);
+	// Clear CAN
+	CAN_DeInit(CAN);
+	// Get APB Clock
+	RCC_ClocksTypeDef clocks;
+	RCC_GetClocksFreq(&clocks);
+	// Compute bit time
+	uint32_t prescaler;
+	uint32_t tseg1;
+	int32_t tseg2;
+	uint32_t sjw;
+	bool done = false;
+	for (prescaler = 1; prescaler <= 1024; prescaler++) {
+		uint32_t tq_total = (clocks.PCLK_Frequency) / (prescaler * init->bitrate);
+		// TSEG1 must be at least 2 time quantas long because of it includes
+		// the propagation segment which takes 1 time quanta.
+		for (tseg1 = 2; tseg1 < 16; tseg1++) {
+			tseg2 = tq_total - tseg1;
+			// Here are the rules to pass this point.
+			// 1. TSEG2 must be equal or less to TSEG1. This is to ensure that
+			//    the sample point is not before the 50% mark.
+			if (tseg2 > tseg1) {
+				continue;
+			}
+			// 2. Since TSEG2 must have a time, it cannot be 0.
+			if (tseg2 <= 0) {
+				continue;
+			}
+			// 3. TSEG2 has a maximum of 8 time quantas.
+			if (tseg2 > 8) {
+				continue;
+			}
+			// We're, now we have to find a suitable synchronisation jump
+			// width.
+			for (sjw = 4; sjw >= 1; sjw--) {
+				// Jump must not be longer than TSEG2 because the jump lengthen
+				// or shorten TSEG2.
+				if (sjw < tseg2) {
+					done = true;
+					break;
+				}
+			}
+			if (done) {
+				break;
+			}
+		}
+		if (done) {
+			break;
+		}
+	}
+	if (!done) {
+		return MAL_ERROR_CLOCK_ERROR;
+	}
+	// Save call backs
+	can_tx_callback = init->tx_callback;
+	can_rx_callback = init->rx_callback;
+	// Configure CAN
+	CAN_InitTypeDef can_init;
+	CAN_StructInit(&can_init);
+	can_init.CAN_BS1 = tseg1 - 1;
+	can_init.CAN_BS2 = tseg2 - 1;
+	can_init.CAN_SJW = sjw - 1;
+	can_init.CAN_Prescaler = prescaler;
+	if (CAN_InitStatus_Success != CAN_Init(CAN, &can_init)) {
+		return MAL_ERROR_INIT_FAILED;
+	}
+	// Enable interrupts
+	// 30 equates to CAN_IRQ. However, the name of the constant changes based
+	// on the MCU because it is not available on all of them. It is simpler to
+	// use the constant directly. If the MCU does not support CAN, the code
+	// will not get here.
+	NVIC_EnableIRQ(30);
+	CAN_ITConfig(CAN, CAN_IT_FMP0, ENABLE);
+	CAN_ITConfig(CAN, CAN_IT_FMP1, ENABLE);
+	CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
+}
+
+void CEC_CAN_IRQHandler(void) {
+	// Check if transmit is empty
+	if (CAN_GetITStatus(CAN, CAN_IT_TME) == SET) {
+		if (can_tx_callback != NULL) {
+			mal_hspec_can_msg_s *msg;
+			can_tx_callback(&msg);
+			if (msg != NULL) {
+				CanTxMsg can_msg;
+				if (MAL_HSPEC_CAN_ID_STANDARD == msg->id_type) {
+					can_msg.StdId = msg->id;
+					can_msg.IDE = CAN_Id_Standard;
+				} else {
+					can_msg.ExtId = msg->id;
+					can_msg.IDE = CAN_Id_Extended;
+				}
+				for (can_msg.DLC = 0; can_msg.DLC < msg->size; can_msg.DLC++) {
+					can_msg.Data[can_msg.DLC] = msg->data[can_msg.DLC];
+				}
+				can_msg.DLC = msg->size;
+				can_msg.RTR = CAN_RTR_Data;
+				CAN_Transmit(CAN, &can_msg);
+			} else {
+				CAN_ITConfig(CAN, CAN_IT_TME, DISABLE);
+				CAN_ClearITPendingBit(CAN, CAN_IT_TME);
+			}
+		}
+	}
+	// Check FIFOs
+	while (CAN_MessagePending(CAN, CAN_FIFO0)) {
+		CanRxMsg can_msg;
+		CAN_Receive(CAN, CAN_FIFO0, &can_msg);
 	}
 }

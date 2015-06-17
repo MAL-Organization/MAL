@@ -136,3 +136,42 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, mal_hspe
 
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx) {
+	uint8_t i;
+	mal_error_e result;
+	const mal_hspec_gpio_s *txs;
+	const mal_hspec_gpio_s *rxs;
+	uint8_t txs_size;
+	uint8_t rxs_size;
+	bool found;
+	// Fetch IOs
+	result = mal_hspec_get_valid_i2c_ios(interface, &txs, &txs_size, &rxs, &rxs_size);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Check for TX io
+	found = false;
+	for (i = 0; i < txs_size; i++) {
+		if (txs[i].pin == tx->pin && txs[i].port == tx->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Check for SDA io
+	found = false;
+	for (i = 0; i < rxs_size; i++) {
+		if (rxs[i].pin == rx->pin && rxs[i].port == rx->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+
+	return MAL_ERROR_OK;
+}

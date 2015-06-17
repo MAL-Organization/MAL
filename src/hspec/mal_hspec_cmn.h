@@ -144,7 +144,7 @@ typedef struct {
 	volatile uint8_t *buffer;
 	volatile uint8_t packet_size;
 	mal_hspec_i2c_cmd_e cmd;
-} mal_hspec_i2c_packet_t;
+} mal_hspec_i2c_packet_s;
 
 typedef enum {
 	MAL_HSPEC_I2C_SUCCESS,
@@ -153,13 +153,48 @@ typedef enum {
 	MAL_HSPEC_I2C_BUS_ERROR
 } mal_hspec_i2c_result_e;
 
-typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_t;
+typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_s;
 
-typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_packet_t *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_t **next_msg);
+typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg);
 
 typedef struct MAL_HSPEC_I2C_MSG {
-	mal_hspec_i2c_packet_t packet;
+	mal_hspec_i2c_packet_s packet;
 	mal_hspec_i2c_callback_t callback;
-} mal_hspec_i2c_msg_t;
+} mal_hspec_i2c_msg_s;
+
+// CAN
+
+#define MAL_HSPEC_CAN_MAX_DATA_SIZE	8
+
+typedef enum {
+	MAL_HSPEC_CAN_1 = 0,
+	MAL_HSPEC_CAN_2 = 1,
+	MAL_HSPEC_CAN_SIZE = 2
+} mal_hspec_can_e;
+
+typedef enum {
+	MAL_HSPEC_CAN_ID_STANDARD,
+	MAL_HSPEC_CAN_ID_EXTENDED
+} mal_hspec_can_id_type_e;
+
+typedef struct {
+	uint8_t data[MAL_HSPEC_CAN_MAX_DATA_SIZE];
+	uint8_t size;
+	uint32_t id;
+	mal_hspec_can_id_type_e id_type;
+} mal_hspec_can_msg_s;
+
+typedef mal_error_e (*mal_hspec_can_tx_callback_t)(mal_hspec_can_msg_s **next_msg);
+
+typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_msg_s *msg);
+
+typedef struct {
+	mal_hspec_can_e interface;
+	mal_hspec_gpio_s *tx_gpio;
+	mal_hspec_gpio_s *rx_gpio;
+	uint64_t bitrate;
+	mal_hspec_can_tx_callback_t tx_callback;
+	mal_hspec_can_rx_callback_t rx_callback;
+} mal_hspec_can_init_s;
 
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */

@@ -1,7 +1,7 @@
 /*
- * mal_erno.h
+ * mal_can.c
  *
- *  Created on: May 3, 2015
+ *  Created on: Jun 14, 2015
  *      Author: Olivier
  */
 /*
@@ -23,15 +23,17 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STD_MAL_ERNO_H_
-#define STD_MAL_ERNO_H_
+#include "can/mal_can.h"
+#include "std/mal_error.h"
+#include "hspec/mal_hspec.h"
 
-typedef enum {
-	MAL_ERROR_OK = 0,
-	MAL_ERROR_HARDWARE_INVALID = -1,
-	MAL_ERROR_CLOCK_ERROR = -2,
-	MAL_ERROR_HARDWARE_UNAVAILABLE = -3,
-	MAL_ERROR_INIT_FAILED = -4
-} mal_error_e;
-
-#endif /* STD_MAL_ERNO_H_ */
+mal_error_e mal_can_init(mal_hspec_can_init_s *init) {
+	mal_error_e result;
+	// Check if interface is valid
+	result = mal_hspec_is_can_interface_valid(init->interface, init->tx_gpio, init->rx_gpio);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialise interface
+	return mal_hspec_can_init(init);
+}

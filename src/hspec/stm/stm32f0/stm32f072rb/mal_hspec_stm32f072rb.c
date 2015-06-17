@@ -406,6 +406,28 @@ static const mal_hspec_stm32f0_af_e port_f_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT
 	}
 };
 
+static const mal_hspec_gpio_s valid_can1_tx_gpios[] = {
+	{
+		.pin = 12,
+		.port = MAL_HSPEC_PORT_A
+	},
+	{
+		.pin = 9,
+		.port = MAL_HSPEC_PORT_B
+	}
+};
+
+static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
+	{
+		.pin = 11,
+		.port = MAL_HSPEC_PORT_A
+	},
+	{
+		.pin = 8,
+		.port = MAL_HSPEC_PORT_B
+	}
+};
+
 mal_error_e mal_hspec_stm32f072rb_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
 	*ports = valid_ports;
 	*size = sizeof(valid_ports) / sizeof(mal_hspec_port_e);
@@ -494,5 +516,18 @@ mal_error_e mal_hspec_stm32f072rb_get_port_afs(mal_hspec_port_e port, const mal_
 	if (NULL == *afs) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size) {
+	if (MAL_HSPEC_CAN_1 != interface) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+
+	*txs = valid_can1_tx_gpios;
+	*txs_size = sizeof(valid_can1_tx_gpios) / sizeof(mal_hspec_gpio_s);
+	*rxs = valid_can1_rx_gpios;
+	*rxs_size = sizeof(valid_can1_rx_gpios) / sizeof(mal_hspec_gpio_s);
+
 	return MAL_ERROR_OK;
 }

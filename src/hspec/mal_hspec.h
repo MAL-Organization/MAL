@@ -78,6 +78,10 @@
 
 #define mal_hspec_i2c_transfer(interface, msg) mal_hspec_stm32f0_i2c_transfer(interface, msg)
 
+// CAN
+
+#define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif
@@ -93,5 +97,7 @@ uint64_t mal_hspec_get_external_clk_freq(void);
 mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, mal_hspec_gpio_s *scl, mal_hspec_gpio_s *sda);
+
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */
