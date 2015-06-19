@@ -82,6 +82,12 @@
 
 #define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
+// SERIAL
+
+#define mal_hspec_serial_init(init) mal_hspec_stm32f0_serial_init(init)
+
+#define mal_hspec_serial_transmit(port, data) mal_hspec_stm32f0_serial_transmit(port, data)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif

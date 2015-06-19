@@ -26,8 +26,9 @@
 #ifndef SERIAL_MAL_SERIAL_H_
 #define SERIAL_MAL_SERIAL_H_
 
+#include "std/mal_error.h"
+#include "hspec/mal_hspec.h"
 
-
-
+mal_error_e mal_i2c_init(mal_hspec_serial_init_s *init);
 
 #endif /* SERIAL_MAL_SERIAL_H_ */

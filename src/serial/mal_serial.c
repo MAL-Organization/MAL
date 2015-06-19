@@ -23,3 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "mal_serial.h"
+
+mal_error_e mal_i2c_init(mal_hspec_serial_init_s *init) {
+
+}

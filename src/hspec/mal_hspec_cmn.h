@@ -119,6 +119,38 @@ typedef enum {
 	MAL_HSPEC_SERIAL_PORT_SIZE = 2
 } mal_hspec_serial_port_e;
 
+typedef enum {
+	MAL_HSPEC_SERIAL_DATA_7_BITS,
+	MAL_HSPEC_SERIAL_DATA_8_BITS,
+	MAL_HSPEC_SERIAL_DATA_9_BITS
+} mal_hspec_serial_data_size_e;
+
+typedef enum {
+	MAL_HSPEC_SERIAL_STOP_BITS_1,
+	MAL_HSPEC_SERIAL_STOP_BITS_2
+} mal_hspec_serial_stop_bits_e;
+
+typedef enum {
+	MAL_HSPEC_SERIAL_PARITY,
+	MAL_HSPEC_SERIAL_NO_PARITY
+} mal_hspec_serial_parity_e;
+
+typedef mal_error_e (*mal_hspec_serial_tx_callbacl_t)(uint16_t *data);
+
+typedef mal_error_e (*mal_hspec_serial_rx_callbacl_t)(uint16_t data);
+
+typedef struct {
+	mal_hspec_serial_port_e port;
+	mal_hspec_gpio_s *rx_gpio;
+	mal_hspec_gpio_s *tx_gpio;
+	uint64_t baudrate;
+	mal_hspec_serial_data_size_e data_size;
+	mal_hspec_serial_stop_bits_e stop_bits;
+	mal_hspec_serial_parity_e parity;
+	mal_hspec_serial_tx_callbacl_t tx_callback;
+	mal_hspec_serial_rx_callbacl_t rx_callback;
+} mal_hspec_serial_init_s;
+
 // I2C
 
 typedef enum {

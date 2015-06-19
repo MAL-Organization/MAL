@@ -250,5 +250,8 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init);
 
 mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
 
+mal_error_e mal_hspec_stm32f0_serial_init(mal_hspec_serial_init_s *init);
+
+mal_error_e mal_hspec_stm32f0_serial_transmit(mal_hspec_serial_port_e port, uint16_t data);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F0_H_ */
