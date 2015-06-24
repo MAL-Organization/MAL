@@ -229,4 +229,10 @@ typedef struct {
 	mal_hspec_can_rx_callback_t rx_callback;
 } mal_hspec_can_init_s;
 
+typedef struct {
+	uint32_t id;
+	uint32_t mask;
+	mal_hspec_can_id_type_e id_type;
+} mal_hspec_can_filter_s;
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */

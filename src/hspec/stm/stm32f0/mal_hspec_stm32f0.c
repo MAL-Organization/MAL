@@ -59,7 +59,10 @@ extern unsigned int __bss_end__;
 	} \
 }while(0)
 
-#define I2C_MIN_AF_DELAY	0.00000005f
+#define I2C_MIN_AF_DELAY		0.00000005f
+
+#define CAN_FILTER_BANKS_SIZE	14
+#define CAN_FILTER_STD_SIZE		2
 
 extern void mal_clock_set_system_clock(uint64_t clock);
 
@@ -80,6 +83,28 @@ typedef struct {
 	volatile mal_hspec_i2c_cmd_e cmd;
 	I2C_TypeDef *stm_handle;
 } i2c_handle_s;
+
+typedef struct {
+	uint32_t id;
+	uint32_t mask;
+} can_extended_filter_s;
+
+typedef struct {
+	uint16_t id[CAN_FILTER_STD_SIZE];
+	uint16_t mask[CAN_FILTER_STD_SIZE];
+} can_standard_filter_s;
+
+typedef union {
+	can_extended_filter_s ext;
+	can_standard_filter_s std;
+} can_filter_u;
+
+typedef struct {
+	can_filter_u filter;
+	uint8_t filter_count;
+	mal_hspec_can_id_type_e type;
+	bool is_active;
+} can_filter_bank_s;
 
 static void initialise_memory(void);
 
@@ -106,6 +131,10 @@ static void i2c_interrupt_receive_handler(i2c_handle_s *handle);
 static void i2c_common_errors(i2c_handle_s *handle);
 
 static void i2c_common(i2c_handle_s *handle);
+
+static void can_read_fifo(uint8_t fifo);
+
+static void can_transmit_msg(mal_hspec_can_msg_s *msg);
 
 static const uint32_t hse_prediv_values[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
@@ -140,6 +169,8 @@ static i2c_handle_s i2c_handle_2 = {
 
 static mal_hspec_can_tx_callback_t can_tx_callback = NULL;
 static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
+
+static can_filter_bank_s can_filter_banks[CAN_FILTER_BANKS_SIZE];
 
 mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
 	mal_error_e result;
@@ -1022,6 +1053,7 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	uint32_t sjw;
 	bool done = false;
 	for (prescaler = 1; prescaler <= 1024; prescaler++) {
+		// Calculate total time quantas
 		uint32_t tq_total = (clocks.PCLK_Frequency) / (prescaler * init->bitrate);
 		// TSEG1 must be at least 2 time quantas long because of it includes
 		// the propagation segment which takes 1 time quanta.
@@ -1039,6 +1071,13 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 			}
 			// 3. TSEG2 has a maximum of 8 time quantas.
 			if (tseg2 > 8) {
+				continue;
+			}
+			// Limit error to 0.5%
+			float tq = 1.0f / (((float)clocks.PCLK_Frequency) / (float)prescaler);
+			float result_freq = 1.0f / (tq + tseg1 * tq + tq * tseg2);
+			float error = fabsf(1.0f - (result_freq / (float)init->bitrate));
+			if (error > 0.005f) {
 				continue;
 			}
 			// We're, now we have to find a suitable synchronisation jump
@@ -1093,20 +1132,7 @@ void CEC_CAN_IRQHandler(void) {
 			mal_hspec_can_msg_s *msg;
 			can_tx_callback(&msg);
 			if (msg != NULL) {
-				CanTxMsg can_msg;
-				if (MAL_HSPEC_CAN_ID_STANDARD == msg->id_type) {
-					can_msg.StdId = msg->id;
-					can_msg.IDE = CAN_Id_Standard;
-				} else {
-					can_msg.ExtId = msg->id;
-					can_msg.IDE = CAN_Id_Extended;
-				}
-				for (can_msg.DLC = 0; can_msg.DLC < msg->size; can_msg.DLC++) {
-					can_msg.Data[can_msg.DLC] = msg->data[can_msg.DLC];
-				}
-				can_msg.DLC = msg->size;
-				can_msg.RTR = CAN_RTR_Data;
-				CAN_Transmit(CAN, &can_msg);
+				can_transmit_msg(msg);
 			} else {
 				CAN_ITConfig(CAN, CAN_IT_TME, DISABLE);
 				CAN_ClearITPendingBit(CAN, CAN_IT_TME);
@@ -1115,7 +1141,141 @@ void CEC_CAN_IRQHandler(void) {
 	}
 	// Check FIFOs
 	while (CAN_MessagePending(CAN, CAN_FIFO0)) {
-		CanRxMsg can_msg;
-		CAN_Receive(CAN, CAN_FIFO0, &can_msg);
+		can_read_fifo(CAN_FIFO0);
 	}
+	while (CAN_MessagePending(CAN, CAN_FIFO1)) {
+		can_read_fifo(CAN_FIFO1);
+	}
+}
+
+void can_read_fifo(uint8_t fifo) {
+	// Read msg
+	CanRxMsg can_msg;
+	CAN_Receive(CAN, fifo, &can_msg);
+	// Transfer msg
+	mal_hspec_can_msg_s msg;
+	if (CAN_Id_Standard == can_msg.IDE) {
+		msg.id = can_msg.StdId;
+		msg.id_type = MAL_HSPEC_CAN_ID_STANDARD;
+	} else {
+		msg.id = can_msg.ExtId;
+		msg.id_type = MAL_HSPEC_CAN_ID_EXTENDED;
+	}
+	for (msg.size = 0; msg.size < can_msg.DLC; msg.size++) {
+		msg.data[msg.size] = can_msg.Data[msg.size];
+	}
+	msg.size = can_msg.DLC;
+	can_rx_callback(&msg);
+}
+
+mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
+	if (MAL_HSPEC_CAN_1 != interface) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	mal_error_e result = MAL_ERROR_OK;;
+	// Disable interrupts to get true status of TX queue
+	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	// Check if queue is empty
+	if (((CAN->TSR & CAN_TSR_TME0) == CAN_TSR_TME0)) {
+		can_transmit_msg(msg);
+		CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
+	} else {
+		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
+	}
+
+	mal_hspec_stm32f0_enable_can_interrupt(interface);
+
+	return result;
+}
+
+void can_transmit_msg(mal_hspec_can_msg_s *msg) {
+	CanTxMsg can_msg;
+	if (MAL_HSPEC_CAN_ID_STANDARD == msg->id_type) {
+		can_msg.StdId = msg->id;
+		can_msg.IDE = CAN_Id_Standard;
+	} else {
+		can_msg.ExtId = msg->id;
+		can_msg.IDE = CAN_Id_Extended;
+	}
+	for (can_msg.DLC = 0; can_msg.DLC < msg->size; can_msg.DLC++) {
+		can_msg.Data[can_msg.DLC] = msg->data[can_msg.DLC];
+	}
+	can_msg.DLC = msg->size;
+	can_msg.RTR = CAN_RTR_Data;
+	CAN_Transmit(CAN, &can_msg);
+}
+
+mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+	static uint16_t fifo = CAN_Filter_FIFO0;
+	if (MAL_HSPEC_CAN_1 != interface) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	mal_error_e result = MAL_ERROR_OK;;
+	// Disable interrupts
+	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	// Find a free filter
+	uint8_t filter_index;
+	bool found = false;
+	for (filter_index = 0; filter_index < CAN_FILTER_BANKS_SIZE; filter_index++) {
+		// Check if filter is unused.
+		if (!can_filter_banks[filter_index].is_active) {
+			found = true;
+			break;
+		}
+		// If the ID is standard, it is possible to resuse that filter if it
+		// has an available slot
+		if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type && MAL_HSPEC_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
+			if (can_filter_banks[filter_index].filter_count < (CAN_FILTER_STD_SIZE - 1)) {
+				found = true;
+				break;
+			}
+		}
+	}
+	if (!found) {
+		result =  MAL_ERROR_HARDWARE_UNAVAILABLE;
+	} else {
+		// Initialise filter array
+		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+			can_filter_banks[filter_index].is_active = true;
+			can_filter_banks[filter_index].type = MAL_HSPEC_CAN_ID_EXTENDED;
+			can_filter_banks[filter_index].filter.ext.id = filter->id;
+			can_filter_banks[filter_index].filter.ext.mask = filter->mask;
+		} else {
+			// Check if filter is already active to reset count at the same time.
+			if (!can_filter_banks[filter_index].is_active) {
+				can_filter_banks[filter_index].filter_count = 0;
+				can_filter_banks[filter_index].is_active = true;
+			}
+			// Set correct mask and filter
+			can_filter_banks[filter_index].filter.std.id[can_filter_banks[filter_index].filter_count] = filter->id;
+			can_filter_banks[filter_index].filter.std.mask[can_filter_banks[filter_index].filter_count] = filter->mask;
+			can_filter_banks[filter_index].filter_count++;
+		}
+		// Initialise filter
+		CAN_FilterInitTypeDef filter_init;
+		filter_init.CAN_FilterActivation = ENABLE;
+		filter_init.CAN_FilterFIFOAssignment = fifo;
+		filter_init.CAN_FilterIdHigh = can_filter_banks[filter_index].filter.std.id[1];
+		filter_init.CAN_FilterIdLow = can_filter_banks[filter_index].filter.std.id[0];
+		filter_init.CAN_FilterMaskIdHigh = can_filter_banks[filter_index].filter.std.mask[1];
+		filter_init.CAN_FilterMaskIdLow = can_filter_banks[filter_index].filter.std.mask[0];
+		filter_init.CAN_FilterMode = CAN_FilterMode_IdMask;
+		filter_init.CAN_FilterNumber = filter_index;
+		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+			filter_init.CAN_FilterScale = CAN_FilterScale_32bit;
+		} else {
+			filter_init.CAN_FilterScale = CAN_FilterScale_16bit;
+		}
+		CAN_FilterInit(&filter_init);
+		// Switch fifo
+		if (CAN_Filter_FIFO0 == fifo) {
+			fifo = CAN_Filter_FIFO1;
+		} else {
+			fifo = CAN_Filter_FIFO0;
+		}
+	}
+
+	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1);
+
+	return result;
 }

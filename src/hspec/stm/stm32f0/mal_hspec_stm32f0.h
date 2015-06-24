@@ -224,6 +224,20 @@ typedef enum {
 	NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
 } while(0)
 
+// Enable interrupts
+// 30 equates to CAN_IRQ. However, the name of the constant changes based
+// on the MCU because it is not available on all of them. It is simpler to
+// use the constant directly.
+#define mal_hspec_stm32f0_disable_can_interrupt(interface) do {\
+	NVIC_DisableIRQ(30); \
+	__DSB(); \
+	__ISB(); \
+} while(0)
+
+#define mal_hspec_stm32f0_enable_can_interrupt(interface) do {\
+	NVIC_EnableIRQ(30); \
+} while(0)
+
 /**
  * Specific implementation of setting direction of gpio for STM.
  * \param gpio [in] The desired GPIO.
@@ -249,6 +263,12 @@ mal_error_e mal_hspec_stm32f0_get_timer_input_clk(mal_hspec_timer_e timer, uint6
 mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init);
 
 mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
+
+mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init);
+
+mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
+
+mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
 
 mal_error_e mal_hspec_stm32f0_serial_init(mal_hspec_serial_init_s *init);
 

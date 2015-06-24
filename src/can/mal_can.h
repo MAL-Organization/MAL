@@ -29,6 +29,12 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec.h"
 
+#define mal_can_add_filter(interface, filter) mal_hspec_can_add_filter(interface, filter)
+
+#define mal_can_transmit(interface, msg) mal_hspec_can_transmit(interface, msg)
+
+#define mal_can_init(init) mal_hspec_can_init(init)
+
 mal_error_e mal_can_init(mal_hspec_can_init_s *init);
 
 #endif /* CAN_MAL_CAN_H_ */
