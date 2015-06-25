@@ -1,7 +1,7 @@
 /*
- * mal_gpio.h
+ * mal_hspec_stm32f0_gpio.h
  *
- *  Created on: May 2, 2015
+ *  Created on: Jun 24, 2015
  *      Author: Olivier
  */
 /*
@@ -23,17 +23,25 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MAL_GPIO_H_
-#define MAL_GPIO_H_
+#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_GPIO_H_
+#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_GPIO_H_
 
-#include "hspec/mal_hspec.h"
+#include "std/mal_error.h"
+#include "std/mal_bool.h"
 
-#define mal_gpio_set(gpio, value) mal_hspec_set_gpio(gpio, value)
+/**
+ * Specific implementation of setting direction of gpio for STM.
+ * \param gpio [in] The desired GPIO.
+ * \param dir  [in] The desired direction.
+ * \return Returns an error code.
+ */
+mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
 
-#define mal_gpio_get(gpio) mal_hspec_get_gpio(gpio)
+mal_error_e mal_hspec_stm32f0_set_gpio(mal_hspec_gpio_s *gpio, bool value);
 
-#define mal_gpio_toggle(gpio) mal_hspec_toggle_gpio(gpio)
+mal_error_e mal_hspec_stm32f0_toggle_gpio(mal_hspec_gpio_s *gpio);
 
-mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
+bool mal_hspec_stm32f0_get_gpio(mal_hspec_gpio_s *gpio);
 
-#endif /* MAL_GPIO_H_ */
+
+#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_GPIO_H_ */

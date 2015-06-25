@@ -64,7 +64,7 @@ mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, uint8_
 		precision = 100;
 	}
 	// Initialise timer
-	result = mal_hspec_init_tick(timer, frequency, precision, &timer_states[timer].tick_counter);
+	result = mal_hspec_timer_init_tick(timer, frequency, precision, &timer_states[timer].tick_counter);
 
 	return result;
 }

@@ -1,7 +1,7 @@
 /*
- * mal_gpio.h
+ * mal_hspec_stm32f0_i2c.h
  *
- *  Created on: May 2, 2015
+ *  Created on: Jun 24, 2015
  *      Author: Olivier
  */
 /*
@@ -23,17 +23,14 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MAL_GPIO_H_
-#define MAL_GPIO_H_
+#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_
+#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_
 
+#include "std/mal_error.h"
 #include "hspec/mal_hspec.h"
 
-#define mal_gpio_set(gpio, value) mal_hspec_set_gpio(gpio, value)
+mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init);
 
-#define mal_gpio_get(gpio) mal_hspec_get_gpio(gpio)
+mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
 
-#define mal_gpio_toggle(gpio) mal_hspec_toggle_gpio(gpio)
-
-mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
-
-#endif /* MAL_GPIO_H_ */
+#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_ */

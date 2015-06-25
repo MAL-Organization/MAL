@@ -1,7 +1,7 @@
 /*
- * mal_gpio.h
+ * mal_gpio.c
  *
- *  Created on: May 2, 2015
+ *  Created on: Jun 24, 2015
  *      Author: Olivier
  */
 /*
@@ -23,17 +23,14 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MAL_GPIO_H_
-#define MAL_GPIO_H_
+#include "mal_gpio.h"
 
-#include "hspec/mal_hspec.h"
-
-#define mal_gpio_set(gpio, value) mal_hspec_set_gpio(gpio, value)
-
-#define mal_gpio_get(gpio) mal_hspec_get_gpio(gpio)
-
-#define mal_gpio_toggle(gpio) mal_hspec_toggle_gpio(gpio)
-
-mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
-
-#endif /* MAL_GPIO_H_ */
+mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
+	mal_error_e result;
+	// Check gpio
+	result = mal_hspec_is_gpio_valid(&gpio_init->gpio);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	return mal_hspec_gpio_init(gpio_init);
+}
