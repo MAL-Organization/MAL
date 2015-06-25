@@ -83,6 +83,19 @@ typedef struct {
 	uint64_t speed;
 } mal_hpsec_gpio_init_s;
 
+typedef enum {
+	MAL_HSPEC_GPIO_EVENT_RISING,
+	MAL_HSPEC_GPIO_EVENT_FALLING
+} mal_hspec_gpio_event_e;
+
+typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
+
+typedef struct {
+	mal_hspec_gpio_s *gpio;
+	mal_hspec_gpio_event_e event;
+	mal_hspec_gpio_event_callback_t callback;
+} mal_hspec_gpio_event_init_s;
+
 // TIMER
 
 typedef enum {

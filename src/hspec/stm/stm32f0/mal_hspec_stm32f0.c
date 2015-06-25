@@ -1279,3 +1279,11 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 
 	return result;
 }
+
+mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init) {
+	// Enable syscfg clock
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+	// Disable interrupt
+	//NVIC_DisableIRQ()
+
+}
