@@ -28,7 +28,7 @@
 
 #include "gpio/mal_gpio.h"
 #include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
+#include "hspec/mal_hspec.h"
 
 #define mal_i2c_transfer(interface, msg) mal_hspec_i2c_transfer(interface, msg)
 

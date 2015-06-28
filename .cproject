@@ -90,7 +90,7 @@
 					<sourceEntries>
 						<entry excluding="cortexm|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -181,7 +181,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
 					</sourceEntries>
 				</configuration>
@@ -290,7 +290,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>
@@ -401,7 +401,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>

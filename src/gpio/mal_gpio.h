@@ -34,6 +34,8 @@
 
 #define mal_gpio_toggle(gpio) mal_hspec_toggle_gpio(gpio)
 
-mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
+mal_error_e mal_gpio_init(mal_hspec_gpio_init_s *gpio_init);
+
+mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio_event_init_s *event_init);
 
 #endif /* MAL_GPIO_H_ */

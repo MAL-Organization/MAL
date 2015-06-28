@@ -25,7 +25,7 @@
 
 #include "mal_gpio.h"
 
-mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
+mal_error_e mal_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	mal_error_e result;
 	// Check gpio
 	result = mal_hspec_is_gpio_valid(&gpio_init->gpio);
@@ -33,4 +33,13 @@ mal_error_e mal_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
 		return result;
 	}
 	return mal_hspec_gpio_init(gpio_init);
+}
+
+mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio_event_init_s *event_init) {
+	mal_error_e result = mal_gpio_init(gpio_init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+
+	return mal_hspec_gpio_event_init(event_init);
 }

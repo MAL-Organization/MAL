@@ -81,7 +81,7 @@ typedef struct {
 	mal_hspec_gpio_out_e output_config;
 	mal_hspec_gpio_pupd_e pupd;
 	uint64_t speed;
-} mal_hpsec_gpio_init_s;
+} mal_hspec_gpio_init_s;
 
 typedef enum {
 	MAL_HSPEC_GPIO_EVENT_RISING,

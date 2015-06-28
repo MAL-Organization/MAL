@@ -68,10 +68,10 @@ mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float fre
 	for (period = UINT16_MAX; period > 0; period--) {
 		float value = ((float)timer_frequency) / (frequency * ((float)period));
 		// Check precision
-		int remainder = (value - (uint64_t)value) * 100;
-		if (remainder >= precision) {
+		int error = (value / frequency) * 100;
+		if (error >= precision) {
 			prescaler = (int)ceilf(value);
-		} else if (remainder <= (100 - precision)) {
+		} else if (error <= (100 - precision)) {
 			prescaler = (int)value;
 		} else {
 			continue;

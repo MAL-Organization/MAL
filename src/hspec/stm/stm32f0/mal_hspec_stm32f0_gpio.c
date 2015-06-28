@@ -32,8 +32,13 @@
 #include "mal_hspec_stm32f0_cmn.h"
 
 static GPIOSpeed_TypeDef get_gpio_speed(uint64_t speed);
+static IRQn_Type get_exti_irq(uint8_t pin);
+static uint8_t get_exti_port_source(mal_hspec_port_e port);
+static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin);
 
-mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init) {
+static mal_hspec_gpio_event_callback_t gpio_event_callbacks[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE];
+
+mal_error_e mal_hspec_stm32f0_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	// Enable clock domain
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(gpio_init->gpio.port), ENABLE);
 	// Set GPIO
@@ -116,6 +121,85 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	// Enable syscfg clock
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	// Disable interrupt
-	//NVIC_DisableIRQ()
+	NVIC_DisableIRQ(get_exti_irq(init->gpio->pin));
+	// Configure EXTI source
+	SYSCFG_EXTILineConfig(get_exti_port_source(init->gpio->port), init->gpio->pin);
+	// Save callback
+	gpio_event_callbacks[init->gpio->pin] = init->callback;
+	// Configure EXTI
+	EXTI_InitTypeDef exti_init;
+	exti_init.EXTI_Line = (1 << init->gpio->pin);
+	exti_init.EXTI_Mode = EXTI_Mode_Interrupt;
+	if (MAL_HSPEC_GPIO_EVENT_FALLING == init->event) {
+		exti_init.EXTI_Trigger = EXTI_Trigger_Falling;
+	} else {
+		exti_init.EXTI_Trigger = EXTI_Trigger_Rising;
+	}
+	exti_init.EXTI_LineCmd = ENABLE;
+	EXTI_Init(&exti_init);
+	// Enable interrupt
+	NVIC_EnableIRQ(get_exti_irq(init->gpio->pin));
 
+	return MAL_ERROR_OK;
+}
+
+static IRQn_Type get_exti_irq(uint8_t pin) {
+	if (pin >= 0 && pin <= 1) {
+		return EXTI0_1_IRQn;
+	} else if (pin >= 2 && pin <= 3) {
+		return EXTI2_3_IRQn;
+	} else {
+		return EXTI4_15_IRQn;
+	}
+}
+
+static uint8_t get_exti_port_source(mal_hspec_port_e port) {
+	switch (port) {
+		case MAL_HSPEC_PORT_A:
+			return EXTI_PortSourceGPIOA;
+		case MAL_HSPEC_PORT_B:
+			return EXTI_PortSourceGPIOB;
+		case MAL_HSPEC_PORT_C:
+			return EXTI_PortSourceGPIOC;
+		case MAL_HSPEC_PORT_D:
+			return EXTI_PortSourceGPIOD;
+		case MAL_HSPEC_PORT_E:
+			return EXTI_PortSourceGPIOE;
+		default:
+			return EXTI_PortSourceGPIOF;
+	}
+}
+
+void EXTI0_1_IRQHandler(void) {
+	handle_exti_interrupt(EXTI_Line0, 0);
+	handle_exti_interrupt(EXTI_Line1, 1);
+}
+
+void EXTI2_3_IRQHandler(void) {
+	handle_exti_interrupt(EXTI_Line2, 2);
+	handle_exti_interrupt(EXTI_Line3, 3);
+}
+
+void EXTI4_15_IRQHandler(void) {
+	handle_exti_interrupt(EXTI_Line4, 4);
+	handle_exti_interrupt(EXTI_Line5, 5);
+	handle_exti_interrupt(EXTI_Line6, 6);
+	handle_exti_interrupt(EXTI_Line7, 7);
+	handle_exti_interrupt(EXTI_Line8, 8);
+	handle_exti_interrupt(EXTI_Line9, 9);
+	handle_exti_interrupt(EXTI_Line10, 10);
+	handle_exti_interrupt(EXTI_Line11, 11);
+	handle_exti_interrupt(EXTI_Line12, 12);
+	handle_exti_interrupt(EXTI_Line13, 13);
+	handle_exti_interrupt(EXTI_Line14, 14);
+	handle_exti_interrupt(EXTI_Line15, 15);
+}
+
+static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
+	if (EXTI_GetITStatus(exti_line) != RESET) {
+		EXTI_ClearITPendingBit(exti_line);
+		if (gpio_event_callbacks[pin] != NULL) {
+			gpio_event_callbacks[pin]();
+		}
+	}
 }

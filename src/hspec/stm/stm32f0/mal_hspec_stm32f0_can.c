@@ -25,6 +25,7 @@
 
 #include "mal_hspec_stm32f0_can.h"
 #include "std/mal_stdlib.h"
+#include "std/mal_math.h"
 
 #define CAN_FILTER_BANKS_SIZE	14
 #define CAN_FILTER_STD_SIZE		2

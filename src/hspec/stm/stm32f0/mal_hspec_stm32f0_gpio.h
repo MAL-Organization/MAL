@@ -35,7 +35,7 @@
  * \param dir  [in] The desired direction.
  * \return Returns an error code.
  */
-mal_error_e mal_hspec_stm32f0_gpio_init(mal_hpsec_gpio_init_s *gpio_init);
+mal_error_e mal_hspec_stm32f0_gpio_init(mal_hspec_gpio_init_s *gpio_init);
 
 mal_error_e mal_hspec_stm32f0_set_gpio(mal_hspec_gpio_s *gpio, bool value);
 
@@ -43,5 +43,6 @@ mal_error_e mal_hspec_stm32f0_toggle_gpio(mal_hspec_gpio_s *gpio);
 
 bool mal_hspec_stm32f0_get_gpio(mal_hspec_gpio_s *gpio);
 
+mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_GPIO_H_ */
