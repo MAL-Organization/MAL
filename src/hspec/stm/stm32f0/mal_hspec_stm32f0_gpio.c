@@ -30,9 +30,9 @@
 #include "stm32f0/stm32f0xx_gpio.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
+#include "mal_hspec_stm32f0_gpio.h"
 
 static GPIOSpeed_TypeDef get_gpio_speed(uint64_t speed);
-static IRQn_Type get_exti_irq(uint8_t pin);
 static uint8_t get_exti_port_source(mal_hspec_port_e port);
 static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin);
 
@@ -121,7 +121,7 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	// Enable syscfg clock
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	// Disable interrupt
-	NVIC_DisableIRQ(get_exti_irq(init->gpio->pin));
+	mal_hspec_stm32f0_gpio_event_disable_interrupt(init->gpio);
 	// Configure EXTI source
 	SYSCFG_EXTILineConfig(get_exti_port_source(init->gpio->port), init->gpio->pin);
 	// Save callback
@@ -138,12 +138,12 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	NVIC_EnableIRQ(get_exti_irq(init->gpio->pin));
+	mal_hspec_stm32f0_gpio_event_enable_interrupt(init->gpio);
 
 	return MAL_ERROR_OK;
 }
 
-static IRQn_Type get_exti_irq(uint8_t pin) {
+IRQn_Type mal_hspec_stm32f0_gpio_get_exti_irq(uint8_t pin) {
 	if (pin >= 0 && pin <= 1) {
 		return EXTI0_1_IRQn;
 	} else if (pin >= 2 && pin <= 3) {
@@ -202,4 +202,21 @@ static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
 			gpio_event_callbacks[pin]();
 		}
 	}
+}
+
+mal_error_e mal_hspec_stm32f0_gpio_event_remove(mal_hspec_gpio_s *gpio) {
+	// Disable interrupt
+	mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio);
+	// Remove callback
+	gpio_event_callbacks[gpio->pin] = NULL;
+	// Disable EXTI
+	EXTI_InitTypeDef exti_init;
+	exti_init.EXTI_Line = (1 << gpio->pin);
+	exti_init.EXTI_Mode = EXTI_Mode_Interrupt;
+	exti_init.EXTI_LineCmd = DISABLE;
+	EXTI_Init(&exti_init);
+	// Enable interrupt
+	mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio);
+
+	return MAL_ERROR_OK;
 }
