@@ -1,7 +1,7 @@
 /*
- * mal_erno.h
+ * mal_circular_buffer.h
  *
- *  Created on: May 3, 2015
+ *  Created on: Jun 28, 2015
  *      Author: Olivier
  */
 /*
@@ -23,17 +23,25 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STD_MAL_ERNO_H_
-#define STD_MAL_ERNO_H_
+#ifndef UTILS_MAL_CIRCULAR_BUFFER_H_
+#define UTILS_MAL_CIRCULAR_BUFFER_H_
 
-typedef enum {
-	MAL_ERROR_OK = 0,
-	MAL_ERROR_HARDWARE_INVALID = -1,
-	MAL_ERROR_CLOCK_ERROR = -2,
-	MAL_ERROR_HARDWARE_UNAVAILABLE = -3,
-	MAL_ERROR_INIT_FAILED = -4,
-	MAL_ERROR_FULL = -5,
-	MAL_ERROR_EMPTY = -6
-} mal_error_e;
+#include "std/mal_stdint.h"
+#include "std/mal_error.h"
 
-#endif /* STD_MAL_ERNO_H_ */
+typedef struct {
+	uint8_t *buffer;
+	uint64_t element_size;
+	uint64_t input_pointer;
+	uint64_t output_pointer;
+	uint64_t size;
+	uint64_t maximum_size;
+} mal_circular_buffer_s;
+
+mal_error_e mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer);
+
+mal_error_e mal_circular_buffer_write(mal_circular_buffer_s *buffer, void *data);
+
+mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data);
+
+#endif /* UTILS_MAL_CIRCULAR_BUFFER_H_ */
