@@ -30,13 +30,13 @@
 #include "std/mal_bool.h"
 
 #define mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio) do {\
-	NVIC_DisableIRQ(mal_hspec_stm32f0_gpio_get_exti_irq(gpio->pin)); \
+	NVIC_DisableIRQ(mal_hspec_stm32f0_gpio_get_exti_irq((gpio)->pin)); \
 	__DSB(); \
 	__ISB(); \
 } while(0)
 
 #define mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio) do {\
-	NVIC_EnableIRQ(mal_hspec_stm32f0_gpio_get_exti_irq(gpio->pin)); \
+	NVIC_EnableIRQ(mal_hspec_stm32f0_gpio_get_exti_irq((gpio)->pin)); \
 } while(0)
 
 /**

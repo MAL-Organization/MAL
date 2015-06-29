@@ -36,6 +36,10 @@
 
 #define mal_gpio_event_remove(gpio) mal_hspec_gpio_event_remove(gpio)
 
+#define mal_gpio_event_disable_interrupt(gpio) mal_hspec_gpio_event_disable_interrupt(gpio)
+
+#define mal_gpio_event_enable_interrupt(gpio) mal_hspec_gpio_event_enable_interrupt(gpio)
+
 mal_error_e mal_gpio_init(mal_hspec_gpio_init_s *gpio_init);
 
 mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio_event_init_s *event_init);

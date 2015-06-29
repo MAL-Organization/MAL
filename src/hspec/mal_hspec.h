@@ -59,6 +59,10 @@
 
 #define mal_hspec_gpio_event_remove(gpio) mal_hspec_stm32f0_gpio_event_remove(gpio)
 
+#define mal_hspec_gpio_event_disable_interrupt(gpio) mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio)
+
+#define mal_hspec_gpio_event_enable_interrupt(gpio) mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio)
+
 // Clock mappings
 #define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
 
