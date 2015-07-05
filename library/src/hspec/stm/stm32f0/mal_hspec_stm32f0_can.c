@@ -56,6 +56,10 @@ static void can_read_fifo(uint8_t fifo);
 
 static void can_transmit_msg(mal_hspec_can_msg_s *msg);
 
+static uint32_t can_extended_fr_format(uint32_t id);
+
+static uint16_t can_standard_fr_format(uint16_t id);
+
 static mal_hspec_can_tx_callback_t can_tx_callback = NULL;
 static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
 static can_filter_bank_s can_filter_banks[CAN_FILTER_BANKS_SIZE];
@@ -288,8 +292,8 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
 			can_filter_banks[filter_index].is_active = true;
 			can_filter_banks[filter_index].type = MAL_HSPEC_CAN_ID_EXTENDED;
-			can_filter_banks[filter_index].filter.ext.id = filter->id;
-			can_filter_banks[filter_index].filter.ext.mask = filter->mask;
+			can_filter_banks[filter_index].filter.ext.id = can_extended_fr_format(filter->id);
+			can_filter_banks[filter_index].filter.ext.mask = can_extended_fr_format(filter->mask);
 		} else {
 			// Check if filter is already active to reset count at the same time.
 			if (!can_filter_banks[filter_index].is_active) {
@@ -297,9 +301,15 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 				can_filter_banks[filter_index].is_active = true;
 			}
 			// Set correct mask and filter
-			can_filter_banks[filter_index].filter.std.id[can_filter_banks[filter_index].filter_count] = filter->id;
-			can_filter_banks[filter_index].filter.std.mask[can_filter_banks[filter_index].filter_count] = filter->mask;
+			can_filter_banks[filter_index].filter.std.id[can_filter_banks[filter_index].filter_count] = can_standard_fr_format(filter->id);
+			can_filter_banks[filter_index].filter.std.mask[can_filter_banks[filter_index].filter_count] = can_standard_fr_format(filter->mask);
 			can_filter_banks[filter_index].filter_count++;
+			// Fill remaining filters with the last one
+			uint32_t i;
+			for (i = can_filter_banks[filter_index].filter_count; i < CAN_FILTER_STD_SIZE; i++) {
+				can_filter_banks[filter_index].filter.std.id[i] = can_standard_fr_format(filter->id);
+				can_filter_banks[filter_index].filter.std.mask[i] = can_standard_fr_format(filter->mask);
+			}
 		}
 		// Initialise filter
 		CAN_FilterInitTypeDef filter_init;
@@ -326,6 +336,34 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 	}
 
 	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1);
+
+	return result;
+}
+
+static uint32_t can_extended_fr_format(uint32_t id) {
+	uint32_t result = 0;
+	// 11 MSb are the 11 bits of the standard ID (first 11 bits of
+	// extended ID)
+	result |= (id & 0x3FF) << 21;
+	// Next 18 bits is the MS part of the extended ID
+	result |= (id & 0x1FFFF800) << 3;
+	// Next and last 3 bits are flags. IDE which is set since this is
+	// extended. RTR not set since we don't support remote frames. And
+	// the last one must be 0.
+	result |= 4;
+
+	return result;
+}
+
+static uint16_t can_standard_fr_format(uint16_t id) {
+	uint16_t result = 0;
+	// 11 MSb are the 11 bits of the standard ID (first 11 bits of
+	// extended ID)
+	result |= (id & 0x3FF) << 5;
+	// Next and last 5 bits are flags. RTR which is not set since we don't
+	// support remote frames. IDE which is not set since this is standard. And
+	// the last 3 must be 0 since they are only valid in extended.
+	result |= 0;
 
 	return result;
 }
