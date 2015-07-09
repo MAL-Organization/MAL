@@ -35,6 +35,10 @@
 
 #define mal_can_init(init) mal_hspec_can_init(init)
 
+#define mal_can_disable_interrupt(interface) mal_hspec_disable_can_interrupt(interface)
+
+#define mal_can_enable_interrupt(interface) mal_hspec_enable_can_interrupt(interface)
+
 mal_error_e mal_can_init(mal_hspec_can_init_s *init);
 
 #endif /* CAN_MAL_CAN_H_ */

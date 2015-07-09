@@ -229,9 +229,9 @@ typedef struct {
 	mal_hspec_can_id_type_e id_type;
 } mal_hspec_can_msg_s;
 
-typedef mal_error_e (*mal_hspec_can_tx_callback_t)(mal_hspec_can_msg_s **next_msg);
+typedef mal_error_e (*mal_hspec_can_tx_callback_t)(mal_hspec_can_e interface, mal_hspec_can_msg_s *next_msg);
 
-typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_msg_s *msg);
+typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
 
 typedef struct {
 	mal_hspec_can_e interface;

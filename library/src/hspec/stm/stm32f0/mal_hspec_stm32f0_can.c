@@ -183,10 +183,9 @@ void CEC_CAN_IRQHandler(void) {
 	// Check if transmit is empty
 	if (CAN_GetITStatus(CAN, CAN_IT_TME) == SET) {
 		if (can_tx_callback != NULL) {
-			mal_hspec_can_msg_s *msg;
-			can_tx_callback(&msg);
-			if (msg != NULL) {
-				can_transmit_msg(msg);
+			mal_hspec_can_msg_s msg;
+			if (MAL_ERROR_OK == can_tx_callback(MAL_HSPEC_CAN_1, &msg)) {
+				can_transmit_msg(&msg);
 			} else {
 				CAN_ITConfig(CAN, CAN_IT_TME, DISABLE);
 				CAN_ClearITPendingBit(CAN, CAN_IT_TME);
@@ -219,7 +218,7 @@ static void can_read_fifo(uint8_t fifo) {
 		msg.data[msg.size] = can_msg.Data[msg.size];
 	}
 	msg.size = can_msg.DLC;
-	can_rx_callback(&msg);
+	can_rx_callback(MAL_HSPEC_CAN_1, &msg);
 }
 
 mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
