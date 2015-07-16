@@ -37,6 +37,7 @@
 #include "mal_hspec_stm32f0_timer.h"
 #include "mal_hspec_stm32f0_i2c.h"
 #include "mal_hspec_stm32f0_can.h"
+#include "mal_hspec_stm32f0_uuid.h"
 
 // Device specific function mapping section.
 #ifdef MAL_STM32F030R8

@@ -105,6 +105,10 @@
 
 #define mal_hspec_serial_transmit(port, data) mal_hspec_stm32f0_serial_transmit(port, data)
 
+// UUID
+
+#define mal_hspec_uuid_read(uuid) mal_hspec_stm32f0_uuid_read(uuid)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif
