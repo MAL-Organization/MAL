@@ -75,3 +75,11 @@ mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data) 
 
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer) {
+	buffer->input_pointer = 0;
+	buffer->output_pointer = 0;
+	buffer->size = 0;
+
+	return MAL_ERROR_OK;
+}

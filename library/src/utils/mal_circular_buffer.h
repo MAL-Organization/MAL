@@ -44,4 +44,6 @@ mal_error_e mal_circular_buffer_write(mal_circular_buffer_s *buffer, void *data)
 
 mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data);
 
+mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer);
+
 #endif /* UTILS_MAL_CIRCULAR_BUFFER_H_ */
