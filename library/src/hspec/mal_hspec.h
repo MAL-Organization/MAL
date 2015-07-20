@@ -99,6 +99,8 @@
 
 #define mal_hspec_enable_can_interrupt(interface) mal_hspec_stm32f0_enable_can_interrupt(interface)
 
+#define mal_hspec_can_remove_filter(interface, filter) mal_hspec_stm32f0_can_remove_filter(interface, filter)
+
 // SERIAL
 
 #define mal_hspec_serial_init(init) mal_hspec_stm32f0_serial_init(init)

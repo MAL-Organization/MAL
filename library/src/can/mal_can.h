@@ -31,6 +31,8 @@
 
 #define mal_can_add_filter(interface, filter) mal_hspec_can_add_filter(interface, filter)
 
+#define mal_can_remove_filter(interface, filter) mal_hspec_can_remove_filter(interface, filter)
+
 #define mal_can_transmit(interface, msg) mal_hspec_can_transmit(interface, msg)
 
 #define mal_can_init(init) mal_hspec_can_init(init)

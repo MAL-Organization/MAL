@@ -50,6 +50,7 @@ typedef struct {
 	uint8_t filter_count;
 	mal_hspec_can_id_type_e type;
 	bool is_active;
+	uint8_t fifo;
 } can_filter_bank_s;
 
 static void can_read_fifo(uint8_t fifo);
@@ -278,7 +279,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		// If the ID is standard, it is possible to resuse that filter if it
 		// has an available slot
 		if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type && MAL_HSPEC_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
-			if (can_filter_banks[filter_index].filter_count < (CAN_FILTER_STD_SIZE - 1)) {
+			if (can_filter_banks[filter_index].filter_count < CAN_FILTER_STD_SIZE) {
 				found = true;
 				break;
 			}
@@ -310,6 +311,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 				can_filter_banks[filter_index].filter.std.mask[i] = can_standard_fr_format(filter->mask);
 			}
 		}
+		can_filter_banks[filter_index].fifo = fifo;
 		// Initialise filter
 		CAN_FilterInitTypeDef filter_init;
 		filter_init.CAN_FilterActivation = ENABLE;
@@ -363,6 +365,87 @@ static uint16_t can_standard_fr_format(uint16_t id) {
 	// support remote frames. IDE which is not set since this is standard. And
 	// the last 3 must be 0 since they are only valid in extended.
 	result |= 0;
+
+	return result;
+}
+
+mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+	static uint16_t fifo = CAN_Filter_FIFO0;
+	if (MAL_HSPEC_CAN_1 != interface) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	mal_error_e result = MAL_ERROR_OK;;
+	// Disable interrupts
+	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	// Find filter index
+	uint8_t filter_index;
+	uint8_t std_filter_index;
+	bool found = false;
+	for (filter_index = 0; filter_index < CAN_FILTER_BANKS_SIZE; filter_index++) {
+		// Check if filter is unused.
+		if (!can_filter_banks[filter_index].is_active) {
+			continue;
+		}
+
+		if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type && MAL_HSPEC_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
+			int32_t i;
+			for (i = can_filter_banks[filter_index].filter_count - 1; i >=0; i--) {
+				if (can_filter_banks[filter_index].filter.std.id[i] == filter->id && can_filter_banks[filter_index].filter.std.mask[i] == filter->mask) {
+					std_filter_index = i;
+					found = true;
+					break;
+				}
+			}
+		} else if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type && MAL_HSPEC_CAN_ID_EXTENDED == can_filter_banks[filter_index].type) {
+			if (can_filter_banks[filter_index].filter.ext.id == filter->id && can_filter_banks[filter_index].filter.ext.mask == filter->mask) {
+				found = true;
+			}
+		}
+		if (found) {
+			break;
+		}
+	}
+	if (found) {
+		// Free filter array, especially for santard type
+		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+			can_filter_banks[filter_index].is_active = false;
+		} else {
+			if (can_filter_banks[filter_index].filter_count <= 1) {
+				can_filter_banks[filter_index].is_active = false;
+			} else {
+				uint8_t copy_index = 0;
+				if (std_filter_index == 0) {
+					copy_index = 1;
+				}
+				// Set correct mask and filter
+				can_filter_banks[filter_index].filter.std.id[std_filter_index] = can_filter_banks[filter_index].filter.std.id[copy_index];
+				can_filter_banks[filter_index].filter.std.mask[std_filter_index] = can_filter_banks[filter_index].filter.std.mask[copy_index];
+				can_filter_banks[filter_index].filter_count--;
+			}
+		}
+		// Initialise filter
+		CAN_FilterInitTypeDef filter_init;
+		if (can_filter_banks[filter_index].is_active) {
+			filter_init.CAN_FilterActivation = ENABLE;
+		} else {
+			filter_init.CAN_FilterActivation = DISABLE;
+		}
+		filter_init.CAN_FilterFIFOAssignment = can_filter_banks[filter_index].fifo;
+		filter_init.CAN_FilterIdHigh = can_filter_banks[filter_index].filter.std.id[1];
+		filter_init.CAN_FilterIdLow = can_filter_banks[filter_index].filter.std.id[0];
+		filter_init.CAN_FilterMaskIdHigh = can_filter_banks[filter_index].filter.std.mask[1];
+		filter_init.CAN_FilterMaskIdLow = can_filter_banks[filter_index].filter.std.mask[0];
+		filter_init.CAN_FilterMode = CAN_FilterMode_IdMask;
+		filter_init.CAN_FilterNumber = filter_index;
+		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+			filter_init.CAN_FilterScale = CAN_FilterScale_32bit;
+		} else {
+			filter_init.CAN_FilterScale = CAN_FilterScale_16bit;
+		}
+		CAN_FilterInit(&filter_init);
+	}
+
+	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1);
 
 	return result;
 }

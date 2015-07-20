@@ -50,4 +50,6 @@ mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_
 
 mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
 
+mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_ */
