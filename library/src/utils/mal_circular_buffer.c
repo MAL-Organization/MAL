@@ -28,7 +28,7 @@
 mal_error_e mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer) {
 	buffer->buffer = data_buffer;
 	buffer->element_size = element_size;
-	buffer->maximum_size = size;
+	buffer->maximum_size = size / element_size;
 	buffer->input_pointer = 0;
 	buffer->output_pointer = 0;
 	buffer->size = 0;
