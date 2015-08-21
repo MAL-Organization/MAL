@@ -224,7 +224,7 @@ void SystemInit(void) {
  * @param  None
  * @retval None
  */
-void SystemCoreClockUpdate(void) {
+void SystemCoreClockUpdate(uint64_t hse_value) {
 	uint32_t tmp = 0, pllmull = 0, pllsource = 0, prediv1factor = 0;
 
 	/* Get SYSCLK source -------------------------------------------------------*/
@@ -235,7 +235,7 @@ void SystemCoreClockUpdate(void) {
 		SystemCoreClock = HSI_VALUE;
 		break;
 	case 0x04: /* HSE used as system clock */
-		SystemCoreClock = HSE_VALUE;
+		SystemCoreClock = hse_value;
 		break;
 	case 0x08: /* PLL used as system clock */
 		/* Get PLL clock source and multiplication factor ----------------------*/
@@ -249,7 +249,7 @@ void SystemCoreClockUpdate(void) {
 		} else {
 			prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
 			/* HSE oscillator clock selected as PREDIV1 clock entry */
-			SystemCoreClock = (HSE_VALUE / prediv1factor) * pllmull;
+			SystemCoreClock = (hse_value / prediv1factor) * pllmull;
 		}
 		break;
 	default: /* HSI used as system clock */

@@ -84,7 +84,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
   
 extern void SystemInit(void);
 void SetSysClock(void);
-extern void SystemCoreClockUpdate(void);
+void SystemCoreClockUpdate(uint64_t hse_value);
 /**
   * @}
   */
