@@ -42,7 +42,7 @@ static mal_error_e get_available_timer(mal_hspec_timer_e *timer);
 
 static timer_state_s timer_states[MAL_HSPEC_TIMER_SIZE];
 
-mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, uint8_t precision, mal_hspec_timer_e *handle) {
+mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_e *handle) {
 	mal_error_e result;
 	// Check if timer is specified
 	if (MAL_HSPEC_TIMER_ANY == timer) {
@@ -59,12 +59,8 @@ mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, uint8_
 	} else {
 		return MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
-	// Check precision
-	if (precision > 100) {
-		precision = 100;
-	}
 	// Initialise timer
-	result = mal_hspec_timer_init_tick(timer, frequency, precision, &timer_states[timer].tick_counter);
+	result = mal_hspec_timer_init_tick(timer, frequency, delta, &timer_states[timer].tick_counter);
 
 	return result;
 }

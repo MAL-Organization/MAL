@@ -40,7 +40,7 @@
 	NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
 } while(0)
 
-mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float frequency, uint8_t precision, volatile uint64_t *tick_handle);
+mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, volatile uint64_t *tick_handle);
 
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 
