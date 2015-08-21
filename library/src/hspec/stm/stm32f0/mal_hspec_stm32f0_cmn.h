@@ -172,6 +172,12 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
 
+#elif defined(MAL_STM32F072CB)
+
+#include "stm32f072cb/mal_hspec_stm32f072cb.h"
+
+#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072cb_get_port_afs(port, afs)
+
 #elif defined(MAL_STM32F030K6)
 #else
 #error No valid hardware specfic device symbol specified...
