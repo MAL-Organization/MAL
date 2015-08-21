@@ -42,7 +42,7 @@ static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer);
 
 static volatile uint64_t *tick_handles[MAL_HSPEC_TIMER_SIZE];
 
-mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float frequency, uint8_t precision,
+mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta,
 		volatile uint64_t *tick_handle) {
 	mal_error_e result;
 	// Initialise peripheral clock
@@ -58,29 +58,52 @@ mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float fre
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
+	// Computations will be done in integers for speed. We will use uHz for the current precision
+	uint64_t uhz_frequency = frequency * 1000000.0f;
+	if (uhz_frequency == 0) {
+		return MAL_ERROR_CLOCK_ERROR;
+	}
+	uint64_t uhz_delta = delta * 1000000.0f;
 	// Initialise time base timer
 	TIM_TimeBaseInitTypeDef params;
 	TIM_TimeBaseStructInit(&params);
 	params.TIM_CounterMode = TIM_CounterMode_Up;
 	// Choose longest count to get maximum precision
-	uint64_t prescaler;
-	int64_t period;
+	uint16_t prescaler;
+	uint16_t period;
+	bool found = false;
+	uint64_t smallest_delta = UINT64_MAX;
 	for (period = UINT16_MAX; period > 0; period--) {
-		float value = ((float)timer_frequency) / (frequency * ((float)period));
-		// Check precision
-		int error = (value / frequency) * 100;
-		if (error >= precision) {
-			prescaler = (int)ceilf(value);
-		} else if (error <= (100 - precision)) {
-			prescaler = (int)value;
-		} else {
-			continue;
+		for (prescaler = 1; prescaler <= UINT16_MAX; prescaler++) {
+			// Resolution is in uHz to handle fractions of Hz
+			uint64_t potential_frequency = (timer_frequency * 1000000) / ((uint64_t)period * (uint64_t)prescaler);
+			uint64_t actual_delta;
+			if (potential_frequency >= uhz_frequency) {
+				actual_delta = potential_frequency - uhz_frequency;
+			} else {
+				actual_delta = uhz_frequency - potential_frequency;
+			}
+			if (actual_delta <= uhz_delta) {
+				found = true;
+				break;
+			} else {
+				if (actual_delta < smallest_delta) {
+					smallest_delta = actual_delta;
+				}
+			}
+			// If we get here and the potential frequency is smaller than the
+			// target frequency, we can change the period as the potential
+			// frequency is just gonna keep getting smaller if we continue
+			if (potential_frequency < uhz_frequency) {
+				break;
+			}
 		}
-		// Check that prescaler is not 0. This would happen if prescaler in
-		// float would be 0.1 or lower.
-		if (prescaler > 0) {
+		if (found) {
 			break;
 		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	params.TIM_Prescaler = prescaler - 1;
 	params.TIM_Period = period;
