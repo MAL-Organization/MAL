@@ -75,6 +75,7 @@ RCC_CFGR_PLLMULL9, RCC_CFGR_PLLMULL10, RCC_CFGR_PLLMULL11,
 RCC_CFGR_PLLMULL12, RCC_CFGR_PLLMULL13, RCC_CFGR_PLLMULL14,
 RCC_CFGR_PLLMULL15, RCC_CFGR_PLLMULL16 };
 
+extern uint64_t mal_external_clk_freq;
 void mal_hspec_stm32f0_startup() {
 	// Initialises basic clocks and systems
 	SystemInit();
@@ -83,7 +84,7 @@ void mal_hspec_stm32f0_startup() {
 	mal_hspec_initialise_system_clk();
 
 	// Update system core clock for stm32f0-stdperiph drivers
-	SystemCoreClockUpdate();
+	SystemCoreClockUpdate(mal_external_clk_freq);
 }
 
 mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) {
@@ -144,7 +145,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		// Select PLL input clock
 		uint64_t pll_src_clock;
 		if (clk_src == MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL) {
-			pll_src_clock = HSI_VALUE / 2;
+			pll_src_clock = HSI_VALUE / MAL_HSPEC_STM32F0_HSI_PLL_DIV;
 		} else {
 			pll_src_clock = src_clk_freq;
 		}
@@ -157,8 +158,8 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 			for (j = 0; j < (sizeof(pll_mul_values) / sizeof(uint32_t)); j++) {
 				// Compute resulting system frequency
 				uint64_t sys_freq;
-				if (clk_src == MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL) {
-					sys_freq = (pll_src_clock / hse_prediv_values[i]) * pll_mul_values[j];
+				if (mal_hspec_stm32f0_is_pll_div_available(clk_src)) {
+					sys_freq = (pll_src_clock * pll_mul_values[j]) / hse_prediv_values[i];
 				} else {
 					sys_freq = pll_src_clock * pll_mul_values[j];
 				}
@@ -166,7 +167,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 					continue;
 				}
 				// Check if it is a better fit
-				uint64_t new_freq_diff = abs_int64(sys_freq - target_frequency);
+				uint64_t new_freq_diff = abs_int64((int64_t)sys_freq - (int64_t)target_frequency);
 				if (new_freq_diff < freq_diff) {
 					freq_diff = new_freq_diff;
 					if (0 == freq_diff) {
@@ -180,13 +181,17 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		}
 		// Adjust target frequency
 		target_frequency = target_frequency - freq_diff;
+		// Set flash latency before switching
+		if (target_frequency > 24000000) {
+			FLASH_SetLatency(FLASH_Latency_1);
+		}
 		// Set HSE divider
 		if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
 			RCC_PREDIV1Config(hse_prediv_reg_values[i]);
 		}
 		// Set PLL multiplier and input
 		uint32_t pll_source = RCC_PLLSource_HSI_Div2;
-		if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
+		if (mal_hspec_stm32f0_is_pll_div_available(clk_src)) {
 			pll_source = RCC_PLLSource_PREDIV1;
 		}
 		RCC_PLLConfig(pll_source, pll_mul_reg_values[j]);

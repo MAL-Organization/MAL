@@ -46,6 +46,8 @@
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
+#define MAL_HSPEC_STM32F0_HSI_PLL_DIV	2
+
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f030r8_get_valid_ports(ports, size)
 
 #define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f030r8_get_valid_pins(pins)
@@ -55,6 +57,7 @@
 #include "stm32f051r8/mal_hspec_stm32f051r8.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
+#define MAL_HSPEC_STM32F0_HSI_PLL_DIV	2
 
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f051r8_get_valid_ports(ports, size)
 
@@ -74,6 +77,8 @@
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
+#define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1
+
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f072rb_get_valid_ports(ports, size)
 
 #define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f072rb_get_valid_pins(pins)
@@ -87,6 +92,30 @@
 #define mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072rb_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
 
 #define mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072rb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
+
+#elif defined(MAL_STM32F072CB)
+
+#include "stm32f072cb/mal_hspec_stm32f072cb.h"
+
+#define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
+
+#define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1
+
+#define mal_hspec_stm32f0_is_pll_div_available(source) mal_hspec_stm32f072cb_is_pll_div_available(source)
+
+#define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f072cb_get_valid_ports(ports, size)
+
+#define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f072cb_get_valid_pins(pins)
+
+#define mal_hspec_stm32f0_get_valid_timers(timers, size) mal_hspec_stm32f072cb_get_valid_timers(timers, size)
+
+#define mal_hspec_stm32f0_get_timer_update_irq(timer) mal_hspec_stm32f072cb_get_timer_update_irq(timer)
+
+#define mal_hspec_stm32f0_get_valid_i2c_interfaces(interfaces, size) mal_hspec_stm32f072cb_get_valid_i2c_interfaces(interfaces, size)
+
+#define mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072cb_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
+
+#define mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072cb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
 #elif defined(MAL_STM32F030K6)
 #else
