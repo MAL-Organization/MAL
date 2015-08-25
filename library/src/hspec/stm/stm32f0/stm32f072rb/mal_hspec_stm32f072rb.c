@@ -428,6 +428,10 @@ static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
 	}
 };
 
+bool mal_hspec_stm32f072rb_is_pll_div_available(mal_hspec_system_clk_src_e source) {
+	return true;
+}
+
 mal_error_e mal_hspec_stm32f072rb_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
 	*ports = valid_ports;
 	*size = sizeof(valid_ports) / sizeof(mal_hspec_port_e);

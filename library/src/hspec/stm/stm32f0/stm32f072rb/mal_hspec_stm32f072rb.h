@@ -31,7 +31,9 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "stm32f0/stm32f0xx.h"
 #include "i2c/mal_i2c.h"
+#include "std/mal_bool.h"
 
+bool mal_hspec_stm32f072rb_is_pll_div_available(mal_hspec_system_clk_src_e source);
 mal_error_e mal_hspec_stm32f072rb_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size);
 mal_error_e mal_hspec_stm32f072rb_get_valid_pins(const uint64_t **pins);
 mal_error_e mal_hspec_stm32f072rb_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size);
