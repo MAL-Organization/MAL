@@ -1054,7 +1054,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
       RCC_Clocks->SYSCLK_Frequency = HSI_VALUE;
       break;
     case 0x04:  /* HSE used as system clock */
-      RCC_Clocks->SYSCLK_Frequency = HSE_VALUE;
+      RCC_Clocks->SYSCLK_Frequency = mal_external_clk_freq;
       break;
     case 0x08:  /* PLL used as system clock */
       /* Get PLL clock source and multiplication factor ----------------------*/
@@ -1071,7 +1071,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
       {
         prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
         /* HSE oscillator clock selected as PREDIV1 clock entry */
-        pllclk = (HSE_VALUE / prediv1factor) * pllmull; 
+        pllclk = (mal_external_clk_freq / prediv1factor) * pllmull;
       }
       RCC_Clocks->SYSCLK_Frequency = pllclk;      
       break;

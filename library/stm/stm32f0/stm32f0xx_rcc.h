@@ -528,6 +528,8 @@ Proper ADC clock selection is done within ADC driver by mean of the ADC_ClockMod
   * @}
   */
 
+extern uint64_t mal_external_clk_freq;
+
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
