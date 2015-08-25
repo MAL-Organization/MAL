@@ -38,6 +38,7 @@
 #include "mal_hspec_stm32f0_i2c.h"
 #include "mal_hspec_stm32f0_can.h"
 #include "mal_hspec_stm32f0_uuid.h"
+#include "stm32f0/stm32f0xx_rcc.h"
 
 // Device specific function mapping section.
 #ifdef MAL_STM32F030R8
@@ -48,6 +49,8 @@
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	2
 
+#define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI_Div2
+
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f030r8_get_valid_ports(ports, size)
 
 #define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f030r8_get_valid_pins(pins)
@@ -57,7 +60,10 @@
 #include "stm32f051r8/mal_hspec_stm32f051r8.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
+
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	2
+
+#define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI_Div2
 
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f051r8_get_valid_ports(ports, size)
 
@@ -78,6 +84,10 @@
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1
+
+#define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI
+
+#define mal_hspec_stm32f0_is_pll_div_available(source) mal_hspec_stm32f072rb_is_pll_div_available(source)
 
 #define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f072rb_get_valid_ports(ports, size)
 
@@ -100,6 +110,8 @@
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1
+
+#define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI
 
 #define mal_hspec_stm32f0_is_pll_div_available(source) mal_hspec_stm32f072cb_is_pll_div_available(source)
 

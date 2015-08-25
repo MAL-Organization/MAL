@@ -186,13 +186,13 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 			FLASH_SetLatency(FLASH_Latency_1);
 		}
 		// Set HSE divider
-		if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
+		if (mal_hspec_stm32f0_is_pll_div_available(clk_src)) {
 			RCC_PREDIV1Config(hse_prediv_reg_values[i]);
 		}
 		// Set PLL multiplier and input
-		uint32_t pll_source = RCC_PLLSource_HSI_Div2;
-		if (mal_hspec_stm32f0_is_pll_div_available(clk_src)) {
-			pll_source = RCC_PLLSource_PREDIV1;
+		uint32_t pll_source = MAL_HSPEC_STM32F0_HSI_PLL_SRC;
+		if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
+			pll_source = RCC_PLLSource_HSE;
 		}
 		RCC_PLLConfig(pll_source, pll_mul_reg_values[j]);
 		// Turn PLL on
