@@ -95,3 +95,13 @@ uint64_t mal_timer_get_tick(mal_hspec_timer_e handle) {
 	mal_hspec_enable_timer_interrupt(handle);
 	return tick;
 }
+
+mal_error_e mal_timer_free(mal_hspec_timer_e timer) {
+	mal_error_e result = MAL_ERROR_OK;
+	// Free timer
+	if (!timer_states[timer].is_available) {
+		result = mal_hspec_timer_free(timer);
+		timer_states[timer].is_available = true;
+	}
+	return result;
+}

@@ -77,6 +77,8 @@
 
 #define mal_hspec_enable_timer_interrupt(timer) mal_hspec_stm32f0_enable_timer_interrupt(timer)
 
+#define mal_hspec_timer_free(timer) mal_hspec_stm32f0_timer_free(timer)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)

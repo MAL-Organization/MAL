@@ -35,4 +35,6 @@ mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float 
 
 uint64_t mal_timer_get_tick(mal_hspec_timer_e handle);
 
+mal_error_e mal_timer_free(mal_hspec_timer_e timer);
+
 #endif /* TIMER_MAL_TIMER_H_ */

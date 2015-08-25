@@ -44,4 +44,6 @@ mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float fre
 
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 
+mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

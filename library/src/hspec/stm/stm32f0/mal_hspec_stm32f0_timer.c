@@ -260,3 +260,17 @@ void TIM17_IRQHandler(void) {
 	// Handles tick
 	INCREMENT_TICK(MAL_HSPEC_TIMER_17);
 }
+
+mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer) {
+	// Get timer
+	TIM_TypeDef *tim = get_timer_typedef(timer);
+	// Disable timer
+	TIM_Cmd(tim, DISABLE);
+	// Disable interrupt
+	TIM_ITConfig(tim, TIM_IT_Update, DISABLE);
+	NVIC_DisableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer));
+	// Unitialise timer
+	TIM_DeInit(tim);
+
+	return MAL_ERROR_OK;
+}
