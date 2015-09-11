@@ -31,5 +31,6 @@
 mal_error_e mal_hspec_stm32f0_adc_init(mal_hspec_adc_init_s *init);
 mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value);
 mal_error_e mal_hspec_stm32f0_adc_resolution(mal_hspec_adc_e adc, uint8_t *resolution);
+mal_error_e mal_hspec_stm32f0_adc_async_read(mal_hspec_adc_e adc, mal_hspec_adc_read_callback_t callback);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_ADC_H_ */

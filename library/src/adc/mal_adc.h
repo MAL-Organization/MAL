@@ -32,8 +32,12 @@
 
 #define mal_adc_resolution(adc, resolution) mal_hspec_adc_resolution(adc, resolution)
 
+#define mal_adc_async_read(adc, callback) mal_hspec_adc_async_read(adc, callback)
+
 mal_error_e mal_adc_init(mal_hspec_adc_init_s *init);
 
 mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value);
+
+mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, float *value);
 
 #endif /* ADC_MAL_ADC_H_ */

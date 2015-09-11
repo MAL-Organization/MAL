@@ -46,6 +46,12 @@ mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value) {
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
+
+	return mal_adc_bits_to_volts(adc, bit_value, value);
+}
+
+mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, float *value) {
+	mal_error_e result;
 	// Get ADC resolution
 	uint8_t resolution;
 	result = mal_adc_resolution(adc, &resolution);

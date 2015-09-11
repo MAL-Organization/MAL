@@ -123,6 +123,8 @@
 
 #define mal_hspec_adc_resolution(adc, resolution) mal_hspec_stm32f0_adc_resolution(adc, resolution)
 
+#define mal_hspec_adc_async_read(adc, callback) mal_hspec_stm32f0_adc_async_read(adc, callback)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif

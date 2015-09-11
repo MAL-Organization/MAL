@@ -29,8 +29,12 @@
 #include "stm32f0/stm32f0xx_gpio.h"
 #include "stm32f0/stm32f0xx_adc.h"
 #include "std/mal_bool.h"
+#include "std/mal_stdlib.h"
 
 static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resolution);
+static void start_adc_conversion(mal_hspec_adc_e adc);
+
+static mal_hspec_adc_read_callback_t adc_callbacks[MAL_HSPEC_ADC_SIZE];
 
 mal_error_e mal_hspec_stm32f0_adc_init(mal_hspec_adc_init_s *init) {
 	static bool initialised = false;
@@ -105,6 +109,36 @@ static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resoluti
 }
 
 mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value) {
+	// Disable interrupt
+	NVIC_DisableIRQ(ADC1_COMP_IRQn);
+	ADC_ITConfig(ADC1, ADC_IT_EOC, DISABLE);
+	// Start conversion
+	start_adc_conversion(adc);
+	// Wait end of conversion
+	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+	// Read value
+	*value = ADC_GetConversionValue(ADC1);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f0_adc_async_read(mal_hspec_adc_e adc, mal_hspec_adc_read_callback_t callback) {
+	NVIC_InitTypeDef nvic_init;
+	// Save callback
+	adc_callbacks[adc] = callback;
+	// Configure interrupt
+	ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
+	nvic_init.NVIC_IRQChannel = ADC1_COMP_IRQn;
+	nvic_init.NVIC_IRQChannelPriority = 0;
+	nvic_init.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nvic_init);
+	// Start conversion
+	start_adc_conversion(adc);
+
+	return MAL_ERROR_OK;
+}
+
+static void start_adc_conversion(mal_hspec_adc_e adc) {
 	// Clear ADC configuration
 	ADC1->CHSELR = 0;
 	// Configure channel
@@ -113,12 +147,6 @@ mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value) {
 	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADRDY) == RESET);
 	// Start conversion
 	ADC_StartOfConversion(ADC1);
-	// Wait end of conversion
-	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
-	// Read value
-	*value = ADC_GetConversionValue(ADC1);
-
-	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_hspec_stm32f0_adc_resolution(mal_hspec_adc_e adc, uint8_t *resolution) {
@@ -137,5 +165,69 @@ mal_error_e mal_hspec_stm32f0_adc_resolution(mal_hspec_adc_e adc, uint8_t *resol
 		return MAL_ERROR_OK;
 	default:
 		return MAL_ERROR_HARDWARE_INVALID;
+	}
+}
+
+void ADC1_COMP_IRQHandler(void) {
+	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
+	// Get ADC
+	mal_hspec_adc_e adc;
+	switch (ADC1->CHSELR) {
+		case 0x1:
+			adc = MAL_HSPEC_ADC_0;
+			break;
+		case 0x2:
+			adc = MAL_HSPEC_ADC_1;
+			break;
+		case 0x4:
+			adc = MAL_HSPEC_ADC_2;
+			break;
+		case 0x8:
+			adc = MAL_HSPEC_ADC_3;
+			break;
+		case 0x10:
+			adc = MAL_HSPEC_ADC_4;
+			break;
+		case 0x20:
+			adc = MAL_HSPEC_ADC_5;
+			break;
+		case 0x40:
+			adc = MAL_HSPEC_ADC_6;
+			break;
+		case 0x80:
+			adc = MAL_HSPEC_ADC_7;
+			break;
+		case 0x100:
+			adc = MAL_HSPEC_ADC_8;
+			break;
+		case 0x200:
+			adc = MAL_HSPEC_ADC_9;
+			break;
+		case 0x400:
+			adc = MAL_HSPEC_ADC_10;
+			break;
+		case 0x800:
+			adc = MAL_HSPEC_ADC_11;
+			break;
+		case 0x1000:
+			adc = MAL_HSPEC_ADC_12;
+			break;
+		case 0x2000:
+			adc = MAL_HSPEC_ADC_13;
+			break;
+		case 0x4000:
+			adc = MAL_HSPEC_ADC_14;
+			break;
+		case 0x8000:
+			adc = MAL_HSPEC_ADC_15;
+			break;
+		default:
+			return;
+	}
+	// Execute callback
+	mal_hspec_adc_read_callback_t cb = adc_callbacks[adc];
+	adc_callbacks[adc] = NULL;
+	if (cb != NULL) {
+		cb(adc, ADC_GetConversionValue(ADC1));
 	}
 }

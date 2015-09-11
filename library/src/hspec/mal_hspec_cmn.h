@@ -276,4 +276,6 @@ typedef struct {
 	uint8_t bit_resolution;
 } mal_hspec_adc_init_s;
 
+typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64_t value);
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */
