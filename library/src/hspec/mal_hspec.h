@@ -113,6 +113,16 @@
 
 #define mal_hspec_uuid_read(uuid) mal_hspec_stm32f0_uuid_read(uuid)
 
+// ADC
+
+#define mal_hspec_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size)
+
+#define mal_hspec_adc_init(init) mal_hspec_stm32f0_adc_init(init)
+
+#define mal_hspec_adc_read(adc, value) mal_hspec_stm32f0_adc_read(adc, value)
+
+#define mal_hspec_adc_resolution(adc, resolution) mal_hspec_stm32f0_adc_resolution(adc, resolution)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif
@@ -130,5 +140,7 @@ mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, mal_hspec_gpio_s *scl, mal_hspec_gpio_s *sda);
 
 mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
+
+mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

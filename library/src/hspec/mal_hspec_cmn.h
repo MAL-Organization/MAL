@@ -248,4 +248,32 @@ typedef struct {
 	mal_hspec_can_id_type_e id_type;
 } mal_hspec_can_filter_s;
 
+// ADC
+
+typedef enum {
+	MAL_HSPEC_ADC_0 = 0,
+	MAL_HSPEC_ADC_1 = 1,
+	MAL_HSPEC_ADC_2 = 2,
+	MAL_HSPEC_ADC_3 = 3,
+	MAL_HSPEC_ADC_4 = 4,
+	MAL_HSPEC_ADC_5 = 5,
+	MAL_HSPEC_ADC_6 = 6,
+	MAL_HSPEC_ADC_7 = 7,
+	MAL_HSPEC_ADC_8 = 8,
+	MAL_HSPEC_ADC_9 = 9,
+	MAL_HSPEC_ADC_10 = 10,
+	MAL_HSPEC_ADC_11 = 11,
+	MAL_HSPEC_ADC_12 = 12,
+	MAL_HSPEC_ADC_13 = 13,
+	MAL_HSPEC_ADC_14 = 14,
+	MAL_HSPEC_ADC_15 = 15,
+	MAL_HSPEC_ADC_SIZE = 16
+} mal_hspec_adc_e;
+
+typedef struct {
+	mal_hspec_adc_e adc;
+	mal_hspec_gpio_s *gpio;
+	uint8_t bit_resolution;
+} mal_hspec_adc_init_s;
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */
