@@ -28,9 +28,9 @@
 #include "std/mal_math.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 
-#define INCREMENT_TICK(timer) do { \
-	if (tick_handles[timer] != NULL) { \
-		(*tick_handles[timer]) ++; \
+#define INVOKE_CALLBACK(timer) do { \
+	if (timer_callbacks[timer] != NULL) { \
+		timer_callbacks[timer](timer); \
 	} \
 }while(0)
 
@@ -40,10 +40,9 @@ static uint32_t get_rcc_timer(mal_hspec_timer_e timer);
 
 static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer);
 
-static volatile uint64_t *tick_handles[MAL_HSPEC_TIMER_SIZE];
+static mal_hspec_timer_callback_t timer_callbacks[MAL_HSPEC_TIMER_SIZE];
 
-mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta,
-		volatile uint64_t *tick_handle) {
+mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback) {
 	mal_error_e result;
 	// Initialise peripheral clock
 	result = init_timer_rcc(timer);
@@ -109,7 +108,7 @@ mal_error_e mal_hspec_stm32f0_timer_init_tick(mal_hspec_timer_e timer, float fre
 	params.TIM_Period = period;
 	TIM_TimeBaseInit(tim, &params);
 	// Save tick handle
-	tick_handles[timer] = tick_handle;
+	timer_callbacks[timer] = callback;
 	// Enable NVIC interrupt for timer
 	IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
 	NVIC_EnableIRQ(irq);
@@ -210,55 +209,55 @@ mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer,
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 	TIM_ClearFlag(TIM1, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_1);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_1);
 }
 
 void TIM2_IRQHandler(void) {
 	TIM_ClearFlag(TIM2, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_2);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_2);
 }
 
 void TIM3_IRQHandler(void) {
 	TIM_ClearFlag(TIM3, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_3);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_3);
 }
 
 void TIM6_DAC_IRQHandler(void) {
 	TIM_ClearFlag(TIM6, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_6);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_6);
 }
 
 void TIM7_IRQHandler(void) {
 	TIM_ClearFlag(TIM7, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_7);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_7);
 }
 
 void TIM14_IRQHandler(void) {
 	TIM_ClearFlag(TIM14, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_14);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_14);
 }
 
 void TIM15_IRQHandler(void) {
 	TIM_ClearFlag(TIM15, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_15);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_15);
 }
 
 void TIM16_IRQHandler(void) {
 	TIM_ClearFlag(TIM16, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_16);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_16);
 }
 
 void TIM17_IRQHandler(void) {
 	TIM_ClearFlag(TIM17, TIM_FLAG_Update);
 	// Handles tick
-	INCREMENT_TICK(MAL_HSPEC_TIMER_17);
+	INVOKE_CALLBACK(MAL_HSPEC_TIMER_17);
 }
 
 mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer) {
@@ -271,6 +270,8 @@ mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer) {
 	NVIC_DisableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer));
 	// Unitialise timer
 	TIM_DeInit(tim);
+	// Remove callback
+	timer_callbacks[timer] = NULL;
 
 	return MAL_ERROR_OK;
 }

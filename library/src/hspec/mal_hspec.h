@@ -71,7 +71,7 @@
 // Timer mappings
 #define mal_hspec_get_valid_timers(timers, size) mal_hspec_stm32f0_get_valid_timers(timers, size)
 
-#define mal_hspec_timer_init_tick(timer, frequency, precision, tick_handle) mal_hspec_stm32f0_timer_init_tick(timer, frequency, precision, tick_handle)
+#define mal_hspec_timer_init(timer, frequency, precision, callback) mal_hspec_stm32f0_timer_init(timer, frequency, precision, callback)
 
 #define mal_hspec_disable_timer_interrupt(timer) mal_hspec_stm32f0_disable_timer_interrupt(timer)
 

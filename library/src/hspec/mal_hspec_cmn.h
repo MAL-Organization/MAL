@@ -121,8 +121,11 @@ typedef enum {
 } mal_hspec_timer_e;
 
 typedef enum {
-	MAL_HSPEC_TIMER_MODE_TICK
+	MAL_HSPEC_TIMER_MODE_TICK,
+	MAL_HSPEC_TIMER_MODE_TASK
 } mal_hspec_timer_mode_e;
+
+typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 
 // Serial
 
