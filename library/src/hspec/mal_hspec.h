@@ -143,6 +143,6 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, mal_hspe
 
 mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
 
-mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, mal_hspec_gpio_s *gpio);
+mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

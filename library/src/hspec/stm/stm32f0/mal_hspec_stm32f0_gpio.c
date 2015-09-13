@@ -81,14 +81,9 @@ GPIOSpeed_TypeDef get_gpio_speed(uint64_t speed) {
 	return GPIO_Speed_Level_1;
 }
 
-mal_error_e mal_hspec_stm32f0_set_gpio(mal_hspec_gpio_s *gpio, bool value) {
+mal_error_e mal_hspec_stm32f0_set_gpio(const mal_hspec_gpio_s *gpio, bool value) {
 	BitAction action = Bit_RESET;
-	mal_error_e result;
-	// Check gpio
-	result = mal_hspec_is_gpio_valid(gpio);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+
 	if (value) {
 		action = Bit_SET;
 	}
@@ -98,7 +93,7 @@ mal_error_e mal_hspec_stm32f0_set_gpio(mal_hspec_gpio_s *gpio, bool value) {
 	return MAL_ERROR_OK;
 }
 
-bool mal_hspec_stm32f0_get_gpio(mal_hspec_gpio_s *gpio) {
+bool mal_hspec_stm32f0_get_gpio(const mal_hspec_gpio_s *gpio) {
 	uint8_t result = GPIO_ReadInputDataBit(mal_hspec_stm32f0_get_gpio_typedef(gpio->port),
 			MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio->pin));
 	if (Bit_SET == result) {
@@ -107,7 +102,7 @@ bool mal_hspec_stm32f0_get_gpio(mal_hspec_gpio_s *gpio) {
 	return false;
 }
 
-mal_error_e mal_hspec_stm32f0_toggle_gpio(mal_hspec_gpio_s *gpio) {
+mal_error_e mal_hspec_stm32f0_toggle_gpio(const mal_hspec_gpio_s *gpio) {
 	uint8_t state = GPIO_ReadOutputDataBit(mal_hspec_stm32f0_get_gpio_typedef(gpio->port), MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio->pin));
 	if (Bit_SET == state) {
 		mal_hspec_stm32f0_set_gpio(gpio, false);
@@ -206,7 +201,7 @@ static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_gpio_event_remove(mal_hspec_gpio_s *gpio) {
+mal_error_e mal_hspec_stm32f0_gpio_event_remove(const mal_hspec_gpio_s *gpio) {
 	// Disable interrupt
 	mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio);
 	// Remove callback

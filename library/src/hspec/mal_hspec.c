@@ -176,7 +176,7 @@ mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspe
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, mal_hspec_gpio_s *gpio) {
+mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio) {
 	mal_error_e result;
 	const mal_hspec_gpio_s *ios;
 	uint8_t size;
