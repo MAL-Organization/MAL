@@ -33,7 +33,8 @@ typedef enum {
 	MAL_ERROR_HARDWARE_UNAVAILABLE = -3,
 	MAL_ERROR_INIT_FAILED = -4,
 	MAL_ERROR_FULL = -5,
-	MAL_ERROR_EMPTY = -6
+	MAL_ERROR_EMPTY = -6,
+	MAL_ERROR_USER = -7
 } mal_error_e;
 
 #endif /* STD_MAL_ERNO_H_ */
