@@ -132,8 +132,10 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	exti_init.EXTI_Mode = EXTI_Mode_Interrupt;
 	if (MAL_HSPEC_GPIO_EVENT_FALLING == init->event) {
 		exti_init.EXTI_Trigger = EXTI_Trigger_Falling;
-	} else {
+	} else if (MAL_HSPEC_GPIO_EVENT_RISING) {
 		exti_init.EXTI_Trigger = EXTI_Trigger_Rising;
+	} else {
+		exti_init.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
 	}
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);

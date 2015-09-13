@@ -85,7 +85,8 @@ typedef struct {
 
 typedef enum {
 	MAL_HSPEC_GPIO_EVENT_RISING,
-	MAL_HSPEC_GPIO_EVENT_FALLING
+	MAL_HSPEC_GPIO_EVENT_FALLING,
+	MAL_HSPEC_GPIO_EVENT_BOTH
 } mal_hspec_gpio_event_e;
 
 typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
