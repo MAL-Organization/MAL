@@ -41,5 +41,6 @@ IRQn_Type mal_hspec_stm32f072rb_get_timer_update_irq(mal_hspec_timer_e timer);
 mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_hspec_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size);
 mal_error_e mal_hspec_stm32f072rb_get_port_afs(mal_hspec_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]);
 mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size);
+mal_error_e mal_hspec_stm32f072rb_get_valid_adc_ios(mal_hspec_adc_e adc, const mal_hspec_gpio_s **ios, uint8_t *size);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F072RB_H_ */

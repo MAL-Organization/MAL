@@ -428,6 +428,118 @@ static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
 	}
 };
 
+static const mal_hspec_gpio_s valid_adc0_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 0
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc1_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 1
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc2_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 2
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc3_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 3
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc4_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 4
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc5_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 5
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc6_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 6
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc7_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 7
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc8_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 0
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc9_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 1
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc10_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 0
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc11_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 1
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc12_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 2
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc13_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 3
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc14_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 4
+	}
+};
+
+static const mal_hspec_gpio_s valid_adc15_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 5
+	}
+};
+
 bool mal_hspec_stm32f072rb_is_pll_div_available(mal_hspec_system_clk_src_e source) {
 	return true;
 }
@@ -533,5 +645,81 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface, c
 	*rxs = valid_can1_rx_gpios;
 	*rxs_size = sizeof(valid_can1_rx_gpios) / sizeof(mal_hspec_gpio_s);
 
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f072rb_get_valid_adc_ios(mal_hspec_adc_e adc, const mal_hspec_gpio_s **ios, uint8_t *size) {
+	switch (adc) {
+		case MAL_HSPEC_ADC_0:
+			*ios = valid_adc0_gpios;
+			*size = sizeof(valid_adc0_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_1:
+			*ios = valid_adc1_gpios;
+			*size = sizeof(valid_adc1_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_2:
+			*ios = valid_adc2_gpios;
+			*size = sizeof(valid_adc2_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_3:
+			*ios = valid_adc3_gpios;
+			*size = sizeof(valid_adc3_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_4:
+			*ios = valid_adc4_gpios;
+			*size = sizeof(valid_adc4_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_5:
+			*ios = valid_adc5_gpios;
+			*size = sizeof(valid_adc5_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_6:
+			*ios = valid_adc6_gpios;
+			*size = sizeof(valid_adc6_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_7:
+			*ios = valid_adc7_gpios;
+			*size = sizeof(valid_adc7_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_8:
+			*ios = valid_adc8_gpios;
+			*size = sizeof(valid_adc8_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_9:
+			*ios = valid_adc9_gpios;
+			*size = sizeof(valid_adc9_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_10:
+			*ios = valid_adc10_gpios;
+			*size = sizeof(valid_adc10_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_11:
+			*ios = valid_adc11_gpios;
+			*size = sizeof(valid_adc11_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_12:
+			*ios = valid_adc12_gpios;
+			*size = sizeof(valid_adc12_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_13:
+			*ios = valid_adc13_gpios;
+			*size = sizeof(valid_adc13_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_14:
+			*ios = valid_adc14_gpios;
+			*size = sizeof(valid_adc14_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_ADC_15:
+			*ios = valid_adc15_gpios;
+			*size = sizeof(valid_adc15_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		default:
+			*ios = NULL;
+			break;
+	}
+	if (NULL == *ios) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
 	return MAL_ERROR_OK;
 }
