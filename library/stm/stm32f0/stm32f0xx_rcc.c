@@ -1067,11 +1067,17 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
         /* HSI oscillator clock divided by 2 selected as PLL clock entry */
         pllclk = (HSI_VALUE >> 1) * pllmull;
       }
+      else if (pllsource == 0x8000) {
+    	prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
+    	/* HSI clock with divide by 2. This is the STM32F04x, STM32F07x or
+    	 * STM32F09x. Devider an multiplier applies here. */
+    	pllclk = (HSI_VALUE * pllmull) / prediv1factor;
+      }
       else
       {
         prediv1factor = (RCC->CFGR2 & RCC_CFGR2_PREDIV1) + 1;
         /* HSE oscillator clock selected as PREDIV1 clock entry */
-        pllclk = (mal_external_clk_freq / prediv1factor) * pllmull;
+        pllclk = (mal_external_clk_freq * pllmull) / prediv1factor;
       }
       RCC_Clocks->SYSCLK_Frequency = pllclk;      
       break;

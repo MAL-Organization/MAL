@@ -185,7 +185,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		if (target_frequency > 24000000) {
 			FLASH_SetLatency(FLASH_Latency_1);
 		}
-		// Set HSE divider
+		// Set divider
 		if (mal_hspec_stm32f0_is_pll_div_available(clk_src)) {
 			RCC_PREDIV1Config(hse_prediv_reg_values[i]);
 		}
