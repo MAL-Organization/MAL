@@ -375,6 +375,14 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	mal_error_e result = MAL_ERROR_OK;;
+	// Format id and mask
+	if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type) {
+		filter->id = can_standard_fr_format(filter->id);
+		filter->mask = can_standard_fr_format(filter->mask);
+	} else {
+		filter->id = can_extended_fr_format(filter->id);
+		filter->mask = can_extended_fr_format(filter->mask);
+	}
 	// Disable interrupts
 	mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Find filter index
