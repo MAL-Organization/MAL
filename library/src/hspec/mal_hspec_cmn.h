@@ -178,8 +178,8 @@ typedef enum {
 
 typedef struct {
 	mal_hspec_i2c_e interface;
-	mal_hspec_gpio_s *scl_gpio;
-	mal_hspec_gpio_s *sda_gpio;
+	const mal_hspec_gpio_s *scl_gpio;
+	const mal_hspec_gpio_s *sda_gpio;
 	uint64_t bitrate;
 } mal_hspec_i2c_init_s;
 

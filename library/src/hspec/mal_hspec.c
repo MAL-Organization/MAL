@@ -98,7 +98,7 @@ mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer) {
 
 // I2C
 
-mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, mal_hspec_gpio_s *scl, mal_hspec_gpio_s *sda) {
+mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_hspec_gpio_s *scl, const mal_hspec_gpio_s *sda) {
 	uint8_t i;
 	mal_error_e result;
 	const mal_hspec_gpio_s *scls;

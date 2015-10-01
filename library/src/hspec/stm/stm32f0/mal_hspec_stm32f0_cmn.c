@@ -63,7 +63,7 @@ uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_port_e port) {
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_get_pin_af(mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function) {
+mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function) {
 	const mal_hspec_stm32f0_af_e (*afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE];
 	mal_error_e result;
 	int port_af, pin_af;
