@@ -28,9 +28,22 @@
 
 #include "std/mal_error.h"
 #include "hspec/mal_hspec.h"
+#include "stm32f0/stm32f0xx_misc.h"
+
+#define mal_hspec_stm32f0_i2c_disable_interrupt(interface) do {\
+	NVIC_DisableIRQ(mal_hspec_stm32f0_i2c_get_irq(interface)); \
+	__DSB(); \
+	__ISB(); \
+} while(0)
+
+#define mal_hspec_stm32f0_i2c_enable_interrupt(interface) do {\
+	NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(interface)); \
+} while(0)
 
 mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init);
 
 mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
+
+IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_hspec_i2c_e interface);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_ */

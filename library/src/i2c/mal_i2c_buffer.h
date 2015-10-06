@@ -1,7 +1,7 @@
 /*
- * mal_serial.c
+ * mal_i2c_buffer.h
  *
- *  Created on: May 30, 2015
+ *  Created on: Oct 3, 2015
  *      Author: Olivier
  */
 /*
@@ -23,4 +23,27 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_serial.h"
+#ifndef I2C_MAL_I2C_BUFFER_H_
+#define I2C_MAL_I2C_BUFFER_H_
+
+#include "mal_i2c.h"
+#include "std/mal_stdint.h"
+#include "std/mal_error.h"
+#include "utils/mal_circular_buffer.h"
+
+typedef struct {
+	mal_hspec_i2c_init_s i2c_init;
+	uint8_t *buffer;
+	uint64_t buffer_size;
+} mal_i2c_buffer_init_s;
+
+typedef struct {
+	mal_hspec_i2c_e interface;
+	mal_circular_buffer_s buffer;
+} mal_i2c_buffer_handle_s;
+
+mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle);
+
+mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_hspec_i2c_msg_s *msg);
+
+#endif /* I2C_MAL_I2C_BUFFER_H_ */

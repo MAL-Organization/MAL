@@ -1,7 +1,7 @@
 /*
- * mal_serial.c
+ * mal_pool.h
  *
- *  Created on: May 30, 2015
+ *  Created on: Oct 4, 2015
  *      Author: Olivier
  */
 /*
@@ -23,4 +23,28 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_serial.h"
+#ifndef UTILS_MAL_POOL_H_
+#define UTILS_MAL_POOL_H_
+
+#include "std/mal_bool.h"
+#include "std/mal_stdint.h"
+#include "std/mal_error.h"
+
+typedef struct {
+	bool is_free;
+	void *object;
+} mal_pool_object_s;
+
+typedef struct {
+	mal_pool_object_s *objects;
+	uint64_t object_size;
+	uint64_t size;
+} mal_pool_s;
+
+mal_error_e mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool);
+
+mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object);
+
+mal_error_e mal_pool_free(mal_pool_s *pool, void *object);
+
+#endif /* UTILS_MAL_POOL_H_ */

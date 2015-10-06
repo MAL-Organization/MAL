@@ -32,6 +32,10 @@
 
 #define mal_i2c_transfer(interface, msg) mal_hspec_i2c_transfer(interface, msg)
 
+#define mal_i2c_disable_interrupt(interface) mal_hspec_i2c_disable_interrupt(interface)
+
+#define mal_i2c_enable_interrupt(interface) mal_hspec_i2c_enable_interrupt(interface)
+
 mal_error_e mal_i2c_init_master(mal_hspec_i2c_init_s *init);
 
 #endif /* I2C_MAL_I2C_H_ */

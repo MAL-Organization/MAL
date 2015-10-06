@@ -204,7 +204,7 @@ typedef enum {
 
 typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_s;
 
-typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg);
+typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg);
 
 typedef struct MAL_HSPEC_I2C_MSG {
 	mal_hspec_i2c_packet_s packet;

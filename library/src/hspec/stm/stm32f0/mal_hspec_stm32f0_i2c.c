@@ -38,6 +38,7 @@ typedef enum {
 } i2c_states_e;
 
 typedef struct {
+	mal_hspec_i2c_e interface;
 	mal_hspec_i2c_msg_s *msg;
 	bool is_active;
 	volatile i2c_states_e state;
@@ -57,11 +58,13 @@ static void i2c_common_errors(i2c_handle_s *handle);
 static void i2c_common(i2c_handle_s *handle);
 
 static i2c_handle_s i2c_handle_1 = {
+	.interface = MAL_HSPEC_I2C_1,
 	.is_active = false,
 	.stm_handle = I2C1
 };
 
 static i2c_handle_s i2c_handle_2 = {
+		.interface = MAL_HSPEC_I2C_2,
 	.is_active = false,
 	.stm_handle = I2C2
 };
@@ -223,11 +226,7 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	i2c_init.I2C_Timing = (presc << 28) | (scldel << 20) | (sdadel << 16) | (scllh << 8) | scllh;
 	I2C_Init(i2c_typedef, &i2c_init);
 	// Enable interrupt
-	if (MAL_HSPEC_I2C_1 == init->interface) {
-		NVIC_EnableIRQ(I2C1_IRQn);
-	} else {
-		NVIC_EnableIRQ(I2C2_IRQn);
-	}
+	NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(init->interface));
 	I2C_ITConfig(i2c_typedef, I2C_IT_RXI|I2C_IT_TXI|I2C_IT_TCI|I2C_IT_NACKI|I2C_IT_ERRI|I2C_IT_STOPI, ENABLE);
 	// Enable I2C, finally!
 	I2C_Cmd(i2c_typedef, ENABLE);
@@ -249,6 +248,7 @@ mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_
 	if (i2c_handle->is_active) {
 		return MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
+	i2c_handle->is_active = true;
 	// Save msg
 	i2c_handle->msg = msg;
 
@@ -300,12 +300,12 @@ void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
 				// Transfer is incomplete
 				result = MAL_HSPEC_I2C_NACK_INCOMPLETE;
 			}
-			handle->msg->callback(&handle->msg->packet, result, &handle->msg);
+			handle->msg->callback(handle->interface, &handle->msg->packet, result, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		} else {
 			// Unknown sate for nack
-			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_NACK_INCOMPLETE, &handle->msg);
+			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_NACK_INCOMPLETE, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		}
@@ -393,7 +393,7 @@ void i2c_common(i2c_handle_s *handle) {
 			// We are in error
 			handle->state = I2C_STATE_ERROR;
 		} else {
-			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_SUCCESS, &handle->msg);
+			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_SUCCESS, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		}
@@ -404,7 +404,7 @@ void i2c_common(i2c_handle_s *handle) {
 		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_STOPF);
 		// Check if stop is expected
 		if (I2C_STATE_WAIT_STOP != handle->state) {
-			handle->msg->callback(&handle->msg->packet, MAL_HSPEC_I2C_BUS_ERROR, &handle->msg);
+			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_BUS_ERROR, &handle->msg);
 		}
 		// Check if a new message can be started
 		if (handle->msg != NULL) {
@@ -412,5 +412,13 @@ void i2c_common(i2c_handle_s *handle) {
 		} else {
 			handle->is_active = false;
 		}
+	}
+}
+
+IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_hspec_i2c_e interface) {
+	if (MAL_HSPEC_I2C_1 == interface) {
+		return I2C1_IRQn;
+	} else {
+		return I2C2_IRQn;
 	}
 }
