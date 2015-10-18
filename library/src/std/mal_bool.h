@@ -1,13 +1,9 @@
-/*
- * mal_bool.h
- *
- *  Created on: May 22, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
- *
- * This file is part of MAL.
+/**
+ * @file mal_bool.h
+ * @author Olivier Allaire
+ * @date May 22 2015
+ * @copyright Copyright (c) 2015 Olivier Allaire
+ * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +17,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ * @brief Place holder for stdbool. Ensures we have the right definitions
+ * regardless of the compiler.
  */
 
 #ifndef STD_MAL_BOOL_H_
