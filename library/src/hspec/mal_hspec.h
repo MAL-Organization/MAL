@@ -66,7 +66,7 @@
 // Clock mappings
 #define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
 
-#define mal_hspec_get_timer_input_clk(timer, clock) mal_hspec_stm32f0_get_timer_input_clk(timer, clock)
+#define mal_hspec_get_timer_input_clk(timer, clock) mal_hspec_stm32f0_timer_get_input_clk(timer, clock)
 
 // Timer mappings
 #define mal_hspec_get_valid_timers(timers, size) mal_hspec_stm32f0_get_valid_timers(timers, size)

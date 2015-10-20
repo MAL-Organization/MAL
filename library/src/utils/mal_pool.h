@@ -29,6 +29,12 @@
 #include "std/mal_error.h"
 
 /**
+ * @defgroup Pool
+ * @brief @copybrief mal_pool.h
+ * @{
+ */
+
+/**
  * This structure is the base constituent of the pool. It is a basic container
  * to track an object pointer and its state.
  */
@@ -78,5 +84,9 @@ mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object);
  * found.
  */
 mal_error_e mal_pool_free(mal_pool_s *pool, void *object);
+
+/**
+ * @}
+ */
 
 #endif /* UTILS_MAL_POOL_H_ */

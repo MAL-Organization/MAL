@@ -1,13 +1,9 @@
-/*
- * mal_hspec_cmn.h
- *
- *  Created on: May 3, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
- *
- * This file is part of MAL.
+/**
+ * @file mal_hspec_cmn.h
+ * @author Olivier Allaire
+ * @date May 3 2015
+ * @copyright Copyright (c) 2015 Olivier Allaire
+ * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +17,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ * @brief Common definitions to prevent circular dependencies.
  */
 
 #ifndef HSPEC_MAL_HSPEC_CMN_H_
@@ -29,29 +26,45 @@
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
 
-// Clock
+/**
+ * @addtogroup Clock
+ * @{
+ */
 
+/**
+ * @brief Possible clock sources for the MCU
+ */
 typedef enum {
-	MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL,
-	MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL,
-	MAL_HSPEC_SYSTEM_CLK_SRC_AUTO
+	MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL,//!< Source is an internal oscillator.
+	MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL,//!< Source is an external crystal or oscillator.
+	MAL_HSPEC_SYSTEM_CLK_SRC_AUTO     //!< MAL will select the source. Note it is safer to define a known source.
 } mal_hspec_system_clk_src_e;
 
+/**
+ * @brief Structure to define the system clock source.
+ */
 typedef struct {
-	uint64_t frequency;
-	mal_hspec_system_clk_src_e src;
+	uint64_t frequency; /**< The frequency in hertz.*/
+	mal_hspec_system_clk_src_e src; /**< The source of the frequency.*/
 } mal_hspec_system_clk_s;
 
-// GPIO
+/**
+ * @}
+ */
+
+/**
+ * @defgroup GPIO GPIO
+ * @{
+ */
 
 typedef enum {
-	MAL_HSPEC_PORT_A = 0,
-	MAL_HSPEC_PORT_B = 1,
-	MAL_HSPEC_PORT_C = 2,
-	MAL_HSPEC_PORT_D = 3,
-	MAL_HSPEC_PORT_E = 4,
-	MAL_HSPEC_PORT_F = 5,
-	MAL_HSPEC_PORT_SIZE = 6
+	MAL_HSPEC_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
+	MAL_HSPEC_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
+	MAL_HSPEC_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
+	MAL_HSPEC_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
+	MAL_HSPEC_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
+	MAL_HSPEC_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
+	MAL_HSPEC_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
 } mal_hspec_port_e;
 
 typedef struct {
@@ -97,28 +110,35 @@ typedef struct {
 	mal_hspec_gpio_event_callback_t callback;
 } mal_hspec_gpio_event_init_s;
 
-// TIMER
+/**
+ * @}
+ */
+
+/**
+ * @addtogroup Timer
+ * @{
+ */
 
 typedef enum {
-	MAL_HSPEC_TIMER_1 = 0,
-	MAL_HSPEC_TIMER_2 = 1,
-	MAL_HSPEC_TIMER_3 = 2,
-	MAL_HSPEC_TIMER_4 = 3,
-	MAL_HSPEC_TIMER_5 = 4,
-	MAL_HSPEC_TIMER_6 = 5,
-	MAL_HSPEC_TIMER_7 = 6,
-	MAL_HSPEC_TIMER_8 = 7,
-	MAL_HSPEC_TIMER_9 = 8,
-	MAL_HSPEC_TIMER_10 = 9,
-	MAL_HSPEC_TIMER_11 = 10,
-	MAL_HSPEC_TIMER_12 = 11,
-	MAL_HSPEC_TIMER_13 = 12,
-	MAL_HSPEC_TIMER_14= 13,
-	MAL_HSPEC_TIMER_15 = 14,
-	MAL_HSPEC_TIMER_16 = 15,
-	MAL_HSPEC_TIMER_17 = 16,
-	MAL_HSPEC_TIMER_SIZE = 17,
-	MAL_HSPEC_TIMER_ANY
+	MAL_HSPEC_TIMER_1 = 0,    //!< MAL_HSPEC_TIMER_1
+	MAL_HSPEC_TIMER_2 = 1,    //!< MAL_HSPEC_TIMER_2
+	MAL_HSPEC_TIMER_3 = 2,    //!< MAL_HSPEC_TIMER_3
+	MAL_HSPEC_TIMER_4 = 3,    //!< MAL_HSPEC_TIMER_4
+	MAL_HSPEC_TIMER_5 = 4,    //!< MAL_HSPEC_TIMER_5
+	MAL_HSPEC_TIMER_6 = 5,    //!< MAL_HSPEC_TIMER_6
+	MAL_HSPEC_TIMER_7 = 6,    //!< MAL_HSPEC_TIMER_7
+	MAL_HSPEC_TIMER_8 = 7,    //!< MAL_HSPEC_TIMER_8
+	MAL_HSPEC_TIMER_9 = 8,    //!< MAL_HSPEC_TIMER_9
+	MAL_HSPEC_TIMER_10 = 9,   //!< MAL_HSPEC_TIMER_10
+	MAL_HSPEC_TIMER_11 = 10,  //!< MAL_HSPEC_TIMER_11
+	MAL_HSPEC_TIMER_12 = 11,  //!< MAL_HSPEC_TIMER_12
+	MAL_HSPEC_TIMER_13 = 12,  //!< MAL_HSPEC_TIMER_13
+	MAL_HSPEC_TIMER_14= 13,   //!< MAL_HSPEC_TIMER_14
+	MAL_HSPEC_TIMER_15 = 14,  //!< MAL_HSPEC_TIMER_15
+	MAL_HSPEC_TIMER_16 = 15,  //!< MAL_HSPEC_TIMER_16
+	MAL_HSPEC_TIMER_17 = 16,  //!< MAL_HSPEC_TIMER_17
+	MAL_HSPEC_TIMER_SIZE = 17,//!< MAL_HSPEC_TIMER_SIZE
+	MAL_HSPEC_TIMER_ANY       //!< MAL_HSPEC_TIMER_ANY
 } mal_hspec_timer_e;
 
 typedef enum {
@@ -128,12 +148,15 @@ typedef enum {
 
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 
+/**
+ * @}
+ */
 // Serial
 
 typedef enum {
-	MAL_HSPEC_SERIAL_PORT_1 = 0,
-	MAL_HSPEC_SERIAL_PORT_2 = 1,
-	MAL_HSPEC_SERIAL_PORT_SIZE = 2
+	MAL_HSPEC_SERIAL_PORT_1 = 0,  //!< MAL_HSPEC_SERIAL_PORT_1
+	MAL_HSPEC_SERIAL_PORT_2 = 1,  //!< MAL_HSPEC_SERIAL_PORT_2
+	MAL_HSPEC_SERIAL_PORT_SIZE = 2//!< MAL_HSPEC_SERIAL_PORT_SIZE
 } mal_hspec_serial_port_e;
 
 typedef enum {
