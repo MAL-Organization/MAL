@@ -192,82 +192,144 @@ typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 /**
  * @}
  */
-// Serial
 
+/**
+ * @addtogroup Serial
+ * @{
+ */
+
+/**
+ * Possible serial ports.
+ */
 typedef enum {
 	MAL_HSPEC_SERIAL_PORT_1 = 0,  //!< MAL_HSPEC_SERIAL_PORT_1
 	MAL_HSPEC_SERIAL_PORT_2 = 1,  //!< MAL_HSPEC_SERIAL_PORT_2
 	MAL_HSPEC_SERIAL_PORT_SIZE = 2//!< MAL_HSPEC_SERIAL_PORT_SIZE
 } mal_hspec_serial_port_e;
 
+/**
+ * Possible word width.
+ */
 typedef enum {
-	MAL_HSPEC_SERIAL_DATA_7_BITS,
-	MAL_HSPEC_SERIAL_DATA_8_BITS,
-	MAL_HSPEC_SERIAL_DATA_9_BITS
+	MAL_HSPEC_SERIAL_DATA_7_BITS,//!< MAL_HSPEC_SERIAL_DATA_7_BITS
+	MAL_HSPEC_SERIAL_DATA_8_BITS,//!< MAL_HSPEC_SERIAL_DATA_8_BITS
+	MAL_HSPEC_SERIAL_DATA_9_BITS //!< MAL_HSPEC_SERIAL_DATA_9_BITS
 } mal_hspec_serial_data_size_e;
 
+/**
+ * Possible number of stop bits.
+ */
 typedef enum {
-	MAL_HSPEC_SERIAL_STOP_BITS_1,
-	MAL_HSPEC_SERIAL_STOP_BITS_2
+	MAL_HSPEC_SERIAL_STOP_BITS_1,//!< MAL_HSPEC_SERIAL_STOP_BITS_1
+	MAL_HSPEC_SERIAL_STOP_BITS_2 //!< MAL_HSPEC_SERIAL_STOP_BITS_2
 } mal_hspec_serial_stop_bits_e;
 
+/**
+ * Possible parity values.
+ */
 typedef enum {
-	MAL_HSPEC_SERIAL_PARITY,
-	MAL_HSPEC_SERIAL_NO_PARITY
+	MAL_HSPEC_SERIAL_PARITY,  //!< MAL_HSPEC_SERIAL_PARITY
+	MAL_HSPEC_SERIAL_NO_PARITY//!< MAL_HSPEC_SERIAL_NO_PARITY
 } mal_hspec_serial_parity_e;
 
+/**
+ * @brief Callback on byte transmitted.
+ * @param data The next data to transfer.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_serial_tx_callbacl_t)(uint16_t *data);
 
+/**
+ * @brief Callback on byte received.
+ * @param data The data received..
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_serial_rx_callbacl_t)(uint16_t data);
 
+/**
+ * Parameters to initialise a serial port.
+ */
 typedef struct {
-	mal_hspec_serial_port_e port;
-	mal_hspec_gpio_s *rx_gpio;
-	mal_hspec_gpio_s *tx_gpio;
-	uint64_t baudrate;
-	mal_hspec_serial_data_size_e data_size;
-	mal_hspec_serial_stop_bits_e stop_bits;
-	mal_hspec_serial_parity_e parity;
-	mal_hspec_serial_tx_callbacl_t tx_callback;
-	mal_hspec_serial_rx_callbacl_t rx_callback;
+	mal_hspec_serial_port_e port; /**< The port to initialise.*/
+	mal_hspec_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
+	mal_hspec_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
+	uint64_t baudrate; /**< The baudrate.*/
+	mal_hspec_serial_data_size_e data_size; /**< The word size.*/
+	mal_hspec_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
+	mal_hspec_serial_parity_e parity; /**< The parity setting.*/
+	mal_hspec_serial_tx_callbacl_t tx_callback; /**< Transmit completed callback.*/
+	mal_hspec_serial_rx_callbacl_t rx_callback; /**< Receive completed callback.*/
 } mal_hspec_serial_init_s;
 
-// I2C
+/**
+ * @}
+ */
 
+/**
+ * @addtogroup I2C
+ * @{
+ */
+
+/**
+ * Possible I2C interfaces.
+ */
 typedef enum {
-	MAL_HSPEC_I2C_1 = 0,
-	MAL_HSPEC_I2C_2 = 1,
-	MAL_HSPEC_I2C_SIZE = 2
+	MAL_HSPEC_I2C_1 = 0,  //!< MAL_HSPEC_I2C_1
+	MAL_HSPEC_I2C_2 = 1,  //!< MAL_HSPEC_I2C_2
+	MAL_HSPEC_I2C_SIZE = 2//!< MAL_HSPEC_I2C_SIZE
 } mal_hspec_i2c_e;
 
+/**
+ * I2C initialisation parameters.
+ */
 typedef struct {
-	mal_hspec_i2c_e interface;
-	const mal_hspec_gpio_s *scl_gpio;
-	const mal_hspec_gpio_s *sda_gpio;
-	uint64_t bitrate;
+	mal_hspec_i2c_e interface; /**< The I2C interface.*/
+	const mal_hspec_gpio_s *scl_gpio; /**< The GPIO of the scl pin.*/
+	const mal_hspec_gpio_s *sda_gpio; /**< The GPIO of the sda pin.*/
+	uint64_t bitrate; /**< The bitrate of the interface.*/
 } mal_hspec_i2c_init_s;
 
+/**
+ * The possible command types.
+ */
 typedef enum {
-	MAL_HSPEC_I2C_READ,
-	MAL_HSPEC_I2C_WRITE
+	MAL_HSPEC_I2C_READ,//!< MAL_HSPEC_I2C_READ
+	MAL_HSPEC_I2C_WRITE//!< MAL_HSPEC_I2C_WRITE
 } mal_hspec_i2c_cmd_e;
 
+/**
+ * This structure defines the core part of an I2C message.
+ */
 typedef struct {
-	volatile uint8_t address;
-	volatile uint8_t *buffer;
-	volatile uint8_t packet_size;
-	mal_hspec_i2c_cmd_e cmd;
+	volatile uint8_t address; /**< The address of the transaction.*/
+	volatile uint8_t *buffer; /**< The buffer containing the data for the transaction.*/
+	volatile uint8_t packet_size; /**< The number of words in the buffer.*/
+	mal_hspec_i2c_cmd_e cmd; /**< The type of transactions.*/
 } mal_hspec_i2c_packet_s;
 
+/**
+ * Possible I2C transactions results.
+ */
 typedef enum {
-	MAL_HSPEC_I2C_SUCCESS,
-	MAL_HSPEC_I2C_NACK_COMPLETE,
-	MAL_HSPEC_I2C_NACK_INCOMPLETE,
-	MAL_HSPEC_I2C_BUS_ERROR
+	MAL_HSPEC_I2C_SUCCESS,        //!< Successful transaction.
+	MAL_HSPEC_I2C_NACK_COMPLETE,  //!< Transaction completed, but device did not acknowledge.
+	MAL_HSPEC_I2C_NACK_INCOMPLETE,//!< Transaction is incomplete, and the device did not acknowledge.
+	MAL_HSPEC_I2C_BUS_ERROR       //!< An error occured on the bus during the transaction.
 } mal_hspec_i2c_result_e;
 
 typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_s;
 
+/**
+ * @brief This callback is used when a transaction completes.
+ * @param interface The interface the transaction completed on.
+ * @param packet The packet received.
+ * @param result The result of the transaction.
+ * @param next_msg The next message to send. This message will be sent immediately.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg);
 
 typedef struct MAL_HSPEC_I2C_MSG {
@@ -275,14 +337,17 @@ typedef struct MAL_HSPEC_I2C_MSG {
 	mal_hspec_i2c_callback_t callback;
 } mal_hspec_i2c_msg_s;
 
+/**
+ * @}
+ */
 // CAN
 
 #define MAL_HSPEC_CAN_MAX_DATA_SIZE	8
 
 typedef enum {
-	MAL_HSPEC_CAN_1 = 0,
-	MAL_HSPEC_CAN_2 = 1,
-	MAL_HSPEC_CAN_SIZE = 2
+	MAL_HSPEC_CAN_1 = 0,  //!< MAL_HSPEC_CAN_1
+	MAL_HSPEC_CAN_2 = 1,  //!< MAL_HSPEC_CAN_2
+	MAL_HSPEC_CAN_SIZE = 2//!< MAL_HSPEC_CAN_SIZE
 } mal_hspec_can_e;
 
 typedef enum {
