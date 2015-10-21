@@ -53,10 +53,13 @@ typedef struct {
  */
 
 /**
- * @defgroup GPIO GPIO
+ * @addtogroup GPIO
  * @{
  */
 
+/**
+ * Possible GPIO ports.
+ */
 typedef enum {
 	MAL_HSPEC_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
 	MAL_HSPEC_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
@@ -67,47 +70,72 @@ typedef enum {
 	MAL_HSPEC_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
 } mal_hspec_port_e;
 
+/**
+ * Defines a GPIO.
+ */
 typedef struct {
-	mal_hspec_port_e port;
-	uint8_t pin;
+	mal_hspec_port_e port; /**< The port of the GPIO.*/
+	uint8_t pin; /**< The pin of the GPIO.*/
 } mal_hspec_gpio_s;
 
+/**
+ * Possible GPIO directions.
+ */
 typedef enum {
-	MAL_GPIO_DIR_IN,
-	MAL_GPIO_DIR_OUT
+	MAL_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
+	MAL_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
 } mal_hspec_gpio_dir_e;
 
+/**
+ * Possible GPIO types.
+ */
 typedef enum {
-	MAL_GPIO_OUT_PP,
-	MAL_GPIO_OUT_OD
+	MAL_GPIO_OUT_PP,//!< Push-Pull
+	MAL_GPIO_OUT_OD //!< Open Drain
 } mal_hspec_gpio_out_e;
 
+/**
+ * Possible pull-up and pull-down values.
+ */
 typedef enum {
-	MAL_GPIO_PUPD_NONE,
-	MAL_GPIO_PUPD_PU,
-	MAL_GPIO_PUPD_PD
+	MAL_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
+	MAL_GPIO_PUPD_PU,  //!< Pull-up.
+	MAL_GPIO_PUPD_PD   //!< Pull-down.
 } mal_hspec_gpio_pupd_e;
 
+/**
+ * Parameters to initialise a GPIO.
+ */
 typedef struct {
-	mal_hspec_gpio_s gpio;
-	mal_hspec_gpio_dir_e direction;
-	mal_hspec_gpio_out_e output_config;
-	mal_hspec_gpio_pupd_e pupd;
-	uint64_t speed;
+	mal_hspec_gpio_s gpio; /**< The gpio to initialise.*/
+	mal_hspec_gpio_dir_e direction; /**< The direction of the GPIO.*/
+	mal_hspec_gpio_out_e output_config; /**< The output configuration (type) of the GPIO.*/
+	mal_hspec_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
+	uint64_t speed; /**< The refresh speed of the GPIO in hertz.*/
 } mal_hspec_gpio_init_s;
 
+/**
+ * Possible GPIO event triggers.
+ */
 typedef enum {
-	MAL_HSPEC_GPIO_EVENT_RISING,
-	MAL_HSPEC_GPIO_EVENT_FALLING,
-	MAL_HSPEC_GPIO_EVENT_BOTH
+	MAL_HSPEC_GPIO_EVENT_RISING, //!< MAL_HSPEC_GPIO_EVENT_RISING
+	MAL_HSPEC_GPIO_EVENT_FALLING,//!< MAL_HSPEC_GPIO_EVENT_FALLING
+	MAL_HSPEC_GPIO_EVENT_BOTH    //!< MAL_HSPEC_GPIO_EVENT_BOTH
 } mal_hspec_gpio_event_e;
 
+/**
+ * @brief GPIO event callback.
+ * @return Return a satus of the callback.
+ */
 typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
 
+/**
+ * Parameters to initialise an event.
+ */
 typedef struct {
-	const mal_hspec_gpio_s *gpio;
-	mal_hspec_gpio_event_e event;
-	mal_hspec_gpio_event_callback_t callback;
+	const mal_hspec_gpio_s *gpio; /**< The gpio for the event.*/
+	mal_hspec_gpio_event_e event; /**< The event that will trigger.*/
+	mal_hspec_gpio_event_callback_t callback; /**< The callback to execute upon event.*/
 } mal_hspec_gpio_event_init_s;
 
 /**
@@ -119,33 +147,46 @@ typedef struct {
  * @{
  */
 
+/**
+ * Possible timers to use. Note that not all timers are supported on all
+ * platforms.
+ */
 typedef enum {
-	MAL_HSPEC_TIMER_1 = 0,    //!< MAL_HSPEC_TIMER_1
-	MAL_HSPEC_TIMER_2 = 1,    //!< MAL_HSPEC_TIMER_2
-	MAL_HSPEC_TIMER_3 = 2,    //!< MAL_HSPEC_TIMER_3
-	MAL_HSPEC_TIMER_4 = 3,    //!< MAL_HSPEC_TIMER_4
-	MAL_HSPEC_TIMER_5 = 4,    //!< MAL_HSPEC_TIMER_5
-	MAL_HSPEC_TIMER_6 = 5,    //!< MAL_HSPEC_TIMER_6
-	MAL_HSPEC_TIMER_7 = 6,    //!< MAL_HSPEC_TIMER_7
-	MAL_HSPEC_TIMER_8 = 7,    //!< MAL_HSPEC_TIMER_8
-	MAL_HSPEC_TIMER_9 = 8,    //!< MAL_HSPEC_TIMER_9
-	MAL_HSPEC_TIMER_10 = 9,   //!< MAL_HSPEC_TIMER_10
-	MAL_HSPEC_TIMER_11 = 10,  //!< MAL_HSPEC_TIMER_11
-	MAL_HSPEC_TIMER_12 = 11,  //!< MAL_HSPEC_TIMER_12
-	MAL_HSPEC_TIMER_13 = 12,  //!< MAL_HSPEC_TIMER_13
-	MAL_HSPEC_TIMER_14= 13,   //!< MAL_HSPEC_TIMER_14
-	MAL_HSPEC_TIMER_15 = 14,  //!< MAL_HSPEC_TIMER_15
-	MAL_HSPEC_TIMER_16 = 15,  //!< MAL_HSPEC_TIMER_16
-	MAL_HSPEC_TIMER_17 = 16,  //!< MAL_HSPEC_TIMER_17
-	MAL_HSPEC_TIMER_SIZE = 17,//!< MAL_HSPEC_TIMER_SIZE
-	MAL_HSPEC_TIMER_ANY       //!< MAL_HSPEC_TIMER_ANY
+	MAL_HSPEC_TIMER_1 = 0,    //!< Timer 1
+	MAL_HSPEC_TIMER_2 = 1,    //!< Timer 2
+	MAL_HSPEC_TIMER_3 = 2,    //!< Timer 3
+	MAL_HSPEC_TIMER_4 = 3,    //!< Timer 4
+	MAL_HSPEC_TIMER_5 = 4,    //!< Timer 5
+	MAL_HSPEC_TIMER_6 = 5,    //!< Timer 6
+	MAL_HSPEC_TIMER_7 = 6,    //!< Timer 7
+	MAL_HSPEC_TIMER_8 = 7,    //!< Timer 8
+	MAL_HSPEC_TIMER_9 = 8,    //!< Timer 9
+	MAL_HSPEC_TIMER_10 = 9,   //!< Timer 10
+	MAL_HSPEC_TIMER_11 = 10,  //!< Timer 11
+	MAL_HSPEC_TIMER_12 = 11,  //!< Timer 12
+	MAL_HSPEC_TIMER_13 = 12,  //!< Timer 13
+	MAL_HSPEC_TIMER_14= 13,   //!< Timer 14
+	MAL_HSPEC_TIMER_15 = 14,  //!< Timer 15
+	MAL_HSPEC_TIMER_16 = 15,  //!< Timer 16
+	MAL_HSPEC_TIMER_17 = 16,  //!< Timer 17
+	MAL_HSPEC_TIMER_SIZE = 17,//!< Do not use.
+	MAL_HSPEC_TIMER_ANY       //!< Use to pick first available timer for initialisation.
 } mal_hspec_timer_e;
 
+/**
+ * Possible timer modes.
+ */
 typedef enum {
-	MAL_HSPEC_TIMER_MODE_TICK,
-	MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_TICK,//!< MAL_HSPEC_TIMER_MODE_TICK
+	MAL_HSPEC_TIMER_MODE_TASK //!< MAL_HSPEC_TIMER_MODE_TASK
 } mal_hspec_timer_mode_e;
 
+/**
+ * @brief Function pointer typdef for timer in task mode.
+ * @param timer Will provide the timer executing the callback.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 
 /**

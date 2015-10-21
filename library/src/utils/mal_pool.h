@@ -48,7 +48,7 @@ typedef struct {
  * all pool operations.
  */
 typedef struct {
-	mal_pool_object_s *objects; /**< This is an array of #mal_pool_objects_s.*/
+	mal_pool_object_s *objects; /**< This is an array of ::mal_pool_object_s.*/
 	uint64_t object_size; /**< This is the size of each object stored by #mal_pool_object_s in bytes*/
 	uint64_t size; /**< The size of the pool. In other words, the size of the objects array.*/
 } mal_pool_s;
