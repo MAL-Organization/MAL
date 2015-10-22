@@ -319,7 +319,9 @@ typedef enum {
 	MAL_HSPEC_I2C_BUS_ERROR       //!< An error occured on the bus during the transaction.
 } mal_hspec_i2c_result_e;
 
+/// @cond SKIP
 typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_s;
+/// @endcond
 
 /**
  * @brief This callback is used when a transaction completes.
@@ -332,83 +334,147 @@ typedef struct MAL_HSPEC_I2C_MSG mal_hspec_i2c_msg_s;
  */
 typedef mal_error_e (*mal_hspec_i2c_callback_t)(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg);
 
-typedef struct MAL_HSPEC_I2C_MSG {
-	mal_hspec_i2c_packet_s packet;
-	mal_hspec_i2c_callback_t callback;
+/**
+ * I2C message.
+ */
+typedef struct /** @cond SKIP*/MAL_HSPEC_I2C_MSG /** @endcond*/ {
+	mal_hspec_i2c_packet_s packet; /**< The packet containing the core of the message.*/
+	mal_hspec_i2c_callback_t callback; /**< The callback to execute once the transaction is complete.*/
 } mal_hspec_i2c_msg_s;
 
 /**
  * @}
  */
-// CAN
 
+/**
+ * @addtogroup CAN
+ * @{
+ */
+
+/**
+ * The maximum number of bytes possible in a CAN message.
+ */
 #define MAL_HSPEC_CAN_MAX_DATA_SIZE	8
 
+/**
+ * The possible CAN interfaces.
+ */
 typedef enum {
 	MAL_HSPEC_CAN_1 = 0,  //!< MAL_HSPEC_CAN_1
 	MAL_HSPEC_CAN_2 = 1,  //!< MAL_HSPEC_CAN_2
 	MAL_HSPEC_CAN_SIZE = 2//!< MAL_HSPEC_CAN_SIZE
 } mal_hspec_can_e;
 
+/**
+ * The possible ID types.
+ */
 typedef enum {
-	MAL_HSPEC_CAN_ID_STANDARD,
-	MAL_HSPEC_CAN_ID_EXTENDED
+	MAL_HSPEC_CAN_ID_STANDARD,//!< MAL_HSPEC_CAN_ID_STANDARD
+	MAL_HSPEC_CAN_ID_EXTENDED //!< MAL_HSPEC_CAN_ID_EXTENDED
 } mal_hspec_can_id_type_e;
 
+/**
+ * The variables related to a CAN message.
+ */
 typedef struct {
-	uint8_t data[MAL_HSPEC_CAN_MAX_DATA_SIZE];
-	uint8_t size;
-	uint32_t id;
-	mal_hspec_can_id_type_e id_type;
+	uint8_t data[MAL_HSPEC_CAN_MAX_DATA_SIZE]; /**< The array containing the data of a message.*/
+	uint8_t size; /**< The numbers of valid bytes in the data array.*/
+	uint32_t id; /**< The id of the message.*/
+	mal_hspec_can_id_type_e id_type; /**< The type of the id.*/
 } mal_hspec_can_msg_s;
 
+/**
+ * @brief This function will be called when a CAN message is transmitted.
+ * @param interface The interface the message was transmitted on.
+ * @param next_msg The next message to send.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_can_tx_callback_t)(mal_hspec_can_e interface, mal_hspec_can_msg_s *next_msg);
 
+/**
+ * @brief This function will be called when a CAN message is received.
+ * @param interface The interface the message was received on.
+ * @param next_msg The message received.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
 
+/**
+ * The parameters to initialise a CAN interface.
+ */
 typedef struct {
-	mal_hspec_can_e interface;
-	mal_hspec_gpio_s *tx_gpio;
-	mal_hspec_gpio_s *rx_gpio;
-	uint64_t bitrate;
-	mal_hspec_can_tx_callback_t tx_callback;
-	mal_hspec_can_rx_callback_t rx_callback;
+	mal_hspec_can_e interface; /**< The CAN interface to initialise.*/
+	mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
+	mal_hspec_can_tx_callback_t tx_callback; /**< The callback to be executed when a message is transmitted.*/
+	mal_hspec_can_rx_callback_t rx_callback; /**< The callback to be executed when a message is received.*/
 } mal_hspec_can_init_s;
 
+/**
+ * The varaibles of a CAN filter.
+ */
 typedef struct {
-	uint32_t id;
-	uint32_t mask;
-	mal_hspec_can_id_type_e id_type;
+	uint32_t id; /**< The id of the filter.*/
+	uint32_t mask; /**< The mask of the filter. Only bits of id matching with
+						bits equal to 1 of the filter will be considered.*/
+	mal_hspec_can_id_type_e id_type; /**< The type of ID to filter.*/
 } mal_hspec_can_filter_s;
 
-// ADC
+/**
+ * @}
+ */
 
+/**
+ * @addtogroup ADC
+ * @{
+ */
+
+/**
+ * The possible ADCs.
+ */
 typedef enum {
-	MAL_HSPEC_ADC_0 = 0,
-	MAL_HSPEC_ADC_1 = 1,
-	MAL_HSPEC_ADC_2 = 2,
-	MAL_HSPEC_ADC_3 = 3,
-	MAL_HSPEC_ADC_4 = 4,
-	MAL_HSPEC_ADC_5 = 5,
-	MAL_HSPEC_ADC_6 = 6,
-	MAL_HSPEC_ADC_7 = 7,
-	MAL_HSPEC_ADC_8 = 8,
-	MAL_HSPEC_ADC_9 = 9,
-	MAL_HSPEC_ADC_10 = 10,
-	MAL_HSPEC_ADC_11 = 11,
-	MAL_HSPEC_ADC_12 = 12,
-	MAL_HSPEC_ADC_13 = 13,
-	MAL_HSPEC_ADC_14 = 14,
-	MAL_HSPEC_ADC_15 = 15,
-	MAL_HSPEC_ADC_SIZE = 16
+	MAL_HSPEC_ADC_0 = 0,   //!< MAL_HSPEC_ADC_0
+	MAL_HSPEC_ADC_1 = 1,   //!< MAL_HSPEC_ADC_1
+	MAL_HSPEC_ADC_2 = 2,   //!< MAL_HSPEC_ADC_2
+	MAL_HSPEC_ADC_3 = 3,   //!< MAL_HSPEC_ADC_3
+	MAL_HSPEC_ADC_4 = 4,   //!< MAL_HSPEC_ADC_4
+	MAL_HSPEC_ADC_5 = 5,   //!< MAL_HSPEC_ADC_5
+	MAL_HSPEC_ADC_6 = 6,   //!< MAL_HSPEC_ADC_6
+	MAL_HSPEC_ADC_7 = 7,   //!< MAL_HSPEC_ADC_7
+	MAL_HSPEC_ADC_8 = 8,   //!< MAL_HSPEC_ADC_8
+	MAL_HSPEC_ADC_9 = 9,   //!< MAL_HSPEC_ADC_9
+	MAL_HSPEC_ADC_10 = 10, //!< MAL_HSPEC_ADC_10
+	MAL_HSPEC_ADC_11 = 11, //!< MAL_HSPEC_ADC_11
+	MAL_HSPEC_ADC_12 = 12, //!< MAL_HSPEC_ADC_12
+	MAL_HSPEC_ADC_13 = 13, //!< MAL_HSPEC_ADC_13
+	MAL_HSPEC_ADC_14 = 14, //!< MAL_HSPEC_ADC_14
+	MAL_HSPEC_ADC_15 = 15, //!< MAL_HSPEC_ADC_15
+	MAL_HSPEC_ADC_SIZE = 16//!< MAL_HSPEC_ADC_SIZE
 } mal_hspec_adc_e;
 
+/**
+ * The initialisation parameters of an ADC.
+ */
 typedef struct {
-	mal_hspec_adc_e adc;
-	const mal_hspec_gpio_s *gpio;
-	uint8_t bit_resolution;
+	mal_hspec_adc_e adc; /**< To ADC to initialise.*/
+	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the ADC.*/
+	uint8_t bit_resolution; /**< The resolution of the ADC.*/
 } mal_hspec_adc_init_s;
 
+/**
+ * @brief This callback will be executed when an ADC read is complete.
+ * @param adc The ADC the value was read from.
+ * @param value The value read.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
 typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64_t value);
+
+/**
+ * @}
+ */
 
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */
