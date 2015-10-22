@@ -27,6 +27,21 @@
 #define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_ADC_H_
 
 #include "hspec/mal_hspec.h"
+#include "stm32f0/stm32f0xx_misc.h"
+
+// Enable interrupts
+// 12 equates to ADC_IRQ. However, the name of the constant changes based
+// on the MCU because it is multiplex with other interrupts in some of them. It
+// is simpler to use the constant directly.
+#define mal_hspec_stm32f0_disable_adc_interrupt(interface) do {\
+	NVIC_DisableIRQ(12); \
+	__DSB(); \
+	__ISB(); \
+} while(0)
+
+#define mal_hspec_stm32f0_enable_adc_interrupt(interface) do {\
+	NVIC_EnableIRQ(12); \
+} while(0)
 
 mal_error_e mal_hspec_stm32f0_adc_init(mal_hspec_adc_init_s *init);
 mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value);
