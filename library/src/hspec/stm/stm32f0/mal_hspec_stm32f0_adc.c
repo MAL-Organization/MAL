@@ -231,3 +231,16 @@ void ADC1_COMP_IRQHandler(void) {
 		cb(adc, ADC_GetConversionValue(ADC1));
 	}
 }
+
+bool mal_hspec_stm32f0_disable_adc_interrupt(mal_hspec_adc_e adc) {
+	// 12 equates to ADC_IRQ. However, the name of the constant changes based
+	// on the MCU because it is multiplex with other interrupts in some of them. It
+	// is simpler to use the constant directly.
+	bool active = NVIC_GetActive(12);
+	// Enable interrupts
+	NVIC_DisableIRQ(12);
+	__DSB();
+	__ISB();
+
+	return active;
+}

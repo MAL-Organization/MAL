@@ -61,7 +61,7 @@
 
 #define mal_hspec_gpio_event_disable_interrupt(gpio) mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio)
 
-#define mal_hspec_gpio_event_enable_interrupt(gpio) mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio)
+#define mal_hspec_gpio_event_enable_interrupt(gpio, active) mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio, active)
 
 // Clock mappings
 #define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
@@ -75,7 +75,7 @@
 
 #define mal_hspec_disable_timer_interrupt(timer) mal_hspec_stm32f0_disable_timer_interrupt(timer)
 
-#define mal_hspec_enable_timer_interrupt(timer) mal_hspec_stm32f0_enable_timer_interrupt(timer)
+#define mal_hspec_enable_timer_interrupt(timer, active) mal_hspec_stm32f0_enable_timer_interrupt(timer, active)
 
 #define mal_hspec_timer_free(timer) mal_hspec_stm32f0_timer_free(timer)
 
@@ -89,7 +89,7 @@
 
 #define mal_hspec_i2c_disable_interrupt(interface) mal_hspec_stm32f0_i2c_disable_interrupt(interface)
 
-#define mal_hspec_i2c_enable_interrupt(interface) mal_hspec_stm32f0_i2c_enable_interrupt(interface)
+#define mal_hspec_i2c_enable_interrupt(interface, active) mal_hspec_stm32f0_i2c_enable_interrupt(interface, active)
 
 // CAN
 
@@ -103,7 +103,7 @@
 
 #define mal_hspec_disable_can_interrupt(interface) mal_hspec_stm32f0_disable_can_interrupt(interface)
 
-#define mal_hspec_enable_can_interrupt(interface) mal_hspec_stm32f0_enable_can_interrupt(interface)
+#define mal_hspec_enable_can_interrupt(interface, active) mal_hspec_stm32f0_enable_can_interrupt(interface, active)
 
 #define mal_hspec_can_remove_filter(interface, filter) mal_hspec_stm32f0_can_remove_filter(interface, filter)
 
@@ -128,6 +128,10 @@
 #define mal_hspec_adc_resolution(adc, resolution) mal_hspec_stm32f0_adc_resolution(adc, resolution)
 
 #define mal_hspec_adc_async_read(adc, callback) mal_hspec_stm32f0_adc_async_read(adc, callback)
+
+#define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
+
+#define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
 
 #else
 #error No hardware specfic family symbol specified...

@@ -422,3 +422,12 @@ IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_hspec_i2c_e interface) {
 		return I2C2_IRQn;
 	}
 }
+
+bool mal_hspec_stm32f0_i2c_disable_interrupt(mal_hspec_i2c_e interface) {
+	IRQn_Type irq = mal_hspec_stm32f0_i2c_get_irq(interface);
+	bool active = NVIC_GetActive(irq);
+	NVIC_DisableIRQ(irq);
+	__DSB();
+	__ISB();
+	return active;
+}

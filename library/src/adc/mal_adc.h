@@ -61,6 +61,24 @@
 #define mal_adc_async_read(adc, callback) mal_hspec_adc_async_read(adc, callback)
 
 /**
+ * @brief Disable interrupts for an ADC.
+ * @param adc The ADC to disable the interrupt. Should be of type
+ * ::mal_hspec_adc_e.
+ * @return Returns true if interrupt was active before disabling it.
+ */
+#define mal_adc_disable_interrupt(adc) mal_hspec_disable_adc_interrupt(adc)
+
+/**
+ * @brief Enable interrupts for an ADC.
+ * @param adc The ADC to enable the interrupt.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
+ * @return Nothing. This macro is meant to be standalone on a line. Do not
+ * equate or use as a condition.
+ */
+#define mal_adc_enable_interrupt(adc, active) mal_hspec_enable_adc_interrupt(adc, active)
+
+/**
  * @brief Initialise an ADC.
  * @param init The initialisation parameters.
  * @return Returns #MAL_ERROR_OK on success.

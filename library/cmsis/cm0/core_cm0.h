@@ -152,6 +152,7 @@
 #endif
 
 #include <stdint.h>                      /* standard types definitions                      */
+#include <stdbool.h>
 #include <cmsis/core_cmInstr.h>                /* Core Instruction Access                         */
 #include <cmsis/core_cmFunc.h>                 /* Core Function Access                            */
 
@@ -555,6 +556,12 @@ __STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 __STATIC_INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 {
   NVIC->ICER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
+}
+
+__STATIC_INLINE bool NVIC_GetActive(IRQn_Type IRQn)
+{
+  uint32_t mask = (1 << ((uint32_t)(IRQn) & 0x1F));
+  return (NVIC->ICER[0] & mask) == mask;
 }
 
 

@@ -228,7 +228,7 @@ mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_
 	}
 	mal_error_e result = MAL_ERROR_OK;;
 	// Disable interrupts to get true status of TX queue
-	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Check if queue is empty
 	if (((CAN->TSR & CAN_TSR_TME0) == CAN_TSR_TME0)) {
 		can_transmit_msg(msg);
@@ -237,7 +237,7 @@ mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(interface);
+	mal_hspec_stm32f0_enable_can_interrupt(interface, active);
 
 	return result;
 }
@@ -266,7 +266,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 	}
 	mal_error_e result = MAL_ERROR_OK;;
 	// Disable interrupts
-	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Find a free filter
 	uint8_t filter_index;
 	bool found = false;
@@ -336,7 +336,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		}
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1);
+	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1, active);
 
 	return result;
 }
@@ -384,7 +384,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		filter->mask = can_extended_fr_format(filter->mask);
 	}
 	// Disable interrupts
-	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Find filter index
 	uint8_t filter_index;
 	uint8_t std_filter_index;
@@ -453,7 +453,19 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		CAN_FilterInit(&filter_init);
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1);
+	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1, active);
 
 	return result;
+}
+
+bool mal_hspec_stm32f0_disable_can_interrupt(mal_hspec_can_e interface) {
+	// 30 equates to CAN_IRQ. However, the name of the constant changes based
+	// on the MCU because it is not available on all of them. It is simpler to
+	// use the constant directly.
+	bool active = NVIC_GetActive(30);
+	// Enable interrupts
+	NVIC_DisableIRQ(30);
+	__DSB();
+	__ISB();
+	return active;
 }
