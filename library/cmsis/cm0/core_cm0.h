@@ -534,6 +534,7 @@ typedef struct
 #define _SHP_IDX(IRQn)           ( ((((uint32_t)(IRQn) & 0x0F)-8) >>    2)     )
 #define _IP_IDX(IRQn)            (   ((uint32_t)(IRQn)            >>    2)     )
 
+extern volatile uint32_t nvic_status;
 
 /** \brief  Enable External Interrupt
 
@@ -543,7 +544,9 @@ typedef struct
  */
 __STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 {
-  NVIC->ISER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
+  uint32_t mask = (1 << ((uint32_t)(IRQn) & 0x1F));
+  NVIC->ISER[0] = mask;
+  nvic_status |= mask;
 }
 
 
@@ -555,13 +558,15 @@ __STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
  */
 __STATIC_INLINE void NVIC_DisableIRQ(IRQn_Type IRQn)
 {
-  NVIC->ICER[0] = (1 << ((uint32_t)(IRQn) & 0x1F));
+  uint32_t mask = (1 << ((uint32_t)(IRQn) & 0x1F));
+  NVIC->ICER[0] = mask;
+  nvic_status &= ~mask;
 }
 
 __STATIC_INLINE bool NVIC_GetActive(IRQn_Type IRQn)
 {
   uint32_t mask = (1 << ((uint32_t)(IRQn) & 0x1F));
-  return (NVIC->ICER[0] & mask) == mask;
+  return (nvic_status & mask) == mask;
 }
 
 

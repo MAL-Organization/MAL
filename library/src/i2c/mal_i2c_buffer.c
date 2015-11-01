@@ -98,6 +98,8 @@ static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_
 	if (NULL != cb_next_msg) {
 		i2c_interface_handles[interface].callback = cb_next_msg->callback;
 		cb_next_msg->callback = &i2c_callback;
+	} else {
+		i2c_interface_handles[interface].callback = NULL;
 	}
 	return MAL_ERROR_OK;
 }

@@ -116,7 +116,7 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	// Enable syscfg clock
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 	// Disable interrupt
-	bool active = mal_hspec_stm32f0_gpio_event_disable_interrupt(init->gpio);
+	mal_hspec_stm32f0_gpio_event_disable_interrupt(init->gpio);
 	// Configure EXTI source
 	SYSCFG_EXTILineConfig(get_exti_port_source(init->gpio->port), init->gpio->pin);
 	// Save callback
@@ -135,7 +135,7 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_hspec_stm32f0_gpio_event_enable_interrupt(init->gpio, active);
+	mal_hspec_stm32f0_gpio_event_enable_interrupt(init->gpio, true);
 
 	return MAL_ERROR_OK;
 }
