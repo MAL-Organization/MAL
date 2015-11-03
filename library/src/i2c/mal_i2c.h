@@ -46,8 +46,7 @@
  * @brief Disable an I2C interrupt.
  * @param interface The interface to disable the interrupt from of type
  * ::mal_hspec_i2c_e.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @return Returns true if interrupt was active before disabling it.
  */
 #define mal_i2c_disable_interrupt(interface) mal_hspec_i2c_disable_interrupt(interface)
 
@@ -55,10 +54,12 @@
  * @brief Enable an I2C interrupt.
  * @param interface The interface to enable the interrupt from of type
  * ::mal_hspec_i2c_e.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-#define mal_i2c_enable_interrupt(interface) mal_hspec_i2c_enable_interrupt(interface)
+#define mal_i2c_enable_interrupt(interface, active) mal_hspec_i2c_enable_interrupt(interface, active)
 
 /**
  * @brief Initialize an I2C interface as a master interface.

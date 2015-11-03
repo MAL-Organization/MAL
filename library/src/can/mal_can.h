@@ -61,19 +61,21 @@
 
 /**
  * @brief Disable interrupts for a CAN interface.
- * @param interface The interface to disable the interrupt.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @param interface The interface to disable the interrupt. Should be of type
+ * ::mal_hspec_can_e.
+ * @return Returns true if interrupt was active before disabling it.
  */
 #define mal_can_disable_interrupt(interface) mal_hspec_disable_can_interrupt(interface)
 
 /**
  * @brief Enable interrupts for a CAN interface.
  * @param interface The interface to enable the interrupt.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-#define mal_can_enable_interrupt(interface) mal_hspec_enable_can_interrupt(interface)
+#define mal_can_enable_interrupt(interface, active) mal_hspec_enable_can_interrupt(interface, active)
 
 /**
  * @brief Initialize a CAN interface.

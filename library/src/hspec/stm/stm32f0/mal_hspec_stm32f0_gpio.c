@@ -135,7 +135,7 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_hspec_stm32f0_gpio_event_enable_interrupt(init->gpio);
+	mal_hspec_stm32f0_gpio_event_enable_interrupt(init->gpio, true);
 
 	return MAL_ERROR_OK;
 }
@@ -203,7 +203,7 @@ static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
 
 mal_error_e mal_hspec_stm32f0_gpio_event_remove(const mal_hspec_gpio_s *gpio) {
 	// Disable interrupt
-	mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio);
+	bool active = mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio);
 	// Remove callback
 	gpio_event_callbacks[gpio->pin] = NULL;
 	// Disable EXTI
@@ -213,7 +213,16 @@ mal_error_e mal_hspec_stm32f0_gpio_event_remove(const mal_hspec_gpio_s *gpio) {
 	exti_init.EXTI_LineCmd = DISABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio);
+	mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio, active);
 
 	return MAL_ERROR_OK;
+}
+
+bool mal_hspec_stm32f0_gpio_event_disable_interrupt(const mal_hspec_gpio_s *gpio) {
+	IRQn_Type irq = mal_hspec_stm32f0_gpio_get_exti_irq((gpio)->pin);
+	bool active = NVIC_GetActive(irq);
+	NVIC_DisableIRQ(irq);
+	__DSB();
+	__ISB();
+	return active;
 }

@@ -34,6 +34,25 @@
  */
 
 /**
+ * @brief Disable interrupts for a timer.
+ * @param timer The timer to disable the interrupt. Should be of type
+ * ::mal_hspec_timer_e.
+ * @return Returns true if interrupt was active before disabling it.
+ */
+#define mal_timer_disable_interrupt(timer) mal_hspec_disable_timer_interrupt(timer)
+
+/**
+ * @brief Enable interrupts for a timer.
+ * @param timer The timer to enable the interrupt. Should be of type
+ * ::mal_hspec_timer_e.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
+ * @return Nothing. This macro is meant to be standalone on a line. Do not
+ * equate or use as a condition.
+ */
+#define mal_timer_enable_interrupt(timer, active) mal_hspec_enable_timer_interrupt(timer, active)
+
+/**
  * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
  * to read ticks.
  * @param timer The desired timer to initialize.

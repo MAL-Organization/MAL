@@ -80,9 +80,9 @@ void mal_timer_init(void) {
 
 uint64_t mal_timer_get_tick(mal_hspec_timer_e handle) {
 	uint64_t tick;
-	mal_hspec_disable_timer_interrupt(handle);
+	bool active = mal_timer_disable_interrupt(handle);
 	tick = timer_states[handle].tick_counter;
-	mal_hspec_enable_timer_interrupt(handle);
+	mal_timer_enable_interrupt(handle, active);
 	return tick;
 }
 

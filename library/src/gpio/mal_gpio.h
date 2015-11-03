@@ -63,18 +63,19 @@
 /**
  * @brief Disable interrupt for a GPIO event.
  * @param gpio A pointer of type ::mal_hspec_gpio_s.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @return Returns true if interrupt was active before disabling it.
  */
 #define mal_gpio_event_disable_interrupt(gpio) mal_hspec_gpio_event_disable_interrupt(gpio)
 
 /**
  * @brief Enable interrupt for a GPIO event.
  * @param gpio A pointer of type ::mal_hspec_gpio_s.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-#define mal_gpio_event_enable_interrupt(gpio) mal_hspec_gpio_event_enable_interrupt(gpio)
+#define mal_gpio_event_enable_interrupt(gpio, active) mal_hspec_gpio_event_enable_interrupt(gpio, active)
 
 /**
  * @brief Initialize a GPIO.

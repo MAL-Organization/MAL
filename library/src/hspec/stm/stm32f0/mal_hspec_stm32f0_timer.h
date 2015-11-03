@@ -29,15 +29,12 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec.h"
 #include "std/mal_stdint.h"
+#include "std/mal_bool.h"
 
-#define mal_hspec_stm32f0_disable_timer_interrupt(timer) do {\
-	NVIC_DisableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
-	__DSB(); \
-	__ISB(); \
-} while(0)
-
-#define mal_hspec_stm32f0_enable_timer_interrupt(timer) do {\
-	NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
+#define mal_hspec_stm32f0_enable_timer_interrupt(timer, active) do {\
+	if (active) { \
+		NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
+	} \
 } while(0)
 
 mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback);
@@ -45,5 +42,7 @@ mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequenc
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 
 mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer);
+
+bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

@@ -65,22 +65,22 @@ mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_
 
 mal_error_e mal_can_buffer_write(mal_can_buffer_handle_s *handle, mal_hspec_can_msg_s *msg) {
 	mal_error_e result;
-	mal_can_disable_interrupt(handle->interface);
+	bool active = mal_can_disable_interrupt(handle->interface);
 	result = mal_can_transmit(handle->interface, msg);
 	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
 		// Interface is busy writing, write to buffer
 		result = mal_circular_buffer_write((mal_circular_buffer_s*)&handle->tx_buffer, msg);
 	}
-	mal_can_enable_interrupt(handle->interface);
+	mal_can_enable_interrupt(handle->interface, active);
 
 	return result;
 }
 
 mal_error_e mal_can_buffer_read(mal_can_buffer_handle_s *handle, mal_hspec_can_msg_s *msg) {
 	mal_error_e result;
-	mal_can_disable_interrupt(handle->interface);
+	bool active = mal_can_disable_interrupt(handle->interface);
 	result = mal_circular_buffer_read((mal_circular_buffer_s*)&handle->rx_buffer, msg);
-	mal_can_enable_interrupt(handle->interface);
+	mal_can_enable_interrupt(handle->interface, active);
 
 	return result;
 }

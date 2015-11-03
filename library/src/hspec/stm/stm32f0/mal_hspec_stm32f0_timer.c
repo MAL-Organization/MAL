@@ -275,3 +275,12 @@ mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer) {
 
 	return MAL_ERROR_OK;
 }
+
+bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer) {
+	IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
+	bool active = NVIC_GetActive(irq);
+	NVIC_DisableIRQ(irq);
+	__DSB();
+	__ISB();
+	return active;
+}

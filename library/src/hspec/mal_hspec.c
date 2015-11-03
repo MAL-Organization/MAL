@@ -146,7 +146,7 @@ mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspe
 	uint8_t rxs_size;
 	bool found;
 	// Fetch IOs
-	result = mal_hspec_get_valid_i2c_ios(interface, &txs, &txs_size, &rxs, &rxs_size);
+	result = mal_hspec_get_valid_can_ios(interface, &txs, &txs_size, &rxs, &rxs_size);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

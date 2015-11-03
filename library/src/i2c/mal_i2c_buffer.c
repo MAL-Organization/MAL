@@ -56,7 +56,7 @@ mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_hand
 
 mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_hspec_i2c_msg_s *msg) {
 	mal_error_e result = MAL_ERROR_HARDWARE_UNAVAILABLE;
-	mal_i2c_disable_interrupt(handle->interface);
+	bool active = mal_i2c_disable_interrupt(handle->interface);
 	// Try to send message
 	if (NULL == i2c_interface_handles[handle->interface].callback) {
 		i2c_interface_handles[handle->interface].callback = msg->callback;
@@ -70,7 +70,7 @@ mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_hspec_i2c_
 	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
 		result = mal_circular_buffer_write(&handle->buffer, msg);
 	}
-	mal_i2c_enable_interrupt(handle->interface);
+	mal_i2c_enable_interrupt(handle->interface, active);
 	return result;
 }
 
@@ -98,6 +98,8 @@ static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_
 	if (NULL != cb_next_msg) {
 		i2c_interface_handles[interface].callback = cb_next_msg->callback;
 		cb_next_msg->callback = &i2c_callback;
+	} else {
+		i2c_interface_handles[interface].callback = NULL;
 	}
 	return MAL_ERROR_OK;
 }
