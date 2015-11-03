@@ -77,17 +77,17 @@
 #define mal_gpio_event_enable_interrupt(gpio) mal_hspec_gpio_event_enable_interrupt(gpio)
 
 /**
- * @brief Initialise a GPIO.
- * @param gpio_init Initialise parameters.
+ * @brief Initialize a GPIO.
+ * @param gpio_init Initialize parameters.
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_gpio_init(mal_hspec_gpio_init_s *gpio_init);
 
 /**
- * @brief Initialise a GPIO event. An event will allow you to execute code when
+ * @brief Initialize a GPIO event. An event will allow you to execute code when
  * a GPIO changes state.
- * @param gpio_init GPIO initialise parameters.
- * @param event_init Event initialise parameters.
+ * @param gpio_init GPIO initialize parameters.
+ * @param event_init Event initialize parameters.
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio_event_init_s *event_init);

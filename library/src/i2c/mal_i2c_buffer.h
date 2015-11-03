@@ -35,10 +35,10 @@
  */
 
 /**
- * The initialisation parameters of an I2C buffer.
+ * The initialization parameters of an I2C buffer.
  */
 typedef struct {
-	mal_hspec_i2c_init_s i2c_init; /**< The I2C interface initialisation parameters.*/
+	mal_hspec_i2c_init_s i2c_init; /**< The I2C interface initialization parameters.*/
 	uint8_t *buffer; /**< A pointer to an array of bytes. Should be a multiple of ::mal_hspec_i2c_msg_s.*/
 	uint64_t buffer_size; /**< The size of the buffer in bytes.*/
 } mal_i2c_buffer_init_s;
@@ -52,9 +52,9 @@ typedef struct {
 } mal_i2c_buffer_handle_s;
 
 /**
- * @brief Function to initialise an I2C buffer.
- * @param init The initialisation parameters.
- * @param handle A handle to initialise.
+ * @brief Function to initialize an I2C buffer.
+ * @param init The initialization parameters.
+ * @param handle A handle to initialize.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle);

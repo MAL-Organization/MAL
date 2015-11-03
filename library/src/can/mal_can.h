@@ -76,8 +76,8 @@
 #define mal_can_enable_interrupt(interface) mal_hspec_enable_can_interrupt(interface)
 
 /**
- * @brief Initialise a CAN interface.
- * @param init Initialisation parameters.
+ * @brief Initialize a CAN interface.
+ * @param init Initialization parameters.
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_can_init(mal_hspec_can_init_s *init);

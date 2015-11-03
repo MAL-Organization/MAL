@@ -46,12 +46,12 @@ typedef struct {
 } mal_circular_buffer_s;
 
 /**
- * @brief Initialise a circular buffer.
+ * @brief Initialize a circular buffer.
  * @param data_buffer a buffer of bytes that should multiples of the object you
  * want to use.
  * @param element_size The size of one object.
  * @param size  The size of the data buffer in bytes.
- * @param buffer The buffer to initialise.
+ * @param buffer The buffer to initialize.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer);

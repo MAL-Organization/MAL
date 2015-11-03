@@ -61,8 +61,8 @@
 #define mal_adc_async_read(adc, callback) mal_hspec_adc_async_read(adc, callback)
 
 /**
- * @brief Initialise an ADC.
- * @param init The initialisation parameters.
+ * @brief Initialize an ADC.
+ * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_adc_init(mal_hspec_adc_init_s *init);
