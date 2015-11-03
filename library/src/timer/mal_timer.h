@@ -53,9 +53,9 @@
 #define mal_timer_enable_interrupt(timer, active) mal_hspec_enable_timer_interrupt(timer, active)
 
 /**
- * @brief Initialise a timer as a simple tick counter. Use ::mal_timer_get_tick
+ * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
  * to read ticks.
- * @param timer The desired timer to initialise.
+ * @param timer The desired timer to initialize.
  * @param frequency The frequency to count at in hertz.
  * @param delta The allowed delta of frequency in hertz. This means the actual
  * frequency of the timer can be frequency +/- delta.
@@ -66,8 +66,8 @@
 mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_e *handle);
 
 /**
- * @brief Initialise a timer that periodically calls a function (task).
- * @param timer The desired timer to initialise.
+ * @brief Initialize a timer that periodically calls a function (task).
+ * @param timer The desired timer to initialize.
  * @param frequency The frequency to count at in hertz.
  * @param delta delta The allowed delta of frequency in hertz. This means the actual
  * frequency of the timer can be frequency +/- delta.
@@ -79,7 +79,7 @@ mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float 
 mal_error_e mal_timer_init_task(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback, mal_hspec_timer_e *handle);
 
 /**
- * @brief Return the tick of a timer when initialised in tick mode.
+ * @brief Return the tick of a timer when initialized in tick mode.
  * @param handle The timer to check for tick.
  * @return The tick count.
  */

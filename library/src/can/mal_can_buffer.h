@@ -44,10 +44,10 @@ typedef struct {
 } mal_can_buffer_handle_s;
 
 /**
- * Initialisation parameters of the CAN buffer.
+ * Initialization parameters of the CAN buffer.
  */
 typedef struct {
-	mal_hspec_can_e interface; /**< The CAN interface to initialise and use.*/
+	mal_hspec_can_e interface; /**< The CAN interface to initialize and use.*/
 	mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
 	mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
@@ -58,9 +58,9 @@ typedef struct {
 } mal_can_buffer_init_s;
 
 /**
- * @brief Initialise a CAN buffer and a CAN interface.
+ * @brief Initialize a CAN buffer and a CAN interface.
  * @param handle The handle of the CAN buffer.
- * @param init The initialisation parameters.
+ * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init);

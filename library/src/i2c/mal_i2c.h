@@ -62,8 +62,8 @@
 #define mal_i2c_enable_interrupt(interface, active) mal_hspec_i2c_enable_interrupt(interface, active)
 
 /**
- * @brief Initialise an I2C interface as a master interface.
- * @param init The initialisation parameters.
+ * @brief Initialize an I2C interface as a master interface.
+ * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_i2c_init_master(mal_hspec_i2c_init_s *init);

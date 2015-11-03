@@ -107,7 +107,7 @@ typedef enum {
  * Parameters to initialise a GPIO.
  */
 typedef struct {
-	mal_hspec_gpio_s gpio; /**< The gpio to initialise.*/
+	mal_hspec_gpio_s gpio; /**< The gpio to initialize.*/
 	mal_hspec_gpio_dir_e direction; /**< The direction of the GPIO.*/
 	mal_hspec_gpio_out_e output_config; /**< The output configuration (type) of the GPIO.*/
 	mal_hspec_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
@@ -130,7 +130,7 @@ typedef enum {
 typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
 
 /**
- * Parameters to initialise an event.
+ * Parameters to initialize an event.
  */
 typedef struct {
 	const mal_hspec_gpio_s *gpio; /**< The gpio for the event.*/
@@ -170,7 +170,7 @@ typedef enum {
 	MAL_HSPEC_TIMER_16 = 15,  //!< Timer 16
 	MAL_HSPEC_TIMER_17 = 16,  //!< Timer 17
 	MAL_HSPEC_TIMER_SIZE = 17,//!< Do not use.
-	MAL_HSPEC_TIMER_ANY       //!< Use to pick first available timer for initialisation.
+	MAL_HSPEC_TIMER_ANY       //!< Use to pick first available timer for initialization.
 } mal_hspec_timer_e;
 
 /**
@@ -249,10 +249,10 @@ typedef mal_error_e (*mal_hspec_serial_tx_callbacl_t)(uint16_t *data);
 typedef mal_error_e (*mal_hspec_serial_rx_callbacl_t)(uint16_t data);
 
 /**
- * Parameters to initialise a serial port.
+ * Parameters to initialize a serial port.
  */
 typedef struct {
-	mal_hspec_serial_port_e port; /**< The port to initialise.*/
+	mal_hspec_serial_port_e port; /**< The port to initialize.*/
 	mal_hspec_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
 	mal_hspec_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
 	uint64_t baudrate; /**< The baudrate.*/
@@ -282,7 +282,7 @@ typedef enum {
 } mal_hspec_i2c_e;
 
 /**
- * I2C initialisation parameters.
+ * I2C initialization parameters.
  */
 typedef struct {
 	mal_hspec_i2c_e interface; /**< The I2C interface.*/
@@ -316,7 +316,7 @@ typedef enum {
 	MAL_HSPEC_I2C_SUCCESS,        //!< Successful transaction.
 	MAL_HSPEC_I2C_NACK_COMPLETE,  //!< Transaction completed, but device did not acknowledge.
 	MAL_HSPEC_I2C_NACK_INCOMPLETE,//!< Transaction is incomplete, and the device did not acknowledge.
-	MAL_HSPEC_I2C_BUS_ERROR       //!< An error occured on the bus during the transaction.
+	MAL_HSPEC_I2C_BUS_ERROR       //!< An error occurred on the bus during the transaction.
 } mal_hspec_i2c_result_e;
 
 /// @cond SKIP
@@ -402,10 +402,10 @@ typedef mal_error_e (*mal_hspec_can_tx_callback_t)(mal_hspec_can_e interface, ma
 typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
 
 /**
- * The parameters to initialise a CAN interface.
+ * The parameters to initialize a CAN interface.
  */
 typedef struct {
-	mal_hspec_can_e interface; /**< The CAN interface to initialise.*/
+	mal_hspec_can_e interface; /**< The CAN interface to initialize.*/
 	mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
 	mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
@@ -414,7 +414,7 @@ typedef struct {
 } mal_hspec_can_init_s;
 
 /**
- * The varaibles of a CAN filter.
+ * The variables of a CAN filter.
  */
 typedef struct {
 	uint32_t id; /**< The id of the filter.*/
@@ -456,10 +456,10 @@ typedef enum {
 } mal_hspec_adc_e;
 
 /**
- * The initialisation parameters of an ADC.
+ * The initialization parameters of an ADC.
  */
 typedef struct {
-	mal_hspec_adc_e adc; /**< To ADC to initialise.*/
+	mal_hspec_adc_e adc; /**< To ADC to initialize.*/
 	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the ADC.*/
 	uint8_t bit_resolution; /**< The resolution of the ADC.*/
 } mal_hspec_adc_init_s;
