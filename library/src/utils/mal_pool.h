@@ -29,6 +29,12 @@
 #include "std/mal_error.h"
 
 /**
+ * @defgroup Pool
+ * @brief @copybrief mal_pool.h
+ * @{
+ */
+
+/**
  * This structure is the base constituent of the pool. It is a basic container
  * to track an object pointer and its state.
  */
@@ -42,13 +48,13 @@ typedef struct {
  * all pool operations.
  */
 typedef struct {
-	mal_pool_object_s *objects; /**< This is an array of #mal_pool_objects_s.*/
+	mal_pool_object_s *objects; /**< This is an array of ::mal_pool_object_s.*/
 	uint64_t object_size; /**< This is the size of each object stored by #mal_pool_object_s in bytes*/
 	uint64_t size; /**< The size of the pool. In other words, the size of the objects array.*/
 } mal_pool_s;
 
 /**
- * @brief This function will initialise an instance of a pool object.
+ * @brief This function will initialize an instance of a pool object.
  * @param object_pool This should be an array of #mal_pool_object_s.
  * @param pool_size The number of #mal_pool_object_s that fits in ::object_pool.
  * In other words, the size of the array.
@@ -56,7 +62,7 @@ typedef struct {
  * be an array of a complex structure or simply an array of integers. pool_size
  * should also indicate how many object can fit into the buffers.
  * @param object_size The size, in bytes, of a single object.
- * @param pool The pool to initialise.
+ * @param pool The pool to initialize.
  * @return Returns #MAL_ERROR_OK upon completion.
  */
 mal_error_e mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool);
@@ -78,5 +84,9 @@ mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object);
  * found.
  */
 mal_error_e mal_pool_free(mal_pool_s *pool, void *object);
+
+/**
+ * @}
+ */
 
 #endif /* UTILS_MAL_POOL_H_ */

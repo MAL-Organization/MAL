@@ -24,6 +24,11 @@
 #define STD_MAL_ERNO_H_
 
 /**
+ * @defgroup Standard
+ * @{
+ */
+
+/**
  * Possible error codes returned by all MAL functions.
  */
 typedef enum {
@@ -36,5 +41,9 @@ typedef enum {
 	MAL_ERROR_EMPTY = -6,               //!< MAL_ERROR_EMPTY
 	MAL_ERROR_USER = -7                 //!< MAL_ERROR_USER
 } mal_error_e;
+
+/**
+ * @}
+ */
 
 #endif /* STD_MAL_ERNO_H_ */
