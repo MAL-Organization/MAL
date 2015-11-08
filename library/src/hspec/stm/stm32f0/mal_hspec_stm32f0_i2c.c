@@ -259,12 +259,15 @@ mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_
 
 void i2c_start_transfer(i2c_handle_s *i2c_handle) {
 	i2c_handle->cmd = i2c_handle->msg->packet.cmd;
+	// Reset variables
+	i2c_handle->state = I2C_STATE_START;
+	i2c_handle->data_ptr = 0;
 	// Start transfer
 	uint32_t transfer_type = I2C_Generate_Start_Read;
 	if (MAL_HSPEC_I2C_WRITE == i2c_handle->cmd) {
 		transfer_type = I2C_Generate_Start_Write;
 	}
-	I2C_TransferHandling(i2c_handle->stm_handle, i2c_handle->msg->packet.address, i2c_handle->msg->packet.packet_size, I2C_SoftEnd_Mode, transfer_type);
+	I2C_TransferHandling(i2c_handle->stm_handle, i2c_handle->msg->packet.address << 1, i2c_handle->msg->packet.packet_size, I2C_SoftEnd_Mode, transfer_type);
 }
 
 void I2C1_IRQHandler(void) {
@@ -312,8 +315,8 @@ void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
 	}
 	// Transmitter status
 	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_TXIS) == SET) {
-		// Make sure we are receiving
-		if (I2C_STATE_TRANSMITTING != handle->state) {
+		// Make sure we are transmitting
+		if (I2C_STATE_TRANSMITTING != handle->state && I2C_STATE_START != handle->state) {
 			// Stop receiving
 			I2C_GenerateSTOP(handle->stm_handle, ENABLE);
 			// We are in error
@@ -330,6 +333,12 @@ void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
 			} else {
 				// Transmit next data
 				I2C_SendData(handle->stm_handle, handle->msg->packet.buffer[handle->data_ptr++]);
+				// Check if transmission should be complete
+				if (handle->data_ptr >= handle->msg->packet.packet_size) {
+					handle->state = I2C_STATE_WAITING_TRANSFER_COMPLETE;
+				} else {
+					handle->state = I2C_STATE_TRANSMITTING;
+				}
 			}
 		}
 	}
@@ -343,7 +352,7 @@ void i2c_interrupt_receive_handler(i2c_handle_s *handle) {
 	// Receiver status
 	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_RXNE) == SET) {
 		// Make sure we are receiving
-		if (I2C_STATE_RECEIVING != handle->state) {
+		if (I2C_STATE_RECEIVING != handle->state && I2C_STATE_START != handle->state) {
 			// Clear interrupt
 			I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_RXNE);
 			// Stop receiving
@@ -357,6 +366,8 @@ void i2c_interrupt_receive_handler(i2c_handle_s *handle) {
 			if (handle->data_ptr >= handle->msg->packet.packet_size) {
 				// Change state
 				handle->state = I2C_STATE_WAITING_TRANSFER_COMPLETE;
+			} else {
+				handle->state = I2C_STATE_RECEIVING;
 			}
 		}
 	}
@@ -385,7 +396,7 @@ void i2c_common_errors(i2c_handle_s *handle) {
 
 void i2c_common(i2c_handle_s *handle) {
 	// Check if transmission is complete
-	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_TCR) == SET) {
+	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_TC) == SET) {
 		// Transmit complete, stop transfer, clear interrupt with stop
 		I2C_GenerateSTOP(handle->stm_handle, ENABLE);
 		// Make sure it was expected

@@ -84,20 +84,20 @@ static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_
 	}
 	// Send next message. The first source is the callback of the message. If
 	// not, use the buffer.
-	next_msg = &cb_next_msg;
+	*next_msg = cb_next_msg;
 	if (NULL == cb_next_msg) {
-		mal_error_e result;
-		result = mal_circular_buffer_read(&i2c_interface_handles[interface].buffer_handle->buffer, &buffer_msg);
-		if (MAL_ERROR_OK == result) {
-			cb_next_msg = &buffer_msg;
+		mal_error_e mal_result;
+		mal_result = mal_circular_buffer_read(&i2c_interface_handles[interface].buffer_handle->buffer, &buffer_msg);
+		if (MAL_ERROR_OK == mal_result) {
+			*next_msg = &buffer_msg;
 		} else {
-			cb_next_msg = NULL;
+			*next_msg = NULL;
 		}
 	}
 	// Replace callback
-	if (NULL != cb_next_msg) {
-		i2c_interface_handles[interface].callback = cb_next_msg->callback;
-		cb_next_msg->callback = &i2c_callback;
+	if (NULL != *next_msg) {
+		i2c_interface_handles[interface].callback = (*next_msg)->callback;
+		(*next_msg)->callback = &i2c_callback;
 	} else {
 		i2c_interface_handles[interface].callback = NULL;
 	}
