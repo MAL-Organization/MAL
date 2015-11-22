@@ -95,6 +95,5 @@ static mal_error_e tx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *n
 }
 
 static mal_error_e rx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
-	mal_circular_buffer_write((mal_circular_buffer_s*)&handles[interface]->rx_buffer, msg);
-	return MAL_ERROR_OK;
+	return mal_circular_buffer_write((mal_circular_buffer_s*)&handles[interface]->rx_buffer, msg);
 }
