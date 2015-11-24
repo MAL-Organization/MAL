@@ -110,6 +110,11 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	for (prescaler = 1; prescaler <= 1024; prescaler++) {
 		// Calculate total time quantas
 		uint32_t tq_total = (clocks.PCLK_Frequency) / (prescaler * init->bitrate);
+		if (!tq_total) {
+			continue;
+		}
+		// Remove tq to account for sync segment.
+		tq_total--;
 		// TSEG1 must be at least 2 time quantas long because of it includes
 		// the propagation segment which takes 1 time quanta.
 		for (tseg1 = 2; tseg1 < 16; tseg1++) {
