@@ -83,3 +83,29 @@ mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer) {
 
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_circular_buffer_peek(mal_circular_buffer_s *buffer, uint64_t index, void *data) {
+	// Check for space
+	if (buffer->size <= 0) {
+		return MAL_ERROR_EMPTY;
+	}
+	// Check index
+	if (index >= buffer->maximum_size) {
+		return MAL_ERROR_OUT_OF_BOUND;
+	}
+	// Check if index contains data
+	if (index >= buffer->size) {
+		return MAL_ERROR_OUT_OF_BOUND;
+	}
+	// Compute actual buffer index
+	uint64_t buffer_index = buffer->output_pointer + index;
+	buffer_index = buffer_index % buffer->maximum_size;
+	// Read data
+	uint64_t i;
+	uint64_t offset = buffer->element_size * buffer->output_pointer;
+	for (i = 0; i < buffer->element_size; i++) {
+		((uint8_t*)data)[i] = buffer->buffer[offset + i];
+	}
+
+	return MAL_ERROR_OK;
+}

@@ -82,6 +82,17 @@ mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data);
 mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer);
 
 /**
+ * @brief This function will return the value at index in the buffer without
+ * popping the value.
+ * @param buffer The circular buffer to peek from.
+ * @param index The index to peek.
+ * @param data The returned data.
+ * @return Returns #MAL_ERROR_OK on success. If the buffer is empty, it will
+ * return #MAL_ERROR_EMPTY.
+ */
+mal_error_e mal_circular_buffer_peek(mal_circular_buffer_s *buffer, uint64_t index, void *data);
+
+/**
  * @}
  */
 

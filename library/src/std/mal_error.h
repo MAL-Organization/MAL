@@ -39,7 +39,8 @@ typedef enum {
 	MAL_ERROR_INIT_FAILED = -4,         //!< MAL_ERROR_INIT_FAILED
 	MAL_ERROR_FULL = -5,                //!< MAL_ERROR_FULL
 	MAL_ERROR_EMPTY = -6,               //!< MAL_ERROR_EMPTY
-	MAL_ERROR_USER = -7                 //!< MAL_ERROR_USER
+	MAL_ERROR_USER = -7,                //!< MAL_ERROR_USER
+	MAL_ERROR_OUT_OF_BOUND = -8			//!< MAL_ERROR_OUT_OF_BOUND
 } mal_error_e;
 
 /**
