@@ -102,7 +102,7 @@ mal_error_e mal_circular_buffer_peek(mal_circular_buffer_s *buffer, uint64_t ind
 	buffer_index = buffer_index % buffer->maximum_size;
 	// Read data
 	uint64_t i;
-	uint64_t offset = buffer->element_size * buffer->output_pointer;
+	uint64_t offset = buffer->element_size * buffer_index;
 	for (i = 0; i < buffer->element_size; i++) {
 		((uint8_t*)data)[i] = buffer->buffer[offset + i];
 	}
