@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github</groupId>
+	<artifactId>mal</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>mal</name>
+	<description>MAL library</description>
+
+	<properties>
+		<path.to.workspace>C:\Users\Kevin</path.to.workspace>
+		<path.to.eclipse>C:\eclipse</path.to.eclipse>
+	</properties>
+
+	<scm>
+		<connection>scm:git:https://github.com/oallaire/MAL.git</connection>
+		<url>https://github.com/oallaire/MAL.git</url>
+		<developerConnection>scm:git:https://github.com/oallaire/MAL.git</developerConnection>
+		<tag>master</tag>
+	</scm>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>build</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<echoproperties
+									destfile="${project.build.directory}/initialize.properties" />
+								<exec failifexecutionfails="true"
+									executable="${basedir}\build-scripts\compile.bat"
+									failonerror="true">
+									<arg value="${path.to.eclipse}" />
+									<arg value="${path.to.workspace}" />
+								</exec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

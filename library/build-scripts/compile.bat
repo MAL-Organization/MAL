@@ -1,0 +1,1 @@
+%1\eclipsec.exe --launcher.suppressErrors -nosplash -application org.eclipse.cdt.managedbuilder.core.headlessbuild -data "%2" -cleanBuild mal/STM32F072CB
