@@ -6,12 +6,9 @@ $build_configs = $args[2]
 $xml_file = '.cproject'
 $xml_path = "$pwd\$xml_file"
 $base_optimization_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
-#$optimization_levels = @("optimize","more","most","size","debug","none")
-$optimization_levels = @("none")
+$optimization_levels = @("optimize","more","most","size","debug","none")
 $debug_level_build = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.none"
 $debug_level_restore = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.max"
-
-#name="Debug level" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.none"
 
 
 function ChangeDebugLevelInXML
@@ -30,7 +27,7 @@ function ChangeDebugLevelInXML
 				if ($options_xml[$j].name -eq "Debug level") {
 					if ($options_xml[$j].value -ne $null) {
 						$options_xml[$j].value = $debug_level
-					break
+						break
 					}
 				}	
 			}
