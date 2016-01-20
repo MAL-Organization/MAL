@@ -5,12 +5,43 @@ $build_configs = $args[2]
 
 $xml_file = '.cproject'
 $xml_path = "$pwd\$xml_file"
-$base_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
-$optimization_levels = @("optimize","more","most","size","debug","none")
+$base_optimization_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
+#$optimization_levels = @("optimize","more","most","size","debug","none")
+$optimization_levels = @("none")
+$debug_level_build = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.none"
+$debug_level_restore = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.max"
+
+#name="Debug level" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.none"
+
+
+function ChangeDebugLevelInXML
+{
+	param([string]$xml_path, [string]$debug_level)
+	#Load XML
+	$xml = new-object system.xml.xmldocument
+	$xml.PreserveWhitespace = $true
+	$xml.Load($xml_path)
+	#Find proper storageModule and option that will control optimization level
+	$storagemodules_xml = $xml.cproject.storageModule.cconfiguration.storageModule
+	for ($i=0; $i -le $storagemodules_xml.length-1; $i++){
+		if ($storagemodules_xml[$i].moduleId -eq "cdtBuildSystem") {
+			$options_xml = $storagemodules_xml[$i].configuration.folderInfo.toolChain.option
+			for ($j=0; $j -le $options_xml.length-1; $j++) {
+				if ($options_xml[$j].name -eq "Debug level") {
+					if ($options_xml[$j].value -ne $null) {
+						$options_xml[$j].value = $debug_level
+					break
+					}
+				}	
+			}
+		}
+	}
+	$xml.Save($xml_path)
+}
 
 function ChangeOptimizationLevelInXML
 {
-	param([string]$xml_path, [string]$base_level, [string]$level)
+	param([string]$xml_path, [string]$base_optimization_level, [string]$level)
 	#Load XML
 	$xml = new-object system.xml.xmldocument
 	$xml.PreserveWhitespace = $true
@@ -22,9 +53,9 @@ function ChangeOptimizationLevelInXML
 			$options_xml = $storagemodules_xml[$i].configuration.folderInfo.toolChain.option
 			for ($j=0; $j -le $options_xml.length-1; $j++) {
 				if ($options_xml[$j].name -eq "Optimization Level") {
-					$options_xml[$j].value = $base_level+$level
+					$options_xml[$j].value = $base_optimization_level+$level
 					break
-				}
+				}	
 			}
 		}
 	}
@@ -59,14 +90,17 @@ function MoveLibInTarget {
 <#=========================================
                Compile script
 ===========================================#>
-
+#Set debug level to none
+ChangeDebugLevelInXML $xml_path $debug_level_build
 #Create parameter string
 $build_parameters = CreateBuildParametersString $build_configs $workspace_path
 #Create executable string
 $exe = $eclipse_path + "\eclipsec.exe"
 #For each optimisation level set level in XML, compile, save files at proper location
 for ($i=0; $i -le $optimization_levels.length-1; $i++){
-	ChangeOptimizationLevelInXML $xml_path $base_level $optimization_levels[$i]
+	ChangeOptimizationLevelInXML $xml_path $base_optimization_level $optimization_levels[$i]
 	& $exe $build_parameters
 	MoveLibInTarget $build_configs $optimization_levels[$i]
 }
+#Restore debug level to max
+ChangeDebugLevelInXML $xml_path $debug_level_restore
