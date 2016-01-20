@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github</groupId>
 	<artifactId>mal</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>mal</name>
@@ -49,11 +48,8 @@
 						<phase>compile</phase>
 						<configuration>
 							<target>
-								<echoproperties
-									destfile="${project.build.directory}/initialize.properties" />
-								<exec failifexecutionfails="true"
-									executable="powershell"
-									failonerror="true">
+								<echoproperties destfile="${project.build.directory}/initialize.properties" />
+								<exec failifexecutionfails="true" executable="powershell" failonerror="true">
 									<arg value="${basedir}\build-scripts\compile.ps1" />
 									<arg value="${path.to.eclipse}" />
 									<arg value="${path.to.workspace}" />
