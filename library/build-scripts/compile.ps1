@@ -3,11 +3,10 @@ $eclipse_path = $args[0]
 $workspace_path = $args[1]
 $build_configs = $args[2]
 
-$xml_path = '.cproject'
+$xml_file = '.cproject'
+$xml_path = "$pwd\$xml_file"
 $base_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
-#$optimization_levels = "none","optimize","more","most","size","debug"
-$optimization_levels = @("none")
-$path = "$pwd\$xml_path"
+$optimization_levels = @("optimize","more","most","size","debug","none")
 
 function ChangeOptimizationLevelInXML
 {
@@ -43,9 +42,18 @@ function CreateBuildParametersString {
 	$ParamArray += $workspace_path
 	for ($i=0; $i -le $build_configs.length-1; $i++) {
 		$ParamArray += "-cleanBuild"
-		$ParamArray += $build_configs[$i]
+		$ParamArray += "mal/" + $build_configs[$i]
 	}	
 	$ParamArray
+}
+
+function MoveLibInTarget {
+	param([array]$build_configs, [string]$optimization_level)
+	for ($i=0; $i -le $build_configs.length-1; $i++) {
+		$build_config = $build_configs[$i]
+		mkdir  "$pwd\target\library\$build_config\$optimization_level"
+		Copy-Item "$pwd\$build_config\libmal.a" -Destination "$pwd\target\library\$build_config\$optimization_level\."	
+	}
 }
 
 <#=========================================
@@ -56,9 +64,9 @@ function CreateBuildParametersString {
 $build_parameters = CreateBuildParametersString $build_configs $workspace_path
 #Create executable string
 $exe = $eclipse_path + "\eclipsec.exe"
-
 #For each optimisation level set level in XML, compile, save files at proper location
 for ($i=0; $i -le $optimization_levels.length-1; $i++){
-	ChangeOptimizationLevelInXML $path $base_level $optimization_levels[$i]
+	ChangeOptimizationLevelInXML $xml_path $base_level $optimization_levels[$i]
 	& $exe $build_parameters
+	MoveLibInTarget $build_configs $optimization_levels[$i]
 }

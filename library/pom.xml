@@ -57,7 +57,7 @@
 									<arg value="${basedir}\build-scripts\compile.ps1" />
 									<arg value="${path.to.eclipse}" />
 									<arg value="${path.to.workspace}" />
-									<arg value="@('mal/STM32F072CB','mal/STM32F072RB')" />
+									<arg value="@('STM32F072CB','STM32F072RB')" />
 								</exec>
 							</target>
 						</configuration>
