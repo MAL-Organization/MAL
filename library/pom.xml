@@ -70,7 +70,7 @@
 							<target>
 								<echoproperties destfile="${project.build.directory}/initialize.properties" />
 								<exec failifexecutionfails="true" executable="powershell" failonerror="true">
-									<arg value="${basedir}\build-scripts\compile.ps1" />
+									<arg value="${project.build.directory}\..\build-scripts\compile.ps1" />
 									<arg value="${path.to.eclipse}" />
 									<arg value="${path.to.workspace}" />
 									<arg value="@('STM32F072CB','STM32F072RB')" />
