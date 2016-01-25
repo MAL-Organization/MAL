@@ -72,7 +72,7 @@
 								<exec failifexecutionfails="true" executable="powershell" failonerror="true">
 									<arg value="${project.build.directory}\..\build-scripts\compile.ps1" />
 									<arg value="${path.to.eclipse}" />
-									<arg value="${project.build.directory}\..\..\workspace}" />
+									<arg value="${project.build.directory}\..\..\workspace" />
 									<arg value="@('STM32F072CB','STM32F072RB')" />
 									<arg value="${project.build.directory}" />
 								</exec>
