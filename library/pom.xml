@@ -63,6 +63,7 @@
 									<arg value="${path.to.eclipse}" />
 									<arg value="${path.to.workspace}" />
 									<arg value="@('STM32F072CB','STM32F072RB')" />
+									<arg value="${project.build.directory}" />
 								</exec>
 							</target>
 						</configuration>
