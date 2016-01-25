@@ -14,9 +14,9 @@
 	</properties>
 
 	<scm>
-		<connection>scm:git:git@github.com:oallaire/MAL.git</connection>
-        <url>scm:git:git@github.com:oallaire/MAL.git</url>
-        <developerConnection>scm:git:git@github.com:oallaire/MAL.git</developerConnection>
+		<connection>scm:git:https://github.com/MAL-Organization/MAL.git</connection>
+		<url>https://github.com/MAL-Organization/MAL.git</url>
+		<developerConnection>scm:git:https://github.com/MAL-Organization/MAL.git</developerConnection>
 		<tag>master</tag>
 	</scm>
 
