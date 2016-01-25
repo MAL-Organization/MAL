@@ -98,7 +98,6 @@ $exe = $eclipse_path + "\eclipsec.exe"
 #For each optimisation level set level in XML, compile, save files at proper location
 for ($i=0; $i -le $optimization_levels.length-1; $i++){
 	ChangeOptimizationLevelInXML $xml_path $base_optimization_level $optimization_levels[$i]
-	echo $build_parameters
 	& $exe $build_parameters
 	MoveLibInTarget $build_configs $optimization_levels[$i] $maven_build_directory
 }

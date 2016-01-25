@@ -2,14 +2,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github</groupId>
 	<artifactId>mal</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>mal</name>
 	<description>MAL library</description>
 
 	<properties>
-		<path.to.workspace>..\workspace</path.to.workspace>
+		<path.to.workspace>C:\workspace</path.to.workspace>
 		<path.to.eclipse>C:\eclipse</path.to.eclipse>
 	</properties>
 
@@ -17,7 +17,7 @@
 		<connection>scm:git:git@github.com:MAL-Organization/MAL.git</connection>
         <url>scm:git:git@github.com:MAL-Organization/MAL.git</url>
         <developerConnection>scm:git:git@github.com:MAL-Organization/MAL.git</developerConnection>
-		<tag>mal-0.0.6</tag>
+		<tag>master</tag>
 	</scm>
 
 	<build>
