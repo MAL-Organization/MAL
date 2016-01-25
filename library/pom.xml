@@ -45,6 +45,17 @@
 				<releaseProfiles>release</releaseProfiles>
 				<autoVersionSubmodules>true</autoVersionSubmodules>
 			  </configuration>
+			  <executions>
+				<execution>
+					<id>default</id>
+					<goals>
+						<goal>perform</goal>
+					</goals>
+					<configuration>
+						<pomFileName>library/pom.xml</pomFileName>
+					</configuration>
+				</execution>
+			  </executions>
 			</plugin>
 
 			<plugin>
