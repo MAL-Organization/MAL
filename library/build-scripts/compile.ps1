@@ -2,10 +2,10 @@
 $eclipse_path = $args[0]
 $workspace_path = $args[1]
 $build_configs = $args[2]
-$maven_build_directory = $args[3]
+$maven_base_dir = $args[3]
 
 $xml_file = '.cproject'
-$xml_path = "$pwd\$xml_file"
+$xml_path = "$maven_base_dir\$xml_file"
 $base_optimization_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
 #$optimization_levels = @("optimize","more","most","size","debug","none")
 $optimization_levels = @("none")
@@ -78,11 +78,11 @@ function CreateBuildParametersString {
 }
 
 function MoveLibInTarget {
-	param([array]$build_configs, [string]$optimization_level, [string]$maven_build_directory)
+	param([array]$build_configs, [string]$optimization_level, [string]$maven_base_dir)
 	for ($i=0; $i -le $build_configs.length-1; $i++) {
 		$build_config = $build_configs[$i]
-		mkdir  "$maven_build_directory\libraries\$build_config\$optimization_level"
-		Copy-Item "$maven_build_directory\..\$build_config\libmal.a" -Destination "$maven_build_directory\libraries\$build_config\$optimization_level\."	
+		mkdir  "$maven_base_dir\target\libraries\$build_config\$optimization_level"
+		Copy-Item "$maven_base_dir\$build_config\libmal.a" -Destination "$maven_base_dir\target\libraries\$build_config\$optimization_level\."	
 	}
 }
 
@@ -99,7 +99,7 @@ $exe = $eclipse_path + "\eclipsec.exe"
 for ($i=0; $i -le $optimization_levels.length-1; $i++){
 	ChangeOptimizationLevelInXML $xml_path $base_optimization_level $optimization_levels[$i]
 	& $exe $build_parameters
-	MoveLibInTarget $build_configs $optimization_levels[$i] $maven_build_directory
+	MoveLibInTarget $build_configs $optimization_levels[$i] $maven_base_dir
 }
 #Restore debug level to max
 ChangeDebugLevelInXML $xml_path $debug_level_restore
