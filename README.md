@@ -9,11 +9,14 @@ At the moment, the library only support 2 MCUs:
 Since we never have infinite time to work on projects , the build process is not yet fully automated.
 The "perform" step is not yet working.
 
-Doing a build still require manual steps.
+Doing a build still require manual steps in order to publish to GitHub
 * Once your environment is setup properly (see below) you can run the following command in the /library folder:
  * mvn -U -B clean release:clean release:prepare
  * This command will tag and commit the build, and will generate under /library/target a mal-X.X.X-library.zip package
-* Take the zip package and post it on GitHub in the release section
+* Once the build is done, we still need to upload it to GitHub, you should see the tag that was just created here: https://github.com/MAL-Organization/MAL/releases
+ * On the right click edit
+ * Take the /library/target a mal-X.X.X-library.zip package and upload it to GitHub
+ * Click Publish release
 
 ## Environment setup
 The build script run Eclipse in headless mode. You need a fully working Eclipse workspace in order to do a build. Here is how to get there.
@@ -30,7 +33,9 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
 * Select root directory, click Browse... > Select the library folder in the MAL repo > Ok > Finish
 * In the library folder, create a new file named "build.properties"
  * Enter the following lines and make sure to set the proper path to Eclipse and your workspace:
-  * path.to.eclipse=C:\\eclipse
-  * path.to.workspace=C:\\workspace
+``` 
+path.to.eclipse=C:\\eclipse
+path.to.workspace=C:\\workspace
+```
 * Don't forget to escape backslash using \\
 * Voila, you are ready to develop and build
