@@ -62,12 +62,20 @@ function ChangeOptimizationLevelInXML {
 #Change project location in eclipse for the deploy build inside /target/checkout
 function ChangeEclipseProjectLocation {
 	param([string]$workspace_path, [string]$maven_base_dir)
-	if ($maven_base_dir -contains "checkout") {
-		echo "================= CHANGING PROJECT LOCATION ============================="
-		echo "================= CHANGING PROJECT LOCATION ============================="
+	if ($maven_base_dir -like "*checkout*") {
 		echo "================= CHANGING PROJECT LOCATION ============================="
 		$location_file_path = "$workspace_path\.metadata\.plugins\org.eclipse.core.resources\.projects\mal\.location"
 		(Get-Content $location_file_path).replace('library', 'library/target/checkout/library') | Set-Content $location_file_path
+	}
+}
+
+#Change project location in eclipse back to what it was before
+function ChangeEclipseProjectLocationBackToNormal {
+	param([string]$workspace_path, [string]$maven_base_dir)
+	if ($maven_base_dir -like "*checkout*") {
+		echo "================= CHANGING PROJECT LOCATION BACK ============================="
+		$location_file_path = "$workspace_path\.metadata\.plugins\org.eclipse.core.resources\.projects\mal\.location"
+		(Get-Content $location_file_path).replace('library/target/checkout/library', 'library') | Set-Content $location_file_path
 	}
 }
 
@@ -115,3 +123,5 @@ for ($i=0; $i -le $optimization_levels.length-1; $i++){
 }
 #Restore debug level to max
 ChangeDebugLevelInXML $xml_path $debug_level_restore
+#Set Project location back to what it was originally
+ChangeEclipseProjectLocationBackToNormal $workspace_path $maven_base_dir
