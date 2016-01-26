@@ -1,0 +1,108 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github</groupId>
+	<artifactId>mal</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>mal</name>
+	<description>MAL library</description>
+
+	<properties>
+		<build.config>@('STM32F072CB','STM32F072RB')</build.config>
+	</properties>
+
+	<scm>
+		<connection>scm:git:git@github.com:MAL-Organization/MAL.git</connection>
+        <url>scm:git:git@github.com:MAL-Organization/MAL.git</url>
+        <developerConnection>scm:git:git@github.com:MAL-Organization/MAL.git</developerConnection>
+		<tag>master</tag>
+	</scm>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+			</plugin>
+			<plugin>
+			  <artifactId>maven-release-plugin</artifactId>
+			  <version>2.5.3</version>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+				  <execution>
+					<phase>initialize</phase>
+					<goals>
+					  <goal>read-project-properties</goal>
+					</goals>
+					<configuration>
+					  <files>
+						<file>build.properties</file>
+					  </files>
+					</configuration>
+				  </execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>build</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<echoproperties destfile="${project.build.directory}/initialize.properties" />
+								<exec failifexecutionfails="true" executable="powershell" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\compile.ps1" />
+									<arg value="${path.to.eclipse}" />
+									<arg value="${path.to.workspace}" />
+									<arg value="${build.config}" />
+									<arg value="${basedir}" />
+								</exec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+				  <execution>
+					<id>assembly</id>
+					<phase>package</phase>
+					<goals>
+					  <goal>single</goal>
+					</goals>
+				  </execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
