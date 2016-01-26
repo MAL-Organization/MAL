@@ -14,7 +14,7 @@ Doing a build still require manual steps in order to publish to GitHub
  * mvn -U -B clean release:clean release:prepare
  * This command will tag and commit the build, and will generate under /library/target a mal-X.X.X-library.zip package
 * Once the build is done, we still need to upload it to GitHub, you should see the tag that was just created here: https://github.com/MAL-Organization/MAL/releases
- * On the right click edit
+ * On the right of the new tag, click edit
  * Take the /library/target a mal-X.X.X-library.zip package and upload it to GitHub
  * Click Publish release
 

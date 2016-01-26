@@ -9,3 +9,5 @@ library/.settings/language.settings.xml
 library/.settings/org.eclipse.cdt.codan.core.prefs
 library/target/
 library/build.properties
+library/pom.xml.releaseBackup
+library/release.properties
