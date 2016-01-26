@@ -9,7 +9,7 @@
 	<description>MAL library</description>
 
 	<properties>
-		<path.to.workspace>..\workspace</path.to.workspace>
+		<path.to.workspace>C:\workspace</path.to.workspace>
 		<path.to.eclipse>C:\eclipse</path.to.eclipse>
 	</properties>
 
@@ -44,6 +44,7 @@
 				<useReleaseProfile>false</useReleaseProfile>
 				<releaseProfiles>release</releaseProfiles>
 				<autoVersionSubmodules>true</autoVersionSubmodules>
+				<workingDirectory>${basedir}</workingDirectory>
 			  </configuration>
 			  <executions>
 				<execution>
