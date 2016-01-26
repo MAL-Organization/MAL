@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github</groupId>
 	<artifactId>mal</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>mal</name>
@@ -16,7 +16,7 @@
 		<connection>scm:git:git@github.com:MAL-Organization/MAL.git</connection>
         <url>scm:git:git@github.com:MAL-Organization/MAL.git</url>
         <developerConnection>scm:git:git@github.com:MAL-Organization/MAL.git</developerConnection>
-		<tag>master</tag>
+		<tag>mal-1.0.0</tag>
 	</scm>
 
 	<build>
