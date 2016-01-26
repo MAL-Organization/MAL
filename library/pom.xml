@@ -44,7 +44,6 @@
 				<useReleaseProfile>false</useReleaseProfile>
 				<releaseProfiles>release</releaseProfiles>
 				<autoVersionSubmodules>true</autoVersionSubmodules>
-				<workingDirectory>${basedir}</workingDirectory>
 			  </configuration>
 			  <executions>
 				<execution>
@@ -52,9 +51,6 @@
 					<goals>
 						<goal>perform</goal>
 					</goals>
-					<configuration>
-						<pomFileName>library/pom.xml</pomFileName>
-					</configuration>
 				</execution>
 			  </executions>
 			</plugin>
