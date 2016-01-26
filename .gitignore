@@ -7,3 +7,5 @@ library/STM32F030RC/
 library/STM32F051R8/
 library/.settings/language.settings.xml
 library/.settings/org.eclipse.cdt.codan.core.prefs
+library/target/
+library/build.properties
