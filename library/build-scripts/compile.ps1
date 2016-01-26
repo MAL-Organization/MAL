@@ -61,7 +61,7 @@ function ChangeOptimizationLevelInXML {
 
 #Change project location in eclipse for the deploy build inside /target/checkout
 function ChangeEclipseProjectLocation {
-	param([string]$workspace_path [string]$maven_base_dir)
+	param([string]$workspace_path, [string]$maven_base_dir)
 	if ($maven_base_dir -contains "checkout") {
 		echo "================= CHANGING PROJECT LOCATION ============================="
 		echo "================= CHANGING PROJECT LOCATION ============================="
