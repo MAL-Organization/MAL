@@ -13,8 +13,7 @@ $debug_level_build = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.leve
 $debug_level_restore = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.max"
 
 
-function ChangeDebugLevelInXML
-{
+function ChangeDebugLevelInXML {
 	param([string]$xml_path, [string]$debug_level)
 	#Load XML
 	$xml = new-object system.xml.xmldocument
@@ -38,8 +37,7 @@ function ChangeDebugLevelInXML
 	$xml.Save($xml_path)
 }
 
-function ChangeOptimizationLevelInXML
-{
+function ChangeOptimizationLevelInXML {
 	param([string]$xml_path, [string]$base_optimization_level, [string]$level)
 	#Load XML
 	$xml = new-object system.xml.xmldocument
@@ -61,20 +59,32 @@ function ChangeOptimizationLevelInXML
 	$xml.Save($xml_path)
 }
 
+#Change project location in eclipse for the deploy build inside /target/checkout
+function ChangeEclipseProjectLocation {
+	param([string]$workspace_path [string]$maven_base_dir)
+	if ($maven_base_dir -contains "checkout") {
+		echo "================= CHANGING PROJECT LOCATION ============================="
+		echo "================= CHANGING PROJECT LOCATION ============================="
+		echo "================= CHANGING PROJECT LOCATION ============================="
+		$location_file_path = "$workspace_path\.metadata\.plugins\org.eclipse.core.resources\.projects\mal\.location"
+		(Get-Content $location_file_path).replace('library', 'library/target/checkout/library') | Set-Content $location_file_path
+	}
+}
+
 function CreateBuildParametersString {
 	param([array]$build_configs, [string]$workspace_path)
-	$ParamArray = @()
-	$ParamArray += "--launcher.suppressErrors"
-	$ParamArray += "-nosplash"
-	$ParamArray += "-application"
-	$ParamArray += "org.eclipse.cdt.managedbuilder.core.headlessbuild"
-	$ParamArray += "-data"
-	$ParamArray += $workspace_path
+	$parameters_array = @()
+	$parameters_array += "--launcher.suppressErrors"
+	$parameters_array += "-nosplash"
+	$parameters_array += "-application"
+	$parameters_array += "org.eclipse.cdt.managedbuilder.core.headlessbuild"
+	$parameters_array += "-data"
+	$parameters_array += $workspace_path
 	for ($i=0; $i -le $build_configs.length-1; $i++) {
-		$ParamArray += "-cleanBuild"
-		$ParamArray += "mal/" + $build_configs[$i]
+		$parameters_array += "-cleanBuild"
+		$parameters_array += "mal/" + $build_configs[$i]
 	}	
-	$ParamArray
+	$parameters_array
 }
 
 function MoveLibInTarget {
@@ -91,6 +101,8 @@ function MoveLibInTarget {
 ===========================================#>
 #Set debug level to none
 ChangeDebugLevelInXML $xml_path $debug_level_build
+#Chnage Eclipse project location if in deploy build
+ChangeEclipseProjectLocation $workspace_path $maven_base_dir
 #Create parameter string
 $build_parameters = CreateBuildParametersString $build_configs $workspace_path
 #Create executable string
