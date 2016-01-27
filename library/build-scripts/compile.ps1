@@ -58,6 +58,36 @@ function ChangeOptimizationLevelInXML {
 	$xml.Save($xml_path)
 }
 
+function RetreiveExcludeFromXML {
+	param([string]$xml_path, [string]$build_config, [string]$path)
+	#Load XML
+	$xml = new-object system.xml.xmldocument
+	$xml.PreserveWhitespace = $true
+	$xml.Load($xml_path)
+	#Find proper build_config
+	$storagemodules_xml = $xml.cproject.storageModule.cconfiguration.storageModule
+	for ($i=0; $i -le $storagemodules_xml.length-1; $i++){
+		if ($storagemodules_xml[$i].moduleId -eq "cdtBuildSystem") {
+			if ($storagemodules_xml[$i].configuration.name -eq $build_config) {
+				$entries_xml = $storagemodules_xml[$i].configuration.sourceEntries.entry
+				[string[]]$exclusions_array = @()
+				for ($j=0; $j -le $entries_xml.length-1; $j++) {
+					if ($entries_xml[$j].name -ne "" -and $entries_xml[$j].excluding -ne $null ) {
+						$exclusion = $entries_xml[$j].excluding.Replace("/","\").Split('|',[System.StringSplitOptions]::RemoveEmptyEntries)
+						for ($k=0; $k -le $exclusion.length-1; $k++) {
+							$exclusion[$k] = "*"+$exclusion[$k]+"*"
+						}
+						$exclusions_array += $exclusion
+					}
+				}
+				#Exclusion found stoping
+				break
+			}
+		}
+	}
+	$exclusions_array
+}
+
 function CreateBuildParametersString {
 	param([array]$build_configs, [string]$workspace_path)
 	$parameters_array = @()
@@ -83,9 +113,42 @@ function MoveLibInTarget {
 	}
 }
 
+function MoveHeadersInTarget {
+	param([array]$exclusions_array, [string]$maven_base_dir, [string]$build_config)
+	$headers = Get-ChildItem $maven_base_dir -recurse -include *.h | Select-Object Directory,Name
+	foreach ($file_obj in $headers) {
+		$copy = $true
+		
+		foreach ($exclusion in $exclusions_array){
+			if ($file_obj.Directory.FullName -like $exclusion) {
+				$copy = $false
+			}
+		}
+		# Exclude target where other header files will be copied
+		if ($file_obj.Directory.FullName -like "*target*") {
+			$copy = $false
+		}
+		
+		if ($copy -eq $true) {
+			$directory = $file_obj.Directory.FullName
+			$file_name = $file_obj.Name
+			$file_path = "$directory\$file_name"
+			
+			$destination_directory = $directory.Replace("$maven_base_dir","")
+			New-Item -ItemType directory -Force -Path "$maven_base_dir\target\libraries\$build_config\headers\$destination_directory" | Out-Null
+			Copy-Item "$file_path" -Destination "$maven_base_dir\target\libraries\$build_config\headers\$destination_directory\."
+		}
+	}
+}
+
 <#=========================================
                Compile script
 ===========================================#>
+#Retreive header for each build config
+for ($i=0; $i -lt $build_configs.length; $i++) {
+	$exclusions_array = RetreiveExcludeFromXML $xml_path $build_configs[$i]
+	MoveHeadersInTarget $exclusions_array $maven_base_dir $build_configs[$i]
+}
 #Set debug level to none
 ChangeDebugLevelInXML $xml_path $debug_level_build
 #Create parameter string
