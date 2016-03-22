@@ -24,6 +24,7 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
 * Install the GNU ARM Windows build tool by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/
 * If not present install Java JDK
 * If not present install Powershell 4 or newer (to find what version you have use the following command: $PSVersionTable.PSVersion )
+ *  You may need to run the command '''Set-ExecutionPolicy Unrestricted''' to allow powershell scripts to be ran.
 * Download and unzip latest Eclipse CDT package, found here: http://www.eclipse.org/downloads/packages/
 * Launch Eclipse and create a new workspace
 * Install GNU ARM Eclipse plugin by following this: http://gnuarmeclipse.github.io/plugins/install/
