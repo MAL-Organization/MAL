@@ -4,6 +4,9 @@ $workspace_path = $args[1]
 $build_configs = $args[2]
 $maven_base_dir = $args[3]
 
+# Include common functions
+. ($maven_base_dir + "/build-scripts/common.ps1")
+
 $xml_file = '.cproject'
 $xml_path = "$maven_base_dir\$xml_file"
 $base_optimization_level = "ilg.gnuarmeclipse.managedbuild.cross.option.optimization.level."
@@ -13,7 +16,7 @@ $debug_level_restore = "ilg.gnuarmeclipse.managedbuild.cross.option.debugging.le
 
 
 function ChangeDebugLevelInXML {
-	param([string]$xml_path, [string]$debug_level)
+	param([string]$xml_path, [string]$debug_level, [array]$configurations)
 	#Load XML
 	$xml = new-object system.xml.xmldocument
 	$xml.PreserveWhitespace = $true
@@ -22,6 +25,19 @@ function ChangeDebugLevelInXML {
 	$storagemodules_xml = $xml.cproject.storageModule.cconfiguration.storageModule
 	for ($i=0; $i -le $storagemodules_xml.length-1; $i++){
 		if ($storagemodules_xml[$i].moduleId -eq "cdtBuildSystem") {
+			#Make sure this is part of the configurations
+			$config_found = $false
+			for($j = 0; $j -lt $configurations.length; $j++) {
+				if ($storagemodules_xml[$i].configuration.name -eq $configurations[$j]) {
+					$config_found = $true
+					break
+				}
+			}
+			if ($config_found -eq $false) {
+				# Skip this change
+				continue
+			}
+			#Change level
 			$options_xml = $storagemodules_xml[$i].configuration.folderInfo.toolChain.option
 			for ($j=0; $j -le $options_xml.length-1; $j++) {
 				if ($options_xml[$j].name -eq "Debug level") {
@@ -37,7 +53,7 @@ function ChangeDebugLevelInXML {
 }
 
 function ChangeOptimizationLevelInXML {
-	param([string]$xml_path, [string]$base_optimization_level, [string]$level)
+	param([string]$xml_path, [string]$base_optimization_level, [string]$level, [array]$configurations)
 	#Load XML
 	$xml = new-object system.xml.xmldocument
 	$xml.PreserveWhitespace = $true
@@ -46,6 +62,19 @@ function ChangeOptimizationLevelInXML {
 	$storagemodules_xml = $xml.cproject.storageModule.cconfiguration.storageModule
 	for ($i=0; $i -le $storagemodules_xml.length-1; $i++){
 		if ($storagemodules_xml[$i].moduleId -eq "cdtBuildSystem") {
+			#Make sure this is part of the configurations
+			$config_found = $false
+			for($j = 0; $j -lt $configurations.length; $j++) {
+				if ($storagemodules_xml[$i].configuration.name -eq $configurations[$j]) {
+					$config_found = $true
+					break
+				}
+			}
+			if ($config_found -eq $false) {
+				# Skip this change
+				continue
+			}
+			#Change level
 			$options_xml = $storagemodules_xml[$i].configuration.folderInfo.toolChain.option
 			for ($j=0; $j -le $options_xml.length-1; $j++) {
 				if ($options_xml[$j].name -eq "Optimization Level") {
@@ -86,22 +115,6 @@ function RetreiveExcludeFromXML {
 		}
 	}
 	$exclusions_array
-}
-
-function CreateBuildParametersString {
-	param([array]$build_configs, [string]$workspace_path)
-	$parameters_array = @()
-	$parameters_array += "--launcher.suppressErrors"
-	$parameters_array += "-nosplash"
-	$parameters_array += "-application"
-	$parameters_array += "org.eclipse.cdt.managedbuilder.core.headlessbuild"
-	$parameters_array += "-data"
-	$parameters_array += $workspace_path
-	for ($i=0; $i -le $build_configs.length-1; $i++) {
-		$parameters_array += "-cleanBuild"
-		$parameters_array += "mal/" + $build_configs[$i]
-	}	
-	$parameters_array
 }
 
 function MoveLibInTarget {
@@ -150,15 +163,15 @@ for ($i=0; $i -lt $build_configs.length; $i++) {
 	MoveHeadersInTarget $exclusions_array $maven_base_dir $build_configs[$i]
 }
 #Set debug level to none
-ChangeDebugLevelInXML $xml_path $debug_level_build
+ChangeDebugLevelInXML $xml_path $debug_level_build $build_configs
 #Create parameter string
-$build_parameters = CreateBuildParametersString $build_configs $workspace_path
+$build_parameters = CreateBuildParametersString $build_configs $workspace_path "mal"
 #Create executable string
 $exe = $eclipse_path + "\eclipsec.exe"
 #For each optimisation level set level in XML, compile, save files at proper location
 for ($i=0; $i -le $optimization_levels.length-1; $i++){
 	$level = $optimization_levels[$i]
-	ChangeOptimizationLevelInXML $xml_path $base_optimization_level $level
+	ChangeOptimizationLevelInXML $xml_path $base_optimization_level $level $build_configs
 	Write-Output "Building library with optimization level $level..."
 	#Launch build and capture output to exit on errors
 	$output = & $exe $build_parameters *>&1

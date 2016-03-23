@@ -26,6 +26,7 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec.h"
 #include "hspec/mal_hspec_cmn.h"
+#include "std/mal_bool.h"
 
 // Clock
 

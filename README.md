@@ -22,16 +22,22 @@ Doing a build still require manual steps in order to publish to GitHub
 The build script run Eclipse in headless mode. You need a fully working Eclipse workspace in order to do a build. Here is how to get there.
 * Install last GNU ARM Toolchain by following this: http://gnuarmeclipse.github.io/toolchain/install/
 * Install the GNU ARM Windows build tool by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/
+* Install MinGW with the latest release here: https://sourceforge.net/projects/mingw/files/Installer/
+ * Install base and g++
+ * Add the following path to Path environment variable: [PathToMinGW]/bin
 * If not present install Java JDK
 * If not present install Powershell 4 or newer (to find what version you have use the following command: $PSVersionTable.PSVersion )
  *  You may need to run the command Set-ExecutionPolicy Unrestricted to allow powershell scripts to be ran.
 * Download and unzip latest Eclipse CDT package, found here: http://www.eclipse.org/downloads/packages/
 * Launch Eclipse and create a new workspace
 * Install GNU ARM Eclipse plugin by following this: http://gnuarmeclipse.github.io/plugins/install/
+* Install the Unit Test plugin for CDT from your CDT update site.
 * Make sure Global tools path are set properly by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/#check-the-global-tools-path
 * Checkout the MAL repo
 * In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
 * Select root directory, click Browse... > Select the library folder in the MAL repo > Ok > Finish
+* In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
+* Select root directory, click Browse... > Select the test folder in the MAL repo > Ok > Finish
 * In the library folder, create a new file named "build.properties"
  * Enter the following lines and make sure to set the proper path to Eclipse and your workspace:
 ``` 
