@@ -36,6 +36,8 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
 * Checkout the MAL repo
 * In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
 * Select root directory, click Browse... > Select the library folder in the MAL repo > Ok > Finish
+* In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
+* Select root directory, click Browse... > Select the test folder in the MAL repo > Ok > Finish
 * In the library folder, create a new file named "build.properties"
  * Enter the following lines and make sure to set the proper path to Eclipse and your workspace:
 ``` 
