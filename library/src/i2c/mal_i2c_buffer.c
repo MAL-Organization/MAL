@@ -25,6 +25,7 @@
 
 #include "std/mal_stdlib.h"
 #include "mal_i2c_buffer.h"
+#include "std/mal_bool.h"
 
 typedef struct {
 	volatile mal_hspec_i2c_callback_t callback;

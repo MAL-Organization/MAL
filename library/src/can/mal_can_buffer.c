@@ -26,6 +26,7 @@
 #include "mal_can_buffer.h"
 #include "can/mal_can.h"
 #include "std/mal_stdlib.h"
+#include "std/mal_bool.h"
 
 static mal_error_e tx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *next_msg);
 static mal_error_e rx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
