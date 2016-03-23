@@ -24,7 +24,7 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
 * Install the GNU ARM Windows build tool by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/
 * Install MinGW with the latest release here: https://sourceforge.net/projects/mingw/files/Installer/
  * Install base and g++
- * Add the following path to Path environment variable: <PathToMinGW>/bin
+ * Add the following path to Path environment variable: [PathToMinGW]/bin
 * If not present install Java JDK
 * If not present install Powershell 4 or newer (to find what version you have use the following command: $PSVersionTable.PSVersion )
  *  You may need to run the command Set-ExecutionPolicy Unrestricted to allow powershell scripts to be ran.
