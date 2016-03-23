@@ -45,4 +45,5 @@ path.to.eclipse=C:\\eclipse
 path.to.workspace=C:\\workspace
 ```
 * Don't forget to escape backslash using \\
+* Install git and make sure the path of the executable is the Path environment variable.
 * Voila, you are ready to develop and build
