@@ -9,7 +9,7 @@
 	<description>MAL library</description>
 
 	<properties>
-		<build.config>@('STM32F072CB','STM32F072RB')</build.config>
+		<build.config>@('STM32F072CB','STM32F072RB','MINGW')</build.config>
 	</properties>
 
 	<scm>
