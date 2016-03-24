@@ -232,9 +232,9 @@
 
 #define mal_hspec_adc_async_read(adc, callback) mal_hspec_mingw_adc_async_read(adc, callback)
 
-#define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
+#define mal_hspec_disable_adc_interrupt(adc) 1
 
-#define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
+#define mal_hspec_enable_adc_interrupt(adc, active)
 
 #else
 #error No hardware specfic family symbol specified...
