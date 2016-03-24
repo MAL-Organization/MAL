@@ -134,7 +134,7 @@
 #define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
 
 #elif defined(MAL_MINGW)
-//#include "stm/stm32f0/mal_hspec_stm32f0.h"
+#include "mingw/mal_hspec_mingw.h"
 //
 //// Startup mappings
 //#define mal_hspec_startup() mal_hspec_stm32f0_startup()
@@ -219,22 +219,22 @@
 //// UUID
 //
 //#define mal_hspec_uuid_read(uuid) mal_hspec_stm32f0_uuid_read(uuid)
-//
-//// ADC
-//
-//#define mal_hspec_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size)
-//
-//#define mal_hspec_adc_init(init) mal_hspec_stm32f0_adc_init(init)
-//
-//#define mal_hspec_adc_read(adc, value) mal_hspec_stm32f0_adc_read(adc, value)
-//
-//#define mal_hspec_adc_resolution(adc, resolution) mal_hspec_stm32f0_adc_resolution(adc, resolution)
-//
-//#define mal_hspec_adc_async_read(adc, callback) mal_hspec_stm32f0_adc_async_read(adc, callback)
-//
-//#define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
-//
-//#define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
+
+// ADC
+
+#define mal_hspec_get_valid_adc_ios(adc, ios, size) mal_hspec_mingw_get_valid_adc_ios(adc, ios, size)
+
+#define mal_hspec_adc_init(init) mal_hspec_mingw_adc_init(init)
+
+#define mal_hspec_adc_read(adc, value) mal_hspec_mingw_adc_read(adc, value)
+
+#define mal_hspec_adc_resolution(adc, resolution) mal_hspec_mingw_adc_resolution(adc, resolution)
+
+#define mal_hspec_adc_async_read(adc, callback) mal_hspec_mingw_adc_async_read(adc, callback)
+
+#define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
+
+#define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
 
 #else
 #error No hardware specfic family symbol specified...
