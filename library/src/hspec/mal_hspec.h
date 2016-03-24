@@ -193,23 +193,23 @@
 //#define mal_hspec_i2c_disable_interrupt(interface) mal_hspec_stm32f0_i2c_disable_interrupt(interface)
 //
 //#define mal_hspec_i2c_enable_interrupt(interface, active) mal_hspec_stm32f0_i2c_enable_interrupt(interface, active)
-//
-//// CAN
-//
-//#define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
-//
-//#define mal_hspec_can_init(init) mal_hspec_stm32f0_can_init(init)
-//
-//#define mal_hspec_can_transmit(interface, msg) mal_hspec_stm32f0_can_transmit(interface, msg)
-//
-//#define mal_hspec_can_add_filter(interface, filter) mal_hspec_stm32f0_can_add_filter(interface, filter)
-//
-//#define mal_hspec_disable_can_interrupt(interface) mal_hspec_stm32f0_disable_can_interrupt(interface)
-//
-//#define mal_hspec_enable_can_interrupt(interface, active) mal_hspec_stm32f0_enable_can_interrupt(interface, active)
-//
-//#define mal_hspec_can_remove_filter(interface, filter) mal_hspec_stm32f0_can_remove_filter(interface, filter)
-//
+
+// CAN
+
+#define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_mingw_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
+
+#define mal_hspec_can_init(init) mal_hspec_mingw_can_init(init)
+
+#define mal_hspec_can_transmit(interface, msg) mal_hspec_mingw_can_transmit(interface, msg)
+
+#define mal_hspec_can_add_filter(interface, filter) mal_hspec_mingw_can_add_filter(interface, filter)
+
+#define mal_hspec_disable_can_interrupt(interface) 1
+
+#define mal_hspec_enable_can_interrupt(interface, active)
+
+#define mal_hspec_can_remove_filter(interface, filter) mal_hspec_mingw_can_remove_filter(interface, filter)
+
 //// SERIAL
 //
 //#define mal_hspec_serial_init(init) mal_hspec_stm32f0_serial_init(init)
