@@ -215,10 +215,10 @@
 //#define mal_hspec_serial_init(init) mal_hspec_stm32f0_serial_init(init)
 //
 //#define mal_hspec_serial_transmit(port, data) mal_hspec_stm32f0_serial_transmit(port, data)
-//
-//// UUID
-//
-//#define mal_hspec_uuid_read(uuid) mal_hspec_stm32f0_uuid_read(uuid)
+
+// UUID
+
+#define mal_hspec_uuid_read(uuid) mal_hspec_mingw_uuid_read(uuid)
 
 // ADC
 
