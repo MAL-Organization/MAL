@@ -11,7 +11,7 @@ static mal_hspec_gpio_s valid_ios[MAL_HSPEC_PORT_SIZE][PORT_SIZE];
 static mal_hspec_port_e valid_ports[MAL_HSPEC_PORT_SIZE];
 static uint64_t valid_pins[MAL_HSPEC_PORT_SIZE];
 
-void mal_hspec_mingw_cmn_valid_ios(mal_hspec_gpio_s **ios, uint8_t *size) {
+void mal_hspec_mingw_cmn_valid_ios(const mal_hspec_gpio_s **ios, uint8_t *size) {
 	// Initialise IOs
 	for (int i = 0; i < MAL_HSPEC_PORT_SIZE; i++) {
 		for (int j = 0; j < PORT_SIZE; j++) {
