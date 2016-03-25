@@ -7,6 +7,7 @@
 
 #include "mal_hspec_mingw_adc.h"
 #include "mal_hspec_mingw_cmn.h"
+#include "std/mal_stdlib.h"
 
 typedef struct {
 	mal_hspec_adc_e adc;
