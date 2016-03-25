@@ -26,6 +26,10 @@ bool mal_hspec_mingw_get_gpio(const mal_hspec_gpio_s *gpio);
 
 mal_error_e mal_hspec_mingw_gpio_event_init(mal_hspec_gpio_event_init_s *init);
 
+mal_error_e mal_hspec_mingw_gpio_async_event(mal_hspec_gpio_s *gpio, mal_hspec_gpio_event_e event, mal_hspec_gpio_event_callback_t callback);
+
+void mal_hspec_mingw_gpio_do_async(mal_hspec_gpio_s gpio);
+
 mal_error_e mal_hspec_mingw_gpio_event_remove(const mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_GPIO_H_ */

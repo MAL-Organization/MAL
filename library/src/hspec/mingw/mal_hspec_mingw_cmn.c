@@ -24,7 +24,7 @@ void mal_hspec_mingw_cmn_valid_ios(const mal_hspec_gpio_s **ios, uint8_t *size) 
 	*size = MAL_HSPEC_PORT_SIZE * PORT_SIZE;
 }
 
-void mal_hspec_mingw_cmn_valid_ports(mal_hspec_port_e **ports, uint8_t *size) {
+void mal_hspec_mingw_cmn_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
 	// Initialise Ports
 	for(int i = 0; i < MAL_HSPEC_PORT_SIZE; i++) {
 		valid_ports[i] = i;
@@ -34,7 +34,7 @@ void mal_hspec_mingw_cmn_valid_ports(mal_hspec_port_e **ports, uint8_t *size) {
 	*size = MAL_HSPEC_PORT_SIZE;
 }
 
-void mal_hspec_mingw_cmn_valid_pins(uint64_t **pins) {
+void mal_hspec_mingw_cmn_valid_pins(const uint64_t **pins) {
 	// Initialise Pins
 	for(int i = 0; i < MAL_HSPEC_PORT_SIZE; i++) {
 		valid_pins[i] = ((uint64_t)1 << (uint64_t)PORT_SIZE) - (uint64_t)1;
