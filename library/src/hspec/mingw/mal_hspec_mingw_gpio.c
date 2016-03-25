@@ -52,16 +52,20 @@ mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_hspec_gpio_s *gpio, bool v
 	switch (gpio_array[gpio->port][gpio->pin].event) {
 		case (MAL_HSPEC_GPIO_EVENT_FALLING):
 				if (old_value == 1 && value == 0) {
-					mal_hspec_mingw_gpio_do_async(*gpio);
+					mal_hspec_mingw_gpio_execute_callback(*gpio);
 				}
 				break;
 		case (MAL_HSPEC_GPIO_EVENT_RISING):
 				if (old_value == 0 && value == 1) {
-					mal_hspec_mingw_gpio_do_async(*gpio);
+					mal_hspec_mingw_gpio_execute_callback(*gpio);
+				}
+				break;
+		case (MAL_HSPEC_GPIO_EVENT_BOTH):
+				if (old_value != value) {
+					mal_hspec_mingw_gpio_execute_callback(*gpio);
 				}
 				break;
 		default:
-				mal_hspec_mingw_gpio_do_async(*gpio);
 				break;
 	}
 
@@ -69,11 +73,10 @@ mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_hspec_gpio_s *gpio, bool v
 }
 
 mal_error_e mal_hspec_mingw_set_gpio(const mal_hspec_gpio_s *gpio, bool value) {
-	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_IN) {
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	gpio_array[gpio->port][gpio->pin].input = value;
 	gpio_array[gpio->port][gpio->pin].output = value;
+	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_OUT) {
+		gpio_array[gpio->port][gpio->pin].input = value;
+	}
 
 	return MAL_ERROR_OK;
 }
@@ -99,19 +102,10 @@ mal_error_e mal_hspec_mingw_gpio_event_init(mal_hspec_gpio_event_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_gpio_async_event(mal_hspec_gpio_s *gpio, mal_hspec_gpio_event_callback_t callback) {
-	if (NULL == gpio_array[gpio->port][gpio->pin].callback) {
-		gpio_array[gpio->port][gpio->pin].callback = callback;
-		return MAL_ERROR_OK;
-	}
-	return MAL_ERROR_HARDWARE_UNAVAILABLE;
-}
-
-void mal_hspec_mingw_gpio_do_async(mal_hspec_gpio_s gpio) {
+void mal_hspec_mingw_gpio_execute_callback(mal_hspec_gpio_s gpio) {
 	if (NULL != gpio_array[gpio.port][gpio.pin].callback) {
 		// Fetch callback
 		mal_hspec_gpio_event_callback_t cb = gpio_array[gpio.port][gpio.pin].callback;
-		gpio_array[gpio.port][gpio.pin].callback = NULL;
 		// Execute
 		cb();
 	}
