@@ -251,6 +251,10 @@ for ($i=0; $i -le $optimization_levels.length-1; $i++){
 		Exit 1
 		break
 	}
+	if ($lastexitcode -ne 0) {
+		Write-Host "EClipse build failed"
+		Exit $lastexitcode
+	}
 	MoveLibInTarget $build_configs $optimization_levels[$i] $maven_base_dir
 }
 #Restore debug level to max
