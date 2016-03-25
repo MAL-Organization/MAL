@@ -170,18 +170,18 @@
 //#define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
 //
 //#define mal_hspec_get_timer_input_clk(timer, clock) mal_hspec_stm32f0_timer_get_input_clk(timer, clock)
-//
-//// Timer mappings
-//#define mal_hspec_get_valid_timers(timers, size) mal_hspec_stm32f0_get_valid_timers(timers, size)
-//
-//#define mal_hspec_timer_init(timer, frequency, precision, callback) mal_hspec_stm32f0_timer_init(timer, frequency, precision, callback)
-//
-//#define mal_hspec_disable_timer_interrupt(timer) mal_hspec_stm32f0_disable_timer_interrupt(timer)
-//
-//#define mal_hspec_enable_timer_interrupt(timer, active) mal_hspec_stm32f0_enable_timer_interrupt(timer, active)
-//
-//#define mal_hspec_timer_free(timer) mal_hspec_stm32f0_timer_free(timer)
-//
+
+// Timer mappings
+#define mal_hspec_get_valid_timers(timers, size) mal_hspec_mingw_get_valid_timers(timers, size)
+
+#define mal_hspec_timer_init(timer, frequency, precision, callback) mal_hspec_mingw_timer_init(timer, frequency, precision, callback)
+
+#define mal_hspec_disable_timer_interrupt(timer) 1
+
+#define mal_hspec_enable_timer_interrupt(timer, active) (void)(timer);(void)(active);
+
+#define mal_hspec_timer_free(timer) mal_hspec_mingw_timer_free(timer)
+
 //// I2C mappings
 //
 //#define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
@@ -206,7 +206,7 @@
 
 #define mal_hspec_disable_can_interrupt(interface) 1
 
-#define mal_hspec_enable_can_interrupt(interface, active)
+#define mal_hspec_enable_can_interrupt(interface, active) (void)(interface);(void)(active);
 
 #define mal_hspec_can_remove_filter(interface, filter) mal_hspec_mingw_can_remove_filter(interface, filter)
 
@@ -234,7 +234,7 @@
 
 #define mal_hspec_disable_adc_interrupt(adc) 1
 
-#define mal_hspec_enable_adc_interrupt(adc, active)
+#define mal_hspec_enable_adc_interrupt(adc, active) (void)(adc);(void)(active);
 
 #else
 #error No hardware specfic family symbol specified...
