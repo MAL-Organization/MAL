@@ -182,17 +182,17 @@
 
 #define mal_hspec_timer_free(timer) mal_hspec_mingw_timer_free(timer)
 
-//// I2C mappings
-//
-//#define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
-//
-//#define mal_hspec_i2c_master_init(init) mal_hspec_stm32f0_i2c_master_init(init)
-//
-//#define mal_hspec_i2c_transfer(interface, msg) mal_hspec_stm32f0_i2c_transfer(interface, msg)
-//
-//#define mal_hspec_i2c_disable_interrupt(interface) mal_hspec_stm32f0_i2c_disable_interrupt(interface)
-//
-//#define mal_hspec_i2c_enable_interrupt(interface, active) mal_hspec_stm32f0_i2c_enable_interrupt(interface, active)
+// I2C mappings
+
+#define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_mingw_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
+
+#define mal_hspec_i2c_master_init(init) mal_hspec_mingw_i2c_master_init(init)
+
+#define mal_hspec_i2c_transfer(interface, msg) mal_hspec_mingw_i2c_transfer(interface, msg)
+
+#define mal_hspec_i2c_disable_interrupt(interface) 1
+
+#define mal_hspec_i2c_enable_interrupt(interface, active) (void)(interface);(void)(active);
 
 // CAN
 

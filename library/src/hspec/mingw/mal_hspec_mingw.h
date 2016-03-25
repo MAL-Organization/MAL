@@ -11,5 +11,6 @@
 #include "mal_hspec_mingw_adc.h"
 #include "mal_hspec_mingw_can.h"
 #include "mal_hspec_mingw_timer.h"
+#include "mal_hspec_mingw_i2c.h"
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */

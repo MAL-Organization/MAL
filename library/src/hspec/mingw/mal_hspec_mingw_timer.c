@@ -26,6 +26,11 @@ static mal_hspec_timer_e available_timers[MAL_HSPEC_TIMER_SIZE];
 static mingw_timer_s mingw_timers[MAL_HSPEC_TIMER_SIZE];
 
 mal_error_e mal_hspec_mingw_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size) {
+	// Initialize timers
+	for (int i = 0; i < MAL_HSPEC_TIMER_SIZE; i++) {
+		available_timers[i] = i;
+	}
+	// Set values
 	*timers = available_timers;
 	*size = MAL_HSPEC_TIMER_SIZE;
 	return MAL_ERROR_OK;
