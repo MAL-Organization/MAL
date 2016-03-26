@@ -135,17 +135,12 @@
 
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
-//
-//// Startup mappings
-//#define mal_hspec_startup() mal_hspec_stm32f0_startup()
-//
-//// GPIO mappings
-///**
-// * \def mal_hspec_set_gpio_dir(port, pin)
-// * \param[in] port The port defined by #mal_hspec_port_e.
-// * \param[in] pin  The pin number.
-// * \return Returns a #mal_error_e code.
-// */
+
+// Startup mappings
+#define mal_hspec_startup()
+
+// GPIO mappings
+
 #define mal_hspec_gpio_init(init) mal_hspec_mingw_gpio_init(init)
 
 #define mal_hspec_get_valid_ports(ports, size) mal_hspec_mingw_get_valid_ports(ports, size)
@@ -165,11 +160,11 @@
 #define mal_hspec_gpio_event_disable_interrupt(gpio) 1
 
 #define mal_hspec_gpio_event_enable_interrupt(gpio, active) (void)(gpio);(void)(active);
-//
-//// Clock mappings
-//#define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
-//
-//#define mal_hspec_get_timer_input_clk(timer, clock) mal_hspec_stm32f0_timer_get_input_clk(timer, clock)
+
+// Clock mappings
+#define mal_hspec_set_system_clk(clk) mal_hspec_mingw_set_system_clk(clk)
+
+#define mal_hspec_get_timer_input_clk(timer, clock)
 
 // Timer mappings
 #define mal_hspec_get_valid_timers(timers, size) mal_hspec_mingw_get_valid_timers(timers, size)

@@ -30,4 +30,6 @@ void mal_hspec_mingw_gpio_execute_callback(mal_hspec_gpio_s gpio);
 
 mal_error_e mal_hspec_mingw_gpio_event_remove(const mal_hspec_gpio_s *gpio);
 
+mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_hspec_gpio_s *gpio, bool value);
+
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_GPIO_H_ */

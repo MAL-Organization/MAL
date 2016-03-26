@@ -20,7 +20,6 @@ typedef struct {
 static mal_hspec_gpio_info_s gpio_array[MAL_HSPEC_PORT_SIZE][PORT_SIZE];
 
 mal_error_e mal_hspec_mingw_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
-	gpio_array[gpio_init->gpio.port][gpio_init->gpio.pin].input = false;
 	gpio_array[gpio_init->gpio.port][gpio_init->gpio.pin].output = false;
 	gpio_array[gpio_init->gpio.port][gpio_init->gpio.pin].direction = gpio_init->direction;
 	gpio_array[gpio_init->gpio.port][gpio_init->gpio.pin].event = MAL_HSPEC_GPIO_EVENT_BOTH;

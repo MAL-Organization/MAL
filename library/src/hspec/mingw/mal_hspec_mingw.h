@@ -13,5 +13,7 @@
 #include "mal_hspec_mingw_gpio.h"
 #include "mal_hspec_mingw_timer.h"
 #include "mal_hspec_mingw_i2c.h"
+#include "mal_hspec_mingw_clock.h"
+#include "mal_hspec_mingw_uuid.h"
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
