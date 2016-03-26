@@ -146,25 +146,25 @@
 // * \param[in] pin  The pin number.
 // * \return Returns a #mal_error_e code.
 // */
-//#define mal_hspec_gpio_init(init) mal_hspec_stm32f0_gpio_init(init)
-//
-//#define mal_hspec_get_valid_ports(ports, size) mal_hspec_stm32f0_get_valid_ports(ports, size)
-//
-//#define mal_hspec_get_valid_pins(pins) mal_hspec_stm32f0_get_valid_pins(pins)
-//
-//#define mal_hspec_set_gpio(gpio, value) mal_hspec_stm32f0_set_gpio(gpio, value)
-//
-//#define mal_hspec_get_gpio(gpio) mal_hspec_stm32f0_get_gpio(gpio)
-//
-//#define mal_hspec_toggle_gpio(gpio) mal_hspec_stm32f0_toggle_gpio(gpio)
-//
-//#define mal_hspec_gpio_event_init(init) mal_hspec_stm32f0_gpio_event_init(init)
-//
-//#define mal_hspec_gpio_event_remove(gpio) mal_hspec_stm32f0_gpio_event_remove(gpio)
-//
-//#define mal_hspec_gpio_event_disable_interrupt(gpio) mal_hspec_stm32f0_gpio_event_disable_interrupt(gpio)
-//
-//#define mal_hspec_gpio_event_enable_interrupt(gpio, active) mal_hspec_stm32f0_gpio_event_enable_interrupt(gpio, active)
+#define mal_hspec_gpio_init(init) mal_hspec_mingw_gpio_init(init)
+
+#define mal_hspec_get_valid_ports(ports, size) mal_hspec_mingw_get_valid_ports(ports, size)
+
+#define mal_hspec_get_valid_pins(pins) mal_hspec_mingw_get_valid_pins(pins)
+
+#define mal_hspec_set_gpio(gpio, value) mal_hspec_mingw_set_gpio(gpio, value)
+
+#define mal_hspec_get_gpio(gpio) mal_hspec_mingw_get_gpio(gpio)
+
+#define mal_hspec_toggle_gpio(gpio) mal_hspec_mingw_toggle_gpio(gpio)
+
+#define mal_hspec_gpio_event_init(init) mal_hspec_mingw_gpio_event_init(init)
+
+#define mal_hspec_gpio_event_remove(gpio) mal_hspec_mingw_gpio_event_remove(gpio)
+
+#define mal_hspec_gpio_event_disable_interrupt(gpio) 1
+
+#define mal_hspec_gpio_event_enable_interrupt(gpio, active) (void)(gpio);(void)(active);
 //
 //// Clock mappings
 //#define mal_hspec_set_system_clk(clk) mal_hspec_stm32f0_set_system_clk(clk)
