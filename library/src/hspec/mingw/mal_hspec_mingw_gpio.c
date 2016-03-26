@@ -82,13 +82,7 @@ mal_error_e mal_hspec_mingw_set_gpio(const mal_hspec_gpio_s *gpio, bool value) {
 }
 
 mal_error_e mal_hspec_mingw_toggle_gpio(const mal_hspec_gpio_s *gpio) {
-	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_IN) {
-			return MAL_ERROR_HARDWARE_INVALID;
-	}
-
-	mal_hspec_mingw_set_gpio(gpio, !gpio_array[gpio->port][gpio->pin].output);
-
-	return MAL_ERROR_OK;
+	return mal_hspec_mingw_set_gpio(gpio, !gpio_array[gpio->port][gpio->pin].output);
 }
 
 bool mal_hspec_mingw_get_gpio(const mal_hspec_gpio_s *gpio) {
