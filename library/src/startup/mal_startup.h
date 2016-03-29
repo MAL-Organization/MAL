@@ -29,5 +29,7 @@
 
 void mal_startup(void);
 
+void mal_startup_hardware(void);
+
 
 #endif /* STARTUP_MAL_STARTUP_H_ */

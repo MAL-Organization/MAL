@@ -90,7 +90,7 @@
 					<sourceEntries>
 						<entry excluding="cortexm|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -181,7 +181,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
+						<entry excluding="src/hspec/mingw|src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
 					</sourceEntries>
 				</configuration>
@@ -290,7 +290,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -401,7 +401,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -512,7 +512,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -624,7 +624,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -675,10 +675,11 @@
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1476565584" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="MAL_MINGW" />
+									<listOptionValue builtIn="false" value="PORT_SIZE=32" />
 								</option>
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.option.optimization.level.1447092094" name="Optimization Level" superClass="gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" valueType="enumerated" />
 								<option id="gnu.c.compiler.option.debugging.level.1894229898" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated" />
-								<option id="gnu.c.compiler.option.dialect.std.98591103" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.default" valueType="enumerated" />
+								<option id="gnu.c.compiler.option.dialect.std.98591103" name="Language standard" superClass="gnu.c.compiler.option.dialect.std" useByScannerDiscovery="true" value="gnu.c.compiler.dialect.c99" valueType="enumerated" />
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1640772827" superClass="cdt.managedbuild.tool.gnu.c.compiler.input" />
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.base.701437175" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.base" />
@@ -699,12 +700,17 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders" />
 	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="STM32F030RC" />
+		<configuration configurationName="STM32F072CB" />
+		<configuration configurationName="STM32F072RB" />
+		<configuration configurationName="MINGW" />
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/mal" />
 		</configuration>
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/mal" />
 		</configuration>
+		<configuration configurationName="STM32F051R8" />
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings">
 		<doc-comment-owner id="org.eclipse.cdt.ui.doxygen">

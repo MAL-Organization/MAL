@@ -28,6 +28,13 @@
 
 #include "hspec/mal_hspec.h"
 
+/**
+ * @brief Fetch the uuid of the device. This should be unique ID for the device
+ * of 64 bits.
+ * @param uuid This is a pointer to uint64_t variable. The uuid will be stored
+ * to this location.
+ * @return Returns MAL_ERROR_OK on success.
+ */
 #define mal_uuid_read(uuid) mal_hspec_uuid_read(uuid)
 
 #endif /* UUID_MAL_UUID_H_ */

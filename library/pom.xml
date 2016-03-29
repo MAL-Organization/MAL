@@ -2,14 +2,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github</groupId>
 	<artifactId>mal</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>mal</name>
 	<description>MAL library</description>
 
 	<properties>
-		<build.config>@('STM32F072CB','STM32F072RB')</build.config>
+		<build.config>@('STM32F072CB','STM32F072RB','MINGW')</build.config>
 	</properties>
 
 	<scm>

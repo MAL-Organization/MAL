@@ -28,13 +28,17 @@
 extern void mal_timer_init(void);
 extern int main(void);
 
-void __attribute__ ((section(".after_vectors"),noreturn)) mal_startup(void) {
-
+void mal_startup_hardware(void) {
 	// Hardware specific startup
 	mal_hspec_startup();
 
 	// Initialise library components
 	mal_timer_init();
+}
+
+void __attribute__ ((section(".after_vectors"),noreturn)) mal_startup(void) {
+
+	mal_startup_hardware();
 
 	main();
 
