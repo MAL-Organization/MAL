@@ -14,8 +14,6 @@
 
 mal_error_e mal_hspec_mingw_get_valid_adc_ios(mal_hspec_adc_e adc,const mal_hspec_gpio_s **ios, uint8_t *size);
 
-void mal_hspec_mingw_add_adc(mal_hspec_adc_e adc);
-
 mal_error_e mal_hspec_mingw_adc_init(mal_hspec_adc_init_s *init);
 
 mal_error_e mal_hspec_mingw_adc_read(mal_error_e adc, uint64_t *value);
