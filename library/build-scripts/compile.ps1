@@ -188,7 +188,7 @@ function MoveLibInTarget {
 	for ($i=0; $i -le $build_configs.length-1; $i++) {
 		$build_config = $build_configs[$i]
 		New-Item -ItemType directory -Force -Path "$maven_base_dir\target\libraries\$build_config\$optimization_level" | Out-Null
-		Copy-Item "$maven_base_dir\$build_config\libmal.a" -Destination "$maven_base_dir\target\libraries\$build_config\$optimization_level\."	
+		Copy-Item "$maven_base_dir\$build_config\libmal.a" -Destination "$maven_base_dir\target\libraries\$build_config\$optimization_level\."
 	}
 }
 
@@ -223,6 +223,8 @@ function MoveHeadersInTarget {
 <#=========================================
                Compile script
 ===========================================#>
+# Fail script on failed cmdlets
+$ErrorActionPreference = "Stop"
 #Retreive header for each build config
 for ($i=0; $i -lt $build_configs.length; $i++) {
 	$exclusions_array = RetreiveExcludeFromXML $xml_path $build_configs[$i]
@@ -252,7 +254,7 @@ for ($i=0; $i -le $optimization_levels.length-1; $i++){
 		break
 	}
 	if ($lastexitcode -ne 0) {
-		Write-Host "EClipse build failed"
+		Write-Host "Eclipse build failed"
 		Exit $lastexitcode
 	}
 	MoveLibInTarget $build_configs $optimization_levels[$i] $maven_base_dir

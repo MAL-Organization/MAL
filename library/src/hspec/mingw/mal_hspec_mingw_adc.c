@@ -77,3 +77,7 @@ void mal_hspec_mingw_adc_do_async(mal_hspec_adc_e adc) {
 		cb(adc, value);
 	}
 }
+
+bool mal_hspec_mingw_adc_peek_async(mal_hspec_adc_e adc) {
+	return adc_array[adc].callback != NULL;
+}
