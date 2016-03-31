@@ -200,3 +200,71 @@ mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *
 	}
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface,
+											 const mal_hspec_gpio_s *mosi,
+											 const mal_hspec_gpio_s *miso,
+											 const mal_hspec_gpio_s *clk,
+											 const mal_hspec_gpio_s *select) {
+	mal_error_e result;
+	uint8_t i;
+	bool found;
+	const mal_hspec_gpio_s *mosis;
+	uint8_t mosis_size;
+	const mal_hspec_gpio_s *misos;
+	uint8_t misos_size;
+	const mal_hspec_gpio_s *clks;
+	uint8_t clks_size;
+	const mal_hspec_gpio_s *selects;
+	uint8_t selects_size;
+	// Fetch IOs
+	result = mal_hspec_get_valid_spi_ios(interface, &mosis, &mosis_size, &misos, &misos_size, &clks, &clks_size, &selects, &selects_size);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Check mosi IO
+	found = false;
+	for (i = 0; i < mosis_size; i++) {
+		if (mosis[i].pin == mosi->pin && mosis[i].port == mosi->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Check miso IO
+	found = false;
+	for (i = 0; i < misos_size; i++) {
+		if (misos[i].pin == miso->pin && misos[i].port == miso->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Check clk IO
+	found = false;
+	for (i = 0; i < clks_size; i++) {
+		if (clks[i].pin == clk->pin && clks[i].port == clk->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Check select IO
+	found = false;
+	for (i = 0; i < selects_size; i++) {
+		if (selects[i].pin == select->pin && selects[i].port == select->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	return MAL_ERROR_OK;
+}

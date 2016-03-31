@@ -477,4 +477,63 @@ typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64
  * @}
  */
 
+/**
+ * @addtogroup SPI
+ * @{
+ */
+
+/**
+ * The possible SPI interfaces.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_1 = 0,  //!< MAL_HSPEC_SPI_1
+	MAL_HSPEC_SPI_2 = 1,  //!< MAL_HSPEC_SPI_2
+	MAL_HSPEC_SPI_SIZE = 2//!< MAL_HSPEC_SPI_SIZE
+} mal_hspec_spi_e;
+
+/**
+ * Possible modes for the select pin of an interface.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_SELECT_MODE_HARDWARE,//!< The select pin is controlled by hardware.
+	MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE,//!< The select pin is controlled by software by the driver.
+	MAL_HSPEC_SPI_SELECT_MODE_USER,    //!< The select pin is controlled by software by the user code.
+	MAL_HSPEC_SPI_SELECT_MODE_NONE     //!< The select pin is not controlled at all.
+} mal_hspec_spi_select_mode_e;
+
+/**
+ * The possible word sizes for data transactions
+ */
+typedef enum {
+	MAL_HSPEC_SPI_DATA_4_BITS = 4,  //!< MAL_HSPEC_SPI_DATA_4_BITS
+	MAL_HSPEC_SPI_DATA_5_BITS = 5,  //!< MAL_HSPEC_SPI_DATA_5_BITS
+	MAL_HSPEC_SPI_DATA_6_BITS = 6,  //!< MAL_HSPEC_SPI_DATA_6_BITS
+	MAL_HSPEC_SPI_DATA_7_BITS = 7,  //!< MAL_HSPEC_SPI_DATA_7_BITS
+	MAL_HSPEC_SPI_DATA_8_BITS = 8,  //!< MAL_HSPEC_SPI_DATA_8_BITS
+	MAL_HSPEC_SPI_DATA_9_BITS = 9,  //!< MAL_HSPEC_SPI_DATA_9_BITS
+	MAL_HSPEC_SPI_DATA_10_BITS = 10,//!< MAL_HSPEC_SPI_DATA_10_BITS
+	MAL_HSPEC_SPI_DATA_11_BITS = 11,//!< MAL_HSPEC_SPI_DATA_11_BITS
+	MAL_HSPEC_SPI_DATA_12_BITS = 12,//!< MAL_HSPEC_SPI_DATA_12_BITS
+	MAL_HSPEC_SPI_DATA_13_BITS = 13,//!< MAL_HSPEC_SPI_DATA_13_BITS
+	MAL_HSPEC_SPI_DATA_14_BITS = 14,//!< MAL_HSPEC_SPI_DATA_14_BITS
+	MAL_HSPEC_SPI_DATA_15_BITS = 15,//!< MAL_HSPEC_SPI_DATA_15_BITS
+	MAL_HSPEC_SPI_DATA_16_BITS = 16 //!< MAL_HSPEC_SPI_DATA_16_BITS
+} mal_hspec_spi_data_size_e;
+
+
+
+typedef struct {
+	mal_hspec_spi_e interface;
+	mal_hspec_gpio_s *mosi;
+	mal_hspec_gpio_s *miso;
+	mal_hspec_gpio_s *clk;
+	mal_hspec_gpio_s *select;
+	mal_hspec_spi_select_mode_e select_mode;
+	mal_hspec_spi_data_size_e data_size;
+} mal_hspec_spi_init_s;
+
+/**
+ * @}
+ */
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */

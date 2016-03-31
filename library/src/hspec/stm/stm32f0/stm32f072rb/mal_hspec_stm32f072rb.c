@@ -540,6 +540,94 @@ static const mal_hspec_gpio_s valid_adc15_gpios[] = {
 	}
 };
 
+static const mal_hspec_gpio_s valid_spi1_miso_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 6
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 4
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi2_miso_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 2
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 14
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi1_mosi_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 7
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 5
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi2_mosi_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_C,
+		.pin = 3
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 15
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi1_clk_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 5
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 3
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi2_clk_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 10
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 13
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi1_select_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 4
+	},
+	{
+		.port = MAL_HSPEC_PORT_A,
+		.pin = 15
+	}
+};
+
+static const mal_hspec_gpio_s valid_spi2_select_gpios[] = {
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 12
+	},
+	{
+		.port = MAL_HSPEC_PORT_B,
+		.pin = 9
+	}
+};
+
 bool mal_hspec_stm32f072rb_is_pll_div_available(mal_hspec_system_clk_src_e source) {
 	return true;
 }
@@ -719,6 +807,46 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_adc_ios(mal_hspec_adc_e adc, const m
 			break;
 	}
 	if (NULL == *ios) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface,
+													const mal_hspec_gpio_s **mosis,
+													uint8_t *mosis_size,
+													const mal_hspec_gpio_s **misos,
+													uint8_t *misos_size,
+													const mal_hspec_gpio_s **clks,
+													uint8_t *clks_size,
+													const mal_hspec_gpio_s **selects,
+													uint8_t *selects_size) {
+	switch (interface) {
+		case MAL_HSPEC_SPI_1:
+			*mosis = valid_spi1_mosi_gpios;
+			*mosis_size = sizeof(valid_spi1_mosi_gpios) / sizeof(mal_hspec_gpio_s);
+			*misos = valid_spi1_miso_gpios;
+			*misos_size = sizeof(valid_spi1_miso_gpios) / sizeof(mal_hspec_gpio_s);
+			*clks = valid_spi1_clk_gpios;
+			*clks_size = sizeof(valid_spi1_clk_gpios) / sizeof(mal_hspec_gpio_s);
+			*selects = valid_spi1_select_gpios;
+			*selects_size = sizeof(valid_spi1_select_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		case MAL_HSPEC_SPI_2:
+			*mosis = valid_spi2_mosi_gpios;
+			*mosis_size = sizeof(valid_spi2_mosi_gpios) / sizeof(mal_hspec_gpio_s);
+			*misos = valid_spi2_miso_gpios;
+			*misos_size = sizeof(valid_spi2_miso_gpios) / sizeof(mal_hspec_gpio_s);
+			*clks = valid_spi2_clk_gpios;
+			*clks_size = sizeof(valid_spi2_clk_gpios) / sizeof(mal_hspec_gpio_s);
+			*selects = valid_spi2_select_gpios;
+			*selects_size = sizeof(valid_spi2_select_gpios) / sizeof(mal_hspec_gpio_s);
+			break;
+		default:
+			*mosis = NULL;
+			break;
+	}
+	if (NULL == *mosis) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	return MAL_ERROR_OK;

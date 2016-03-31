@@ -106,6 +106,8 @@
 
 #define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072rb_get_valid_adc_ios(adc, ios, size)
 
+#define mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072rb_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
+
 #elif defined(MAL_STM32F072CB)
 
 #include "stm32f072cb/mal_hspec_stm32f072cb.h"

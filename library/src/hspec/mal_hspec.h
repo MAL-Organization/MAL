@@ -133,6 +133,12 @@
 
 #define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
 
+// SPI
+
+#define mal_hspec_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
+
+#define mal_hspec_spi_master_init(init) mal_hspec_stm32f0_spi_master_init(init)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -250,5 +256,7 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const ma
 mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
 
 mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
+
+mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_hspec_gpio_s *mosi, const mal_hspec_gpio_s *miso, const mal_hspec_gpio_s *clk, const mal_hspec_gpio_s *select);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */
