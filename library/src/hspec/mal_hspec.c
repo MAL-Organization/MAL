@@ -138,7 +138,7 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const ma
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx) {
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx) {
 	uint8_t i;
 	mal_error_e result;
 	const mal_hspec_gpio_s *txs;

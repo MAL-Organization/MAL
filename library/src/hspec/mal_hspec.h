@@ -247,7 +247,7 @@ mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_hspec_gpio_s *scl, const mal_hspec_gpio_s *sda);
 
-mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx);
 
 mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
 
