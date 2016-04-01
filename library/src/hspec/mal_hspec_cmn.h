@@ -127,7 +127,7 @@ typedef enum {
  * @brief GPIO event callback.
  * @return Return a status of the callback.
  */
-typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
+typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(mal_hspec_gpio_s *gpio);
 
 /**
  * Parameters to initialize an event.

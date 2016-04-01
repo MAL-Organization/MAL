@@ -38,6 +38,12 @@ static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin);
 
 static mal_hspec_gpio_event_callback_t gpio_event_callbacks[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE];
 
+/**
+ * The port size for STM32F0 is 16. We need to remember which port is
+ * associated to which exti line. This where we do it.
+ */
+static mal_hspec_gpio_port_e exti_ports[16];
+
 mal_error_e mal_hspec_stm32f0_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	// Enable clock domain
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(gpio_init->gpio.port), ENABLE);
@@ -121,6 +127,8 @@ mal_error_e mal_hspec_stm32f0_gpio_event_init(mal_hspec_gpio_event_init_s *init)
 	SYSCFG_EXTILineConfig(get_exti_port_source(init->gpio->port), init->gpio->pin);
 	// Save callback
 	gpio_event_callbacks[init->gpio->pin] = init->callback;
+	// Save port
+	exti_ports[init->gpio->pin] = init->gpio->port;
 	// Configure EXTI
 	EXTI_InitTypeDef exti_init;
 	exti_init.EXTI_Line = (1 << init->gpio->pin);
@@ -193,10 +201,13 @@ void EXTI4_15_IRQHandler(void) {
 }
 
 static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
+	mal_hspec_gpio_s event_gpio;
+	event_gpio.pin = pin;
+	event_gpio.port = exti_ports[pin];
 	if (EXTI_GetITStatus(exti_line) != RESET) {
 		EXTI_ClearITPendingBit(exti_line);
 		if (gpio_event_callbacks[pin] != NULL) {
-			gpio_event_callbacks[pin]();
+			gpio_event_callbacks[pin](&event_gpio);
 		}
 	}
 }

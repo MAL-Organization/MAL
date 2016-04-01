@@ -100,7 +100,7 @@ void mal_hspec_mingw_gpio_execute_callback(mal_hspec_gpio_s gpio) {
 		// Fetch callback
 		mal_hspec_gpio_event_callback_t cb = gpio_array[gpio.port][gpio.pin].callback;
 		// Execute
-		cb();
+		cb(&gpio);
 	}
 }
 
