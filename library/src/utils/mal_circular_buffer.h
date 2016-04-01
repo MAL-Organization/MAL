@@ -85,7 +85,9 @@ void mal_circular_buffer_clear(mal_circular_buffer_s *buffer);
  * @brief This function will return the value at index in the buffer without
  * popping the value.
  * @param buffer The circular buffer to peek from.
- * @param index The index to peek.
+ * @param index The index to peek. This is from the read perspective. This
+ * means index 0 is the oldest data in the buffer and the last index is the
+ * newest data in the buffer.
  * @param data The returned data.
  * @return Returns #MAL_ERROR_OK on success. If the buffer is empty, it will
  * return #MAL_ERROR_EMPTY.
