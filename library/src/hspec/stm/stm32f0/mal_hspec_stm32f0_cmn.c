@@ -26,38 +26,38 @@
 #include "mal_hspec_stm32f0_cmn.h"
 #include "std/mal_stdlib.h"
 
-GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_port_e port) {
+GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_HSPEC_GPIO_PORT_A:
 		return GPIOA;
-	case MAL_HSPEC_PORT_B:
+	case MAL_HSPEC_GPIO_PORT_B:
 		return GPIOB;
-	case MAL_HSPEC_PORT_C:
+	case MAL_HSPEC_GPIO_PORT_C:
 		return GPIOC;
-	case MAL_HSPEC_PORT_D:
+	case MAL_HSPEC_GPIO_PORT_D:
 		return GPIOD;
-	case MAL_HSPEC_PORT_E:
+	case MAL_HSPEC_GPIO_PORT_E:
 		return GPIOE;
-	case MAL_HSPEC_PORT_F:
+	case MAL_HSPEC_GPIO_PORT_F:
 		return GPIOF;
 	default:
 		return NULL;
 	}
 }
 
-uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_port_e port) {
+uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_HSPEC_GPIO_PORT_A:
 		return RCC_AHBPeriph_GPIOA;
-	case MAL_HSPEC_PORT_B:
+	case MAL_HSPEC_GPIO_PORT_B:
 		return RCC_AHBPeriph_GPIOB;
-	case MAL_HSPEC_PORT_C:
+	case MAL_HSPEC_GPIO_PORT_C:
 		return RCC_AHBPeriph_GPIOC;
-	case MAL_HSPEC_PORT_D:
+	case MAL_HSPEC_GPIO_PORT_D:
 		return RCC_AHBPeriph_GPIOD;
-	case MAL_HSPEC_PORT_E:
+	case MAL_HSPEC_GPIO_PORT_E:
 		return RCC_AHBPeriph_GPIOE;
-	case MAL_HSPEC_PORT_F:
+	case MAL_HSPEC_GPIO_PORT_F:
 	default:
 		return RCC_AHBPeriph_GPIOA;
 	}

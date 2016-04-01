@@ -42,10 +42,10 @@ uint64_t mal_hspec_get_external_clk_freq(void) {
 
 // GPIO
 
-mal_error_e mal_hspec_is_port_valid(mal_hspec_port_e port) {
+mal_error_e mal_hspec_is_port_valid(mal_hspec_gpio_port_e port) {
 	// Get valid ports
 	mal_error_e result;
-	const mal_hspec_port_e *ports;
+	const mal_hspec_gpio_port_e *ports;
 	uint8_t size;
 	result = mal_hspec_get_valid_ports(&ports, &size);
 	if (MAL_ERROR_OK != result) {

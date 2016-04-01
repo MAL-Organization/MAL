@@ -33,7 +33,7 @@
 #include "mal_hspec_stm32f0_gpio.h"
 
 static GPIOSpeed_TypeDef get_gpio_speed(uint64_t speed);
-static uint8_t get_exti_port_source(mal_hspec_port_e port);
+static uint8_t get_exti_port_source(mal_hspec_gpio_port_e port);
 static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin);
 
 static mal_hspec_gpio_event_callback_t gpio_event_callbacks[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE];
@@ -43,11 +43,11 @@ mal_error_e mal_hspec_stm32f0_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(gpio_init->gpio.port), ENABLE);
 	// Set GPIO
 	GPIO_InitTypeDef init;
-	if (MAL_GPIO_DIR_IN == gpio_init->direction) {
+	if (MAL_HSPEC_GPIO_DIR_IN == gpio_init->direction) {
 		init.GPIO_Mode = GPIO_Mode_IN;
 	} else {
 		init.GPIO_Mode = GPIO_Mode_OUT;
-		if (MAL_GPIO_OUT_PP == gpio_init->output_config) {
+		if (MAL_HSPEC_GPIO_OUT_PP == gpio_init->output_config) {
 			init.GPIO_OType = GPIO_OType_PP;
 		} else {
 			init.GPIO_OType = GPIO_OType_OD;
@@ -55,13 +55,13 @@ mal_error_e mal_hspec_stm32f0_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	}
 	init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio_init->gpio.pin);
 	switch (gpio_init->pupd) {
-	case MAL_GPIO_PUPD_PU:
+	case MAL_HSPEC_GPIO_PUPD_PU:
 		init.GPIO_PuPd = GPIO_PuPd_UP;
 		break;
-	case MAL_GPIO_PUPD_PD:
+	case MAL_HSPEC_GPIO_PUPD_PD:
 		init.GPIO_PuPd = GPIO_PuPd_DOWN;
 		break;
-	case MAL_GPIO_PUPD_NONE:
+	case MAL_HSPEC_GPIO_PUPD_NONE:
 	default:
 		init.GPIO_PuPd = GPIO_PuPd_NOPULL;
 		break;
@@ -150,17 +150,17 @@ IRQn_Type mal_hspec_stm32f0_gpio_get_exti_irq(uint8_t pin) {
 	}
 }
 
-static uint8_t get_exti_port_source(mal_hspec_port_e port) {
+static uint8_t get_exti_port_source(mal_hspec_gpio_port_e port) {
 	switch (port) {
-		case MAL_HSPEC_PORT_A:
+		case MAL_HSPEC_GPIO_PORT_A:
 			return EXTI_PortSourceGPIOA;
-		case MAL_HSPEC_PORT_B:
+		case MAL_HSPEC_GPIO_PORT_B:
 			return EXTI_PortSourceGPIOB;
-		case MAL_HSPEC_PORT_C:
+		case MAL_HSPEC_GPIO_PORT_C:
 			return EXTI_PortSourceGPIOC;
-		case MAL_HSPEC_PORT_D:
+		case MAL_HSPEC_GPIO_PORT_D:
 			return EXTI_PortSourceGPIOD;
-		case MAL_HSPEC_PORT_E:
+		case MAL_HSPEC_GPIO_PORT_E:
 			return EXTI_PortSourceGPIOE;
 		default:
 			return EXTI_PortSourceGPIOF;

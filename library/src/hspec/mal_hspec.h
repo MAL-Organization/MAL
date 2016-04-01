@@ -235,7 +235,7 @@
 #error No hardware specfic family symbol specified...
 #endif
 
-mal_error_e mal_hspec_is_port_valid(mal_hspec_port_e port);
+mal_error_e mal_hspec_is_port_valid(mal_hspec_gpio_port_e port);
 
 mal_error_e mal_hspec_is_gpio_valid(mal_hspec_gpio_s *gpio);
 

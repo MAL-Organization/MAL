@@ -61,20 +61,20 @@ typedef struct {
  * Possible GPIO ports.
  */
 typedef enum {
-	MAL_HSPEC_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
-	MAL_HSPEC_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
-	MAL_HSPEC_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
-	MAL_HSPEC_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
-	MAL_HSPEC_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
-	MAL_HSPEC_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
-	MAL_HSPEC_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
-} mal_hspec_port_e;
+	MAL_HSPEC_GPIO_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
+	MAL_HSPEC_GPIO_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
+	MAL_HSPEC_GPIO_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
+	MAL_HSPEC_GPIO_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
+	MAL_HSPEC_GPIO_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
+	MAL_HSPEC_GPIO_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
+	MAL_HSPEC_GPIO_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
+} mal_hspec_gpio_port_e;
 
 /**
  * Defines a GPIO.
  */
 typedef struct {
-	mal_hspec_port_e port; /**< The port of the GPIO.*/
+	mal_hspec_gpio_port_e port; /**< The port of the GPIO.*/
 	uint8_t pin; /**< The pin of the GPIO.*/
 } mal_hspec_gpio_s;
 
@@ -82,25 +82,25 @@ typedef struct {
  * Possible GPIO directions.
  */
 typedef enum {
-	MAL_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
-	MAL_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
+	MAL_HSPEC_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
+	MAL_HSPEC_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
 } mal_hspec_gpio_dir_e;
 
 /**
  * Possible GPIO types.
  */
 typedef enum {
-	MAL_GPIO_OUT_PP,//!< Push-Pull
-	MAL_GPIO_OUT_OD //!< Open Drain
+	MAL_HSPEC_GPIO_OUT_PP,//!< Push-Pull
+	MAL_HSPEC_GPIO_OUT_OD //!< Open Drain
 } mal_hspec_gpio_out_e;
 
 /**
  * Possible pull-up and pull-down values.
  */
 typedef enum {
-	MAL_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
-	MAL_GPIO_PUPD_PU,  //!< Pull-up.
-	MAL_GPIO_PUPD_PD   //!< Pull-down.
+	MAL_HSPEC_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
+	MAL_HSPEC_GPIO_PUPD_PU,  //!< Pull-up.
+	MAL_HSPEC_GPIO_PUPD_PD   //!< Pull-down.
 } mal_hspec_gpio_pupd_e;
 
 /**

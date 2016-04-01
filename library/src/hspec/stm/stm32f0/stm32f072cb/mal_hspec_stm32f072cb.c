@@ -27,15 +27,15 @@
 
 #include "mal_hspec_stm32f072cb.h"
 
-static const mal_hspec_port_e valid_ports[] = {
-	MAL_HSPEC_PORT_A,
-	MAL_HSPEC_PORT_B,
-	MAL_HSPEC_PORT_C,
-	MAL_HSPEC_PORT_D,
-	MAL_HSPEC_PORT_F
+static const mal_hspec_gpio_port_e valid_ports[] = {
+	MAL_HSPEC_GPIO_PORT_A,
+	MAL_HSPEC_GPIO_PORT_B,
+	MAL_HSPEC_GPIO_PORT_C,
+	MAL_HSPEC_GPIO_PORT_D,
+	MAL_HSPEC_GPIO_PORT_F
 };
 
-static const uint64_t valid_pins[MAL_HSPEC_PORT_SIZE] = {
+static const uint64_t valid_pins[MAL_HSPEC_GPIO_PORT_SIZE] = {
 	0b1111111111111111,	// PA[0:15]
 	0b1111111111111111, // PB[0:15]
 	0b1110000000000000, // PC[13:15]
@@ -59,44 +59,44 @@ static const mal_hspec_timer_e valid_timers[] = {
 static const mal_hspec_gpio_s valid_i2c1_scl_gpios[] = {
 	{
 		.pin = 6,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	},
 	{
 		.pin = 8,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c1_sda_gpios[] = {
 	{
 		.pin = 7,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	},
 	{
 		.pin = 9,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c2_scl_gpios[] = {
 	{
 		.pin = 10,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	},
 	{
 		.pin = 13,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c2_sda_gpios[] = {
 	{
 		.pin = 11,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	},
 	{
 		.pin = 14,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
@@ -409,133 +409,133 @@ static const mal_hspec_stm32f0_af_e port_f_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT
 static const mal_hspec_gpio_s valid_can1_tx_gpios[] = {
 	{
 		.pin = 12,
-		.port = MAL_HSPEC_PORT_A
+		.port = MAL_HSPEC_GPIO_PORT_A
 	},
 	{
 		.pin = 9,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
 	{
 		.pin = 11,
-		.port = MAL_HSPEC_PORT_A
+		.port = MAL_HSPEC_GPIO_PORT_A
 	},
 	{
 		.pin = 8,
-		.port = MAL_HSPEC_PORT_B
+		.port = MAL_HSPEC_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc0_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc1_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc2_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 2
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc3_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 3
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc4_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc5_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 5
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc6_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 6
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc7_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_A,
+		.port = MAL_HSPEC_GPIO_PORT_A,
 		.pin = 7
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc8_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_B,
+		.port = MAL_HSPEC_GPIO_PORT_B,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc9_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_B,
+		.port = MAL_HSPEC_GPIO_PORT_B,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc10_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc11_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc12_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 2
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc13_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 3
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc14_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc15_gpios[] = {
 	{
-		.port = MAL_HSPEC_PORT_C,
+		.port = MAL_HSPEC_GPIO_PORT_C,
 		.pin = 5
 	}
 };
@@ -544,9 +544,9 @@ bool mal_hspec_stm32f072cb_is_pll_div_available(mal_hspec_system_clk_src_e sourc
 	return true;
 }
 
-mal_error_e mal_hspec_stm32f072cb_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
+mal_error_e mal_hspec_stm32f072cb_get_valid_ports(const mal_hspec_gpio_port_e **ports, uint8_t *size) {
 	*ports = valid_ports;
-	*size = sizeof(valid_ports) / sizeof(mal_hspec_port_e);
+	*size = sizeof(valid_ports) / sizeof(mal_hspec_gpio_port_e);
 	return MAL_ERROR_OK;
 }
 
@@ -605,24 +605,24 @@ mal_error_e mal_hspec_stm32f072cb_get_valid_i2c_ios(mal_hspec_i2c_e interface, c
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f072cb_get_port_afs(mal_hspec_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]) {
+mal_error_e mal_hspec_stm32f072cb_get_port_afs(mal_hspec_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_HSPEC_GPIO_PORT_A:
 		*afs = &port_a_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_B:
+	case MAL_HSPEC_GPIO_PORT_B:
 		*afs = &port_b_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_C:
+	case MAL_HSPEC_GPIO_PORT_C:
 		*afs = &port_c_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_D:
+	case MAL_HSPEC_GPIO_PORT_D:
 		*afs = &port_d_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_E:
+	case MAL_HSPEC_GPIO_PORT_E:
 		*afs = &port_e_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_F:
+	case MAL_HSPEC_GPIO_PORT_F:
 		*afs = &port_f_valid_afs;
 		break;
 	default:
