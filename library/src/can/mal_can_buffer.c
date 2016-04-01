@@ -48,15 +48,9 @@ mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_
 		return result;
 	}
 	// Initialise tx circular buffer
-	result = mal_circular_buffer_init(init->tx_buffer, sizeof(mal_hspec_can_msg_s), init->tx_buffer_size, (mal_circular_buffer_s*)&handle->tx_buffer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+	mal_circular_buffer_init(init->tx_buffer, sizeof(mal_hspec_can_msg_s), init->tx_buffer_size, (mal_circular_buffer_s*)&handle->tx_buffer);
 	// Initialise rx circular buffer
-	result = mal_circular_buffer_init(init->rx_buffer, sizeof(mal_hspec_can_msg_s), init->rx_buffer_size, (mal_circular_buffer_s*)&handle->rx_buffer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+	mal_circular_buffer_init(init->rx_buffer, sizeof(mal_hspec_can_msg_s), init->rx_buffer_size, (mal_circular_buffer_s*)&handle->rx_buffer);
 	// Save interface
 	handle->interface = init->interface;
 	handles[handle->interface] = handle;

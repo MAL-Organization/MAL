@@ -32,10 +32,11 @@ mal_error_e mal_hspec_mingw_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	// Save init
 	i2c_interfaces[init->interface].init = *init;
 	// Initialise circular buffer
-	return mal_circular_buffer_init((void*)i2c_interfaces[init->interface].message_buffer,
-							 	 	sizeof(mal_hspec_i2c_msg_s),
-									sizeof(mal_hspec_i2c_msg_s) * MESSAGE_BUFFER_SIZE,
-									&i2c_interfaces[init->interface].tx_circular_buffer);
+	mal_circular_buffer_init((void*)i2c_interfaces[init->interface].message_buffer,
+							 sizeof(mal_hspec_i2c_msg_s),
+							 sizeof(mal_hspec_i2c_msg_s) * MESSAGE_BUFFER_SIZE,
+							 &i2c_interfaces[init->interface].tx_circular_buffer);
+	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_hspec_mingw_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg) {

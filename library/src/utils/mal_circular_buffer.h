@@ -52,9 +52,9 @@ typedef struct {
  * @param element_size The size of one object.
  * @param size  The size of the data buffer in bytes.
  * @param buffer The buffer to initialize.
- * @return Returns #MAL_ERROR_OK on success.
+ * @return Returns nothing.
  */
-mal_error_e mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer);
+void mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer);
 
 /**
  * @brief Write to a circular buffer.
@@ -77,9 +77,9 @@ mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data);
 /**
  * @brief Clears all data in buffer.
  * @param buffer The buffer to clear.
- * @return Returns #MAL_ERROR_OK on success.
+ * @return Returns nothing.
  */
-mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer);
+void mal_circular_buffer_clear(mal_circular_buffer_s *buffer);
 
 /**
  * @brief This function will return the value at index in the buffer without

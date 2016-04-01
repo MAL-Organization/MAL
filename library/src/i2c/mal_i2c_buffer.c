@@ -44,10 +44,7 @@ mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_hand
 		return result;
 	}
 	// Initialise buffer
-	result = mal_circular_buffer_init(init->buffer, sizeof(mal_hspec_i2c_msg_s), init->buffer_size, &handle->buffer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+	mal_circular_buffer_init(init->buffer, sizeof(mal_hspec_i2c_msg_s), init->buffer_size, &handle->buffer);
 	// Save interface
 	handle->interface = init->i2c_init.interface;
 	i2c_interface_handles[handle->interface].buffer_handle = handle;

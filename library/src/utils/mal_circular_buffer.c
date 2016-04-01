@@ -25,15 +25,13 @@
 
 #include "mal_circular_buffer.h"
 
-mal_error_e mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer) {
+void mal_circular_buffer_init(void *data_buffer, uint64_t element_size, uint64_t size, mal_circular_buffer_s *buffer) {
 	buffer->buffer = data_buffer;
 	buffer->element_size = element_size;
 	buffer->maximum_size = size / element_size;
 	buffer->input_pointer = 0;
 	buffer->output_pointer = 0;
 	buffer->size = 0;
-
-	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_circular_buffer_write(mal_circular_buffer_s *buffer, void *data) {
@@ -76,12 +74,10 @@ mal_error_e mal_circular_buffer_read(mal_circular_buffer_s *buffer, void *data) 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_circular_buffer_clear(mal_circular_buffer_s *buffer) {
+void mal_circular_buffer_clear(mal_circular_buffer_s *buffer) {
 	buffer->input_pointer = 0;
 	buffer->output_pointer = 0;
 	buffer->size = 0;
-
-	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_circular_buffer_peek(mal_circular_buffer_s *buffer, uint64_t index, void *data) {
