@@ -14,7 +14,7 @@
 
 mal_error_e mal_hspec_mingw_gpio_init(mal_hspec_gpio_init_s *gpio_init);
 
-mal_error_e mal_hspec_mingw_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size);
+mal_error_e mal_hspec_mingw_get_valid_ports(const mal_hspec_gpio_port_e **ports, uint8_t *size);
 
 mal_error_e mal_hspec_mingw_get_valid_pins(const uint64_t **pins);
 

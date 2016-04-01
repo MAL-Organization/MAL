@@ -42,10 +42,10 @@ uint64_t mal_hspec_get_external_clk_freq(void) {
 
 // GPIO
 
-mal_error_e mal_hspec_is_port_valid(mal_hspec_port_e port) {
+mal_error_e mal_hspec_is_port_valid(mal_hspec_gpio_port_e port) {
 	// Get valid ports
 	mal_error_e result;
-	const mal_hspec_port_e *ports;
+	const mal_hspec_gpio_port_e *ports;
 	uint8_t size;
 	result = mal_hspec_get_valid_ports(&ports, &size);
 	if (MAL_ERROR_OK != result) {
@@ -138,7 +138,7 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const ma
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx) {
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx) {
 	uint8_t i;
 	mal_error_e result;
 	const mal_hspec_gpio_s *txs;

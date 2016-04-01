@@ -17,7 +17,7 @@ typedef struct {
 	mal_hspec_gpio_event_callback_t callback; /**< The callback to execute upon event.*/
 } mal_hspec_gpio_info_s;
 
-static mal_hspec_gpio_info_s gpio_array[MAL_HSPEC_PORT_SIZE][PORT_SIZE];
+static mal_hspec_gpio_info_s gpio_array[MAL_HSPEC_GPIO_PORT_SIZE][PORT_SIZE];
 
 mal_error_e mal_hspec_mingw_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	gpio_array[gpio_init->gpio.port][gpio_init->gpio.pin].output = false;
@@ -27,7 +27,7 @@ mal_error_e mal_hspec_mingw_gpio_init(mal_hspec_gpio_init_s *gpio_init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
+mal_error_e mal_hspec_mingw_get_valid_ports(const mal_hspec_gpio_port_e **ports, uint8_t *size) {
 	mal_hspec_mingw_cmn_valid_ports(ports, size);
 
 	return MAL_ERROR_OK;
@@ -40,7 +40,7 @@ mal_error_e mal_hspec_mingw_get_valid_pins(const uint64_t **pins) {
 }
 
 mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_hspec_gpio_s *gpio, bool value) {
-	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_OUT) {
+	if (gpio_array[gpio->port][gpio->pin].direction == MAL_HSPEC_GPIO_DIR_OUT) {
 			return MAL_ERROR_HARDWARE_INVALID;
 	}
 	// Save old value
@@ -73,7 +73,7 @@ mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_hspec_gpio_s *gpio, bool v
 
 mal_error_e mal_hspec_mingw_set_gpio(const mal_hspec_gpio_s *gpio, bool value) {
 	gpio_array[gpio->port][gpio->pin].output = value;
-	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_OUT) {
+	if (gpio_array[gpio->port][gpio->pin].direction == MAL_HSPEC_GPIO_DIR_OUT) {
 		gpio_array[gpio->port][gpio->pin].input = value;
 	}
 
@@ -100,7 +100,7 @@ void mal_hspec_mingw_gpio_execute_callback(mal_hspec_gpio_s gpio) {
 		// Fetch callback
 		mal_hspec_gpio_event_callback_t cb = gpio_array[gpio.port][gpio.pin].callback;
 		// Execute
-		cb();
+		cb(&gpio);
 	}
 }
 
