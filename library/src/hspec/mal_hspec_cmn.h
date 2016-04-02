@@ -406,8 +406,8 @@ typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, ma
  */
 typedef struct {
 	mal_hspec_can_e interface; /**< The CAN interface to initialize.*/
-	mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	const mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	const mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	mal_hspec_can_tx_callback_t tx_callback; /**< The callback to be executed when a message is transmitted.*/
 	mal_hspec_can_rx_callback_t rx_callback; /**< The callback to be executed when a message is received.*/

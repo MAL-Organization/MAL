@@ -48,7 +48,8 @@ typedef struct {
  */
 typedef struct {
 	mal_hspec_i2c_e interface; /**< The I2C interface.*/
-	mal_circular_buffer_s buffer; /**< A circular buffer.*/
+	volatile mal_circular_buffer_s buffer; /**< A circular buffer.*/
+	volatile mal_hspec_i2c_msg_s active_msg; /**< The active message of the buffer.*/
 } mal_i2c_buffer_handle_s;
 
 /**
