@@ -394,9 +394,9 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 	channel_init.TIM_OutputState = TIM_OutputState_Enable;
 	channel_init.TIM_OutputNState = TIM_OutputNState_Enable;
 	channel_init.TIM_Pulse = 0; // Duty cycle of 0 at init.
-	channel_init.TIM_OCPolarity = TIM_OCPolarity_High;
+	channel_init.TIM_OCPolarity = TIM_OCPolarity_Low;
 	channel_init.TIM_OCNPolarity = TIM_OCNPolarity_High;
-	channel_init.TIM_OCIdleState = TIM_OCIdleState_Reset;
+	channel_init.TIM_OCIdleState = TIM_OCIdleState_Set;
 	channel_init.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 	// Chose the correct init function
 	switch (get_timer_channel(init->pwm_io, init->timer)) {
@@ -417,6 +417,18 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 	}
 	// Enable timer
 	TIM_Cmd(tim, ENABLE);
+	// Check if output has to be enabled
+	switch (init->timer) {
+		case MAL_HSPEC_TIMER_1:
+		case MAL_HSPEC_TIMER_15:
+		case MAL_HSPEC_TIMER_16:
+		case MAL_HSPEC_TIMER_17:
+			TIM_CtrlPWMOutputs(tim, ENABLE);
+			break;
+		default:
+			// Nothing to do for other timers
+			break;
+	}
 
 	return MAL_ERROR_OK;
 }
