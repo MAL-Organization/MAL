@@ -79,6 +79,12 @@
 
 #define mal_hspec_timer_free(timer) mal_hspec_stm32f0_timer_free(timer)
 
+#define mal_hspec_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_pwm_ios(timer, ios, size)
+
+#define mal_hspec_timer_pwm_init(init) mal_hspec_stm32f0_timer_pwm_init(init)
+
+#define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_stm32f0_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
@@ -250,5 +256,7 @@ mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const ma
 mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx);
 
 mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
+
+mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

@@ -45,4 +45,8 @@ mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer);
 
 bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer);
 
+mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init);
+
+mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, float duty_cycle);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

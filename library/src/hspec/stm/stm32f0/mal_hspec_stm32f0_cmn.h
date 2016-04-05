@@ -172,11 +172,17 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
 
+#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
+
+#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072rb_get_timer_afs(afs)
+
 #elif defined(MAL_STM32F072CB)
 
 #include "stm32f072cb/mal_hspec_stm32f072cb.h"
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072cb_get_port_afs(port, afs)
+
+#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072cb_get_timer_afs(afs)
 
 #elif defined(MAL_STM32F030K6)
 #else
@@ -188,5 +194,7 @@ GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port);
 uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port);
 
 mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
+
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer, uint8_t *function);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CMN_H_ */
