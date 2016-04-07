@@ -183,6 +183,12 @@
 
 #define mal_hspec_timer_free(timer) mal_hspec_mingw_timer_free(timer)
 
+#define mal_hspec_get_valid_pwm_ios(timer, ios, size) mal_hspec_mingw_get_valid_pwm_ios(timer, ios, size)
+
+#define mal_hspec_timer_pwm_init(init) mal_hspec_mingw_timer_pwm_init(init)
+
+#define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_mingw_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_mingw_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
