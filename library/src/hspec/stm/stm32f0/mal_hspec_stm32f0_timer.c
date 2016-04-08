@@ -44,8 +44,6 @@ static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer);
 
 static uint16_t get_timer_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer);
 
-static uint8_t get_timer_resolution(mal_hspec_timer_e timer);
-
 static mal_hspec_timer_callback_t timer_callbacks[MAL_HSPEC_TIMER_SIZE];
 
 mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback) {
@@ -329,7 +327,7 @@ static uint16_t get_timer_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_
 	}
 }
 
-static uint8_t get_timer_resolution(mal_hspec_timer_e timer) {
+mal_error_e mal_hspec_stm32f0_timer_get_resolution(mal_hspec_timer_e timer, uint8_t *resolution) {
 	switch (timer) {
 		case MAL_HSPEC_TIMER_1:
 		case MAL_HSPEC_TIMER_3:
@@ -339,11 +337,15 @@ static uint8_t get_timer_resolution(mal_hspec_timer_e timer) {
 		case MAL_HSPEC_TIMER_15:
 		case MAL_HSPEC_TIMER_16:
 		case MAL_HSPEC_TIMER_17:
-			return 16;
+			*resolution = 16;
+			break;
 		case MAL_HSPEC_TIMER_2:
+			*resolution = 32;
+			break;
 		default:
-			return 32;
+			return MAL_ERROR_HARDWARE_INVALID;
 	}
+	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
@@ -434,14 +436,19 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 }
 
 mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, float duty_cycle) {
+	mal_error_e result;
 	// Get timer
 	TIM_TypeDef *tim = get_timer_typedef(timer);
 	// We to compute the duty cycle
 	uint32_t compare_value;
 	if (duty_cycle >= 1.0f) {
 		// Get timer resolution to get max compare value
-		uint16_t resultion = get_timer_resolution(timer);
-		uint32_t max_value = (((uint64_t)1) << ((uint64_t)resultion)) - (uint64_t)1;
+		uint8_t resolution;
+		result = mal_hspec_stm32f0_timer_get_resolution(timer, &resolution);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+		uint32_t max_value = (((uint64_t)1) << ((uint64_t)resolution)) - (uint64_t)1;
 		if (tim->ARR < max_value) {
 			compare_value = tim->ARR + 1;
 		} else {
@@ -467,6 +474,74 @@ mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, 
 		default:
 			return MAL_ERROR_HARDWARE_INVALID;
 	}
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer, float frequency) {
+	mal_error_e result;
+	// Initialize peripheral clock
+	result = init_timer_rcc(timer);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Get timer
+	TIM_TypeDef *tim = get_timer_typedef(timer);
+	// Get timer frequency
+	uint64_t timer_frequency;
+	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialize time base timer
+	TIM_TimeBaseInitTypeDef params;
+	TIM_TimeBaseStructInit(&params);
+	params.TIM_CounterMode = TIM_CounterMode_Up;
+	// Compute prescaler
+	if (0.0f == frequency) {
+		return MAL_ERROR_CLOCK_ERROR;
+	}
+	uint32_t prescaler = (float)timer_frequency / frequency;
+	if (prescaler > (UINT16_MAX+ 1)) {
+		return MAL_ERROR_CLOCK_ERROR;
+	}
+	// Round up prescaler to at least 1
+	if (0 == prescaler) {
+		prescaler += 1;
+	}
+	params.TIM_Prescaler = prescaler - 1;
+	// Set maximum value
+	uint8_t resolution;
+	result = mal_hspec_stm32f0_timer_get_resolution(timer, &resolution);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	uint32_t max_value = (((uint64_t)1) << ((uint64_t)resolution)) - (uint64_t)1;
+	params.TIM_Period = max_value;
+
+	TIM_TimeBaseInit(tim, &params);
+	// Enable timer
+	TIM_Cmd(tim, ENABLE);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency) {
+	mal_error_e result;
+	// Get timer
+	TIM_TypeDef *tim = get_timer_typedef(timer);
+	if (NULL == tim) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Get timer frequency
+	uint64_t timer_frequency;
+	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Compute frequency
+	float prescaler_value = (uint32_t)tim->PSC + 1;
+	*frequency = (float)timer_frequency / prescaler_value;
 
 	return MAL_ERROR_OK;
 }

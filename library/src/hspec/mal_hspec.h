@@ -85,6 +85,12 @@
 
 #define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_stm32f0_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
 
+#define mal_hspec_timer_count_init(timer, frequency) mal_hspec_stm32f0_timer_count_init(timer, frequency)
+
+#define mal_hspec_timer_get_resolution(timer, resolution) mal_hspec_stm32f0_timer_get_resolution(timer, resolution)
+
+#define mal_hspec_timer_get_count_frequency(timer, frequency) mal_hspec_stm32f0_timer_get_count_frequency(timer, frequency)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
@@ -188,6 +194,12 @@
 #define mal_hspec_timer_pwm_init(init) mal_hspec_mingw_timer_pwm_init(init)
 
 #define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_mingw_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
+
+#define mal_hspec_timer_count_init(timer, frequency) mal_hspec_mingw_timer_count_init(timer, frequency)
+
+#define mal_hspec_timer_get_resolution(timer, resolution) mal_hspec_mingw_timer_get_resolution(timer, resolution)
+
+#define mal_hspec_timer_get_count_frequency(timer, frequency) mal_hspec_mingw_timer_get_count_frequency(timer, frequency)
 
 // I2C mappings
 
