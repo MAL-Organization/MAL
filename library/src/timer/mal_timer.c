@@ -179,3 +179,20 @@ mal_error_e mal_timer_init_count(mal_hspec_timer_e timer, float frequency, mal_h
 
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask) {
+	mal_error_e result;
+	// Get timer resolution
+	uint8_t resolution;
+	result = mal_timer_get_resolution(timer, &resolution);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Compute mask
+	if (resolution >= 64) {
+		*mask = UINT64_MAX;
+	} else {
+		*mask = ((((uint64_t)1)<<((uint64_t)resolution)) - ((uint64_t)1));
+	}
+	return MAL_ERROR_OK;
+}

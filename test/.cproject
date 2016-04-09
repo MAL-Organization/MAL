@@ -34,6 +34,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal-test/contrib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal/src}&quot;"/>
 								</option>
+								<option id="gnu.cpp.compiler.option.preprocessor.def.1008250837" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=8000000"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.598173278" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1198006884" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug">
@@ -43,6 +48,11 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal-test/contrib}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal/src}&quot;"/>
+								</option>
+								<option id="gnu.c.compiler.option.preprocessor.def.symbols.795296741" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=8000000"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1638267261" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

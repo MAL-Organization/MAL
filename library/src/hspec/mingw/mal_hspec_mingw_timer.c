@@ -122,3 +122,8 @@ mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, f
 	*frequency = mingw_timers[timer].frequency;
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count) {
+	*count = mingw_timers[timer].count;
+	return MAL_ERROR_OK;
+}

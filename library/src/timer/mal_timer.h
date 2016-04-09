@@ -94,6 +94,16 @@ typedef struct {
  */
 #define mal_timer_get_count_frequency(timer, frequency) mal_hspec_timer_get_count_frequency(timer, frequency)
 
+#define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-count1) & mask)) & mask)
+
+/**
+ * @brief Get the count register of a timer.
+ * @param timer The timer to get the count from.
+ * @param count A pointer to a uint64_t. It will contain the count.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_timer_get_count(timer, count) mal_hspec_timer_get_count(timer, count)
+
 /**
  * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
  * to read ticks.
@@ -162,6 +172,14 @@ mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_get_state(mal_hspec_timer_e timer, mal_timer_state_s *state);
+
+/**
+ * @brief Will return the mask to use to filter the count register values.
+ * @param timer
+ * @param mask A pointer to a uint64_t that will contain the mask;
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask);
 
 /**
  * @}

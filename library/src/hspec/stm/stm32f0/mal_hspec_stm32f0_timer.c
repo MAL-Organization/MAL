@@ -545,3 +545,15 @@ mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer,
 
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t *count) {
+	// Get timer
+	TIM_TypeDef *tim = get_timer_typedef(timer);
+	if (NULL == tim) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Get value
+	*count = tim->CNT;
+
+	return MAL_ERROR_OK;
+}

@@ -41,4 +41,6 @@ mal_error_e mal_hspec_mingw_timer_get_resolution(mal_hspec_timer_e timer, uint8_
 
 mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency);
 
+mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
+
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_ */

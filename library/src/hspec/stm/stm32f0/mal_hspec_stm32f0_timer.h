@@ -55,4 +55,6 @@ mal_error_e mal_hspec_stm32f0_timer_get_resolution(mal_hspec_timer_e timer, uint
 
 mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency);
 
+mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */
