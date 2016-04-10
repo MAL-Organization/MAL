@@ -861,6 +861,30 @@ IRQn_Type mal_hspec_stm32f072cb_get_timer_update_irq(mal_hspec_timer_e timer) {
 	}
 }
 
+IRQn_Type mal_hspec_stm32f072cb_get_timer_compare_irq(mal_hspec_timer_e timer) {
+	switch (timer) {
+	case MAL_HSPEC_TIMER_1:
+		return TIM1_CC_IRQn;
+	case MAL_HSPEC_TIMER_2:
+		return TIM2_IRQn;
+	case MAL_HSPEC_TIMER_3:
+		return TIM3_IRQn;
+	case MAL_HSPEC_TIMER_6:
+		return TIM6_DAC_IRQn;
+	case MAL_HSPEC_TIMER_7:
+		return TIM7_IRQn;
+	case MAL_HSPEC_TIMER_14:
+		return TIM14_IRQn;
+	case MAL_HSPEC_TIMER_15:
+		return TIM15_IRQn;
+	case MAL_HSPEC_TIMER_16:
+		return TIM16_IRQn;
+	case MAL_HSPEC_TIMER_17:
+	default:
+		return TIM17_IRQn;
+	}
+}
+
 mal_error_e mal_hspec_stm32f072cb_get_valid_i2c_ios(mal_hspec_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size) {
 	switch (interface) {
 	case MAL_HSPEC_I2C_1:
@@ -1000,7 +1024,7 @@ mal_error_e mal_hspec_stm32f072cb_get_valid_adc_ios(mal_hspec_adc_e adc, const m
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f072cb_get_valid_pwm_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
+mal_error_e mal_hspec_stm32f072cb_get_valid_channel_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
 	switch (timer) {
 		case MAL_HSPEC_TIMER_1:
 			*ios = valid_timer1_gpios;

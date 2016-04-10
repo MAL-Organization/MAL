@@ -106,7 +106,9 @@
 
 #define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072rb_get_valid_adc_ios(adc, ios, size)
 
-#define mal_hspec_stm32f0_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f072rb_get_valid_pwm_ios(timer, ios, size)
+#define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072rb_get_valid_channel_ios(timer, ios, size)
+
+#define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072rb_get_timer_compare_irq(timer)
 
 #elif defined(MAL_STM32F072CB)
 
@@ -136,7 +138,9 @@
 
 #define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072cb_get_valid_adc_ios(adc, ios, size)
 
-#define mal_hspec_stm32f0_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_pwm_ios(timer, ios, size)
+#define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_channel_ios(timer, ios, size)
+
+#define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072cb_get_timer_compare_irq(timer)
 
 #elif defined(MAL_STM32F030K6)
 #else

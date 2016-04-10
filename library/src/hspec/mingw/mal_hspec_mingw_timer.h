@@ -43,4 +43,10 @@ mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, f
 
 mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
 
+mal_error_e mal_hspec_mingw_get_valid_input_capture_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
+
+mal_error_e mal_hspec_mingw_timer_input_capture_init(mal_hspec_timer_intput_capture_init_s *init);
+
+mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io, uint64_t value);
+
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_ */

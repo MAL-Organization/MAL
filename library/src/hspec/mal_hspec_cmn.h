@@ -177,10 +177,11 @@ typedef enum {
  * Possible timer modes.
  */
 typedef enum {
-	MAL_HSPEC_TIMER_MODE_TICK,	//!< MAL_HSPEC_TIMER_MODE_TICK
-	MAL_HSPEC_TIMER_MODE_TASK,	//!< MAL_HSPEC_TIMER_MODE_TASK
-	MAL_HSPEC_TIMER_MODE_PWM,	//!< MAL_HSPEC_TIMER_MODE_PWM
-	MAL_HSPEC_TIMER_MODE_COUNT	//!< MAL_HSPEC_TIMER_MODE_COUNT
+	MAL_HSPEC_TIMER_MODE_TICK,			//!< MAL_HSPEC_TIMER_MODE_TICK
+	MAL_HSPEC_TIMER_MODE_TASK,			//!< MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_PWM,			//!< MAL_HSPEC_TIMER_MODE_PWM
+	MAL_HSPEC_TIMER_MODE_COUNT,			//!< MAL_HSPEC_TIMER_MODE_COUNT
+	MAL_HSPEC_TIMER_MODE_INPUT_CAPTURE	//!< MAL_HSPEC_TIMER_MODE_COUNT
 } mal_hspec_timer_mode_e;
 
 /**
@@ -191,12 +192,45 @@ typedef enum {
  */
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 
+/**
+ * Initialization parameters of a PWM input.
+ */
 typedef struct {
-	mal_hspec_timer_e timer;
-	float frequency;
-	float delta;
-	const mal_hspec_gpio_s *pwm_io;
+	mal_hspec_timer_e timer; /**< The timer to use for the PWM output.*/
+	float frequency; /**< The frequency of the PWM.*/
+	float delta; /**< The acceptable frequency delta.*/
+	const mal_hspec_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_hspec_timer_pwm_init_s;
+
+/**
+ * Possible timer input triggers.
+ */
+typedef enum {
+	MAL_HSPEC_TIMER_INPUT_RISING, //!< MAL_HSPEC_GPIO_EVENT_RISING
+	MAL_HSPEC_TIMER_INPUT_FALLING,//!< MAL_HSPEC_GPIO_EVENT_FALLING
+	MAL_HSPEC_TIMER_INPUT_BOTH    //!< MAL_HSPEC_GPIO_EVENT_BOTH
+} mal_hspec_timer_input_e;
+
+/**
+ * @brief Function pointer typdef for timer in input capture mode.
+ * @param timer Will provide the timer executing the callback.
+ * @param count The captured count.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
+typedef mal_error_e (*mal_hspec_timer_input_capture_callback_t)(mal_hspec_timer_e timer, uint64_t count);
+
+/**
+ * Initialization parameters of a capture input.
+ */
+typedef struct {
+	mal_hspec_timer_e timer; /**< The timer to use for the input capture.*/
+	float frequency; /**< The frequency to count to.*/
+	const mal_hspec_gpio_s *input_io; /**< The gpio of the input capture.*/
+	mal_hspec_timer_input_e input_event; /**< The input event to capture.*/
+	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
+	mal_hspec_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
+} mal_hspec_timer_intput_capture_init_s;
 
 /**
  * @}

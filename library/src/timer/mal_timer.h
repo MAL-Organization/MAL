@@ -182,6 +182,13 @@ mal_error_e mal_timer_get_state(mal_hspec_timer_e timer, mal_timer_state_s *stat
 mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask);
 
 /**
+ * @brief Initialize a timer as input capture timer.
+ * @param init The initialization parameters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_input_capture(mal_hspec_timer_intput_capture_init_s *init);
+
+/**
  * @}
  */
 

@@ -27,6 +27,7 @@
 #include "std/mal_bool.h"
 #include "std/mal_stdlib.h"
 #include "std/mal_stdint.h"
+#include "mal_hspec_mingw_cmn.h"
 #include <windows.h> // Leave this include last, windows defines the word interface and it creates conflicts.
 
 typedef struct {
@@ -36,6 +37,7 @@ typedef struct {
 	HANDLE thread;
 	volatile bool active;
 	volatile uint32_t count;
+	mal_hspec_timer_input_capture_callback_t intput_capture_cb[MAL_HSPEC_GPIO_PORT_SIZE][PORT_SIZE];
 } mingw_timer_s;
 
 static DWORD WINAPI timer_thread(LPVOID lpParameter);
@@ -126,4 +128,25 @@ mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, f
 mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count) {
 	*count = mingw_timers[timer].count;
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_mingw_get_valid_input_capture_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
+	mal_hspec_mingw_cmn_valid_ios(ios, size);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_mingw_timer_input_capture_init(mal_hspec_timer_intput_capture_init_s *init) {
+	// Save timer parameters
+	mingw_timers[init->timer].timer = init->timer;
+	mingw_timers[init->timer].frequency = init->frequency;
+	mingw_timers[init->timer].intput_capture_cb[init->input_io->port][init->input_io->pin] = init->callback;
+	// Set timer active
+	mingw_timers[init->timer].active = true;
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io, uint64_t value) {
+	return mingw_timers[timer].intput_capture_cb[io->port][io->pin](timer, value);
 }
