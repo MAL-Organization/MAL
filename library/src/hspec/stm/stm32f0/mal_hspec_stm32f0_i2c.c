@@ -227,6 +227,7 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	I2C_Init(i2c_typedef, &i2c_init);
 	// Enable interrupt
 	NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(init->interface));
+	NVIC_SetPriority(mal_hspec_stm32f0_i2c_get_irq(init->interface), 100);
 	I2C_ITConfig(i2c_typedef, I2C_IT_RXI|I2C_IT_TXI|I2C_IT_TCI|I2C_IT_NACKI|I2C_IT_ERRI|I2C_IT_STOPI, ENABLE);
 	// Enable I2C, finally!
 	I2C_Cmd(i2c_typedef, ENABLE);
