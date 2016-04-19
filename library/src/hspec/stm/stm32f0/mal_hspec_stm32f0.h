@@ -106,6 +106,8 @@
 
 #define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072rb_get_valid_adc_ios(adc, ios, size)
 
+#define mal_hspec_stm32f0_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f072rb_get_valid_pwm_ios(timer, ios, size)
+
 #elif defined(MAL_STM32F072CB)
 
 #include "stm32f072cb/mal_hspec_stm32f072cb.h"
@@ -133,6 +135,8 @@
 #define mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072cb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
 #define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072cb_get_valid_adc_ios(adc, ios, size)
+
+#define mal_hspec_stm32f0_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_pwm_ios(timer, ios, size)
 
 #elif defined(MAL_STM32F030K6)
 #else

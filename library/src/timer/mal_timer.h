@@ -26,12 +26,25 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
+#include "std/mal_bool.h"
 
 /**
  * @defgroup Timer
  * @brief @copybrief mal_timer.h
  * @{
  */
+
+/**
+ * Structure that contains basic info about a timer.
+ */
+typedef struct {
+	mal_hspec_timer_mode_e mode; //!< The current mode of the timer.
+	bool is_available; //!< true if the timer is available, false otherwise.
+	float frequency; //!< Frequency of the timer.
+	float delta; //!< Frequency error tolerance.
+	// Tick timer variables
+	volatile uint64_t tick_counter; //!< Contains the count of the timer in tick mode.
+} mal_timer_state_s;
 
 /**
  * @brief Disable interrupts for a timer.
@@ -51,6 +64,16 @@
  * equate or use as a condition.
  */
 #define mal_timer_enable_interrupt(timer, active) mal_hspec_enable_timer_interrupt(timer, active)
+
+/**
+ * @brief Set the duty cycle of an initialized PWM IO.
+ * @param timer The timer of the PWM IO.
+ * @param gpio The GPIO the PWM is on.
+ * @param duty_cyle A float that should go from 0 to 1. 0 is 0% duty cyle and 1
+ * is 100% duty cycle.
+ * @return #MAL_ERROR_OK on success.
+ */
+#define mal_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
 
 /**
  * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
@@ -91,6 +114,22 @@ uint64_t mal_timer_get_tick(mal_hspec_timer_e handle);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_free(mal_hspec_timer_e timer);
+
+/**
+ * @brief Initializes a timer and the IO as a PWM generator.
+ * @param init The initialize structure of the pwm.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init);
+
+/**
+ * @brief Returns the state of the timer.
+ * @param timer The desired timer.
+ * @param state A pointer to a mal_timer_state_s structure. The timer state
+ * will be copied there.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_state(mal_hspec_timer_e timer, mal_timer_state_s *state);
 
 /**
  * @}

@@ -177,8 +177,9 @@ typedef enum {
  * Possible timer modes.
  */
 typedef enum {
-	MAL_HSPEC_TIMER_MODE_TICK,//!< MAL_HSPEC_TIMER_MODE_TICK
-	MAL_HSPEC_TIMER_MODE_TASK //!< MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_TICK,	//!< MAL_HSPEC_TIMER_MODE_TICK
+	MAL_HSPEC_TIMER_MODE_TASK,	//!< MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_PWM	//!< MAL_HSPEC_TIMER_MODE_PWM
 } mal_hspec_timer_mode_e;
 
 /**
@@ -188,6 +189,13 @@ typedef enum {
  * done with this status.
  */
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
+
+typedef struct {
+	mal_hspec_timer_e timer;
+	float frequency;
+	float delta;
+	const mal_hspec_gpio_s *pwm_io;
+} mal_hspec_timer_pwm_init_s;
 
 /**
  * @}

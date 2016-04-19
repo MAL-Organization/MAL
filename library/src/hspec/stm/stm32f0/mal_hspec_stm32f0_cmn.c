@@ -84,3 +84,17 @@ mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec
 
 	return MAL_ERROR_HARDWARE_INVALID;
 }
+
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer, uint8_t *function) {
+	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE];
+	// Fetch timer alternate functions
+	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
+	// Extract alternate function
+	mal_hspec_stm32f0_af_e target_af = (*timer_afs)[gpio->port][gpio->pin][timer];
+	// Check if it is a valid combinations
+	if (MAL_HSPEC_STM32F0_AF_NONE == target_af) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Get alternate function
+	return mal_hspec_stm32f0_get_pin_af(gpio, target_af, function);
+}
