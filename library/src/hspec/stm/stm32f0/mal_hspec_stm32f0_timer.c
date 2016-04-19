@@ -436,7 +436,7 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, float duty_cycle) {
 	// Get timer
 	TIM_TypeDef *tim = get_timer_typedef(timer);
-	// We to compute the duty cycle
+	// We need to compute the duty cycle
 	uint32_t compare_value;
 	if (duty_cycle >= 1.0f) {
 		// Get timer resolution to get max compare value
