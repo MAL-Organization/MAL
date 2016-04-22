@@ -76,6 +76,35 @@ typedef struct {
 #define mal_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
 
 /**
+ * @brief Get the resolution of timer. The resolution is number of bits for the
+ * count register.
+ * @param timer The timer to get the resolution from.
+ * @param resolution A pointer to a uint8_t. It will contain the number of bits
+ * the count register uses. Usually 8, 16, 32 or 64 bits.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_timer_get_resolution(timer, resolution) mal_hspec_timer_get_resolution(timer, resolution)
+
+/**
+ * @brief Get the actual counting frequency of a timer.
+ * @param timer The timer to get the frequency from.
+ * @param frequency A pointer to a float that will contain the counting
+ * frequency.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_timer_get_count_frequency(timer, frequency) mal_hspec_timer_get_count_frequency(timer, frequency)
+
+#define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-count1) & mask)) & mask)
+
+/**
+ * @brief Get the count register of a timer.
+ * @param timer The timer to get the count from.
+ * @param count A pointer to a uint64_t. It will contain the count.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_timer_get_count(timer, count) mal_hspec_timer_get_count(timer, count)
+
+/**
  * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
  * to read ticks.
  * @param timer The desired timer to initialize.
@@ -87,6 +116,19 @@ typedef struct {
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_e *handle);
+
+/**
+ * This is a simple timer initialization. The main difference between this and
+ * the tick timer is you have to handle yourself the overflow of the timer
+ * based on timer resolution. This method is much faster however because it
+ * doesn't rely on interrupts to work. Use this to time precise events.
+ * @param timer The desired timer to initialize.
+ * @param frequency The frequency to count at in hertz.
+ * @param handle This handle will return the used timer. Useful when using
+ * #MAL_HSPEC_TIMER_ANY.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_count(mal_hspec_timer_e timer, float frequency, mal_hspec_timer_e *handle);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task).
@@ -130,6 +172,21 @@ mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_get_state(mal_hspec_timer_e timer, mal_timer_state_s *state);
+
+/**
+ * @brief Will return the mask to use to filter the count register values.
+ * @param timer
+ * @param mask A pointer to a uint64_t that will contain the mask;
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask);
+
+/**
+ * @brief Initialize a timer as input capture timer.
+ * @param init The initialization parameters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_input_capture(mal_hspec_timer_intput_capture_init_s *init);
 
 /**
  * @}
