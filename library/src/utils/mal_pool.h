@@ -63,9 +63,8 @@ typedef struct {
  * should also indicate how many object can fit into the buffers.
  * @param object_size The size, in bytes, of a single object.
  * @param pool The pool to initialize.
- * @return Returns #MAL_ERROR_OK upon completion.
  */
-mal_error_e mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool);
+void mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool);
 
 /**
  * @brief This function will attempt to allocate a free object.
@@ -80,10 +79,14 @@ mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object);
  * @brief This function will free an allocated object.
  * @param pool The pool to free the object from.
  * @param object The object to free.
- * @return Will always return #MAL_ERROR_OK, even if the object is free or not
- * found.
  */
-mal_error_e mal_pool_free(mal_pool_s *pool, void *object);
+void mal_pool_free(mal_pool_s *pool, void *object);
+
+/**
+ * This will reset all objects as free.
+ * @param pool The pool to reset
+ */
+void mal_pool_flush(mal_pool_s *pool);
 
 /**
  * @}
