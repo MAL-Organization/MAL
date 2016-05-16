@@ -29,7 +29,11 @@
 #include "mal_hspec_mingw_uuid.h"
 
 mal_error_e mal_hspec_mingw_uuid_read(uint64_t *uuid) {
-	srand(time(NULL));
-	*uuid = (uint64_t)rand();
+	static uint64_t local_uuid = 0;
+	if (!local_uuid) {
+		srand(time(NULL));
+		local_uuid = (uint64_t)rand();
+	}
+	*uuid = local_uuid;
 	return MAL_ERROR_OK;
 }

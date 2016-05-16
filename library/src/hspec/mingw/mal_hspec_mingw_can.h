@@ -42,4 +42,6 @@ mal_error_e mal_hspec_mingw_can_add_filter(mal_hspec_can_e interface, mal_hspec_
 
 mal_error_e mal_hspec_mingw_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
 
+mal_error_e mal_hspec_mingw_can_push_rx_msg(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
+
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_CAN_H_ */

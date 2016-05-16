@@ -25,7 +25,7 @@
 
 #include "mal_pool.h"
 
-mal_error_e mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool) {
+void mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *object_buffers, uint64_t object_size, mal_pool_s *pool) {
 	// Initialise pool
 	pool->object_size = object_size;
 	pool->objects = object_pool;
@@ -38,8 +38,6 @@ mal_error_e mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, ui
 		pool->objects[object].object = object_buffers + object_offset;
 		object_offset += object_size;
 	}
-
-	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object) {
@@ -54,13 +52,18 @@ mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object) {
 	return MAL_ERROR_EMPTY;
 }
 
-mal_error_e mal_pool_free(mal_pool_s *pool, void *object) {
+void mal_pool_free(mal_pool_s *pool, void *object) {
 	uint64_t index;
 	for (index = 0; index < pool->size; index++) {
 		if (pool->objects[index].object == object) {
 			pool->objects[index].is_free = true;
-			return MAL_ERROR_OK;
 		}
 	}
-	return MAL_ERROR_OK;
+}
+
+void mal_pool_flush(mal_pool_s *pool) {
+	uint64_t index;
+	for (index = 0; index < pool->size; index++) {
+		pool->objects[index].is_free = true;
+	}
 }
