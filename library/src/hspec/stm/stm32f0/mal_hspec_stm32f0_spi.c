@@ -4,19 +4,41 @@
  *  Created on: Mar 30, 2016
  *      Author: Olivier
  */
+/*
+ * Copyright (c) 2015 Olivier Allaire
+ *
+ * This file is part of MAL.
+ *
+ * MAL is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MAL is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "mal_hspec_stm32f0_spi.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
 #include "gpio/mal_gpio.h"
 #include "stm32f0/stm32f0xx_spi.h"
+#include "std/mal_stdlib.h"
+#include "std/mal_bool.h"
 
 mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->mosi->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->miso->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->clk->port), ENABLE);
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->select->port), ENABLE);
+	if (NULL != init->select) {
+		RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->select->port), ENABLE);
+	}
 	// Enable SPI clock
 	if (MAL_HSPEC_SPI_1 == init->interface) {
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
@@ -71,17 +93,21 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 	} else if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == init->select_mode) {
 		// Initialize GPIO
 		mal_hspec_gpio_init_s gpio_init;
-		gpio_init.direction = MAL_GPIO_DIR_OUT;
+		gpio_init.direction = MAL_HSPEC_GPIO_DIR_OUT;
 		gpio_init.gpio = *init->select;
-		gpio_init.output_config = MAL_GPIO_OUT_PP;
-		gpio_init.pupd = MAL_GPIO_PUPD_NONE;
+		gpio_init.output_config = MAL_HSPEC_GPIO_OUT_PP;
+		gpio_init.pupd = MAL_HSPEC_GPIO_PUPD_NONE;
 		gpio_init.speed = UINT64_MAX;
 		result = mal_gpio_init(&gpio_init);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
-		// Set high
-		result = mal_gpio_set(init->select, true);
+		// Set unselected
+		if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
+			result = mal_gpio_set(init->select, false);
+		} else {
+			result = mal_gpio_set(init->select, true);
+		}
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
@@ -126,6 +152,88 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	spi_init.SPI_DataSize = (uint16_t)(init->data_size - 1) << 8;
+	// Set clock idle polarity
+	if (MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state) {
+		spi_init.SPI_CPOL = SPI_CPOL_Low;
+	} else {
+		spi_init.SPI_CPOL = SPI_CPOL_High;
+	}
+	// Set on which edge data should be valid
+	if (MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state &&
+		MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING == init->latch_edge) {
+		spi_init.SPI_CPHA = SPI_CPHA_1Edge;
+	} else if (MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH == init->clk_idle_state &&
+			   MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING == init->latch_edge) {
+		spi_init.SPI_CPHA = SPI_CPHA_1Edge;
+	} else {
+		spi_init.SPI_CPHA = SPI_CPHA_2Edge;
+	}
+	// Set select (NSS) control mode
+	switch (init->select_mode) {
+		case MAL_HSPEC_SPI_SELECT_MODE_HARDWARE:
+			// This MCU only supports low polarity in hardware mode
+			if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
+				return MAL_ERROR_HARDWARE_INVALID;
+			}
+			SPI_NSSPulseModeCmd(spi_typedef, ENABLE);
+			break;
+		case MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE:
+		case MAL_HSPEC_SPI_SELECT_MODE_USER:
+		case MAL_HSPEC_SPI_SELECT_MODE_NONE:
+		default:
+			spi_init.SPI_NSS = SPI_NSS_Soft;
+			break;
+	}
+	// Get SPI clock source
+	// Set I2C clock source
+	RCC_ClocksTypeDef clocks;
+	RCC_GetClocksFreq(&clocks);
+	// Set the clock prescaler. The prescaler can only divide with powers of 2.
+	// The valid values range from 2 to 256. In other words 2^1 to 2^8. The
+	// prescaler value of the register is 0 based. This means you have to
+	// subtract 1 to the value to set to the register.
+	bool found = false;
+	int prescaler = 0;
+	for (prescaler = 0; prescaler <= 7; prescaler++) {
+		uint32_t current_clock = clocks.PCLK_Frequency >> (prescaler + 1);
+		// Check if this is a match
+		if (current_clock == init->clock_speed) {
+			found = true;
+			break;
+		}
+		// Check if we should keep looking
+		if (current_clock < init->clock_speed) {
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_CLOCK_ERROR;
+	}
+	// The prescaler bits start at bit 3
+	spi_init.SPI_BaudRatePrescaler = prescaler << 3;
+	// Set bit order
+	if (MAL_HSPEC_SPI_BIT_ORDER_MSB == init->bit_order) {
+		spi_init.SPI_FirstBit = SPI_FirstBit_MSB;
+	} else {
+		spi_init.SPI_FirstBit = SPI_FirstBit_LSB;
+	}
+	// Initialize
+	SPI_Init(spi_typedef, &spi_init);
+	// Configure IRQ
+	NVIC_InitTypeDef nvic_init;
+	if (MAL_HSPEC_I2C_1 == init->interface) {
+		nvic_init.NVIC_IRQChannel = SPI1_IRQn;
+	} else {
+		nvic_init.NVIC_IRQChannel = SPI2_IRQn;
+	}
+	//FIXME To fix with issue #19.
+	nvic_init.NVIC_IRQChannelPriority = 10;
+	nvic_init.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&nvic_init);
+	// Enable transmit buffer empty
+	SPI_I2S_ITConfig(spi_typedef, SPI_I2S_IT_TXE, ENABLE);
+	// Enable SPI interface
+	SPI_Cmd(spi_typedef, ENABLE);
 
-	spi_init.SPI_CPHA = SPI_CPHA_2Edge;
+	return MAL_ERROR_OK;
 }

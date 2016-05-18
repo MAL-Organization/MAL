@@ -1,8 +1,8 @@
 /*
- * mal_hspec_stm32f0_spi.h
+ * mal_spi.c
  *
- *  Created on: Mar 30, 2016
- *      Author: Olivier
+ *  Created on: May 18, 2016
+ *      Author: olivi
  */
 /*
  * Copyright (c) 2015 Olivier Allaire
@@ -23,12 +23,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_
-#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_
+#include "mal_spi.h"
 
-#include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
-
-mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init);
-
-#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_ */
+mal_error_e mal_spi_init_master(mal_hspec_spi_init_s *init) {
+	mal_error_e result;
+	// Check if interface is valid
+	result = mal_hspec_is_spi_interface_valid(init->interface, init->mosi, init->miso, init->clk, init->select);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialize as master interface
+	return mal_hspec_spi_master_init(init);
+}

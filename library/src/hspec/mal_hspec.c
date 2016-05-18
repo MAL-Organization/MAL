@@ -27,6 +27,7 @@
 #include "hspec/mal_hspec.h"
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_bool.h"
+#include "std/mal_stdlib.h"
 
 // Clock
 
@@ -256,15 +257,17 @@ mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface,
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	// Check select IO
-	found = false;
-	for (i = 0; i < selects_size; i++) {
-		if (selects[i].pin == select->pin && selects[i].port == select->port) {
-			found = true;
-			break;
+	if (NULL != select) {
+		found = false;
+		for (i = 0; i < selects_size; i++) {
+			if (selects[i].pin == select->pin && selects[i].port == select->port) {
+				found = true;
+				break;
+			}
 		}
-	}
-	if (!found) {
-		return MAL_ERROR_HARDWARE_INVALID;
+		if (!found) {
+			return MAL_ERROR_HARDWARE_INVALID;
+		}
 	}
 	return MAL_ERROR_OK;
 }

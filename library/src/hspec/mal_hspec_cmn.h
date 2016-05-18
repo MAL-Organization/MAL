@@ -563,17 +563,60 @@ typedef enum {
 	MAL_HSPEC_SPI_DATA_16_BITS = 16 //!< MAL_HSPEC_SPI_DATA_16_BITS
 } mal_hspec_spi_data_size_e;
 
+/**
+ * Possible states for clock when there is no active transactions.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW,//!< MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW
+	MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH//!< MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH
+} mal_hspec_spi_clk_idle_state_e;
 
+/**
+ * Possible values for valid data on the bus. The edge refers to the clock
+ * signal.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING,//!< MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING
+	MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING//!< MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING
+} mal_hspec_spi_data_latch_edge_e;
 
+/**
+ * Possible values of the select IO when selecting the device.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_SELECT_POLARITY_LOW,//!< The select is active low.
+	MAL_HSPEC_SPI_SELECT_POLARITY_HIGH//!< The select is active high.
+} mal_hspec_spi_select_polarity_e;
+
+/**
+ * Possible values for bit ordering.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_BIT_ORDER_MSB,//!< Most significant bit first
+	MAL_HSPEC_SPI_BIT_ORDER_LSB //!< Least significant bit first
+} mal_hspec_spi_bit_order_e;
+
+/**
+ *
+ */
 typedef struct {
 	mal_hspec_spi_e interface;
+	uint64_t clock_speed;
 	mal_hspec_gpio_s *mosi;
 	mal_hspec_gpio_s *miso;
 	mal_hspec_gpio_s *clk;
 	mal_hspec_gpio_s *select;
 	mal_hspec_spi_select_mode_e select_mode;
 	mal_hspec_spi_data_size_e data_size;
+	mal_hspec_spi_bit_order_e bit_order;
+	mal_hspec_spi_clk_idle_state_e clk_idle_state;
+	mal_hspec_spi_data_latch_edge_e latch_edge;
+	mal_hspec_spi_select_polarity_e select_polarity;
 } mal_hspec_spi_init_s;
+
+typedef struct {
+
+} mal_hspec_spi_msg_s;
 
 /**
  * @}

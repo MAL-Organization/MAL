@@ -1,13 +1,8 @@
-/*
- * mal_hspec_stm32f0_spi.h
- *
- *  Created on: Mar 30, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
- *
- * This file is part of MAL.
+/**
+ * @file mal_spi.h
+ * @author Olivier Allaire
+ * @copyright Copyright (c) 2015 Olivier Allaire
+ * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,14 +16,30 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ * @brief Functions to access and configure the SPI interfaces of the MCU.
  */
 
-#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_
-#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_
+#ifndef SPI_MAL_SPI_H_
+#define SPI_MAL_SPI_H_
 
 #include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
+#include "hspec/mal_hspec.h"
 
-mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init);
+/**
+ * @defgroup SPI
+ * @brief @copybrief mal_spi.h
+ * @{
+ */
 
-#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SPI_H_ */
+/**
+ * @brief Initialize an SPI interface as a master interface.
+ * @param init The initialization parameters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_spi_init_master(mal_hspec_spi_init_s *init);
+
+/**
+ * @}
+ */
+
+#endif /* SPI_MAL_SPI_H_ */
