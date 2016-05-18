@@ -79,6 +79,24 @@
 
 #define mal_hspec_timer_free(timer) mal_hspec_stm32f0_timer_free(timer)
 
+#define mal_hspec_get_valid_pwm_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size)
+
+#define mal_hspec_timer_pwm_init(init) mal_hspec_stm32f0_timer_pwm_init(init)
+
+#define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_stm32f0_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
+
+#define mal_hspec_timer_count_init(timer, frequency) mal_hspec_stm32f0_timer_count_init(timer, frequency)
+
+#define mal_hspec_timer_get_resolution(timer, resolution) mal_hspec_stm32f0_timer_get_resolution(timer, resolution)
+
+#define mal_hspec_timer_get_count_frequency(timer, frequency) mal_hspec_stm32f0_timer_get_count_frequency(timer, frequency)
+
+#define mal_hspec_timer_get_count(timer, count) mal_hspec_stm32f0_timer_get_count(timer, count)
+
+#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size)
+
+#define mal_hspec_timer_input_capture_init(init) mal_hspec_stm32f0_timer_input_capture_init(init)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
@@ -183,6 +201,24 @@
 
 #define mal_hspec_timer_free(timer) mal_hspec_mingw_timer_free(timer)
 
+#define mal_hspec_get_valid_pwm_ios(timer, ios, size) mal_hspec_mingw_get_valid_pwm_ios(timer, ios, size)
+
+#define mal_hspec_timer_pwm_init(init) mal_hspec_mingw_timer_pwm_init(init)
+
+#define mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_mingw_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
+
+#define mal_hspec_timer_count_init(timer, frequency) mal_hspec_mingw_timer_count_init(timer, frequency)
+
+#define mal_hspec_timer_get_resolution(timer, resolution) mal_hspec_mingw_timer_get_resolution(timer, resolution)
+
+#define mal_hspec_timer_get_count_frequency(timer, frequency) mal_hspec_mingw_timer_get_count_frequency(timer, frequency)
+
+#define mal_hspec_timer_get_count(timer, count) mal_hspec_mingw_timer_get_count(timer, count)
+
+#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_mingw_get_valid_input_capture_ios(timer, ios, size)
+
+#define mal_hspec_timer_input_capture_init(init) mal_hspec_mingw_timer_input_capture_init(init)
+
 // I2C mappings
 
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_mingw_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
@@ -241,7 +277,7 @@
 #error No hardware specfic family symbol specified...
 #endif
 
-mal_error_e mal_hspec_is_port_valid(mal_hspec_port_e port);
+mal_error_e mal_hspec_is_port_valid(mal_hspec_gpio_port_e port);
 
 mal_error_e mal_hspec_is_gpio_valid(mal_hspec_gpio_s *gpio);
 
@@ -253,10 +289,14 @@ mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_hspec_gpio_s *scl, const mal_hspec_gpio_s *sda);
 
-mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, mal_hspec_gpio_s *tx, mal_hspec_gpio_s *rx);
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx);
 
 mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
 
 mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_hspec_gpio_s *mosi, const mal_hspec_gpio_s *miso, const mal_hspec_gpio_s *clk, const mal_hspec_gpio_s *select);
+
+mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
+
+mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

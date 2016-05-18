@@ -1,8 +1,8 @@
 /*
- * mal_hspec_mingw_clock.c
+ * test_mal_timer.h
  *
- *  Created on: Mar 26, 2016
- *      Author: olivi
+ *  Created on: Apr 8, 2016
+ *      Author: Olivier
  */
 /*
  * Copyright (c) 2015 Olivier Allaire
@@ -23,8 +23,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_clock.h"
+#ifndef TIMER_TEST_MAL_TIMER_H_
+#define TIMER_TEST_MAL_TIMER_H_
 
-mal_error_e mal_hspec_mingw_set_system_clk(const mal_hspec_system_clk_s *clk) {
-	return MAL_ERROR_OK;
-}
+#include "gtest/gtest.h"
+
+class TestMalTimer: public ::testing::Test {
+protected:
+	virtual void SetUp();
+	virtual void TearDown();
+};
+
+#endif /* TIMER_TEST_MAL_TIMER_H_ */

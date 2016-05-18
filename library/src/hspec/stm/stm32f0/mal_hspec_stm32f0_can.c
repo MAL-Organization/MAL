@@ -64,6 +64,7 @@ static uint16_t can_standard_fr_format(uint16_t id);
 static mal_hspec_can_tx_callback_t can_tx_callback = NULL;
 static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
 static can_filter_bank_s can_filter_banks[CAN_FILTER_BANKS_SIZE];
+static volatile bool interface_active = false;
 
 mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	// Enable GPIO clocks
@@ -195,7 +196,10 @@ void CEC_CAN_IRQHandler(void) {
 			} else {
 				CAN_ITConfig(CAN, CAN_IT_TME, DISABLE);
 				CAN_ClearITPendingBit(CAN, CAN_IT_TME);
+				interface_active = false;
 			}
+		} else {
+			interface_active = false;
 		}
 	}
 	// Check FIFOs
@@ -235,7 +239,8 @@ mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_
 	// Disable interrupts to get true status of TX queue
 	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Check if queue is empty
-	if (((CAN->TSR & CAN_TSR_TME0) == CAN_TSR_TME0)) {
+	if (!interface_active) {
+		interface_active = true;
 		can_transmit_msg(msg);
 		CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
 	} else {

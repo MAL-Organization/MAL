@@ -26,38 +26,38 @@
 #include "mal_hspec_stm32f0_cmn.h"
 #include "std/mal_stdlib.h"
 
-GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_port_e port) {
+GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_HSPEC_GPIO_PORT_A:
 		return GPIOA;
-	case MAL_HSPEC_PORT_B:
+	case MAL_HSPEC_GPIO_PORT_B:
 		return GPIOB;
-	case MAL_HSPEC_PORT_C:
+	case MAL_HSPEC_GPIO_PORT_C:
 		return GPIOC;
-	case MAL_HSPEC_PORT_D:
+	case MAL_HSPEC_GPIO_PORT_D:
 		return GPIOD;
-	case MAL_HSPEC_PORT_E:
+	case MAL_HSPEC_GPIO_PORT_E:
 		return GPIOE;
-	case MAL_HSPEC_PORT_F:
+	case MAL_HSPEC_GPIO_PORT_F:
 		return GPIOF;
 	default:
 		return NULL;
 	}
 }
 
-uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_port_e port) {
+uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_HSPEC_GPIO_PORT_A:
 		return RCC_AHBPeriph_GPIOA;
-	case MAL_HSPEC_PORT_B:
+	case MAL_HSPEC_GPIO_PORT_B:
 		return RCC_AHBPeriph_GPIOB;
-	case MAL_HSPEC_PORT_C:
+	case MAL_HSPEC_GPIO_PORT_C:
 		return RCC_AHBPeriph_GPIOC;
-	case MAL_HSPEC_PORT_D:
+	case MAL_HSPEC_GPIO_PORT_D:
 		return RCC_AHBPeriph_GPIOD;
-	case MAL_HSPEC_PORT_E:
+	case MAL_HSPEC_GPIO_PORT_E:
 		return RCC_AHBPeriph_GPIOE;
-	case MAL_HSPEC_PORT_F:
+	case MAL_HSPEC_GPIO_PORT_F:
 	default:
 		return RCC_AHBPeriph_GPIOA;
 	}
@@ -83,4 +83,18 @@ mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec
 	}
 
 	return MAL_ERROR_HARDWARE_INVALID;
+}
+
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer, uint8_t *function) {
+	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE];
+	// Fetch timer alternate functions
+	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
+	// Extract alternate function
+	mal_hspec_stm32f0_af_e target_af = (*timer_afs)[gpio->port][gpio->pin][timer];
+	// Check if it is a valid combinations
+	if (MAL_HSPEC_STM32F0_AF_NONE == target_af) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	// Get alternate function
+	return mal_hspec_stm32f0_get_pin_af(gpio, target_af, function);
 }

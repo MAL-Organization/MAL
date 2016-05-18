@@ -61,20 +61,20 @@ typedef struct {
  * Possible GPIO ports.
  */
 typedef enum {
-	MAL_HSPEC_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
-	MAL_HSPEC_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
-	MAL_HSPEC_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
-	MAL_HSPEC_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
-	MAL_HSPEC_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
-	MAL_HSPEC_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
-	MAL_HSPEC_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
-} mal_hspec_port_e;
+	MAL_HSPEC_GPIO_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
+	MAL_HSPEC_GPIO_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
+	MAL_HSPEC_GPIO_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
+	MAL_HSPEC_GPIO_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
+	MAL_HSPEC_GPIO_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
+	MAL_HSPEC_GPIO_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
+	MAL_HSPEC_GPIO_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
+} mal_hspec_gpio_port_e;
 
 /**
  * Defines a GPIO.
  */
 typedef struct {
-	mal_hspec_port_e port; /**< The port of the GPIO.*/
+	mal_hspec_gpio_port_e port; /**< The port of the GPIO.*/
 	uint8_t pin; /**< The pin of the GPIO.*/
 } mal_hspec_gpio_s;
 
@@ -82,25 +82,25 @@ typedef struct {
  * Possible GPIO directions.
  */
 typedef enum {
-	MAL_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
-	MAL_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
+	MAL_HSPEC_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
+	MAL_HSPEC_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
 } mal_hspec_gpio_dir_e;
 
 /**
  * Possible GPIO types.
  */
 typedef enum {
-	MAL_GPIO_OUT_PP,//!< Push-Pull
-	MAL_GPIO_OUT_OD //!< Open Drain
+	MAL_HSPEC_GPIO_OUT_PP,//!< Push-Pull
+	MAL_HSPEC_GPIO_OUT_OD //!< Open Drain
 } mal_hspec_gpio_out_e;
 
 /**
  * Possible pull-up and pull-down values.
  */
 typedef enum {
-	MAL_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
-	MAL_GPIO_PUPD_PU,  //!< Pull-up.
-	MAL_GPIO_PUPD_PD   //!< Pull-down.
+	MAL_HSPEC_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
+	MAL_HSPEC_GPIO_PUPD_PU,  //!< Pull-up.
+	MAL_HSPEC_GPIO_PUPD_PD   //!< Pull-down.
 } mal_hspec_gpio_pupd_e;
 
 /**
@@ -127,7 +127,7 @@ typedef enum {
  * @brief GPIO event callback.
  * @return Return a status of the callback.
  */
-typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(void);
+typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(mal_hspec_gpio_s *gpio);
 
 /**
  * Parameters to initialize an event.
@@ -177,8 +177,11 @@ typedef enum {
  * Possible timer modes.
  */
 typedef enum {
-	MAL_HSPEC_TIMER_MODE_TICK,//!< MAL_HSPEC_TIMER_MODE_TICK
-	MAL_HSPEC_TIMER_MODE_TASK //!< MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_TICK,			//!< MAL_HSPEC_TIMER_MODE_TICK
+	MAL_HSPEC_TIMER_MODE_TASK,			//!< MAL_HSPEC_TIMER_MODE_TASK
+	MAL_HSPEC_TIMER_MODE_PWM,			//!< MAL_HSPEC_TIMER_MODE_PWM
+	MAL_HSPEC_TIMER_MODE_COUNT,			//!< MAL_HSPEC_TIMER_MODE_COUNT
+	MAL_HSPEC_TIMER_MODE_INPUT_CAPTURE	//!< MAL_HSPEC_TIMER_MODE_COUNT
 } mal_hspec_timer_mode_e;
 
 /**
@@ -188,6 +191,46 @@ typedef enum {
  * done with this status.
  */
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
+
+/**
+ * Initialization parameters of a PWM input.
+ */
+typedef struct {
+	mal_hspec_timer_e timer; /**< The timer to use for the PWM output.*/
+	float frequency; /**< The frequency of the PWM.*/
+	float delta; /**< The acceptable frequency delta.*/
+	const mal_hspec_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
+} mal_hspec_timer_pwm_init_s;
+
+/**
+ * Possible timer input triggers.
+ */
+typedef enum {
+	MAL_HSPEC_TIMER_INPUT_RISING, //!< MAL_HSPEC_GPIO_EVENT_RISING
+	MAL_HSPEC_TIMER_INPUT_FALLING,//!< MAL_HSPEC_GPIO_EVENT_FALLING
+	MAL_HSPEC_TIMER_INPUT_BOTH    //!< MAL_HSPEC_GPIO_EVENT_BOTH
+} mal_hspec_timer_input_e;
+
+/**
+ * @brief Function pointer typdef for timer in input capture mode.
+ * @param timer Will provide the timer executing the callback.
+ * @param count The captured count.
+ * @return Return a status once you executed your callback. For now, nothing is
+ * done with this status.
+ */
+typedef mal_error_e (*mal_hspec_timer_input_capture_callback_t)(mal_hspec_timer_e timer, uint64_t count);
+
+/**
+ * Initialization parameters of a capture input.
+ */
+typedef struct {
+	mal_hspec_timer_e timer; /**< The timer to use for the input capture.*/
+	float frequency; /**< The frequency to count to.*/
+	const mal_hspec_gpio_s *input_io; /**< The gpio of the input capture.*/
+	mal_hspec_timer_input_e input_event; /**< The input event to capture.*/
+	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
+	mal_hspec_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
+} mal_hspec_timer_intput_capture_init_s;
 
 /**
  * @}
@@ -406,8 +449,8 @@ typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, ma
  */
 typedef struct {
 	mal_hspec_can_e interface; /**< The CAN interface to initialize.*/
-	mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	const mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	const mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	mal_hspec_can_tx_callback_t tx_callback; /**< The callback to be executed when a message is transmitted.*/
 	mal_hspec_can_rx_callback_t rx_callback; /**< The callback to be executed when a message is received.*/

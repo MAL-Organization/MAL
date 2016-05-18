@@ -44,10 +44,10 @@ mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_hand
 		return result;
 	}
 	// Initialise buffer
-	result = mal_circular_buffer_init(init->buffer, sizeof(mal_hspec_i2c_msg_s), init->buffer_size, &handle->buffer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+	mal_circular_buffer_init(init->buffer,
+							 sizeof(mal_hspec_i2c_msg_s),
+							 init->buffer_size,
+							 (mal_circular_buffer_s*)&handle->buffer);
 	// Save interface
 	handle->interface = init->i2c_init.interface;
 	i2c_interface_handles[handle->interface].buffer_handle = handle;
@@ -60,23 +60,28 @@ mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_hspec_i2c_
 	bool active = mal_i2c_disable_interrupt(handle->interface);
 	// Try to send message
 	if (NULL == i2c_interface_handles[handle->interface].callback) {
-		i2c_interface_handles[handle->interface].callback = msg->callback;
-		msg->callback = &i2c_callback;
-		result = mal_i2c_transfer(handle->interface, msg);
+		// Copy msg to active msg
+		handle->active_msg = *msg;
+		// Swap callbacks
+		i2c_interface_handles[handle->interface].callback = handle->active_msg.callback;
+		handle->active_msg.callback = &i2c_callback;
+		// Start transfer
+		result = mal_i2c_transfer(handle->interface,
+								  (mal_hspec_i2c_msg_s*)&handle->active_msg);
 		if (MAL_ERROR_OK != result) {
 			// Failed to write message restore callback for queue
-			msg->callback = i2c_interface_handles[handle->interface].callback;
+			handle->active_msg.callback = i2c_interface_handles[handle->interface].callback;
 		}
 	}
 	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
-		result = mal_circular_buffer_write(&handle->buffer, msg);
+		result = mal_circular_buffer_write((mal_circular_buffer_s*)&handle->buffer,
+										   msg);
 	}
 	mal_i2c_enable_interrupt(handle->interface, active);
 	return result;
 }
 
 static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_s *packet, mal_hspec_i2c_result_e result, mal_hspec_i2c_msg_s **next_msg) {
-	static mal_hspec_i2c_msg_s buffer_msg;
 	static mal_hspec_i2c_msg_s *cb_next_msg;
 	cb_next_msg = NULL;
 	// Execute callback
@@ -88,9 +93,10 @@ static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_
 	*next_msg = cb_next_msg;
 	if (NULL == cb_next_msg) {
 		mal_error_e mal_result;
-		mal_result = mal_circular_buffer_read(&i2c_interface_handles[interface].buffer_handle->buffer, &buffer_msg);
+		mal_result = mal_circular_buffer_read((mal_circular_buffer_s*)&i2c_interface_handles[interface].buffer_handle->buffer,
+				                              (void*)&i2c_interface_handles[interface].buffer_handle->active_msg);
 		if (MAL_ERROR_OK == mal_result) {
-			*next_msg = &buffer_msg;
+			*next_msg = (mal_hspec_i2c_msg_s*)&i2c_interface_handles[interface].buffer_handle->active_msg;
 		} else {
 			*next_msg = NULL;
 		}
