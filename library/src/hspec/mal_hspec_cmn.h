@@ -608,7 +608,8 @@ typedef struct {
 	mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
 								  is to be omitted. This could be because the
 								  mode is user or there is no global select
-								  pin.*/
+								  pin. If not NULL, it should point to static
+								  memory space.*/
 	mal_hspec_spi_select_mode_e select_mode;/**< The select mode.*/
 	mal_hspec_spi_data_size_e data_size;/**< The size of each words.*/
 	mal_hspec_spi_bit_order_e bit_order;/**< The order of each bit in a word.*/
@@ -621,10 +622,11 @@ typedef struct {
 typedef struct MAL_HSPEC_SPI_MSG mal_hspec_spi_msg_s;
 /// @endcond
 
-typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi_msg_s *msg);
+typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi_msg_s *msg, mal_hspec_spi_msg_s **next_msg);
 
 typedef struct MAL_HSPEC_SPI_MSG {
 	mal_hspec_gpio_s *select;
+	mal_hspec_spi_select_polarity_e select_polarity;
 	uint16_t *data;
 	uint8_t data_length;
 	mal_hspec_spi_master_transaction_complete_t callback;

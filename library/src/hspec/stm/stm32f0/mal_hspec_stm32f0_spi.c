@@ -35,7 +35,7 @@ typedef struct {
 	mal_hspec_spi_e interface;
 	SPI_TypeDef *spi_typedef;
 	// Runtime settings
-	mal_hspec_gpio_s select;
+	mal_hspec_gpio_s *select;
 	mal_hspec_spi_select_mode_e select_mode;
 	mal_hspec_spi_select_polarity_e select_polarity;
 	// Runtime variables
@@ -44,9 +44,13 @@ typedef struct {
 	uint8_t data_ptr;
 } stm_spi_interface_s;
 
-static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interface_s **local_interface);
+static mal_error_e get_local_interface(mal_hspec_spi_e interface,
+									   stm_spi_interface_s **local_interface);
 
-static mal_error_e set_global_select_io(stm_spi_interface_s *local_interface, bool state);
+static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
+								 bool selected);
+
+static void handle_spi_interrupt(stm_spi_interface_s *local_interface);
 
 stm_spi_interface_s spi1_interface;
 stm_spi_interface_s spi2_interface;
@@ -249,7 +253,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	local_interface->data_ptr = 0;
 	local_interface->interface = init->interface;
 	local_interface->is_active = false;
-	local_interface->select = *init->select;
+	local_interface->select = init->select;
 	local_interface->select_mode = init->select_mode;
 	local_interface->select_polarity = init->select_polarity;
 	local_interface->spi_typedef = spi_typedef;
@@ -260,8 +264,6 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	nvic_init.NVIC_IRQChannelPriority = 10;
 	nvic_init.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nvic_init);
-	// Enable transmit buffer empty
-	SPI_I2S_ITConfig(spi_typedef, SPI_I2S_IT_TXE, ENABLE);
 	// Enable SPI interface
 	SPI_Cmd(spi_typedef, ENABLE);
 
@@ -281,12 +283,12 @@ static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interf
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_spi_send_msg(mal_hspec_spi_e interface,
-										   mal_hspec_spi_msg_s *msg) {
+mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface,
+										   	   	    mal_hspec_spi_msg_s *msg) {
 	mal_error_e result = MAL_ERROR_OK;
 	// Get local interface
 	stm_spi_interface_s *local_interface;
-	mal_error_e result = get_local_interface(interface, &local_interface);
+	result = get_local_interface(interface, &local_interface);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -296,11 +298,23 @@ mal_error_e mal_hspec_stm32f0_spi_send_msg(mal_hspec_spi_e interface,
 	if (!local_interface->is_active) {
 		// Set active message
 		local_interface->active_msg = msg;
+		// Set select IO
+		result = set_select_io(local_interface, true);
+		if (MAL_ERROR_OK == result) {
+			// Set interface active
+			local_interface->is_active = true;
+			// Set data pointer
+			local_interface->data_ptr = 0;
+			// Set interrupt active
+			SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_TXE, ENABLE);
+		}
 	} else {
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Restore interrupt
 	mal_hspec_stm32f0_spi_enable_interrupt(interface, active);
+
+	return result;
 }
 
 IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_hspec_spi_e interface) {
@@ -322,12 +336,91 @@ bool mal_hspec_stm32f0_spi_disable_interrupt(mal_hspec_spi_e interface) {
 	return active;
 }
 
-static mal_error_e set_global_select_io(stm_spi_interface_s *local_interface, bool selected) {
-	if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode) {
-		bool state;
-		if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == local_interface->select_polarity) {
+static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
+								 bool selected) {
+	// Extract correct select IO and polarity
+	mal_hspec_gpio_s *select_io = NULL;
+	mal_hspec_spi_select_polarity_e polarity;
+	// Check if the active message specifies an IO
+	if (NULL != local_interface->active_msg &&
+		NULL != local_interface->active_msg->select) {
+		select_io = local_interface->active_msg->select;
+		polarity = local_interface->active_msg->select_polarity;
+	} else {
+		if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode &&
+			NULL != local_interface->select) {
+			select_io = local_interface->select;
+			polarity = local_interface->select_polarity;
 		}
-		return mal_gpio_set(&local_interface->select, state);
 	}
-	return MAL_ERROR_OK;
+	// Nothing to do if no IO is specified. This can happen when the interface
+	// select is in user mode.
+	if (NULL == select_io) {
+		return MAL_ERROR_OK;
+	}
+	// Determine state IO based on select state and polarity
+	bool state = selected;
+	if (MAL_HSPEC_SPI_SELECT_POLARITY_LOW == polarity) {
+		state = !state;
+	}
+	// Set IO
+	return mal_gpio_set(select_io, state);
+}
+
+void SPI1_IRQHandler(void) {
+	handle_spi_interrupt(&spi1_interface);
+}
+
+void SPI2_IRQHandler(void) {
+	handle_spi_interrupt(&spi2_interface);
+}
+
+static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
+	// Make sure this a empty buffer interrupt
+	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_TXE) == SET) {
+		// Read last received byte as this is a full duplex transaction
+		if (local_interface->data_ptr > 0) {
+			// Read data
+			uint16_t data = local_interface->spi_typedef->DR;
+			// Get index of last byte
+			uint8_t index = local_interface->data_ptr - 1;
+			// Store data
+			local_interface->active_msg->data[index] = data;
+		}
+		// Check if transaction is complete
+		if (local_interface->data_ptr >= local_interface->active_msg->data_length) {
+			// Deselect device
+			set_select_io(local_interface, false);
+			// Message transaction is complete
+			// Execute callback
+			mal_hspec_spi_msg_s *next_message = NULL;
+			local_interface->active_msg->callback(local_interface->active_msg,
+												  &next_message);
+			// Check if we have a new message
+			if (NULL == next_message) {
+				// No new message, turn off interrupt
+				SPI_I2S_ITConfig(local_interface->spi_typedef,
+								 SPI_I2S_IT_TXE,
+								 DISABLE);
+				// Set interface inactive
+				local_interface->is_active = false;
+				return;
+			}
+			// Set interface for next message
+			local_interface->active_msg = next_message;
+			// Set select IO
+			set_select_io(local_interface, true);
+			// Set data pointer
+			local_interface->data_ptr = 0;
+		}
+		// Check if we still have data to send
+		if (local_interface->data_ptr < local_interface->active_msg->data_length) {
+			// Get index
+			uint8_t index = local_interface->data_ptr++;
+			// Get next word
+			uint16_t data = local_interface->active_msg->data[index];
+			// Send the next data word
+			local_interface->spi_typedef->DR = data;
+		}
+	}
 }

@@ -32,6 +32,17 @@
  */
 
 /**
+ * @brief Start an SPI transfer as a master. Note that this is not a blocking
+ * call. Use the callback of the message to receive the result.
+ * @param interface The SPI interface from ::mal_hspec_spi_e.
+ * @param msg A pointer to the SPI message of type ::mal_hspec_spi_msg_s. Note
+ * that this pointer should point to static memory space. The driver will use
+ * the message during the transfer.
+ * @return @MAL_ERROR_OK on success.
+ */
+#define mal_spi_start_transaction(interface, msg) mal_hspec_spi_start_transaction(interface, msg)
+
+/**
  * @brief Initialize an SPI interface as a master interface.
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.

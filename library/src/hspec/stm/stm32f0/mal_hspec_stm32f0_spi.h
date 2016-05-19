@@ -39,7 +39,7 @@
 
 mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init);
 
-mal_error_e mal_hspec_stm32f0_spi_send_msg(mal_hspec_spi_e interface, mal_hspec_spi_msg_s *msg);
+mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface, mal_hspec_spi_msg_s *msg);
 
 IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_hspec_spi_e interface);
 

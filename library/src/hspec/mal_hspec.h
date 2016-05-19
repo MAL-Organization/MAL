@@ -157,6 +157,8 @@
 
 #define mal_hspec_spi_master_init(init) mal_hspec_stm32f0_spi_master_init(init)
 
+#define mal_hspec_spi_start_transaction(interface, msg) mal_hspec_stm32f0_spi_start_transaction(interface, msg)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
