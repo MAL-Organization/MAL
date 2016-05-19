@@ -36,7 +36,7 @@
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_spi_init_master(mal_hspec_spi_init_s *init);
+mal_error_e mal_spi_init_master(mal_hspec_spi_master_init_s *init);
 
 /**
  * @}

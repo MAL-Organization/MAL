@@ -25,7 +25,7 @@
 
 #include "mal_spi.h"
 
-mal_error_e mal_spi_init_master(mal_hspec_spi_init_s *init) {
+mal_error_e mal_spi_init_master(mal_hspec_spi_master_init_s *init) {
 	mal_error_e result;
 	// Check if interface is valid
 	result = mal_hspec_is_spi_interface_valid(init->interface, init->mosi, init->miso, init->clk, init->select);

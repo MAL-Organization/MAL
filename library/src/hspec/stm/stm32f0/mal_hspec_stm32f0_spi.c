@@ -31,7 +31,28 @@
 #include "std/mal_stdlib.h"
 #include "std/mal_bool.h"
 
-mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
+typedef struct {
+	mal_hspec_spi_e interface;
+	SPI_TypeDef *spi_typedef;
+	// Runtime settings
+	mal_hspec_gpio_s select;
+	mal_hspec_spi_select_mode_e select_mode;
+	mal_hspec_spi_select_polarity_e select_polarity;
+	// Runtime variables
+	volatile bool is_active;
+	mal_hspec_spi_msg_s *active_msg;
+	uint8_t data_ptr;
+} stm_spi_interface_s;
+
+static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interface_s **local_interface);
+
+static mal_error_e set_global_select_io(stm_spi_interface_s *local_interface, bool state);
+
+stm_spi_interface_s spi1_interface;
+stm_spi_interface_s spi2_interface;
+
+mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init) {
+	mal_error_e result;
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->mosi->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->miso->port), ENABLE);
@@ -62,7 +83,6 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 		select_af = MAL_HSPEC_STM32F0_AF_SPI2_NSS;
 	}
 	// Configure alternate function
-	mal_error_e result;
 	uint8_t function;
 	// MOSI
 	result = mal_hspec_stm32f0_get_pin_af(init->mosi, mosi_af, &function);
@@ -219,13 +239,23 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 	}
 	// Initialize
 	SPI_Init(spi_typedef, &spi_init);
+	// Initialize local interface
+	stm_spi_interface_s *local_interface;
+	result = get_local_interface(init->interface, &local_interface);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	local_interface->active_msg = NULL;
+	local_interface->data_ptr = 0;
+	local_interface->interface = init->interface;
+	local_interface->is_active = false;
+	local_interface->select = *init->select;
+	local_interface->select_mode = init->select_mode;
+	local_interface->select_polarity = init->select_polarity;
+	local_interface->spi_typedef = spi_typedef;
 	// Configure IRQ
 	NVIC_InitTypeDef nvic_init;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
-		nvic_init.NVIC_IRQChannel = SPI1_IRQn;
-	} else {
-		nvic_init.NVIC_IRQChannel = SPI2_IRQn;
-	}
+	nvic_init.NVIC_IRQChannel = mal_hspec_stm32f0_spi_get_irq(init->interface);
 	//FIXME To fix with issue #19.
 	nvic_init.NVIC_IRQChannelPriority = 10;
 	nvic_init.NVIC_IRQChannelCmd = ENABLE;
@@ -235,5 +265,69 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_init_s *init) {
 	// Enable SPI interface
 	SPI_Cmd(spi_typedef, ENABLE);
 
+	return MAL_ERROR_OK;
+}
+
+static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interface_s **local_interface) {
+	switch (interface) {
+		case MAL_HSPEC_SPI_1:
+			*local_interface = &spi1_interface;
+			return MAL_ERROR_OK;
+		case MAL_HSPEC_SPI_2:
+			*local_interface = &spi2_interface;
+			return MAL_ERROR_OK;
+		default:
+			return MAL_ERROR_HARDWARE_INVALID;
+	}
+}
+
+mal_error_e mal_hspec_stm32f0_spi_send_msg(mal_hspec_spi_e interface,
+										   mal_hspec_spi_msg_s *msg) {
+	mal_error_e result = MAL_ERROR_OK;
+	// Get local interface
+	stm_spi_interface_s *local_interface;
+	mal_error_e result = get_local_interface(interface, &local_interface);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Deactivate interrupt
+	bool active = mal_hspec_stm32f0_spi_disable_interrupt(interface);
+	// Check if interface is available
+	if (!local_interface->is_active) {
+		// Set active message
+		local_interface->active_msg = msg;
+	} else {
+		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
+	}
+	// Restore interrupt
+	mal_hspec_stm32f0_spi_enable_interrupt(interface, active);
+}
+
+IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_hspec_spi_e interface) {
+	switch (interface) {
+		case MAL_HSPEC_SPI_1:
+			return SPI1_IRQn;
+		case MAL_HSPEC_SPI_2:
+		default:
+			return SPI2_IRQn;
+	}
+}
+
+bool mal_hspec_stm32f0_spi_disable_interrupt(mal_hspec_spi_e interface) {
+	IRQn_Type irq = mal_hspec_stm32f0_spi_get_irq(interface);
+	bool active = NVIC_GetActive(irq);
+	NVIC_DisableIRQ(irq);
+	__DSB();
+	__ISB();
+	return active;
+}
+
+static mal_error_e set_global_select_io(stm_spi_interface_s *local_interface, bool selected) {
+	if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode) {
+		bool state;
+		if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == local_interface->select_polarity) {
+		}
+		return mal_gpio_set(&local_interface->select, state);
+	}
 	return MAL_ERROR_OK;
 }

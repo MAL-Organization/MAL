@@ -597,25 +597,37 @@ typedef enum {
 } mal_hspec_spi_bit_order_e;
 
 /**
- *
+ * All parameters to initialize an SPI interface as a master.
  */
 typedef struct {
-	mal_hspec_spi_e interface;
-	uint64_t clock_speed;
-	mal_hspec_gpio_s *mosi;
-	mal_hspec_gpio_s *miso;
-	mal_hspec_gpio_s *clk;
+	mal_hspec_spi_e interface;/**< The SPI interface to initialize.*/
+	uint64_t clock_speed;/**< The clock speed to set in Hz.*/
+	mal_hspec_gpio_s *mosi;/**< The master out slave in pin.*/
+	mal_hspec_gpio_s *miso;/**< The master in slave out pin.*/
+	mal_hspec_gpio_s *clk;/**< The clock pin.*/
+	mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
+								  is to be omitted. This could be because the
+								  mode is user or there is no global select
+								  pin.*/
+	mal_hspec_spi_select_mode_e select_mode;/**< The select mode.*/
+	mal_hspec_spi_data_size_e data_size;/**< The size of each words.*/
+	mal_hspec_spi_bit_order_e bit_order;/**< The order of each bit in a word.*/
+	mal_hspec_spi_clk_idle_state_e clk_idle_state;/**< Clock idle state.*/
+	mal_hspec_spi_data_latch_edge_e latch_edge;/**< Data latch on clock edge.*/
+	mal_hspec_spi_select_polarity_e select_polarity;/**< Select pin polarity.*/
+} mal_hspec_spi_master_init_s;
+
+/// @cond SKIP
+typedef struct MAL_HSPEC_SPI_MSG mal_hspec_spi_msg_s;
+/// @endcond
+
+typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi_msg_s *msg);
+
+typedef struct MAL_HSPEC_SPI_MSG {
 	mal_hspec_gpio_s *select;
-	mal_hspec_spi_select_mode_e select_mode;
-	mal_hspec_spi_data_size_e data_size;
-	mal_hspec_spi_bit_order_e bit_order;
-	mal_hspec_spi_clk_idle_state_e clk_idle_state;
-	mal_hspec_spi_data_latch_edge_e latch_edge;
-	mal_hspec_spi_select_polarity_e select_polarity;
-} mal_hspec_spi_init_s;
-
-typedef struct {
-
+	uint16_t *data;
+	uint8_t data_length;
+	mal_hspec_spi_master_transaction_complete_t callback;
 } mal_hspec_spi_msg_s;
 
 /**
