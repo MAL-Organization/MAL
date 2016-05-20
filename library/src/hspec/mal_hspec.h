@@ -159,6 +159,10 @@
 
 #define mal_hspec_spi_start_transaction(interface, msg) mal_hspec_stm32f0_spi_start_transaction(interface, msg)
 
+#define mal_hspec_spi_disable_interrupt(interface) mal_hspec_stm32f0_spi_disable_interrupt(interface)
+
+#define mal_hspec_spi_enable_interrupt(interface, active) mal_hspec_stm32f0_spi_enable_interrupt(interface, active)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -274,6 +278,18 @@
 #define mal_hspec_disable_adc_interrupt(adc) 1
 
 #define mal_hspec_enable_adc_interrupt(adc, active) (void)(adc);(void)(active);
+
+// SPI
+
+#define mal_hspec_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_mingw_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
+
+#define mal_hspec_spi_master_init(init) mal_hspec_mingw_spi_master_init(init)
+
+#define mal_hspec_spi_start_transaction(interface, msg) mal_hspec_mingw_spi_start_transaction(interface, msg)
+
+#define mal_hspec_spi_disable_interrupt(interface) 1
+
+#define mal_hspec_spi_enable_interrupt(interface, active) (void)(interface);(void)(active);
 
 #else
 #error No hardware specfic family symbol specified...

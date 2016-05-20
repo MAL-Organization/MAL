@@ -43,6 +43,25 @@
 #define mal_spi_start_transaction(interface, msg) mal_hspec_spi_start_transaction(interface, msg)
 
 /**
+ * @brief Disable an SPI interrupt.
+ * @param interface The interface to disable the interrupt from of type
+ * ::mal_hspec_spi_e.
+ * @return Returns true if interrupt was active before disabling it.
+ */
+#define mal_spi_disable_interrupt(interface) mal_hspec_spi_disable_interrupt(interface)
+
+/**
+ * @brief Enable an SPI interrupt.
+ * @param interface The interface to enable the interrupt from of type
+ * ::mal_hspec_spi_e.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
+ * @return Nothing. This macro is meant to be standalone on a line. Do not
+ * equate or use as a condition.
+ */
+#define mal_spi_enable_interrupt(interface, active) mal_hspec_spi_enable_interrupt(interface, active)
+
+/**
  * @brief Initialize an SPI interface as a master interface.
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.

@@ -34,5 +34,6 @@
 #include "mal_hspec_mingw_clock.h"
 #include "mal_hspec_mingw_uuid.h"
 #include "mal_hspec_mingw_pwm.h"
+#include "mal_hspec_mingw_spi.h"
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
