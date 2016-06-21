@@ -40,7 +40,7 @@ typedef enum {
 typedef struct {
 	mal_hspec_i2c_e interface;
 	mal_hspec_i2c_msg_s *msg;
-	bool is_active;
+	volatile bool is_active;
 	volatile i2c_states_e state;
 	volatile uint8_t data_ptr;
 	volatile mal_hspec_i2c_cmd_e cmd;
