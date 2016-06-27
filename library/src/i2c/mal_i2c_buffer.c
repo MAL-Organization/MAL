@@ -71,6 +71,7 @@ mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_hspec_i2c_
 		if (MAL_ERROR_OK != result) {
 			// Failed to write message restore callback for queue
 			handle->active_msg.callback = i2c_interface_handles[handle->interface].callback;
+			i2c_interface_handles[handle->interface].callback = NULL;
 		}
 	}
 	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
