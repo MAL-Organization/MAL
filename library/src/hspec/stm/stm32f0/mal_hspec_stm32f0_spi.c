@@ -31,17 +31,20 @@
 #include "std/mal_stdlib.h"
 #include "std/mal_bool.h"
 
+#define DATA_SIZE_MASK	0xF00
+
 typedef struct {
 	mal_hspec_spi_e interface;
 	SPI_TypeDef *spi_typedef;
 	// Runtime settings
-	mal_hspec_gpio_s *select;
+	const mal_hspec_gpio_s *select;
 	mal_hspec_spi_select_mode_e select_mode;
 	mal_hspec_spi_select_polarity_e select_polarity;
 	// Runtime variables
 	volatile bool is_active;
 	mal_hspec_spi_msg_s *active_msg;
-	uint8_t data_ptr;
+	uint8_t out_data_ptr;
+	uint8_t in_data_ptr;
 } stm_spi_interface_s;
 
 static mal_error_e get_local_interface(mal_hspec_spi_e interface,
@@ -51,6 +54,8 @@ static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
 								 bool selected);
 
 static void handle_spi_interrupt(stm_spi_interface_s *local_interface);
+
+static void send_data(stm_spi_interface_s *local_interface);
 
 stm_spi_interface_s spi1_interface;
 stm_spi_interface_s spi2_interface;
@@ -199,6 +204,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 			if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
 				return MAL_ERROR_HARDWARE_INVALID;
 			}
+			spi_init.SPI_NSS = SPI_NSS_Hard;
 			SPI_NSSPulseModeCmd(spi_typedef, ENABLE);
 			break;
 		case MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE:
@@ -243,6 +249,15 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	}
 	// Initialize
 	SPI_Init(spi_typedef, &spi_init);
+	// Set proper rx fifo threshold
+	uint16_t fifo_threshold = SPI_RxFIFOThreshold_QF;
+	// If words are more than a byte then we only want to know when 2 bytes are
+	// in fifo. This hardware does not support words greater then 16 bits so
+	// there is no need to look for higher thresholds.
+	if (init->data_size > MAL_HSPEC_SPI_DATA_8_BITS) {
+		fifo_threshold = SPI_RxFIFOThreshold_HF;
+	}
+	SPI_RxFIFOThresholdConfig(spi_typedef, fifo_threshold);
 	// Initialize local interface
 	stm_spi_interface_s *local_interface;
 	result = get_local_interface(init->interface, &local_interface);
@@ -250,7 +265,6 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 		return result;
 	}
 	local_interface->active_msg = NULL;
-	local_interface->data_ptr = 0;
 	local_interface->interface = init->interface;
 	local_interface->is_active = false;
 	local_interface->select = init->select;
@@ -258,12 +272,9 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	local_interface->select_polarity = init->select_polarity;
 	local_interface->spi_typedef = spi_typedef;
 	// Configure IRQ
-	NVIC_InitTypeDef nvic_init;
-	nvic_init.NVIC_IRQChannel = mal_hspec_stm32f0_spi_get_irq(init->interface);
 	//FIXME To fix with issue #19.
-	nvic_init.NVIC_IRQChannelPriority = 10;
-	nvic_init.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&nvic_init);
+	NVIC_EnableIRQ(mal_hspec_stm32f0_spi_get_irq(init->interface));
+	NVIC_SetPriority(mal_hspec_stm32f0_spi_get_irq(init->interface), 10);
 	// Enable SPI interface
 	SPI_Cmd(spi_typedef, ENABLE);
 
@@ -303,10 +314,14 @@ mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface,
 		if (MAL_ERROR_OK == result) {
 			// Set interface active
 			local_interface->is_active = true;
-			// Set data pointer
-			local_interface->data_ptr = 0;
-			// Set interrupt active
+			// Set data pointers
+			local_interface->out_data_ptr = 0;
+			local_interface->in_data_ptr = 0;
+			// Send first data byte
+			send_data(local_interface);
+			// Set interrupts active
 			SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_TXE, ENABLE);
+			SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_RXNE, ENABLE);
 		}
 	} else {
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
@@ -339,7 +354,7 @@ bool mal_hspec_stm32f0_spi_disable_interrupt(mal_hspec_spi_e interface) {
 static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
 								 bool selected) {
 	// Extract correct select IO and polarity
-	mal_hspec_gpio_s *select_io = NULL;
+	const mal_hspec_gpio_s *select_io = NULL;
 	mal_hspec_spi_select_polarity_e polarity;
 	// Check if the active message specifies an IO
 	if (NULL != local_interface->active_msg &&
@@ -376,34 +391,80 @@ void SPI2_IRQHandler(void) {
 }
 
 static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
-	// Make sure this a empty buffer interrupt
+	// Check transmit empty buffer interrupt
 	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_TXE) == SET) {
-		// Read last received byte as this is a full duplex transaction
-		if (local_interface->data_ptr > 0) {
-			// Read data
-			uint16_t data = local_interface->spi_typedef->DR;
-			// Get index of last byte
-			uint8_t index = local_interface->data_ptr - 1;
-			// Store data
-			local_interface->active_msg->data[index] = data;
+		// Check if we still have data to send
+		if (local_interface->out_data_ptr < local_interface->active_msg->data_length) {
+			send_data(local_interface);
+		}
+	}
+	// Check receiver not empty buffer interrupt
+	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_RXNE) == SET) {
+		// Read last received bytes as this is a full duplex transaction
+		// Get number of bytes in queue
+		int8_t fifo_size;
+		uint16_t fifo_status;
+		//fifo_status = SPI_GetReceptionFIFOStatus(local_interface->spi_typedef);
+		fifo_status = local_interface->spi_typedef->SR;
+		fifo_status &= SPI_SR_FRLVL;
+		switch (fifo_status) {
+			case SPI_ReceptionFIFOStatus_Full:
+				fifo_size = 4;
+				break;
+			case SPI_ReceptionFIFOStatus_HalfFull:
+				fifo_size = 2;
+				break;
+			case SPI_ReceptionFIFOStatus_1QuarterFull:
+				fifo_size = 1;
+				break;
+			case SPI_ReceptionFIFOStatus_Empty:
+			default:
+				fifo_size = 0;
+				break;
+		}
+		// Read data
+		while (fifo_size > 0) {
+			// Read all the entire data register
+			uint16_t data;
+			data = SPI_I2S_ReceiveData16(local_interface->spi_typedef);
+			if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b ||
+				1 == fifo_size) {
+				// Get index of last byte
+				uint8_t index = local_interface->in_data_ptr++;
+				// Store data
+				local_interface->active_msg->data[index] = data;
+			} else {
+				// We just read 2 bytes
+				for (int i = 0; i < 2; i++) {
+					// Get index of last byte
+					uint8_t index = local_interface->in_data_ptr++;
+					// Store data
+					local_interface->active_msg->data[index] = (data >> (8 * i)) & 0xFF;
+				}
+			}
+			// Subtract 2. This is valid even there was only 1 byte, we
+			// will exit the read loop.
+			fifo_size -= 2;
 		}
 		// Check if transaction is complete
-		if (local_interface->data_ptr >= local_interface->active_msg->data_length) {
+		if (local_interface->in_data_ptr >= local_interface->active_msg->data_length) {
 			// Deselect device
 			set_select_io(local_interface, false);
 			// Message transaction is complete
 			// Execute callback
 			mal_hspec_spi_msg_s *next_message = NULL;
-			local_interface->active_msg->callback(local_interface->active_msg,
-												  &next_message);
+			if (NULL != local_interface->active_msg->callback) {
+				local_interface->active_msg->callback(
+												local_interface->active_msg,
+												&next_message);
+			}
 			// Check if we have a new message
 			if (NULL == next_message) {
-				// No new message, turn off interrupt
-				SPI_I2S_ITConfig(local_interface->spi_typedef,
-								 SPI_I2S_IT_TXE,
-								 DISABLE);
-				// Set interface inactive
+				// No new message, set interface inactive
 				local_interface->is_active = false;
+				// Set interrupts inactive
+				SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_TXE, DISABLE);
+				SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_RXNE, DISABLE);
 				return;
 			}
 			// Set interface for next message
@@ -411,16 +472,20 @@ static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
 			// Set select IO
 			set_select_io(local_interface, true);
 			// Set data pointer
-			local_interface->data_ptr = 0;
+			local_interface->out_data_ptr = 0;
 		}
-		// Check if we still have data to send
-		if (local_interface->data_ptr < local_interface->active_msg->data_length) {
-			// Get index
-			uint8_t index = local_interface->data_ptr++;
-			// Get next word
-			uint16_t data = local_interface->active_msg->data[index];
-			// Send the next data word
-			local_interface->spi_typedef->DR = data;
-		}
+	}
+}
+
+static void send_data(stm_spi_interface_s *local_interface) {
+	// Get index
+	uint8_t index = local_interface->out_data_ptr++;
+	// Get next word
+	uint16_t data = local_interface->active_msg->data[index];
+	// Send the next data word
+	if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
+		SPI_I2S_SendData16(local_interface->spi_typedef, data);
+	} else {
+		SPI_SendData8(local_interface->spi_typedef, data);
 	}
 }

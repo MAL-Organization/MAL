@@ -602,10 +602,10 @@ typedef enum {
 typedef struct {
 	mal_hspec_spi_e interface;/**< The SPI interface to initialize.*/
 	uint64_t clock_speed;/**< The clock speed to set in Hz.*/
-	mal_hspec_gpio_s *mosi;/**< The master out slave in pin.*/
-	mal_hspec_gpio_s *miso;/**< The master in slave out pin.*/
-	mal_hspec_gpio_s *clk;/**< The clock pin.*/
-	mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
+	const mal_hspec_gpio_s *mosi;/**< The master out slave in pin.*/
+	const mal_hspec_gpio_s *miso;/**< The master in slave out pin.*/
+	const mal_hspec_gpio_s *clk;/**< The clock pin.*/
+	const mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
 								  is to be omitted. This could be because the
 								  mode is user or there is no global select
 								  pin. If not NULL, it should point to static
