@@ -322,11 +322,15 @@ void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
 			I2C_GenerateSTOP(handle->stm_handle, ENABLE);
 			// We are in error
 			handle->state = I2C_STATE_ERROR;
+			// Clear interrupt by transmitting zero
+			I2C_SendData(handle->stm_handle, 0);
 			// Clear interrupt
 			I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_TXIS);
 		} else {
 			// Check if there still data to be sent
 			if (handle->data_ptr >= handle->msg->packet.packet_size) {
+				// Clear interrupt by transmitting zero
+				I2C_SendData(handle->stm_handle, 0);
 				// Clear interrupt
 				I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_TXIS);
 				// Flag error
