@@ -45,5 +45,14 @@ mal_error_e mal_hspec_stm32f072cb_get_valid_adc_ios(mal_hspec_adc_e adc, const m
 mal_error_e mal_hspec_stm32f072cb_get_valid_channel_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
 void mal_hspec_stm32f072cb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE]);
 IRQn_Type mal_hspec_stm32f072cb_get_timer_compare_irq(mal_hspec_timer_e timer);
+mal_error_e mal_hspec_stm32f072cb_get_valid_spi_ios(mal_hspec_spi_e interface,
+													const mal_hspec_gpio_s **mosis,
+													uint8_t *mosis_size,
+													const mal_hspec_gpio_s **misos,
+													uint8_t *misos_size,
+													const mal_hspec_gpio_s **clks,
+													uint8_t *clks_size,
+													const mal_hspec_gpio_s **selects,
+													uint8_t *selects_size);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F072CB_H_ */

@@ -520,4 +520,120 @@ typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64
  * @}
  */
 
+/**
+ * @addtogroup SPI
+ * @{
+ */
+
+/**
+ * The possible SPI interfaces.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_1 = 0,  //!< MAL_HSPEC_SPI_1
+	MAL_HSPEC_SPI_2 = 1,  //!< MAL_HSPEC_SPI_2
+	MAL_HSPEC_SPI_SIZE = 2//!< MAL_HSPEC_SPI_SIZE
+} mal_hspec_spi_e;
+
+/**
+ * Possible modes for the select pin of an interface.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_SELECT_MODE_HARDWARE,//!< The select pin is controlled by hardware.
+	MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE,//!< The select pin is controlled by software by the driver.
+	MAL_HSPEC_SPI_SELECT_MODE_USER,    //!< The select pin is controlled by software by the user code.
+	MAL_HSPEC_SPI_SELECT_MODE_NONE     //!< The select pin is not controlled at all.
+} mal_hspec_spi_select_mode_e;
+
+/**
+ * The possible word sizes for data transactions
+ */
+typedef enum {
+	MAL_HSPEC_SPI_DATA_4_BITS = 4,  //!< MAL_HSPEC_SPI_DATA_4_BITS
+	MAL_HSPEC_SPI_DATA_5_BITS = 5,  //!< MAL_HSPEC_SPI_DATA_5_BITS
+	MAL_HSPEC_SPI_DATA_6_BITS = 6,  //!< MAL_HSPEC_SPI_DATA_6_BITS
+	MAL_HSPEC_SPI_DATA_7_BITS = 7,  //!< MAL_HSPEC_SPI_DATA_7_BITS
+	MAL_HSPEC_SPI_DATA_8_BITS = 8,  //!< MAL_HSPEC_SPI_DATA_8_BITS
+	MAL_HSPEC_SPI_DATA_9_BITS = 9,  //!< MAL_HSPEC_SPI_DATA_9_BITS
+	MAL_HSPEC_SPI_DATA_10_BITS = 10,//!< MAL_HSPEC_SPI_DATA_10_BITS
+	MAL_HSPEC_SPI_DATA_11_BITS = 11,//!< MAL_HSPEC_SPI_DATA_11_BITS
+	MAL_HSPEC_SPI_DATA_12_BITS = 12,//!< MAL_HSPEC_SPI_DATA_12_BITS
+	MAL_HSPEC_SPI_DATA_13_BITS = 13,//!< MAL_HSPEC_SPI_DATA_13_BITS
+	MAL_HSPEC_SPI_DATA_14_BITS = 14,//!< MAL_HSPEC_SPI_DATA_14_BITS
+	MAL_HSPEC_SPI_DATA_15_BITS = 15,//!< MAL_HSPEC_SPI_DATA_15_BITS
+	MAL_HSPEC_SPI_DATA_16_BITS = 16 //!< MAL_HSPEC_SPI_DATA_16_BITS
+} mal_hspec_spi_data_size_e;
+
+/**
+ * Possible states for clock when there is no active transactions.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW,//!< MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW
+	MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH//!< MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH
+} mal_hspec_spi_clk_idle_state_e;
+
+/**
+ * Possible values for valid data on the bus. The edge refers to the clock
+ * signal.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING,//!< MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING
+	MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING//!< MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING
+} mal_hspec_spi_data_latch_edge_e;
+
+/**
+ * Possible values of the select IO when selecting the device.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_SELECT_POLARITY_LOW,//!< The select is active low.
+	MAL_HSPEC_SPI_SELECT_POLARITY_HIGH//!< The select is active high.
+} mal_hspec_spi_select_polarity_e;
+
+/**
+ * Possible values for bit ordering.
+ */
+typedef enum {
+	MAL_HSPEC_SPI_BIT_ORDER_MSB,//!< Most significant bit first
+	MAL_HSPEC_SPI_BIT_ORDER_LSB //!< Least significant bit first
+} mal_hspec_spi_bit_order_e;
+
+/**
+ * All parameters to initialize an SPI interface as a master.
+ */
+typedef struct {
+	mal_hspec_spi_e interface;/**< The SPI interface to initialize.*/
+	uint64_t clock_speed;/**< The clock speed to set in Hz.*/
+	const mal_hspec_gpio_s *mosi;/**< The master out slave in pin.*/
+	const mal_hspec_gpio_s *miso;/**< The master in slave out pin.*/
+	const mal_hspec_gpio_s *clk;/**< The clock pin.*/
+	const mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
+								  is to be omitted. This could be because the
+								  mode is user or there is no global select
+								  pin. If not NULL, it should point to static
+								  memory space.*/
+	mal_hspec_spi_select_mode_e select_mode;/**< The select mode.*/
+	mal_hspec_spi_data_size_e data_size;/**< The size of each words.*/
+	mal_hspec_spi_bit_order_e bit_order;/**< The order of each bit in a word.*/
+	mal_hspec_spi_clk_idle_state_e clk_idle_state;/**< Clock idle state.*/
+	mal_hspec_spi_data_latch_edge_e latch_edge;/**< Data latch on clock edge.*/
+	mal_hspec_spi_select_polarity_e select_polarity;/**< Select pin polarity.*/
+} mal_hspec_spi_master_init_s;
+
+/// @cond SKIP
+typedef struct MAL_HSPEC_SPI_MSG mal_hspec_spi_msg_s;
+/// @endcond
+
+typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi_msg_s *msg, mal_hspec_spi_msg_s **next_msg);
+
+typedef struct MAL_HSPEC_SPI_MSG {
+	mal_hspec_gpio_s *select;
+	mal_hspec_spi_select_polarity_e select_polarity;
+	uint16_t *data;
+	uint8_t data_length;
+	mal_hspec_spi_master_transaction_complete_t callback;
+} mal_hspec_spi_msg_s;
+
+/**
+ * @}
+ */
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */

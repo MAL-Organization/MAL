@@ -143,37 +143,37 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->sda_gpio->port), &gpio_init);
 	// Compute timing
 	// Determine fall time
-	float tf = 0.0000003; // 300 ns
+	float tf = 0.0000003f; // 300 ns
 	if (init->bitrate > 400000) {
 		// 12 ns if bitrate is higher than 400k
-		tf = 0.00000012;
+		tf = 0.00000012f;
 	}
 	// Determine rise time
-	float tr = 0.000001; // 1us
+	float tr = 0.000001f; // 1us
 	if (init->bitrate > 100000 && init->bitrate <= 400000) {
 		// If speed is fast mode (between 100k and 400k), 300ns
-		tr = 0.0000003;
+		tr = 0.0000003f;
 	} else if (init->bitrate > 400000) {
 		// 120ns if faster.
-		tr = 0.00000012;
+		tr = 0.00000012f;
 	}
 	// Determine minimum setup time
-	float tsu = 0.00000015; // 250ns
+	float tsu = 0.00000015f; // 250ns
 	if (init->bitrate > 100000 && init->bitrate <= 400000) {
 		// If speed is fast mode (between 100k and 400k), 100ns
-		tsu = 0.0000001;
+		tsu = 0.0000001f;
 	} else if (init->bitrate > 400000) {
 		// 50ns if faster.
-		tsu = 0.00000005;
+		tsu = 0.00000005f;
 	}
 	// Determine valid data time
-	float tvd = 0.00000345; // 3.45us
+	float tvd = 0.00000345f; // 3.45us
 	if (init->bitrate > 100000 && init->bitrate <= 400000) {
 		// If speed is fast mode (between 100k and 400k), 900ns
-		tsu = 0.0000009;
+		tsu = 0.0000009f;
 	} else if (init->bitrate > 400000) {
 		// 450ns if faster.
-		tsu = 0.00000045;
+		tsu = 0.00000045f;
 	}
 	// Determine true half period. Bitrate = Fall Time + Time Low + Rise Time + Time High
 	float half_period = ((1.0f / ((float)init->bitrate)) - tf - tr) / 2;

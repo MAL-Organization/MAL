@@ -42,6 +42,7 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_hspec_i2c_e interface, c
 mal_error_e mal_hspec_stm32f072rb_get_port_afs(mal_hspec_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]);
 mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size);
 mal_error_e mal_hspec_stm32f072rb_get_valid_adc_ios(mal_hspec_adc_e adc, const mal_hspec_gpio_s **ios, uint8_t *size);
+mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface, const mal_hspec_gpio_s **mosis, uint8_t *mosis_size, const mal_hspec_gpio_s **misos, uint8_t *misos_size, const mal_hspec_gpio_s **clks, uint8_t *clks_size, const mal_hspec_gpio_s **selects, uint8_t *selects_size);
 mal_error_e mal_hspec_stm32f072rb_get_valid_channel_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
 void mal_hspec_stm32f072rb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE]);
 IRQn_Type mal_hspec_stm32f072rb_get_timer_compare_irq(mal_hspec_timer_e timer);

@@ -1,8 +1,8 @@
 /*
- * mal_hspec_mingw.h
+ * mal_spi.c
  *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
+ *  Created on: May 18, 2016
+ *      Author: olivi
  */
 /*
  * Copyright (c) 2015 Olivier Allaire
@@ -23,17 +23,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#include "mal_spi.h"
 
-#include "mal_hspec_mingw_adc.h"
-#include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_gpio.h"
-#include "mal_hspec_mingw_timer.h"
-#include "mal_hspec_mingw_i2c.h"
-#include "mal_hspec_mingw_clock.h"
-#include "mal_hspec_mingw_uuid.h"
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_spi.h"
-
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
+mal_error_e mal_spi_init_master(mal_hspec_spi_master_init_s *init) {
+	mal_error_e result;
+	// Check if interface is valid
+	result = mal_hspec_is_spi_interface_valid(init->interface, init->mosi, init->miso, init->clk, init->select);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialize as master interface
+	return mal_hspec_spi_master_init(init);
+}
