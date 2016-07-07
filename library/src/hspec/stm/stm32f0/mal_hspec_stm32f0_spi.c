@@ -400,52 +400,17 @@ static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
 	}
 	// Check receiver not empty buffer interrupt
 	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_RXNE) == SET) {
-		// Read last received bytes as this is a full duplex transaction
-		// Get number of bytes in queue
-		int8_t fifo_size;
-		uint16_t fifo_status;
-		//fifo_status = SPI_GetReceptionFIFOStatus(local_interface->spi_typedef);
-		fifo_status = local_interface->spi_typedef->SR;
-		fifo_status &= SPI_SR_FRLVL;
-		switch (fifo_status) {
-			case SPI_ReceptionFIFOStatus_Full:
-				fifo_size = 4;
-				break;
-			case SPI_ReceptionFIFOStatus_HalfFull:
-				fifo_size = 2;
-				break;
-			case SPI_ReceptionFIFOStatus_1QuarterFull:
-				fifo_size = 1;
-				break;
-			case SPI_ReceptionFIFOStatus_Empty:
-			default:
-				fifo_size = 0;
-				break;
-		}
+		// Get next index
+		uint8_t index = local_interface->in_data_ptr++;
 		// Read data
-		while (fifo_size > 0) {
-			// Read all the entire data register
-			uint16_t data;
+		uint16_t data;
+		if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
 			data = SPI_I2S_ReceiveData16(local_interface->spi_typedef);
-			if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b ||
-				1 == fifo_size) {
-				// Get index of last byte
-				uint8_t index = local_interface->in_data_ptr++;
-				// Store data
-				local_interface->active_msg->data[index] = data;
-			} else {
-				// We just read 2 bytes
-				for (int i = 0; i < 2; i++) {
-					// Get index of last byte
-					uint8_t index = local_interface->in_data_ptr++;
-					// Store data
-					local_interface->active_msg->data[index] = (data >> (8 * i)) & 0xFF;
-				}
-			}
-			// Subtract 2. This is valid even there was only 1 byte, we
-			// will exit the read loop.
-			fifo_size -= 2;
+		} else {
+			data = SPI_ReceiveData8(local_interface->spi_typedef);
 		}
+		local_interface->active_msg->data[index] = data;
+
 		// Check if transaction is complete
 		if (local_interface->in_data_ptr >= local_interface->active_msg->data_length) {
 			// Deselect device
@@ -473,6 +438,7 @@ static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
 			set_select_io(local_interface, true);
 			// Set data pointer
 			local_interface->out_data_ptr = 0;
+			local_interface->in_data_ptr = 0;
 		}
 	}
 }
