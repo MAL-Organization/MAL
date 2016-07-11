@@ -172,6 +172,7 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	can_init.CAN_BS2 = tseg2 - 1;
 	can_init.CAN_SJW = sjw - 1;
 	can_init.CAN_Prescaler = prescaler;
+	can_init.CAN_ABOM = ENABLE;
 	if (CAN_InitStatus_Success != CAN_Init(CAN, &can_init)) {
 		return MAL_ERROR_INIT_FAILED;
 	}
@@ -274,7 +275,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 	if (MAL_HSPEC_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
-	mal_error_e result = MAL_ERROR_OK;;
+	mal_error_e result = MAL_ERROR_OK;
 	// Disable interrupts
 	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
 	// Find a free filter
