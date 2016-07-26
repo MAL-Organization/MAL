@@ -743,22 +743,22 @@ mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_hspec_timer_intput_ca
 
 static void timer_input_capture_interrupt(mal_hspec_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags) {
 	// Check every channel and execute callbacks
-	if (flags & TIM_IT_CC1) {
+	if ((flags & TIM_IT_CC1) && (stm_timer->DIER & TIM_DIER_CC1IE)) {
 		if (timer_callbacks[timer].ic_cb != NULL) {
 			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR1);
 		}
 	}
-	if (flags & TIM_IT_CC2) {
+	if ((flags & TIM_IT_CC2) && (stm_timer->DIER & TIM_DIER_CC2IE)) {
 		if (timer_callbacks[timer].ic_cb != NULL) {
 			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR2);
 		}
 	}
-	if (flags & TIM_IT_CC3) {
+	if ((flags & TIM_IT_CC3) && (stm_timer->DIER & TIM_DIER_CC3IE)) {
 		if (timer_callbacks[timer].ic_cb != NULL) {
 			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR3);
 		}
 	}
-	if (flags & TIM_IT_CC4) {
+	if ((flags & TIM_IT_CC4) && (stm_timer->DIER & TIM_DIER_CC4IE)) {
 		if (timer_callbacks[timer].ic_cb != NULL) {
 			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR4);
 		}

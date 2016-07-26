@@ -425,7 +425,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		}
 	}
 	if (found) {
-		// Free filter array, especially for santard type
+		// Free filter array, especially for standard type
 		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
 			can_filter_banks[filter_index].is_active = false;
 		} else {
