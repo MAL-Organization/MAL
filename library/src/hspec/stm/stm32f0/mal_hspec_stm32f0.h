@@ -41,6 +41,7 @@
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_adc.h"
 #include "mal_hspec_stm32f0_spi.h"
+#include "mal_hspec_stm32f0_reset.h"
 
 // Device specific function mapping section.
 #ifdef MAL_STM32F030R8

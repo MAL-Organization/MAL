@@ -25,6 +25,7 @@
 
 #include "hspec/mal_hspec.h"
 
+extern void mal_reset_init(void);
 extern void mal_timer_init(void);
 extern int main(void);
 
@@ -33,6 +34,7 @@ void mal_startup_hardware(void) {
 	mal_hspec_startup();
 
 	// Initialise library components
+	mal_reset_init();
 	mal_timer_init();
 }
 

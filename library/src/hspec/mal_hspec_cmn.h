@@ -622,15 +622,55 @@ typedef struct {
 typedef struct MAL_HSPEC_SPI_MSG mal_hspec_spi_msg_s;
 /// @endcond
 
+/**
+ * This callback will be executed at the end of a transaction where the MCU is
+ * the master.
+ * @param msg The message of the transaction containing only the received data.
+ * @param next_msg The next message to send. Set to #NULL if no message should
+ * be transmitted.
+ * @return At this point, the return code is not taken into account.
+ */
 typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi_msg_s *msg, mal_hspec_spi_msg_s **next_msg);
 
+/**
+ * This structures contains all the data to do an SPI transaction.
+ */
 typedef struct MAL_HSPEC_SPI_MSG {
-	mal_hspec_gpio_s *select;
-	mal_hspec_spi_select_polarity_e select_polarity;
-	uint16_t *data;
-	uint8_t data_length;
-	mal_hspec_spi_master_transaction_complete_t callback;
+	mal_hspec_gpio_s *select;/**< The select pin for this message. If no pins
+								  should be used (such as the default pin was
+								  set by the initialization), set this to
+								  #NULL.*/
+	mal_hspec_spi_select_polarity_e select_polarity;/**< The polarity of the
+														 select pin. If select
+														 is #NULL, this isn't
+														 taken into account.*/
+	uint16_t *data;/**< A pointer to the data buffer to send and receive.*/
+	uint8_t data_length;/**< The length of the transaction in words.*/
+	mal_hspec_spi_master_transaction_complete_t callback;/**< The callback to
+															  execute when the
+															  transaction is
+															  over.*/
 } mal_hspec_spi_msg_s;
+
+/**
+ * @}
+ */
+
+/**
+ * @addtogroup RESET
+ * @{
+ */
+
+/**
+ * The possible reset sources.
+ */
+typedef enum {
+	MAL_HSPEC_RESET_SOURCE_RESET_PIN,//!< The physical reset pin was asserted for a reset.
+	MAL_HSPEC_RESET_SOURCE_SOFTWARE, //!< The reset occurred because of a software request.
+	MAL_HSPEC_RESET_SOURCE_POWER,    //!< The reset occurred because of a power anomaly such as POR.
+	MAL_HSPEC_RESET_SOURCE_SLEEP,    //!< The MCU experienced a reset because of a transition of sleep condition.
+	MAL_HSPEC_RESET_SOURCE_UNKNOWN   //!< The source is not known.
+} mal_hspec_reset_source_e;
 
 /**
  * @}

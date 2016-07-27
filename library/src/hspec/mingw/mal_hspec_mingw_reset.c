@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw.h
+ * mal_hspec_mingw_reset.c
  *
- *  Created on: Mar 24, 2016
+ *  Created on: Jul 27, 2016
  *      Author: Olivier
  */
 /*
@@ -23,18 +23,27 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-
-#include "mal_hspec_mingw_adc.h"
-#include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_gpio.h"
-#include "mal_hspec_mingw_timer.h"
-#include "mal_hspec_mingw_i2c.h"
-#include "mal_hspec_mingw_clock.h"
-#include "mal_hspec_mingw_uuid.h"
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_spi.h"
 #include "mal_hspec_mingw_reset.h"
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
+static bool reset_requested = false;
+static mal_hspec_reset_source_e reset_source;
+
+mal_hspec_reset_source_e mal_hspec_mingw_reset_handle_reset_source(void) {
+	return reset_source;
+}
+
+void mal_hspec_mingw_reset_mcu(void) {
+	reset_requested = true;
+}
+
+bool mal_hspec_mingw_reset_get_request(void) {
+	return reset_requested;
+}
+
+void mal_hspec_mingw_reset_clear_request(void) {
+	reset_requested = false;
+}
+
+void mal_hspec_mingw_reset_set_reset_source(mal_hspec_reset_source_e source) {
+	reset_source = source;
+}
