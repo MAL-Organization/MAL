@@ -221,10 +221,19 @@ mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer,
 
 void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM1->SR & TIM_FLAG_CC1;
-	cc_flags |= TIM1->SR & TIM_FLAG_CC2;
-	cc_flags |= TIM1->SR & TIM_FLAG_CC3;
-	cc_flags |= TIM1->SR & TIM_FLAG_CC4;
+	uint16_t cc_flags = 0;
+	if (TIM1->DIER & TIM_DIER_CC1IE) {
+		cc_flags |= TIM1->SR & TIM_FLAG_CC1;
+	}
+	if (TIM1->DIER & TIM_DIER_CC2IE) {
+		cc_flags |= TIM1->SR & TIM_FLAG_CC2;
+	}
+	if (TIM1->DIER & TIM_DIER_CC3IE) {
+		cc_flags |= TIM1->SR & TIM_FLAG_CC3;
+	}
+	if (TIM1->DIER & TIM_DIER_CC4IE) {
+		cc_flags |= TIM1->SR & TIM_FLAG_CC4;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM1, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
@@ -237,10 +246,19 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 
 void TIM2_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM2->SR & TIM_FLAG_CC1;
-	cc_flags |= TIM2->SR & TIM_FLAG_CC2;
-	cc_flags |= TIM2->SR & TIM_FLAG_CC3;
-	cc_flags |= TIM2->SR & TIM_FLAG_CC4;
+	uint16_t cc_flags = 0;
+	if (TIM2->DIER & TIM_DIER_CC1IE) {
+		cc_flags |= TIM2->SR & TIM_FLAG_CC1;
+	}
+	if (TIM2->DIER & TIM_DIER_CC2IE) {
+		cc_flags |= TIM2->SR & TIM_FLAG_CC2;
+	}
+	if (TIM2->DIER & TIM_DIER_CC3IE) {
+		cc_flags |= TIM2->SR & TIM_FLAG_CC3;
+	}
+	if (TIM2->DIER & TIM_DIER_CC4IE) {
+		cc_flags |= TIM2->SR & TIM_FLAG_CC4;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM2, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
@@ -253,10 +271,19 @@ void TIM2_IRQHandler(void) {
 
 void TIM3_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM3->SR & TIM_FLAG_CC1;
-	cc_flags |= TIM3->SR & TIM_FLAG_CC2;
-	cc_flags |= TIM3->SR & TIM_FLAG_CC3;
-	cc_flags |= TIM3->SR & TIM_FLAG_CC4;
+	uint16_t cc_flags = 0;
+	if (TIM3->DIER & TIM_DIER_CC1IE) {
+		cc_flags |= TIM3->SR & TIM_FLAG_CC1;
+	}
+	if (TIM3->DIER & TIM_DIER_CC2IE) {
+		cc_flags |= TIM3->SR & TIM_FLAG_CC2;
+	}
+	if (TIM3->DIER & TIM_DIER_CC3IE) {
+		cc_flags |= TIM3->SR & TIM_FLAG_CC3;
+	}
+	if (TIM3->DIER & TIM_DIER_CC4IE) {
+		cc_flags |= TIM3->SR & TIM_FLAG_CC4;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM3, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
@@ -281,7 +308,10 @@ void TIM7_IRQHandler(void) {
 
 void TIM14_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM14->SR & TIM_FLAG_CC1;
+	uint16_t cc_flags = 0;
+	if (TIM14->DIER & TIM_DIER_CC1IE) {
+		cc_flags = TIM14->SR & TIM_FLAG_CC1;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM14, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
@@ -294,8 +324,13 @@ void TIM14_IRQHandler(void) {
 
 void TIM15_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM15->SR & TIM_FLAG_CC1;
-	cc_flags |= TIM15->SR & TIM_FLAG_CC2;
+	uint16_t cc_flags = 0;
+	if (TIM15->DIER & TIM_DIER_CC1IE) {
+		cc_flags |= TIM15->SR & TIM_FLAG_CC1;
+	}
+	if (TIM15->DIER & TIM_DIER_CC2IE) {
+		cc_flags |= TIM15->SR & TIM_FLAG_CC2;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM15, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2);
 	// Handles interrupt
@@ -308,7 +343,10 @@ void TIM15_IRQHandler(void) {
 
 void TIM16_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM16->SR & TIM_FLAG_CC1;
+	uint16_t cc_flags = 0;
+	if (TIM16->DIER & TIM_DIER_CC1IE) {
+		cc_flags = TIM16->SR & TIM_FLAG_CC1;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM16, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
@@ -321,7 +359,10 @@ void TIM16_IRQHandler(void) {
 
 void TIM17_IRQHandler(void) {
 	// Check if this is a capture interrupt
-	uint16_t cc_flags = TIM17->SR & TIM_FLAG_CC1;
+	uint16_t cc_flags = 0;
+	if (TIM17->DIER & TIM_DIER_CC1IE) {
+		cc_flags = TIM17->SR & TIM_FLAG_CC1;
+	}
 	// Clear interrupts
 	TIM_ClearFlag(TIM17, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
@@ -743,24 +784,16 @@ mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_hspec_timer_intput_ca
 
 static void timer_input_capture_interrupt(mal_hspec_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags) {
 	// Check every channel and execute callbacks
-	if ((flags & TIM_IT_CC1) && (stm_timer->DIER & TIM_DIER_CC1IE)) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR1);
-		}
+	if (timer_callbacks[timer].ic_cb != NULL) {
+		timer_callbacks[timer].ic_cb(timer, stm_timer->CCR1);
 	}
-	if ((flags & TIM_IT_CC2) && (stm_timer->DIER & TIM_DIER_CC2IE)) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR2);
-		}
+	if (timer_callbacks[timer].ic_cb != NULL) {
+		timer_callbacks[timer].ic_cb(timer, stm_timer->CCR2);
 	}
-	if ((flags & TIM_IT_CC3) && (stm_timer->DIER & TIM_DIER_CC3IE)) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR3);
-		}
+	if (timer_callbacks[timer].ic_cb != NULL) {
+		timer_callbacks[timer].ic_cb(timer, stm_timer->CCR3);
 	}
-	if ((flags & TIM_IT_CC4) && (stm_timer->DIER & TIM_DIER_CC4IE)) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR4);
-		}
+	if (timer_callbacks[timer].ic_cb != NULL) {
+		timer_callbacks[timer].ic_cb(timer, stm_timer->CCR4);
 	}
 }

@@ -6614,7 +6614,10 @@ namespace internal {
 
 // Valid only for fast death tests. Indicates the code is running in the
 // child process of a fast style death test.
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic push
 static bool g_in_fast_death_test_child = false;
+#pragma GCC diagnostic pop
 
 // Returns a Boolean value indicating whether the caller is currently
 // executing in the context of the death test child process.  Tools such as

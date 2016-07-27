@@ -163,6 +163,12 @@
 
 #define mal_hspec_spi_enable_interrupt(interface, active) mal_hspec_stm32f0_spi_enable_interrupt(interface, active)
 
+// RESET
+
+#define mal_hspec_reset_handle_reset_source() mal_hspec_stm32f0_reset_handle_reset_source()
+
+#define mal_hspec_reset_mcu() mal_hspec_stm32f0_reset_mcu()
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -290,6 +296,12 @@
 #define mal_hspec_spi_disable_interrupt(interface) 1
 
 #define mal_hspec_spi_enable_interrupt(interface, active) (void)(interface);(void)(active);
+
+// RESET
+
+#define mal_hspec_reset_handle_reset_source() mal_hspec_mingw_reset_handle_reset_source()
+
+#define mal_hspec_reset_mcu() mal_hspec_mingw_reset_mcu()
 
 #else
 #error No hardware specfic family symbol specified...

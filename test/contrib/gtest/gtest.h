@@ -18857,10 +18857,12 @@ AssertionResult CmpHelperEQ(const char* expected_expression,
 # pragma warning(disable:4389)  // Temporarily disables warning on
                                 // signed/unsigned mismatch.
 #endif
-
+#pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic push
   if (expected == actual) {
     return AssertionSuccess();
   }
+#pragma GCC diagnostic pop
 
 #ifdef _MSC_VER
 # pragma warning(pop)          // Restores the warning state.

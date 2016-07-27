@@ -94,6 +94,15 @@ typedef struct {
  */
 #define mal_timer_get_count_frequency(timer, frequency) mal_hspec_timer_get_count_frequency(timer, frequency)
 
+/**
+ * @brief Macro to help subtract 2 timer values regardless of the resolution.
+ * The result will be count2 - count1 respecting the two's complement wrap
+ * around. This means that for an 8 bit resolution timer, 1 - 255 = 2.
+ * @param count2 The count 2 value. Should be the most recent count.
+ * @param count1 The count 1 value. Should be the oldest count.
+ * @param mask The value obtained by #mal_timer_get_count_mask.
+ * @return The result of the subtraction.
+ */
 #define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-count1) & mask)) & mask)
 
 /**
