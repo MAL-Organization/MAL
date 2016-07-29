@@ -669,6 +669,7 @@ typedef enum {
 	MAL_HSPEC_RESET_SOURCE_SOFTWARE, //!< The reset occurred because of a software request.
 	MAL_HSPEC_RESET_SOURCE_POWER,    //!< The reset occurred because of a power anomaly such as POR.
 	MAL_HSPEC_RESET_SOURCE_SLEEP,    //!< The MCU experienced a reset because of a transition of sleep condition.
+	MAL_HSPEC_RESET_SOURCE_WATCHDOG, //!< The reset occurred because of the watchdog.
 	MAL_HSPEC_RESET_SOURCE_UNKNOWN   //!< The source is not known.
 } mal_hspec_reset_source_e;
 

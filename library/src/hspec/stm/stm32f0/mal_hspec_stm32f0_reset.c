@@ -32,6 +32,9 @@ mal_hspec_reset_source_e mal_hspec_stm32f0_reset_handle_reset_source(void) {
 	// Get current source based on RCC flags
 	if (RCC_GetFlagStatus(RCC_FLAG_SFTRST) == ENABLE) {
 		source = MAL_HSPEC_RESET_SOURCE_SOFTWARE;
+	} else if ((RCC_GetFlagStatus(RCC_FLAG_WWDGRST) == ENABLE) ||
+			   (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) == ENABLE)) {
+		source = MAL_HSPEC_RESET_SOURCE_WATCHDOG;
 	} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST) == ENABLE) {
 		source = MAL_HSPEC_RESET_SOURCE_POWER;
 	} else if (RCC_GetFlagStatus(RCC_FLAG_LPWRRST) == ENABLE) {
