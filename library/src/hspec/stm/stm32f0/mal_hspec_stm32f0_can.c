@@ -135,14 +135,12 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 				continue;
 			}
 			// Limit error to 0.5%
-			float tq = 1.0f / (((float)clocks.PCLK_Frequency) / (float)prescaler);
-			float result_freq = 1.0f / (tq + tseg1 * tq + tq * tseg2);
-			float error = fabsf(1.0f - (result_freq / (float)init->bitrate));
-			if (error > 0.005f) {
+			int64_t int_error = ((int64_t)clocks.PCLK_Frequency * (int64_t)1000) / (init->bitrate * (int64_t)prescaler * (int64_t)(1 + tseg1 + tseg2));
+			int_error = abs(1000 - int_error);
+			if (int_error > 5) {
 				continue;
 			}
-			// We're, now we have to find a suitable synchronisation jump
-			// width.
+			// Now we have to find a suitable synchronisation jump width.
 			for (sjw = 4; sjw >= 1; sjw--) {
 				// Jump must not be longer than TSEG2 because the jump lengthen
 				// or shorten TSEG2.
