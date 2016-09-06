@@ -54,5 +54,7 @@ mal_error_e mal_hspec_stm32f072cb_get_valid_spi_ios(mal_hspec_spi_e interface,
 													uint8_t *clks_size,
 													const mal_hspec_gpio_s **selects,
 													uint8_t *selects_size);
+uint32_t mal_hspec_stm32f072cb_flash_get_page_count(void);
+uint32_t mal_hspec_stm32f072cb_flash_get_page_size(uint32_t page);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F072CB_H_ */

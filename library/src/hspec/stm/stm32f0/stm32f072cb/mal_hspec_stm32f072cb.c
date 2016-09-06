@@ -1187,3 +1187,11 @@ mal_error_e mal_hspec_stm32f072cb_get_valid_spi_ios(mal_hspec_spi_e interface,
 	}
 	return MAL_ERROR_OK;
 }
+
+uint32_t mal_hspec_stm32f072cb_flash_get_page_count(void) {
+	return 64;
+}
+
+uint32_t mal_hspec_stm32f072cb_flash_get_page_size(uint32_t page) {
+	return 0x800; // 2KB, 2048 bytes.
+}

@@ -172,9 +172,9 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
 
-#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
-
 #define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072rb_get_timer_afs(afs)
+
+#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072rb_flash_get_page_size(page)
 
 #elif defined(MAL_STM32F072CB)
 
@@ -183,6 +183,8 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 #define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072cb_get_port_afs(port, afs)
 
 #define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072cb_get_timer_afs(afs)
+
+#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072cb_flash_get_page_size(page)
 
 #elif defined(MAL_STM32F030K6)
 #else

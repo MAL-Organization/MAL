@@ -1211,3 +1211,11 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_channel_ios(mal_hspec_timer_e timer,
 void mal_hspec_stm32f072rb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE]) {
 	*afs = &timer_channels_afs;
 }
+
+uint32_t mal_hspec_stm32f072rb_flash_get_page_count(void) {
+	return 64;
+}
+
+uint32_t mal_hspec_stm32f072rb_flash_get_page_size(uint32_t page) {
+	return 0x800; // 2KB, 2048 bytes.
+}

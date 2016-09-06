@@ -323,3 +323,10 @@ mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_
 	}
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_flash_is_page_valid(uint32_t page) {
+	if (page >= mal_hspec_flash_get_page_count()) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	return MAL_ERROR_OK;
+}

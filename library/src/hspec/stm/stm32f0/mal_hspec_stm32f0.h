@@ -42,6 +42,7 @@
 #include "mal_hspec_stm32f0_adc.h"
 #include "mal_hspec_stm32f0_spi.h"
 #include "mal_hspec_stm32f0_reset.h"
+#include "mal_hspec_stm32f0_flash.h"
 
 // Device specific function mapping section.
 #ifdef MAL_STM32F030R8
@@ -114,6 +115,8 @@
 
 #define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072rb_get_timer_compare_irq(timer)
 
+#define mal_hspec_stm32f0_flash_get_page_count() mal_hspec_stm32f072rb_flash_get_page_count()
+
 #elif defined(MAL_STM32F072CB)
 
 #include "stm32f072cb/mal_hspec_stm32f072cb.h"
@@ -147,6 +150,8 @@
 #define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_channel_ios(timer, ios, size)
 
 #define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072cb_get_timer_compare_irq(timer)
+
+#define mal_hspec_stm32f0_flash_get_page_count() mal_hspec_stm32f072cb_flash_get_page_count()
 
 #elif defined(MAL_STM32F030K6)
 #else

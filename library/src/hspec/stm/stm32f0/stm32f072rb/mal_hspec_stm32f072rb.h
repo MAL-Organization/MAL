@@ -46,5 +46,7 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface, c
 mal_error_e mal_hspec_stm32f072rb_get_valid_channel_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
 void mal_hspec_stm32f072rb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE]);
 IRQn_Type mal_hspec_stm32f072rb_get_timer_compare_irq(mal_hspec_timer_e timer);
+uint32_t mal_hspec_stm32f072rb_flash_get_page_count(void);
+uint32_t mal_hspec_stm32f072rb_flash_get_page_size(uint32_t page);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F072RB_H_ */
