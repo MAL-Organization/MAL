@@ -181,6 +181,8 @@
 
 #define mal_hspec_flash_write_uint32_values(start_address, values, count) mal_hspec_stm32f0_flash_write_uint32_values(start_address, values, count)
 
+#define mal_hspec_flash_get_page_start_address(page) mal_hspec_stm32f0_flash_get_page_start_address(page)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 

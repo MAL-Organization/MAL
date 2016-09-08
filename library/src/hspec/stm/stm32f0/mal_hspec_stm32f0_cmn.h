@@ -156,37 +156,18 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 #define MAL_HSPEC_STM32F0_GET_GPIO_PIN(pin) (1 << pin)
 
 // Device specific function mapping section.
-#ifdef MAL_STM32F030R8
+#if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)
 
-#include "hspec/stm/mal_hspec_stm32f030r8.h"
+#include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072.h"
 
-#elif defined(MAL_STM32F051R8)
+#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072_get_port_afs(port, afs)
 
-#include "stm32f051r8/mal_hspec_stm32f051r8.h"
+#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072_get_timer_afs(afs)
 
-#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f051r8_get_port_afs(port, afs)
+#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072_flash_get_page_size(page)
 
-#elif defined(MAL_STM32F072RB)
+#define mal_hspec_stm32f0_flash_get_page_count() mal_hspec_stm32f072_flash_get_page_count()
 
-#include "stm32f072rb/mal_hspec_stm32f072rb.h"
-
-#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
-
-#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072rb_get_timer_afs(afs)
-
-#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072rb_flash_get_page_size(page)
-
-#elif defined(MAL_STM32F072CB)
-
-#include "stm32f072cb/mal_hspec_stm32f072cb.h"
-
-#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072cb_get_port_afs(port, afs)
-
-#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072cb_get_timer_afs(afs)
-
-#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072cb_flash_get_page_size(page)
-
-#elif defined(MAL_STM32F030K6)
 #else
 #error No valid hardware specfic device symbol specified...
 #endif

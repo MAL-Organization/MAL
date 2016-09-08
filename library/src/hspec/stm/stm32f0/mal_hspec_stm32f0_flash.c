@@ -102,3 +102,9 @@ mal_error_e mal_hspec_stm32f0_flash_write_uint32_values(uint64_t start_address, 
 	}
 	return MAL_ERROR_OK;
 }
+
+uint64_t mal_hspec_stm32f0_flash_get_page_start_address(uint32_t page) {
+	uint32_t page_size = mal_hspec_stm32f0_flash_get_page_size(page);
+	uint64_t address = FLASH_START_ADDRESS + (page_size * page);
+	return address;
+}

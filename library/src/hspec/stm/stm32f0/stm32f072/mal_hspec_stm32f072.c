@@ -1,7 +1,7 @@
 /*
- * mal_hspec_stm32f0_flash.h
+ * mal_hspec_stm32f072.c
  *
- *  Created on: Sep 2, 2016
+ *  Created on: Sep 7, 2016
  *      Author: Olivier
  */
 /*
@@ -23,18 +23,9 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_FLASH_H_
-#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_FLASH_H_
+#include "mal_hspec_stm32f072.h"
 
-#include "std/mal_error.h"
-#include "std/mal_stdint.h"
+bool mal_hspec_stm32f072_is_pll_div_available(mal_hspec_system_clk_src_e source) {
+	return true;
+}
 
-mal_error_e mal_hspec_stm32f0_flash_erase_page(uint32_t page);
-
-mal_error_e mal_hspec_stm32f0_flash_write_uint16_values(uint64_t start_address, uint16_t *values, uint32_t count);
-
-mal_error_e mal_hspec_stm32f0_flash_write_uint32_values(uint64_t start_address, uint32_t *values, uint32_t count);
-
-uint64_t mal_hspec_stm32f0_flash_get_page_start_address(uint32_t page);
-
-#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_FLASH_H_ */
