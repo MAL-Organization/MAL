@@ -62,7 +62,7 @@ typedef struct {
 	mal_e3prom_section_e active_section;
 } mal_e3prom_s;
 
-void mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom);
+mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom);
 
 mal_error_e mal_e3prom_get_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t *value);
 

@@ -41,8 +41,11 @@
 static mal_e3prom_state_e get_section_state(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 static mal_error_e get_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t *value);
 static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value);
+static mal_error_e switch_active_sector(mal_e3prom_s *e3prom);
+static mal_error_e erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 
-void mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
+mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
+	mal_error_e result;
 	// Store page data
 	e3prom->sections[MAL_E3PROM_SECTION_PRIMARY].start_page = init->primary_start_page;
 	e3prom->sections[MAL_E3PROM_SECTION_SECONDARY].start_page = init->secondary_start_page;
@@ -74,10 +77,60 @@ void mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
 	// Get state of each sections
 	mal_e3prom_state_e primary_state = get_section_state(e3prom, MAL_E3PROM_SECTION_PRIMARY);
 	mal_e3prom_state_e secondary_state = get_section_state(e3prom, MAL_E3PROM_SECTION_SECONDARY);
-	// If sections are in unknown state, we erase them
-	if (MAL_E3PROM_STATE_UNKNOWN == primary_state) {
-
+	// If sections are in unknown state or initializing state, we erase them
+	if (MAL_E3PROM_STATE_UNKNOWN == primary_state || MAL_E3PROM_STATE_INITIALIZING == primary_state) {
+		result = erase_section(e3prom, MAL_E3PROM_SECTION_PRIMARY);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+		primary_state = MAL_E3PROM_STATE_ERASED;
 	}
+	if (MAL_E3PROM_STATE_UNKNOWN == secondary_state || MAL_E3PROM_STATE_INITIALIZING == secondary_state) {
+		result = erase_section(e3prom, MAL_E3PROM_SECTION_SECONDARY);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+		secondary_state = MAL_E3PROM_STATE_ERASED;
+	}
+	// Determine the active sector
+	// The first possibility is that both sections are erased. In that case, we
+	// simply choose the primary as active.
+	if (MAL_E3PROM_STATE_ERASED == primary_state && MAL_E3PROM_STATE_ERASED == secondary_state) {
+		e3prom->active_section = MAL_E3PROM_SECTION_PRIMARY;
+		result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ACTIVE, false);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+	}
+	// The next possibility is that only the primary is active. If, for some
+	// reason, we have 2 active partitions, we will favor the primary.
+	else if (MAL_E3PROM_STATE_ACTIVE == primary_state) {
+		e3prom->active_section = MAL_E3PROM_SECTION_PRIMARY;
+	}
+	// The next possibility is that only the secondary is active.
+	else if (MAL_E3PROM_STATE_ACTIVE == secondary_state) {
+		e3prom->active_section = MAL_E3PROM_SECTION_SECONDARY;
+	}
+	// If we have the primary section decommossioned, we will switch
+	// sections.
+	else if (MAL_E3PROM_STATE_DECOMMISSIONED == primary_state) {
+		e3prom->active_section = MAL_E3PROM_SECTION_PRIMARY;
+		result = switch_active_sector(e3prom, true);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+	}
+	// If we have the secondary section decommossioned, we will switch
+	// sections.
+	else if (MAL_E3PROM_STATE_DECOMMISSIONED == primary_state) {
+		e3prom->active_section = MAL_E3PROM_SECTION_SECONDARY;
+		result = switch_active_sector(e3prom, true);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+	}
+
+	return MAL_ERROR_OK;
 }
 
 static mal_e3prom_state_e get_section_state(mal_e3prom_s *e3prom, mal_e3prom_section_e section) {
@@ -123,6 +176,7 @@ static mal_error_e erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e sect
 		}
 	}
 	// Write state erased
+	return write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ERASED, false);
 }
 
 mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
@@ -137,6 +191,12 @@ mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t 
 		return result;
 	}
 	// When we get here, we need to switch active sector
+	result = switch_active_sector(e3prom, false);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Write value to new sector
+	return write_section_value(e3prom, e3prom->active_section, key, value, true);
 }
 
 static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value) {
@@ -166,20 +226,17 @@ static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_
 	}
 	// Write value
 	uint64_t value_address = key_address + sizeof(uint32_t);
-	result = mal_flash_write_uint32_values(value_address, &value, 1);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-
-	return MAL_ERROR_OK;
+	return mal_flash_write_uint32_values(value_address, &value, 1);
 }
 
-static mal_error_e switch_active_sector(mal_e3prom_s *e3prom) {
+static mal_error_e switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommissioning) {
 	mal_error_e result;
 	// Make the active section decommissioned.
-	result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_DECOMMISSIONED, false);
-	if (MAL_ERROR_OK != result) {
-		return result;
+	if (!skip_decommissioning) {
+		result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_DECOMMISSIONED, false);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
 	}
 	// Switch active sector pointer
 	mal_e3prom_section_e previous_section = e3prom->active_section;
@@ -241,8 +298,5 @@ static mal_error_e switch_active_sector(mal_e3prom_s *e3prom) {
 		}
 	}
 	// Change state to active
-	result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ACTIVE, false);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+	return write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ACTIVE, false);
 }
