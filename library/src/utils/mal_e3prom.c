@@ -25,12 +25,22 @@
 
 #include "mal_e3prom.h"
 #include "flash/mal_flash.h"
+#include "std/mal_bool.h"
 
-#define EMPTY_KEY	0xFFFFFFFF
+/**
+ * The value that should be read from key when read from an empty key value
+ * space.
+ */
+#define EMPTY_KEY			0xFFFFFFFF
+/**
+ * The number of key value spaces to keep empty before declaring a sector full.
+ * This is important to change the state of a sector.
+ */
+#define STATE_SECTOR_BUFFER	1
 
 static mal_e3prom_state_e get_section_state(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 static mal_error_e get_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t *value);
-static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value);
+static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value);
 
 void mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
 	// Store page data
@@ -116,15 +126,29 @@ static mal_error_e erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e sect
 }
 
 mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
-	return write_section_value(e3prom, e3prom->active_section, key, value);
+	mal_error_e result;
+	// Try to write value to active sector
+	result = write_section_value(e3prom, e3prom->active_section, key, value, true);
+	if (MAL_ERROR_OK == result) {
+		return result;
+	}
+	// Make sure the write did not fail in an unexpected way
+	if (MAL_ERROR_FULL != result) {
+		return result;
+	}
+	// When we get here, we need to switch active sector
 }
 
-static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value) {
+static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value) {
+	mal_error_e result;
 	// Find the next available space
 	uint64_t key_address;
+	uint32_t step = sizeof(uint32_t) * 2;
 	uint64_t start_address = mal_flash_get_page_start_address(e3prom->sections[section].start_page);
 	uint64_t last_address = e3prom->sections[section].last_address;
-	uint32_t step = sizeof(uint32_t) * 2;
+	if (user_value) {
+		last_address -= step * STATE_SECTOR_BUFFER;
+	}
 	for (key_address = start_address; key_address <= last_address; key_address += step) {
 		uint32_t current_key = MAL_FLASH_READ_UINT32(key_address);
 		if (EMPTY_KEY == current_key) {
@@ -132,4 +156,93 @@ static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_
 		}
 	}
 	// Make sure an empty key was found
+	if (key_address > last_address) {
+		return MAL_ERROR_FULL;
+	}
+	// Write key
+	result = mal_flash_write_uint32_values(key_address, &key, 1);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Write value
+	uint64_t value_address = key_address + sizeof(uint32_t);
+	result = mal_flash_write_uint32_values(value_address, &value, 1);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+
+	return MAL_ERROR_OK;
+}
+
+static mal_error_e switch_active_sector(mal_e3prom_s *e3prom) {
+	mal_error_e result;
+	// Make the active section decommissioned.
+	result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_DECOMMISSIONED, false);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Switch active sector pointer
+	mal_e3prom_section_e previous_section = e3prom->active_section;
+	if (MAL_E3PROM_SECTION_PRIMARY == e3prom->active_section) {
+		e3prom->active_section = MAL_E3PROM_SECTION_SECONDARY;
+	} else {
+		e3prom->active_section = MAL_E3PROM_SECTION_PRIMARY;
+	}
+	// Make sure current state of new sector is erased
+	mal_e3prom_state_e state = get_section_state(e3prom, e3prom->active_section);
+	if (MAL_E3PROM_STATE_ERASED != state) {
+		result = erase_section(e3prom, e3prom->active_section);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+	}
+	// Change state to initializing
+	result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_INITIALIZING, false);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Copy values from previous sector
+	uint64_t previous_key_address;
+	uint32_t step = sizeof(uint32_t) * 2;
+	uint64_t previous_start_address = mal_flash_get_page_start_address(e3prom->sections[previous_section].start_page);
+	uint64_t previous_last_address = e3prom->sections[previous_section].last_address - (step * STATE_SECTOR_BUFFER);
+	uint64_t active_start_address = mal_flash_get_page_start_address(e3prom->sections[e3prom->active_section].start_page);
+	uint64_t active_last_address = e3prom->sections[e3prom->active_section].last_address - (step * STATE_SECTOR_BUFFER);
+	for (previous_key_address = previous_last_address; previous_key_address >= previous_start_address; previous_key_address -= step) {
+		uint32_t previous_key = MAL_FLASH_READ_UINT32(previous_key_address);
+		// Check if key value should be transfered
+		if (EMPTY_KEY == previous_key || MAL_E3PROM_STATE_KEY == previous_key) {
+			continue;
+		}
+		// Make sure this key was not already transfered
+		bool key_found = false;
+		uint64_t active_key_address;
+		for (active_key_address = active_start_address; active_key_address <= active_last_address; active_key_address += step) {
+			uint32_t active_key = MAL_FLASH_READ_UINT32(active_key_address);
+			// Check if we reached the end
+			if (EMPTY_KEY == active_key) {
+				break;
+			}
+			// Check if key matches
+			if (previous_key == active_key) {
+				key_found = true;
+				break;
+			}
+		}
+		if (key_found) {
+			continue;
+		}
+		// Value was not transfered, write key value
+		uint64_t previous_value_address = previous_key_address + sizeof(uint32_t);
+		uint32_t previous_value = MAL_FLASH_READ_UINT32(previous_value_address);
+		result = write_section_value(e3prom, e3prom->active_section, previous_key, previous_value, true);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+	}
+	// Change state to active
+	result = write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ACTIVE, false);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
 }
