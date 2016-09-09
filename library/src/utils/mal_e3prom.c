@@ -41,7 +41,7 @@
 static mal_e3prom_state_e get_section_state(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 static mal_error_e get_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t *value);
 static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value);
-static mal_error_e switch_active_sector(mal_e3prom_s *e3prom);
+static mal_error_e switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommissioning);
 static mal_error_e erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 
 mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
@@ -154,11 +154,13 @@ static mal_error_e get_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e 
 	uint64_t start_address = mal_flash_get_page_start_address(e3prom->sections[section].start_page);
 	uint64_t last_address = e3prom->sections[section].last_address;
 	uint32_t step = sizeof(uint32_t) * 2;
-	for (key_address = last_address; key_address >= start_address; key_address -= step) {
-		uint32_t current_key = MAL_FLASH_READ_UINT32(key_address);
+	for (key_address = last_address;
+		 key_address >= start_address && key_address <= last_address;
+		 key_address -= step) {
+		uint32_t current_key = mal_flash_read_uint32(key_address);
 		if (current_key == key) {
 			uint64_t value_address = key_address + sizeof(uint32_t);
-			*value = MAL_FLASH_READ_UINT32(value_address);
+			*value = mal_flash_read_uint32(value_address);
 			return MAL_ERROR_OK;
 		}
 	}
@@ -176,11 +178,15 @@ static mal_error_e erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e sect
 		}
 	}
 	// Write state erased
-	return write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ERASED, false);
+	return write_section_value(e3prom, section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ERASED, false);
 }
 
 mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
 	mal_error_e result;
+	// Users cannot write state
+	if (MAL_E3PROM_STATE_KEY == key) {
+		return MAL_ERROR_OPERATION_INVALID;
+	}
 	// Try to write value to active sector
 	result = write_section_value(e3prom, e3prom->active_section, key, value, true);
 	if (MAL_ERROR_OK == result) {
@@ -201,6 +207,10 @@ mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t 
 
 static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_e section, uint32_t key, uint32_t value, bool user_value) {
 	mal_error_e result;
+	// Key cannot be empty value
+	if (EMPTY_KEY == key) {
+		return MAL_ERROR_OPERATION_INVALID;
+	}
 	// Find the next available space
 	uint64_t key_address;
 	uint32_t step = sizeof(uint32_t) * 2;
@@ -210,7 +220,7 @@ static mal_error_e write_section_value(mal_e3prom_s *e3prom, mal_e3prom_section_
 		last_address -= step * STATE_SECTOR_BUFFER;
 	}
 	for (key_address = start_address; key_address <= last_address; key_address += step) {
-		uint32_t current_key = MAL_FLASH_READ_UINT32(key_address);
+		uint32_t current_key = mal_flash_read_uint32(key_address);
 		if (EMPTY_KEY == current_key) {
 			break;
 		}
@@ -265,8 +275,10 @@ static mal_error_e switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommis
 	uint64_t previous_last_address = e3prom->sections[previous_section].last_address - (step * STATE_SECTOR_BUFFER);
 	uint64_t active_start_address = mal_flash_get_page_start_address(e3prom->sections[e3prom->active_section].start_page);
 	uint64_t active_last_address = e3prom->sections[e3prom->active_section].last_address - (step * STATE_SECTOR_BUFFER);
-	for (previous_key_address = previous_last_address; previous_key_address >= previous_start_address; previous_key_address -= step) {
-		uint32_t previous_key = MAL_FLASH_READ_UINT32(previous_key_address);
+	for (previous_key_address = previous_last_address;
+		 previous_key_address >= previous_start_address && previous_key_address <= previous_last_address;
+		 previous_key_address -= step) {
+		uint32_t previous_key = mal_flash_read_uint32(previous_key_address);
 		// Check if key value should be transfered
 		if (EMPTY_KEY == previous_key || MAL_E3PROM_STATE_KEY == previous_key) {
 			continue;
@@ -275,7 +287,7 @@ static mal_error_e switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommis
 		bool key_found = false;
 		uint64_t active_key_address;
 		for (active_key_address = active_start_address; active_key_address <= active_last_address; active_key_address += step) {
-			uint32_t active_key = MAL_FLASH_READ_UINT32(active_key_address);
+			uint32_t active_key = mal_flash_read_uint32(active_key_address);
 			// Check if we reached the end
 			if (EMPTY_KEY == active_key) {
 				break;
@@ -291,7 +303,7 @@ static mal_error_e switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommis
 		}
 		// Value was not transfered, write key value
 		uint64_t previous_value_address = previous_key_address + sizeof(uint32_t);
-		uint32_t previous_value = MAL_FLASH_READ_UINT32(previous_value_address);
+		uint32_t previous_value = mal_flash_read_uint32(previous_value_address);
 		result = write_section_value(e3prom, e3prom->active_section, previous_key, previous_value, true);
 		if (MAL_ERROR_OK != result) {
 			return result;

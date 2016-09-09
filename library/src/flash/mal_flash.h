@@ -25,6 +25,7 @@
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
+#include "hspec/mal_hspec.h"
 
 /**
  * @defgroup CAN
@@ -36,49 +37,49 @@
  * @brief Read an unsigned 8 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_UINT8(address)	*((uint8_t*)address)
+#define mal_flash_read_uint8(address) mal_hspec_flash_read_uint8(address)
 
 /**
  * @brief Read a signed 8 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_INT8(address)	*((int8_t*)address)
+#define mal_flash_read_int8(address) mal_hspec_flash_read_int8(address)
 
 /**
  * @brief Read an unsigned 16 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_UINT16(address)	*((uint16_t*)address)
+#define mal_flash_read_uint16(address) mal_hspec_flash_read_uint16(address)
 
 /**
  * @brief Read a signed 16 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_INT16(address)	*((int16_t*)address)
+#define mal_flash_read_int16(address) mal_hspec_flash_read_int16(address)
 
 /**
  * @brief Read an unsigned 32 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_UINT32(address)	*((uint32_t*)address)
+#define mal_flash_read_uint32(address) mal_hspec_flash_read_uint32(address)
 
 /**
  * @brief Read a signed 32 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_INT32(address)	*((int32_t*)address)
+#define mal_flash_read_int32(address) mal_hspec_flash_read_int32(address)
 
 /**
  * @brief Read an unsigned 64 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_UINT64(address)	*((uint64_t*)address)
+#define mal_flash_read_uint64(address) mal_hspec_flash_read_uint64(address)
 
 /**
  * @brief Read a signed 64 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define MAL_FLASH_READ_INT64(address)	*((int64_t*)address)
+#define mal_flash_read_int64(address) mal_hspec_flash_read_int64(address)
 
 /**
  * @brief This function will write an array of uint16 values to flash from the

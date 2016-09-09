@@ -27,8 +27,9 @@
 #define UTILS_MAL_E3PROM_H_
 
 #include "std/mal_stdint.h"
+#include "std/mal_error.h"
 
-#define MAL_E3PROM_STATE_KEY	(sizeof(uint32_t) - 1)
+#define MAL_E3PROM_STATE_KEY	0xFFFFFFFE
 
 typedef struct {
 	uint32_t primary_start_page;

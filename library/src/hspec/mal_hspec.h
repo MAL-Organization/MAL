@@ -183,6 +183,22 @@
 
 #define mal_hspec_flash_get_page_start_address(page) mal_hspec_stm32f0_flash_get_page_start_address(page)
 
+#define mal_hspec_flash_read_uint8(address) mal_hspec_stm32f0_flash_read_uint8(address)
+
+#define mal_hspec_flash_read_int8(address) mal_hspec_stm32f0_flash_read_int8(address)
+
+#define mal_hspec_flash_read_uint16(address) mal_hspec_stm32f0_flash_read_uint16(address)
+
+#define mal_hspec_flash_read_int16(address)	mal_hspec_stm32f0_flash_read_int16(address)
+
+#define mal_hspec_flash_read_uint32(address) mal_hspec_stm32f0_flash_read_uint32(address)
+
+#define mal_hspec_flash_read_int32(address)	mal_hspec_stm32f0_flash_read_int32(address)
+
+#define mal_hspec_flash_read_uint64(address) mal_hspec_stm32f0_flash_read_uint64(address)
+
+#define mal_hspec_flash_read_int64(address)	mal_hspec_stm32f0_flash_read_int64(address)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -316,6 +332,36 @@
 #define mal_hspec_reset_handle_reset_source() mal_hspec_mingw_reset_handle_reset_source()
 
 #define mal_hspec_reset_mcu() mal_hspec_mingw_reset_mcu()
+
+// FLASH
+
+#define mal_hspec_flash_get_page_count() mal_hspec_mingw_flash_get_page_count()
+
+#define mal_hspec_flash_get_page_size(page) mal_hspec_mingw_flash_get_page_size(page)
+
+#define mal_hspec_flash_erase_page(page) mal_hspec_mingw_flash_erase_page(page)
+
+#define mal_hspec_flash_write_uint16_values(start_address, values, count) mal_hspec_mingw_flash_write_uint16_values(start_address, values, count)
+
+#define mal_hspec_flash_write_uint32_values(start_address, values, count) mal_hspec_mingw_flash_write_uint32_values(start_address, values, count)
+
+#define mal_hspec_flash_get_page_start_address(page) mal_hspec_mingw_flash_get_page_start_address(page)
+
+#define mal_hspec_flash_read_uint8(address) mal_hspec_mingw_flash_read_uint8(address)
+
+#define mal_hspec_flash_read_int8(address) mal_hspec_mingw_flash_read_int8(address)
+
+#define mal_hspec_flash_read_uint16(address) mal_hspec_mingw_flash_read_uint16(address)
+
+#define mal_hspec_flash_read_int16(address)	mal_hspec_mingw_flash_read_int16(address)
+
+#define mal_hspec_flash_read_uint32(address) mal_hspec_mingw_flash_read_uint32(address)
+
+#define mal_hspec_flash_read_int32(address)	mal_hspec_mingw_flash_read_int32(address)
+
+#define mal_hspec_flash_read_uint64(address) mal_hspec_mingw_flash_read_uint64(address)
+
+#define mal_hspec_flash_read_int64(address)	mal_hspec_mingw_flash_read_int64(address)
 
 #else
 #error No hardware specfic family symbol specified...
