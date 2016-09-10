@@ -122,12 +122,15 @@ mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
 	}
 	// If we have the secondary section decommossioned, we will switch
 	// sections.
-	else if (MAL_E3PROM_STATE_DECOMMISSIONED == primary_state) {
+	else if (MAL_E3PROM_STATE_DECOMMISSIONED == secondary_state) {
 		e3prom->active_section = MAL_E3PROM_SECTION_SECONDARY;
 		result = switch_active_sector(e3prom, true);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
+	} else {
+		// Should never get here
+		return MAL_ERROR_INIT_FAILED;
 	}
 
 	return MAL_ERROR_OK;
