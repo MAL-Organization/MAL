@@ -14,3 +14,4 @@ library/release.properties
 library/Release/
 eclipse/
 *.pyc
+library/build-scripts/.idea/

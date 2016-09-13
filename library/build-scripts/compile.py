@@ -161,7 +161,10 @@ if __name__ == '__main__':
     # Extract requested build configurations
     build_configurations = properties["build.configurations"].split(",")
     # Extract exclusions and copy headers
-    global_exlusions = properties["build.excludes"].split(",")
+    global_exlusions_string = properties["build.excludes"]  # type: str
+    global_exlusions = list()
+    if global_exlusions_string:
+        global_exlusions = global_exlusions_string.split(",")
     for bc in build_configurations:
         build_exclusions = extract_cdt_project_exclusions(cproject_file_path, bc)
         # Add global exclusions
