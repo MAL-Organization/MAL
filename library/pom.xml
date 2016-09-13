@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github</groupId>
 	<artifactId>mal</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.8</version>
 	<packaging>pom</packaging>
 
 	<name>mal</name>
@@ -10,7 +10,7 @@
 
 	<properties>
 		<build.configurations>STM32F072CB,STM32F072RB,MINGW</build.configurations>
-		<build.excludes></build.excludes>
+		<build.excludes />
 		<optimization.levels>optimize,more,most,size,debug,none</optimization.levels>
 		<path.to.workspace>${basedir}/../eclipse</path.to.workspace>
 	</properties>
@@ -19,7 +19,7 @@
 		<connection>scm:git:git@github.com:MAL-Organization/MAL.git</connection>
         <url>scm:git:git@github.com:MAL-Organization/MAL.git</url>
         <developerConnection>scm:git:git@github.com:MAL-Organization/MAL.git</developerConnection>
-		<tag>master</tag>
+		<tag>mal-1.0.8</tag>
 	</scm>
 
 	<build>
