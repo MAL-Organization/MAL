@@ -90,7 +90,7 @@
 					<sourceEntries>
 						<entry excluding="cortexm|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -181,7 +181,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/mingw|src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/hspec/stm/stm32f0/stm32f072/stm32f072cb|src/hspec/stm/stm32f0/stm32f072/stm32f072rb|src/hspec/mingw|src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
 					</sourceEntries>
 				</configuration>
@@ -290,7 +290,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>
@@ -401,7 +401,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>
@@ -435,7 +435,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar.1833792991" name="'char' is signed (-fsigned-char)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.signedchar" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections.108717215" name="Function sections (-ffunction-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.functionsections" value="true" valueType="boolean"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections.167654646" name="Data sections (-fdata-sections)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.datasections" value="true" valueType="boolean"/>
-							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1287854041" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.none" valueType="enumerated"/>
+							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.1287854041" name="Debug level" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level" value="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.level.max" valueType="enumerated"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format.1286190560" name="Debug format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.debugging.format"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name.1789785158" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.toolchain.name" value="GNU Tools for ARM Embedded Processors" valueType="string"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.1695932526" name="Architecture" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.architecture" value="ilg.gnuarmeclipse.managedbuild.cross.option.architecture.arm" valueType="enumerated"/>
@@ -512,7 +512,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>
@@ -624,7 +624,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/mingw|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>

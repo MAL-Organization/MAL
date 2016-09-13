@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw.h
+ * mal_hspec_stm32f072.c
  *
- *  Created on: Mar 24, 2016
+ *  Created on: Sep 7, 2016
  *      Author: Olivier
  */
 /*
@@ -23,19 +23,9 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#include "mal_hspec_stm32f072.h"
 
-#include "mal_hspec_mingw_adc.h"
-#include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_gpio.h"
-#include "mal_hspec_mingw_timer.h"
-#include "mal_hspec_mingw_i2c.h"
-#include "mal_hspec_mingw_clock.h"
-#include "mal_hspec_mingw_uuid.h"
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_spi.h"
-#include "mal_hspec_mingw_reset.h"
-#include "mal_hspec_mingw_flash.h"
+bool mal_hspec_stm32f072_is_pll_div_available(mal_hspec_system_clk_src_e source) {
+	return true;
+}
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */

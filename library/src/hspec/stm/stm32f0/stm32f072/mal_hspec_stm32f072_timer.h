@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw.h
+ * mal_hspec_stm32f072_timer.h
  *
- *  Created on: Mar 24, 2016
+ *  Created on: Sep 6, 2016
  *      Author: Olivier
  */
 /*
@@ -23,19 +23,16 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#ifndef HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_
+#define HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_
 
-#include "mal_hspec_mingw_adc.h"
-#include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_gpio.h"
-#include "mal_hspec_mingw_timer.h"
-#include "mal_hspec_mingw_i2c.h"
-#include "mal_hspec_mingw_clock.h"
-#include "mal_hspec_mingw_uuid.h"
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_spi.h"
-#include "mal_hspec_mingw_reset.h"
-#include "mal_hspec_mingw_flash.h"
+#include "std/mal_error.h"
+#include "hspec/mal_hspec_cmn.h"
+#include "std/mal_stdint.h"
+#include "stm32f0/stm32f0xx.h"
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
+mal_error_e mal_hspec_stm32f072_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size);
+IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_hspec_timer_e timer);
+IRQn_Type mal_hspec_stm32f072_get_timer_compare_irq(mal_hspec_timer_e timer);
+
+#endif /* HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_ */

@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw.h
+ * mal_flash.c
  *
- *  Created on: Mar 24, 2016
+ *  Created on: Sep 2, 2016
  *      Author: Olivier
  */
 /*
@@ -23,19 +23,17 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#include "mal_flash.h"
+#include "hspec/mal_hspec.h"
 
-#include "mal_hspec_mingw_adc.h"
-#include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_gpio.h"
-#include "mal_hspec_mingw_timer.h"
-#include "mal_hspec_mingw_i2c.h"
-#include "mal_hspec_mingw_clock.h"
-#include "mal_hspec_mingw_uuid.h"
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_spi.h"
-#include "mal_hspec_mingw_reset.h"
-#include "mal_hspec_mingw_flash.h"
+mal_error_e mal_flash_erase_page(uint32_t page) {
+	mal_error_e result;
+	// Make sure flash page is valid
+	result = mal_hspec_flash_is_page_valid(page);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Erase page
+	return mal_hspec_flash_erase_page(page);
+}
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
