@@ -9,7 +9,10 @@
 	<description>MAL library</description>
 
 	<properties>
-		<build.config>@('STM32F072CB','STM32F072RB','MINGW')</build.config>
+		<build.configurations>STM32F072CB,STM32F072RB,MINGW</build.configurations>
+		<build.excludes></build.excludes>
+		<optimization.levels>optimize,more,most,size,debug,none</optimization.levels>
+		<path.to.workspace>${basedir}/../eclipse</path.to.workspace>
 	</properties>
 
 	<scm>
@@ -40,23 +43,29 @@
 			  <artifactId>maven-release-plugin</artifactId>
 			  <version>2.5.3</version>
 			</plugin>
-			
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0.0</version>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>3.0.0</version>
 				<executions>
-				  <execution>
-					<phase>initialize</phase>
-					<goals>
-					  <goal>read-project-properties</goal>
-					</goals>
-					<configuration>
-					  <files>
-						<file>build.properties</file>
-					  </files>
-					</configuration>
-				  </execution>
+					<execution>
+						<id>copy-headers</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>${path.to.workspace}</directory>
+									<includes>
+										<include>**/*</include>
+									</includes>
+									<excludes />
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -70,12 +79,9 @@
 						<configuration>
 							<target>
 								<echoproperties destfile="${project.build.directory}/initialize.properties" />
-								<exec failifexecutionfails="true" executable="powershell" failonerror="true">
-									<arg value="${project.build.directory}\..\build-scripts\compile.ps1" />
-									<arg value="${path.to.eclipse}" />
-									<arg value="${path.to.workspace}" />
-									<arg value="${build.config}" />
-									<arg value="${basedir}" />
+								<exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\compile.py" />
+									<arg value="${project.build.directory}/initialize.properties" />
 								</exec>
 							</target>
 						</configuration>
@@ -83,17 +89,15 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
-                    <execution>
+					<execution>
                         <id>default-test</id>
                         <phase>test</phase>
                         <configuration>
                             <target>
                                 <echoproperties destfile="${project.build.directory}/test.properties" />
-                                <exec failifexecutionfails="true" executable="powershell" failonerror="true">
-									<arg value="${project.build.directory}\..\build-scripts\test.ps1" />
-									<arg value="${path.to.eclipse}" />
-									<arg value="${path.to.workspace}" />
-									<arg value="${basedir}" />
+                                <exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\test.py" />
+									<arg value="${project.build.directory}/test.properties" />
                                 </exec>
                             </target>
                         </configuration>

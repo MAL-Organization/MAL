@@ -8,7 +8,7 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>${project.build.directory}\libraries</directory>
+      <directory>${project.build.directory}\library</directory>
 	  <outputDirectory></outputDirectory>
 	  <filtered>false</filtered>
     </fileSet>
