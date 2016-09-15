@@ -76,6 +76,8 @@ RCC_CFGR_PLLMULL12, RCC_CFGR_PLLMULL13, RCC_CFGR_PLLMULL14,
 RCC_CFGR_PLLMULL15, RCC_CFGR_PLLMULL16 };
 
 extern uint64_t mal_external_clk_freq;
+void mal_stm32f0_relocate_vector_table(void);
+
 void mal_hspec_stm32f0_startup() {
 	// Initialises basic clocks and systems
 	SystemInit();
@@ -85,6 +87,9 @@ void mal_hspec_stm32f0_startup() {
 
 	// Update system core clock for stm32f0-stdperiph drivers
 	SystemCoreClockUpdate(mal_external_clk_freq);
+
+	// Relocate vector table
+	mal_stm32f0_relocate_vector_table();
 }
 
 mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) {

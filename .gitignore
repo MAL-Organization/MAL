@@ -12,3 +12,6 @@ library/build.properties
 library/pom.xml.releaseBackup
 library/release.properties
 library/Release/
+eclipse/
+*.pyc
+library/build-scripts/.idea/
