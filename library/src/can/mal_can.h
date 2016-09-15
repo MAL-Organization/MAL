@@ -33,6 +33,17 @@
  */
 
 /**
+ * @brief Function to initialize directly the interface. Using this function
+ * will reduce code size at the cost of flexibility and safety. Usually use
+ * this in a code closer to final.
+ * @param init Initialization parameters.
+ * @param direc_init A pointer to direct initialization parameter. See the
+ * hardware specific implementation to know what type this should be.
+ * @return #MAL_ERROR_OK on success.
+ */
+#define mal_can_direct_init(init, direct_init) mal_hspec_can_direct_init(init, direct_init)
+
+/**
  * @brief Add a filter to a CAN interface.
  * @param interface The CAN interface to add the filter to. Should be of type
  * ::mal_hspec_can_e.

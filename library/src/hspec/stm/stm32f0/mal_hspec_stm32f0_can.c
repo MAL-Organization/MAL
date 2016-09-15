@@ -53,6 +53,8 @@ typedef struct {
 	uint8_t fifo;
 } can_filter_bank_s;
 
+static mal_error_e mal_hspec_stm32f0_can_init_common(mal_hspec_can_init_s *init);
+
 static void can_read_fifo(uint8_t fifo);
 
 static void can_transmit_msg(mal_hspec_can_msg_s *msg);
@@ -66,7 +68,7 @@ static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
 static can_filter_bank_s can_filter_banks[CAN_FILTER_BANKS_SIZE];
 static volatile bool interface_active = false;
 
-mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
+static mal_error_e mal_hspec_stm32f0_can_init_common(mal_hspec_can_init_s *init) {
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->tx_gpio->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->rx_gpio->port), ENABLE);
@@ -99,6 +101,17 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN, ENABLE);
 	// Clear CAN
 	CAN_DeInit(CAN);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
+	mal_error_e result;
+	// Initialize common part of CAN
+	result = mal_hspec_stm32f0_can_init_common(init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
 	// Get APB Clock
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
@@ -183,6 +196,43 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	CAN_ITConfig(CAN, CAN_IT_FMP0, ENABLE);
 	CAN_ITConfig(CAN, CAN_IT_FMP1, ENABLE);
 	CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
+}
+
+mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const void *direct_init) {
+	mal_error_e result;
+	// Read direct init
+	mal_hspec_stm32f0_can_direct_init_s *stm_direct_init;
+	stm_direct_init = (mal_hspec_stm32f0_can_direct_init_s*)direct_init;
+	// Initialize common part of CAN
+	result = mal_hspec_stm32f0_can_init_common(init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Save call backs
+	can_tx_callback = init->tx_callback;
+	can_rx_callback = init->rx_callback;
+	// Configure CAN
+	CAN_InitTypeDef can_init;
+	CAN_StructInit(&can_init);
+	can_init.CAN_BS1 = stm_direct_init->bs1;
+	can_init.CAN_BS2 = stm_direct_init->bs2;
+	can_init.CAN_SJW = stm_direct_init->sjw;
+	can_init.CAN_Prescaler = stm_direct_init->prescaler;
+	can_init.CAN_ABOM = ENABLE;
+	if (CAN_InitStatus_Success != CAN_Init(CAN, &can_init)) {
+		return MAL_ERROR_INIT_FAILED;
+	}
+	// Enable interrupts
+	// 30 equates to CAN_IRQ. However, the name of the constant changes based
+	// on the MCU because it is not available on all of them. It is simpler to
+	// use the constant directly. If the MCU does not support CAN, the code
+	// will not get here.
+	NVIC_EnableIRQ(30);
+	CAN_ITConfig(CAN, CAN_IT_FMP0, ENABLE);
+	CAN_ITConfig(CAN, CAN_IT_FMP1, ENABLE);
+	CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
+
+	return MAL_ERROR_OK;
 }
 
 void CEC_CAN_IRQHandler(void) {
