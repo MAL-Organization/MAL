@@ -53,6 +53,41 @@ static void timer_input_capture_interrupt(mal_hspec_timer_e timer, TIM_TypeDef *
 
 static timer_callback_u timer_callbacks[MAL_HSPEC_TIMER_SIZE];
 
+mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_callback_t callback) {
+	mal_error_e result;
+	// Read direct init
+	mal_hspec_stm32f0_timer_direct_init_s *stm_direct_init;
+	stm_direct_init = (mal_hspec_stm32f0_timer_direct_init_s*)direct_init;
+	// Initialise peripheral clock
+	result = init_timer_rcc(timer);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Get timer
+	TIM_TypeDef *tim = get_timer_typedef(timer);
+	// Initialise time base timer
+	TIM_TimeBaseInitTypeDef params;
+	TIM_TimeBaseStructInit(&params);
+	params.TIM_CounterMode = TIM_CounterMode_Up;
+	params.TIM_Prescaler = stm_direct_init->prescaler;
+	params.TIM_Period = stm_direct_init->period;
+	TIM_TimeBaseInit(tim, &params);
+	// Save tick handle
+	timer_callbacks[timer].task_cb = callback;
+	// Enable NVIC interrupt for timer
+	if (NULL != callback) {
+		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
+		NVIC_EnableIRQ(irq);
+		NVIC_SetPriority(irq, 2); // Find a way to manage priorities for interrupts
+		// Enable timer interrupt
+		TIM_ITConfig(tim, TIM_IT_Update, ENABLE);
+	}
+	// Enable timer
+	TIM_Cmd(tim, ENABLE);
+
+	return MAL_ERROR_OK;
+}
+
 mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback) {
 	mal_error_e result;
 	// Initialise peripheral clock

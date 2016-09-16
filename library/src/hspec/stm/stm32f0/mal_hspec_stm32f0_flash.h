@@ -53,4 +53,6 @@ mal_error_e mal_hspec_stm32f0_flash_write_uint32_values(uint64_t start_address, 
 
 uint64_t mal_hspec_stm32f0_flash_get_page_start_address(uint32_t page);
 
+uint32_t mal_hspec_stm32f0_flash_get_page_from_address(uint64_t address);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_FLASH_H_ */

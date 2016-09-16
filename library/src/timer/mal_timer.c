@@ -31,12 +31,41 @@ void mal_timer_init(void);
 static mal_error_e reserve_timer(mal_hspec_timer_e timer, mal_hspec_timer_mode_e mode, mal_hspec_timer_e *handle);
 static mal_error_e get_available_timer(mal_hspec_timer_e *timer);
 static mal_error_e timer_tick_callback(mal_hspec_timer_e timer);
-static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer, mal_hspec_timer_mode_e mode, float frequency, float delta, mal_hspec_timer_callback_t callback, mal_hspec_timer_e *handle);
+static mal_error_e mal_timer_internal_init_common(mal_hspec_timer_e timer,
+												  mal_hspec_timer_mode_e mode,
+												  float frequency, float delta,
+												  mal_hspec_timer_e *handle);
+static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
+										   mal_hspec_timer_mode_e mode,
+										   float frequency, float delta,
+										   mal_hspec_timer_callback_t callback,
+										   mal_hspec_timer_e *handle);
+static mal_error_e mal_timer_internal_direct_init(mal_hspec_timer_e timer,
+										   	   	  mal_hspec_timer_mode_e mode,
+												  float frequency, float delta,
+												  mal_hspec_timer_callback_t callback,
+												  const void *direct_init,
+												  mal_hspec_timer_e *handle);
 
 static mal_timer_state_s timer_states[MAL_HSPEC_TIMER_SIZE];
 
-mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_e *handle) {
-	return mal_timer_internal_init(timer, MAL_HSPEC_TIMER_MODE_TICK, frequency, delta, &timer_tick_callback, handle);
+mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer,
+							    float frequency, float delta,
+								mal_hspec_timer_e *handle) {
+	return mal_timer_internal_init(timer,
+								   MAL_HSPEC_TIMER_MODE_TICK,
+								   frequency, delta,
+								   &timer_tick_callback,
+								   handle);
+}
+
+mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_e *handle) {
+	return mal_timer_internal_direct_init(timer,
+								   	   	  MAL_HSPEC_TIMER_MODE_TICK,
+										  frequency, delta,
+										  &timer_tick_callback,
+										  direct_init,
+										  handle);
 }
 
 mal_error_e get_available_timer(mal_hspec_timer_e *timer) {
@@ -84,11 +113,10 @@ mal_error_e mal_timer_init_task(mal_hspec_timer_e timer, float frequency, float 
 	return mal_timer_internal_init(timer, MAL_HSPEC_TIMER_MODE_TASK, frequency, delta, callback, handle);
 }
 
-static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
-										   mal_hspec_timer_mode_e mode,
-										   float frequency, float delta,
-										   mal_hspec_timer_callback_t callback,
-										   mal_hspec_timer_e *handle) {
+static mal_error_e mal_timer_internal_init_common(mal_hspec_timer_e timer,
+												  mal_hspec_timer_mode_e mode,
+												  float frequency, float delta,
+												  mal_hspec_timer_e *handle) {
 	mal_error_e result;
 	// Reserve timer
 	result = reserve_timer(timer, mode, handle);
@@ -98,8 +126,39 @@ static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
 	// Save info
 	timer_states[*handle].frequency = frequency;
 	timer_states[*handle].delta = delta;
+
+	return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
+										   mal_hspec_timer_mode_e mode,
+										   float frequency, float delta,
+										   mal_hspec_timer_callback_t callback,
+										   mal_hspec_timer_e *handle) {
+	mal_error_e result;
+	result = mal_timer_internal_init_common(timer, mode, frequency, delta, handle);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
 	// Initialise timer
 	result = mal_hspec_timer_init(*handle, frequency, delta, callback);
+
+	return result;
+}
+
+static mal_error_e mal_timer_internal_direct_init(mal_hspec_timer_e timer,
+										   	   	  mal_hspec_timer_mode_e mode,
+												  float frequency, float delta,
+												  mal_hspec_timer_callback_t callback,
+												  const void *direct_init,
+												  mal_hspec_timer_e *handle) {
+	mal_error_e result;
+	result = mal_timer_internal_init_common(timer, mode, frequency, delta, handle);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialise timer
+	result = mal_hspec_timer_direct_init(*handle, frequency, delta, direct_init, callback);
 
 	return result;
 }

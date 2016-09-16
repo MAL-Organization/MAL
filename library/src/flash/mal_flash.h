@@ -112,6 +112,13 @@
 #define mal_flash_get_page_start_address(page) mal_hspec_flash_get_page_start_address(page)
 
 /**
+ * @brief This function will return the page which contains the given address.
+ * @param address A uint64_t address.
+ * @return Returns the page as a uint32_t.
+ */
+#define mal_flash_get_page_from_address(address) mal_hspec_flash_get_page_from_address(address)
+
+/**
  * @brief This function will return the size of a flash page.
  * @param page The page number. Take care to give a valid page number for the
  * running MCU.

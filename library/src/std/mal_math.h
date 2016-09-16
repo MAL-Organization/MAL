@@ -30,6 +30,7 @@
 
 #include "std/mal_stdint.h"
 
+uint32_t abs_int32(int32_t value);
 uint64_t abs_int64(int64_t value);
 
 #endif /* STD_MAL_MATH_H_ */

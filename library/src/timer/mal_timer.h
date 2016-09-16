@@ -127,6 +127,23 @@ typedef struct {
 mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_e *handle);
 
 /**
+ * @brief Function to initialize directly the timer. Using this function
+ * will reduce code size at the cost of flexibility and safety. Usually use
+ * this in a code closer to final.
+ * @param timer The desired timer to initialize. It is not recommended to use
+ * timer ANY when using this function.
+ * @param frequency The frequency to count at in hertz.
+ * @param delta The allowed delta of frequency in hertz. This means the actual
+ * frequency of the timer can be frequency +/- delta.
+ * @param direct_init A pointer to direct initialization parameter. See the
+ * hardware specific implementation to know what type this should be.
+ * @param handle This handle will return the used timer. Useful when using
+ * #MAL_HSPEC_TIMER_ANY.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_e *handle);
+
+/**
  * This is a simple timer initialization. The main difference between this and
  * the tick timer is you have to handle yourself the overflow of the timer
  * based on timer resolution. This method is much faster however because it
