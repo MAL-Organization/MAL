@@ -29,21 +29,21 @@
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
 
-#define mal_hspec_stm32f0_flash_read_uint8(address)		*((uint8_t*)(uint8_t)address)
+#define mal_hspec_stm32f0_flash_read_uint8(address)		*((uint8_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_int8(address)		*((int8_t*)(int8_t)address)
+#define mal_hspec_stm32f0_flash_read_int8(address)		*((int8_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_uint16(address)	*((uint16_t*)(uint16_t)address)
+#define mal_hspec_stm32f0_flash_read_uint16(address)	*((uint16_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_int16(address)		*((int16_t*)(int16_t)address)
+#define mal_hspec_stm32f0_flash_read_int16(address)		*((int16_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_uint32(address)	*((uint32_t*)(uint32_t)address)
+#define mal_hspec_stm32f0_flash_read_uint32(address)	*((uint32_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_int32(address)		*((int32_t*)(int32_t)address)
+#define mal_hspec_stm32f0_flash_read_int32(address)		*((int32_t*)(int)(address))
 
-#define mal_hspec_stm32f0_flash_read_uint64(address)	*((uint64_t*)(uint64_t)address)
+#define mal_hspec_stm32f0_flash_read_uint64(address)	*((uint64_t*)(int)(address))
 
-#define mal_flash_stm32f0_read_int64(address)			*((int64_t*)(int64_t)address)
+#define mal_flash_stm32f0_read_int64(address)			*((int64_t*)(int)(address))
 
 mal_error_e mal_hspec_stm32f0_flash_erase_page(uint32_t page);
 

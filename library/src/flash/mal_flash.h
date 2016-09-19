@@ -104,6 +104,12 @@
 #define mal_flash_write_uint32_values(start_address, values, count) mal_hspec_flash_write_uint32_values(start_address, values, count)
 
 /**
+ * @brief This function return the flash page count of the MCU.
+ * @return Returns the count in a uint32_t variable.
+ */
+#define mal_flash_get_page_count() mal_hspec_flash_get_page_count()
+
+/**
  * @brief This function will return the start address of a flash page.
  * @param page The page number. Take care to give a valid page number for the
  * running MCU.
