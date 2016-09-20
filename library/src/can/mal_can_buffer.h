@@ -58,6 +58,12 @@ typedef struct {
 } mal_can_buffer_init_s;
 
 /**
+ * @brief This function will uninitialize a CAN buffer.
+ * @param handle The handle to the CAN buffer.
+ */
+#define mal_can_buffer_deinit(handle) mal_can_deinit((handle)->interface)
+
+/**
  * @brief Initialize a CAN buffer and a CAN interface.
  * @param handle The handle of the CAN buffer.
  * @param init The initialization parameters.
@@ -74,6 +80,7 @@ mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_can_buffer_direct_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init, const void *direct_init);
+
 
 /**
  * @brief Write a message to a buffer.

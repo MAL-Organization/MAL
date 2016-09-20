@@ -119,6 +119,8 @@
 
 #define mal_hspec_can_direct_init(init, direct_init) mal_hspec_stm32f0_can_direct_init(init, direct_init)
 
+#define mal_hspec_can_deinit(interface) mal_hspec_stm32f0_can_deinit(interface)
+
 #define mal_hspec_can_transmit(interface, msg) mal_hspec_stm32f0_can_transmit(interface, msg)
 
 #define mal_hspec_can_add_filter(interface, filter) mal_hspec_stm32f0_can_add_filter(interface, filter)
@@ -288,6 +290,8 @@
 #define mal_hspec_can_init(init) mal_hspec_mingw_can_init(init)
 
 #define mal_hspec_can_direct_init(init, direct_init) mal_hspec_mingw_can_init(init)
+
+#define mal_hspec_can_deinit(interface) (void)(interface)
 
 #define mal_hspec_can_transmit(interface, msg) mal_hspec_mingw_can_transmit(interface, msg)
 

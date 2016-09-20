@@ -52,6 +52,8 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init);
 
 mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const void *direct_init);
 
+void mal_hspec_stm32f0_can_deinit(mal_hspec_can_e interface);
+
 mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
 
 mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);

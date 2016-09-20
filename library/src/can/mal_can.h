@@ -44,6 +44,13 @@
 #define mal_can_direct_init(init, direct_init) mal_hspec_can_direct_init(init, direct_init)
 
 /**
+ * @brief This function will uninitialize the given interface.
+ * @param interface Interface to disable. Must be of type
+ * mal_hspec_can_id_type_e.
+ */
+#define mal_can_deinit(interface) mal_hspec_can_deinit(interface)
+
+/**
  * @brief Add a filter to a CAN interface.
  * @param interface The CAN interface to add the filter to. Should be of type
  * ::mal_hspec_can_e.

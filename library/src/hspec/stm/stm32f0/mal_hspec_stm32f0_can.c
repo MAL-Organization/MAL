@@ -235,6 +235,13 @@ mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const 
 	return MAL_ERROR_OK;
 }
 
+void mal_hspec_stm32f0_can_deinit(mal_hspec_can_e interface) {
+	// Disable interrupt
+	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	// Uninitialize interface
+	CAN_DeInit(CAN);
+}
+
 void CEC_CAN_IRQHandler(void) {
 	// Check if transmit is empty
 	if (CAN_GetITStatus(CAN, CAN_IT_TME) == SET) {
