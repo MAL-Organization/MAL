@@ -28,7 +28,7 @@
 #include "hspec/mal_hspec.h"
 
 /**
- * @defgroup CAN
+ * @defgroup Flash
  * @brief @copybrief mal_flash.h
  * @{
  */
