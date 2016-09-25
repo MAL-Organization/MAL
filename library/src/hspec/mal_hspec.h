@@ -207,6 +207,12 @@
 
 #define mal_hspec_flash_read_int64(address)	mal_hspec_stm32f0_flash_read_int64(address)
 
+// WATCHDOG
+
+#define mal_hspec_watchdog_init(timeout_ms) mal_hspec_stm32f0_watchdog_init(timeout_ms)
+
+#define mal_hspec_watchdog_feed() mal_hspec_stm32f0_watchdog_feed()
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -378,6 +384,12 @@
 #define mal_hspec_flash_read_uint64(address) mal_hspec_mingw_flash_read_uint64(address)
 
 #define mal_hspec_flash_read_int64(address)	mal_hspec_mingw_flash_read_int64(address)
+
+// WATCHDOG
+
+#define mal_hspec_watchdog_init(timeout_ms) MAL_ERROR_OK
+
+#define mal_hspec_watchdog_feed() (void)
 
 #else
 #error No hardware specfic family symbol specified...
