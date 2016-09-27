@@ -73,6 +73,8 @@
 
 #define mal_hspec_timer_init(timer, frequency, precision, callback) mal_hspec_stm32f0_timer_init(timer, frequency, precision, callback)
 
+#define mal_hspec_timer_direct_init(timer, frequency, delta, direct_init, callback) mal_hspec_stm32f0_timer_direct_init(timer, frequency, delta, direct_init, callback)
+
 #define mal_hspec_disable_timer_interrupt(timer) mal_hspec_stm32f0_disable_timer_interrupt(timer)
 
 #define mal_hspec_enable_timer_interrupt(timer, active) mal_hspec_stm32f0_enable_timer_interrupt(timer, active)
@@ -114,6 +116,10 @@
 #define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
 #define mal_hspec_can_init(init) mal_hspec_stm32f0_can_init(init)
+
+#define mal_hspec_can_direct_init(init, direct_init) mal_hspec_stm32f0_can_direct_init(init, direct_init)
+
+#define mal_hspec_can_deinit(interface) mal_hspec_stm32f0_can_deinit(interface)
 
 #define mal_hspec_can_transmit(interface, msg) mal_hspec_stm32f0_can_transmit(interface, msg)
 
@@ -183,6 +189,8 @@
 
 #define mal_hspec_flash_get_page_start_address(page) mal_hspec_stm32f0_flash_get_page_start_address(page)
 
+#define mal_hspec_flash_get_page_from_address(address) mal_hspec_stm32f0_flash_get_page_from_address(address)
+
 #define mal_hspec_flash_read_uint8(address) mal_hspec_stm32f0_flash_read_uint8(address)
 
 #define mal_hspec_flash_read_int8(address) mal_hspec_stm32f0_flash_read_int8(address)
@@ -235,7 +243,9 @@
 // Timer mappings
 #define mal_hspec_get_valid_timers(timers, size) mal_hspec_mingw_get_valid_timers(timers, size)
 
-#define mal_hspec_timer_init(timer, frequency, precision, callback) mal_hspec_mingw_timer_init(timer, frequency, precision, callback)
+#define mal_hspec_timer_init(timer, frequency, delta, callback) mal_hspec_mingw_timer_init(timer, frequency, delta, callback)
+
+#define mal_hspec_timer_direct_init(timer, frequency, delta, direct_init, callback) mal_hspec_mingw_timer_init(timer, frequency, delta, callback)
 
 #define mal_hspec_disable_timer_interrupt(timer) 1
 
@@ -278,6 +288,10 @@
 #define mal_hspec_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_mingw_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
 #define mal_hspec_can_init(init) mal_hspec_mingw_can_init(init)
+
+#define mal_hspec_can_direct_init(init, direct_init) mal_hspec_mingw_can_init(init)
+
+#define mal_hspec_can_deinit(interface) (void)(interface)
 
 #define mal_hspec_can_transmit(interface, msg) mal_hspec_mingw_can_transmit(interface, msg)
 
@@ -346,6 +360,8 @@
 #define mal_hspec_flash_write_uint32_values(start_address, values, count) mal_hspec_mingw_flash_write_uint32_values(start_address, values, count)
 
 #define mal_hspec_flash_get_page_start_address(page) mal_hspec_mingw_flash_get_page_start_address(page)
+
+#define mal_hspec_flash_get_page_from_address(address) mal_hspec_mingw_flash_get_page_from_address(address)
 
 #define mal_hspec_flash_read_uint8(address) mal_hspec_mingw_flash_read_uint8(address)
 

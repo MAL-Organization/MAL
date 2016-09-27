@@ -31,6 +31,14 @@
 #include "std/mal_stdint.h"
 #include "std/mal_bool.h"
 
+/**
+ * Struct for direct initialization of a CAN interface.
+ */
+typedef struct {
+	uint16_t prescaler;	//!< Prescaler register
+	uint32_t period;	//!< Period register
+} mal_hspec_stm32f0_timer_direct_init_s;
+
 #define mal_hspec_stm32f0_enable_timer_interrupt(timer, active) do {\
 	if (active) { \
 		NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer)); \
@@ -38,6 +46,8 @@
 } while(0)
 
 mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback);
+
+mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_callback_t callback);
 
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 

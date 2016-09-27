@@ -30,8 +30,39 @@
 
 static mal_error_e tx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *next_msg);
 static mal_error_e rx_callback(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
+static void mal_can_buffer_init_common(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init);
 
 static mal_can_buffer_handle_s *handles[MAL_HSPEC_CAN_SIZE];
+
+static void mal_can_buffer_init_common(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init) {
+	// Initialise tx circular buffer
+	mal_circular_buffer_init(init->tx_buffer, sizeof(mal_hspec_can_msg_s), init->tx_buffer_size, (mal_circular_buffer_s*)&handle->tx_buffer);
+	// Initialise rx circular buffer
+	mal_circular_buffer_init(init->rx_buffer, sizeof(mal_hspec_can_msg_s), init->rx_buffer_size, (mal_circular_buffer_s*)&handle->rx_buffer);
+	// Save interface
+	handle->interface = init->interface;
+	handles[handle->interface] = handle;
+}
+
+mal_error_e mal_can_buffer_direct_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init, const void *direct_init) {
+	mal_error_e result;
+	// Initialise CAN interface
+	mal_hspec_can_init_s can_init;
+	can_init.interface = init->interface;
+	can_init.tx_gpio = init->tx_gpio;
+	can_init.rx_gpio = init->rx_gpio;
+	can_init.bitrate = init->bitrate;
+	can_init.tx_callback = &tx_callback;
+	can_init.rx_callback = &rx_callback;
+	result = mal_can_direct_init(&can_init, direct_init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialize common part
+	mal_can_buffer_init_common(handle, init);
+
+	return MAL_ERROR_OK;
+}
 
 mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init) {
 	mal_error_e result;
@@ -47,13 +78,8 @@ mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
-	// Initialise tx circular buffer
-	mal_circular_buffer_init(init->tx_buffer, sizeof(mal_hspec_can_msg_s), init->tx_buffer_size, (mal_circular_buffer_s*)&handle->tx_buffer);
-	// Initialise rx circular buffer
-	mal_circular_buffer_init(init->rx_buffer, sizeof(mal_hspec_can_msg_s), init->rx_buffer_size, (mal_circular_buffer_s*)&handle->rx_buffer);
-	// Save interface
-	handle->interface = init->interface;
-	handles[handle->interface] = handle;
+	// Initialize common part
+	mal_can_buffer_init_common(handle, init);
 
 	return MAL_ERROR_OK;
 }

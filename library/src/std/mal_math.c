@@ -31,3 +31,10 @@ uint64_t abs_int64(int64_t value) {
 	}
 	return value;
 }
+
+uint32_t abs_int32(int32_t value) {
+	if (value < 0) {
+		return -value;
+	}
+	return value;
+}

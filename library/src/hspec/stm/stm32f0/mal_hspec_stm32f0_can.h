@@ -30,6 +30,17 @@
 #include "stm32f0/stm32f0xx_misc.h"
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
+#include "std/mal_stdint.h"
+
+/**
+ * Struct for direct initialization of a CAN interface.
+ */
+typedef struct {
+	uint8_t bs1;		//!< TSEG1 register
+	uint8_t bs2;		//!< TSEG2 register
+	uint8_t sjw;		//!< SJW register
+	uint16_t prescaler;	//!< Prescaler register
+} mal_hspec_stm32f0_can_direct_init_s;
 
 #define mal_hspec_stm32f0_enable_can_interrupt(interface, active) do {\
 	if (active) { \
@@ -38,6 +49,10 @@
 } while(0)
 
 mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init);
+
+mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const void *direct_init);
+
+void mal_hspec_stm32f0_can_deinit(mal_hspec_can_e interface);
 
 mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
 
