@@ -23,6 +23,8 @@
 #ifndef WATCHDOG_MAL_WATCHDOG_H_
 #define WATCHDOG_MAL_WATCHDOG_H_
 
+#include "hspec/mal_hspec.h"
+
 /**
  * @defgroup Watchdog
  * @brief @copybrief mal_watchdog.h
