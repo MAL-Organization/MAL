@@ -127,11 +127,11 @@ mal_error_e mal_hspec_stm32f0_adc_async_read(mal_hspec_adc_e adc, mal_hspec_adc_
 	// Save callback
 	adc_callbacks[adc] = callback;
 	// Configure interrupt
+	// 12 equates to ADC_IRQ. However, the name of the constant changes based
+	// on the MCU because it is multiplex with other interrupts in some of them. It
+	// is simpler to use the constant directly.
+	NVIC_EnableIRQ(12);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
-	nvic_init.NVIC_IRQChannel = ADC1_COMP_IRQn;
-	nvic_init.NVIC_IRQChannelPriority = 0;
-	nvic_init.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&nvic_init);
 	// Start conversion
 	start_adc_conversion(adc);
 
