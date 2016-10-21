@@ -128,7 +128,7 @@
  * @brief This function will return the size of a flash page.
  * @param page The page number. Take care to give a valid page number for the
  * running MCU.
- * @return Returns a uint32_t with the address.
+ * @return Returns a uint32_t with the size in bytes.
  */
 #define mal_flash_get_page_size(page) mal_hspec_flash_get_page_size(page)
 
