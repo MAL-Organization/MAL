@@ -116,7 +116,7 @@ uint32_t mal_hspec_stm32f0_flash_get_page_from_address(uint64_t address) {
 	}
 	// Get page
 	uint32_t page_size = mal_hspec_stm32f0_flash_get_page_size(0);
-	uint32_t page = address / page_size;
+	uint32_t page = (address - FLASH_START_ADDRESS) / page_size;
 
 	return page;
 }
