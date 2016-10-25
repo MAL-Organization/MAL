@@ -44,6 +44,7 @@
 #include "mal_hspec_stm32f0_reset.h"
 #include "mal_hspec_stm32f0_flash.h"
 #include "mal_hspec_stm32f0_watchdog.h"
+#include "mal_hspec_stm32f0_dac.h"
 
 // Device specific function mapping section.
 #if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)
@@ -79,6 +80,8 @@
 #define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size)
 
 #define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072_get_timer_compare_irq(timer)
+
+#define mal_hspec_stm32f0_get_valid_dac_ios(dac, ios, size) mal_hspec_stm32f072_get_valid_dac_ios(dac, ios, size)
 
 #else
 #error No valid hardware specfic device symbol specified...

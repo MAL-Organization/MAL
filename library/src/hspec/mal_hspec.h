@@ -213,6 +213,16 @@
 
 #define mal_hspec_watchdog_feed() mal_hspec_stm32f0_watchdog_feed()
 
+// DAC
+
+#define mal_hspec_get_valid_dac_ios(dac, ios, size) mal_hspec_stm32f0_get_valid_dac_ios(dac, ios, size)
+
+#define mal_hspec_dac_init(init) mal_hspec_stm32f0_dac_init(init)
+
+#define mal_hspec_dac_write(dac, value) mal_hspec_stm32f0_dac_write(dac, value)
+
+#define mal_hspec_dac_resolution(dac, resolution) mal_hspec_stm32f0_dac_resolution(dac, resolution)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
@@ -391,6 +401,16 @@
 
 #define mal_hspec_watchdog_feed() (void)
 
+// DAC
+
+#define mal_hspec_get_valid_dac_ios(dac, ios, size) mal_hspec_mingw_get_valid_dac_ios(dac, ios, size)
+
+#define mal_hspec_dac_init(init) mal_hspec_mingw_dac_init(init)
+
+#define mal_hspec_dac_write(dac, value) mal_hspec_mingw_dac_write(dac, value)
+
+#define mal_hspec_dac_resolution(dac, resolution) mal_hspec_mingw_dac_resolution(dac, resolution)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif
@@ -418,5 +438,7 @@ mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_hspec_gpio
 mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
 
 mal_error_e mal_hspec_flash_is_page_valid(uint32_t page);
+
+mal_error_e mal_hspec_is_dac_valid(mal_hspec_dac_e dac, const mal_hspec_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

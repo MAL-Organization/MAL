@@ -28,6 +28,7 @@
 
 #include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_flash.h"
 #include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_timer.h"
+#include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_dac.h"
 
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_bool.h"

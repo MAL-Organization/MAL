@@ -38,6 +38,7 @@
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=8000000"/>
+									<listOptionValue builtIn="false" value="MAL_MINGW"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.598173278" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -53,6 +54,7 @@
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=8000000"/>
+									<listOptionValue builtIn="false" value="MAL_MINGW"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1638267261" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
