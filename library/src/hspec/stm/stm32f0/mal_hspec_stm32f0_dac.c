@@ -58,6 +58,8 @@ mal_error_e mal_hspec_stm32f0_dac_init(mal_hspec_dac_init_s *init) {
 	DAC_Init(channel, &dac_init);
 	// Enable DAC
 	DAC_Cmd(channel, ENABLE);
+	// Flag that this was at least initialized once
+	initialized = true;
 
 	return MAL_ERROR_OK;
 }
