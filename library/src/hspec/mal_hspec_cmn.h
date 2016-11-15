@@ -677,4 +677,32 @@ typedef enum {
  * @}
  */
 
+/**
+ * @addtogroup DAC
+ * @{
+ */
+
+/**
+ * The possible DACs.
+ */
+typedef enum {
+	MAL_HSPEC_DAC_0 = 0,   //!< MAL_HSPEC_DAC_0
+	MAL_HSPEC_DAC_1 = 1,   //!< MAL_HSPEC_DAC_1
+	MAL_HSPEC_DAC_2 = 2,   //!< MAL_HSPEC_DAC_2
+	MAL_HSPEC_DAC_SIZE = 3//!< MAL_HSPEC_DAC_SIZE
+} mal_hspec_dac_e;
+
+/**
+ * The initialization parameters of a DAC.
+ */
+typedef struct {
+	mal_hspec_dac_e dac; /**< To DAC to initialize.*/
+	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the DAC.*/
+	uint8_t bit_resolution; /**< The resolution of the DAC.*/
+} mal_hspec_dac_init_s;
+
+/**
+ * @}
+ */
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */

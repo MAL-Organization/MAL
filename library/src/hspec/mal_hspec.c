@@ -330,3 +330,27 @@ mal_error_e mal_hspec_flash_is_page_valid(uint32_t page) {
 	}
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_is_dac_valid(mal_hspec_dac_e dac, const mal_hspec_gpio_s *gpio) {
+	mal_error_e result;
+	const mal_hspec_gpio_s *ios;
+	uint8_t size;
+	// Fetch IOs
+	result = mal_hspec_get_valid_dac_ios(dac, &ios, &size);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Check io
+	uint8_t i;
+	bool found = false;
+	for (i = 0; i < size; i++) {
+		if (ios[i].pin == gpio->pin && ios[i].port == gpio->port) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		return MAL_ERROR_HARDWARE_INVALID;
+	}
+	return MAL_ERROR_OK;
+}
