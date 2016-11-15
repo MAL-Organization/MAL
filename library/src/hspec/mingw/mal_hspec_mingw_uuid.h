@@ -31,4 +31,6 @@
 
 mal_error_e mal_hspec_mingw_uuid_read(uint64_t *uuid);
 
+void mal_hspec_mingw_uuid_set(uint64_t uuid);
+
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_UUID_H_ */
