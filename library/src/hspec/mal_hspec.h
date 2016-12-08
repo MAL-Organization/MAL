@@ -295,9 +295,9 @@
 
 #define mal_hspec_i2c_transfer(interface, msg) mal_hspec_mingw_i2c_transfer(interface, msg)
 
-#define mal_hspec_i2c_disable_interrupt(interface) 1
+#define mal_hspec_i2c_disable_interrupt(interface) mal_hspec_mingw_i2c_disable_interrupt(interface)
 
-#define mal_hspec_i2c_enable_interrupt(interface, active) (void)(interface);(void)(active);
+#define mal_hspec_i2c_enable_interrupt(interface, active) mal_hspec_mingw_i2c_enable_interrupt(interface, active)
 
 // CAN
 

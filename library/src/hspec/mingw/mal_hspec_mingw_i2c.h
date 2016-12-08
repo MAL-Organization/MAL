@@ -29,6 +29,7 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
+#include "std/mal_bool.h"
 
 mal_error_e mal_hspec_mingw_get_valid_i2c_ios(mal_hspec_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size);
 
@@ -37,5 +38,13 @@ mal_error_e mal_hspec_mingw_i2c_master_init(mal_hspec_i2c_init_s *init);
 mal_error_e mal_hspec_mingw_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
 
 mal_error_e mal_hspec_mingw_i2c_get_transfer_msg(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg);
+
+bool mal_hspec_mingw_i2c_lock_interface(mal_hspec_i2c_e interface, uint32_t timeout_ms);
+
+void mal_hspec_mingw_i2c_unlock_interface(mal_hspec_i2c_e interface);
+
+bool mal_hspec_mingw_i2c_disable_interrupt(mal_hspec_i2c_e interface);
+
+void mal_hspec_mingw_i2c_enable_interrupt(mal_hspec_i2c_e interface, bool active);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_I2C_H_ */
