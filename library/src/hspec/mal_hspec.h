@@ -105,6 +105,8 @@
 
 #define mal_hspec_i2c_master_init(init) mal_hspec_stm32f0_i2c_master_init(init)
 
+#define mal_hspec_i2c_master_direct_init(init, direct_init) mal_hspec_stm32f0_i2c_master_direct_init(init, direct_init)
+
 #define mal_hspec_i2c_transfer(interface, msg) mal_hspec_stm32f0_i2c_transfer(interface, msg)
 
 #define mal_hspec_i2c_disable_interrupt(interface) mal_hspec_stm32f0_i2c_disable_interrupt(interface)
@@ -292,6 +294,8 @@
 #define mal_hspec_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_mingw_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
 
 #define mal_hspec_i2c_master_init(init) mal_hspec_mingw_i2c_master_init(init)
+
+#define mal_hspec_i2c_master_direct_init(init, direct_init) mal_hspec_mingw_i2c_master_init(init)
 
 #define mal_hspec_i2c_transfer(interface, msg) mal_hspec_mingw_i2c_transfer(interface, msg)
 

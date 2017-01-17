@@ -61,6 +61,16 @@ typedef struct {
 mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle);
 
 /**
+ * @brief Initialize an I2C buffer and an I2C interface using direct initialization.
+ * @param init The initialization parameters.
+ * @param handle A handle to initialize.
+ * @param direct_init A pointer to direct initialization parameter. See the
+ * hardware specific implementation to know what type this should be.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_i2c_buffer_direct_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle, const void *direct_init);
+
+/**
  * @brief Write a message to the buffer.
  * @param handle The handle to write to.
  * @param msg The message to write.

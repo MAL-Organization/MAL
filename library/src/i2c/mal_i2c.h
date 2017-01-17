@@ -34,6 +34,17 @@
  */
 
 /**
+ * @brief Function to initialize directly the interface. Using this function
+ * will reduce code size at the cost of flexibility and safety. Usually use
+ * this in a code closer to final version.
+ * @param init Initialization parameters.
+ * @param direc_init A pointer to direct initialization parameter. See the
+ * hardware specific implementation to know what type this should be.
+ * @return #MAL_ERROR_OK on success.
+ */
+#define mal_i2c_master_direct_init(init, direct_init) mal_hspec_i2c_master_direct_init(init, direct_init)
+
+/**
  * @brief Start an I2C transfer as a master. Note that this is not a blocking
  * call. Use the callback of the message to receive the result.
  * @param interface The I2C interface from ::mal_hspec_i2c_e.

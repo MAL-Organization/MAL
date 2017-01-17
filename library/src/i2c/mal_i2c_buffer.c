@@ -36,13 +36,7 @@ static mal_error_e i2c_callback(mal_hspec_i2c_e interface, mal_hspec_i2c_packet_
 
 static i2c_interface_handle_s i2c_interface_handles[MAL_HSPEC_I2C_SIZE];
 
-mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle) {
-	mal_error_e result;
-	// Initialise I2C interface
-	result = mal_i2c_init_master(&init->i2c_init);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+static void mal_i2c_buffer_common_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle) {
 	// Initialise buffer
 	mal_circular_buffer_init(init->buffer,
 							 sizeof(mal_hspec_i2c_msg_s),
@@ -51,6 +45,30 @@ mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_hand
 	// Save interface
 	handle->interface = init->i2c_init.interface;
 	i2c_interface_handles[handle->interface].buffer_handle = handle;
+}
+
+mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle) {
+	mal_error_e result;
+	// Initialise I2C interface
+	result = mal_i2c_init_master(&init->i2c_init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Common init
+	mal_i2c_buffer_common_init(init, handle);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_i2c_buffer_direct_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle, const void *direct_init) {
+	mal_error_e result;
+	// Initialise I2C interface
+	result = mal_i2c_master_direct_init(&init->i2c_init, direct_init);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Common init
+	mal_i2c_buffer_common_init(init, handle);
 
 	return MAL_ERROR_OK;
 }
