@@ -47,6 +47,10 @@ typedef struct {
 	I2C_TypeDef *stm_handle;
 } i2c_handle_s;
 
+static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s *init, uint64_t *i2c_clock);
+
+static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s *init, uint32_t timing);
+
 static void i2c_start_transfer(i2c_handle_s *i2c_handle);
 
 static void i2c_interrupt_transmit_handler(i2c_handle_s *handle);
@@ -69,8 +73,7 @@ static i2c_handle_s i2c_handle_2 = {
 	.stm_handle = I2C2
 };
 
-mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
-	uint64_t i2c_clock;
+static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s *init, uint64_t *i2c_clock) {
 	// Set I2C clock source
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
@@ -79,15 +82,21 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	if (MAL_HSPEC_I2C_1 == init->interface) {
 		if (SystemCoreClock > min_clk) {
 			RCC_I2CCLKConfig(RCC_I2C1CLK_SYSCLK);
-			i2c_clock = SystemCoreClock;
+			if (NULL != i2c_clock) {
+				*i2c_clock = SystemCoreClock;
+			}
 		} else if (HSI_VALUE > min_clk) {
 			RCC_I2CCLKConfig(RCC_I2C1CLK_HSI);
-			i2c_clock = HSI_VALUE;
+			if (NULL != i2c_clock) {
+				*i2c_clock = HSI_VALUE;
+			}
 		} else {
 			return MAL_ERROR_CLOCK_ERROR;
 		}
 	} else if (MAL_HSPEC_I2C_2 == init->interface) {
-		i2c_clock = clocks.PCLK_Frequency;
+		if (NULL != i2c_clock) {
+			*i2c_clock = clocks.PCLK_Frequency;
+		}
 		if (clocks.PCLK_Frequency < min_clk) {
 			return MAL_ERROR_CLOCK_ERROR;
 		}
@@ -97,6 +106,10 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	if (init->bitrate >= ((4 * clocks.PCLK_Frequency) / 3)) {
 		return MAL_ERROR_CLOCK_ERROR;
 	}
+	return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s *init, uint32_t timing) {
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->scl_gpio->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->sda_gpio->port), ENABLE);
@@ -141,6 +154,41 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 
 	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->sda_gpio->pin);
 	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->sda_gpio->port), &gpio_init);
+	// Get I2C typedef
+	I2C_TypeDef *i2c_typedef;
+	if (MAL_HSPEC_I2C_1 == init->interface) {
+		i2c_typedef = I2C1;
+	} else {
+		i2c_typedef = I2C2;
+	}
+	// Configure I2C
+	I2C_InitTypeDef i2c_init;
+	i2c_init.I2C_Mode = I2C_Mode_I2C;
+	i2c_init.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
+	i2c_init.I2C_DigitalFilter = 0;
+	i2c_init.I2C_OwnAddress1 = 0;
+	i2c_init.I2C_Ack = I2C_Ack_Enable;
+	i2c_init.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
+	i2c_init.I2C_Timing = timing;
+	I2C_Init(i2c_typedef, &i2c_init);
+	// Enable interrupt
+	NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(init->interface));
+	NVIC_SetPriority(mal_hspec_stm32f0_i2c_get_irq(init->interface), 100);
+	I2C_ITConfig(i2c_typedef, I2C_IT_RXI|I2C_IT_TXI|I2C_IT_TCI|I2C_IT_NACKI|I2C_IT_ERRI|I2C_IT_STOPI, ENABLE);
+	// Enable I2C, finally!
+	I2C_Cmd(i2c_typedef, ENABLE);
+
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
+	uint64_t i2c_clock;
+	mal_error_e result;
+	// Initialize I2C clock
+	result = mal_hspec_stm32f0_i2c_master_clock_init(init, &i2c_clock);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
 	// Compute timing
 	// Determine fall time
 	float tf = 0.0000003f; // 300 ns
@@ -208,31 +256,22 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 		// All settings are good, end loop
 		break;
 	}
-	// Get I2C typedef
-	I2C_TypeDef *i2c_typedef;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
-		i2c_typedef = I2C1;
-	} else {
-		i2c_typedef = I2C2;
-	}
-	// Configure I2C
-	I2C_InitTypeDef i2c_init;
-	i2c_init.I2C_Mode = I2C_Mode_I2C;
-	i2c_init.I2C_AnalogFilter = I2C_AnalogFilter_Enable;
-	i2c_init.I2C_DigitalFilter = 0;
-	i2c_init.I2C_OwnAddress1 = 0;
-	i2c_init.I2C_Ack = I2C_Ack_Enable;
-	i2c_init.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
-	i2c_init.I2C_Timing = (presc << 28) | (scldel << 20) | (sdadel << 16) | (scllh << 8) | scllh;
-	I2C_Init(i2c_typedef, &i2c_init);
-	// Enable interrupt
-	NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(init->interface));
-	NVIC_SetPriority(mal_hspec_stm32f0_i2c_get_irq(init->interface), 100);
-	I2C_ITConfig(i2c_typedef, I2C_IT_RXI|I2C_IT_TXI|I2C_IT_TCI|I2C_IT_NACKI|I2C_IT_ERRI|I2C_IT_STOPI, ENABLE);
-	// Enable I2C, finally!
-	I2C_Cmd(i2c_typedef, ENABLE);
+	uint32_t timing = (presc << 28) | (scldel << 20) | (sdadel << 16) | (scllh << 8) | scllh;
+	return mal_hspec_stm32f0_i2c_master_common_init(init, timing);
+}
 
-	return MAL_ERROR_OK;
+mal_error_e mal_hspec_stm32f0_i2c_master_direct_init(mal_hspec_i2c_init_s *init, const void *direct_init) {
+	mal_error_e result;
+	// Read direct init
+	mal_hspec_stm32f0_i2c_direct_init_s *stm_direct_init;
+	stm_direct_init = (mal_hspec_stm32f0_i2c_direct_init_s*)direct_init;
+	// Initialize I2C clock
+	result = mal_hspec_stm32f0_i2c_master_clock_init(init, NULL);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Initialize interface
+	return mal_hspec_stm32f0_i2c_master_common_init(init, stm_direct_init->timing);
 }
 
 mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg) {
