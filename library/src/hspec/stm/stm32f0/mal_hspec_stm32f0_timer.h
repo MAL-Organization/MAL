@@ -45,9 +45,9 @@ typedef struct {
 	} \
 } while(0)
 
-mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback);
+mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_value_t delta, mal_hspec_timer_callback_t callback);
 
-mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_callback_t callback);
+mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_value_t delta, const void *direct_init, mal_hspec_timer_callback_t callback);
 
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 
@@ -57,13 +57,15 @@ bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer);
 
 mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init);
 
-mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, float duty_cycle);
+mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, mal_hspec_timer_pwm_value_t duty_cycle);
 
-mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer, float frequency);
+mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency);
+
+mal_error_e mal_hspec_stm32f0_timer_count_direct_init(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, const void *direct_init);
 
 mal_error_e mal_hspec_stm32f0_timer_get_resolution(mal_hspec_timer_e timer, uint8_t *resolution);
 
-mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency);
+mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, mal_hspec_timer_value_t *frequency);
 
 mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
 
