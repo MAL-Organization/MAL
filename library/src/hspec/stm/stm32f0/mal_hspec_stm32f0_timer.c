@@ -45,7 +45,7 @@ static mal_error_e init_timer_rcc(mal_hspec_timer_e timer);
 
 static uint32_t get_rcc_timer(mal_hspec_timer_e timer);
 
-static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer);
+TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_hspec_timer_e timer);
 
 static uint16_t get_timer_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer);
 
@@ -68,7 +68,7 @@ mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer,
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// Initialise time base timer
 	TIM_TimeBaseInitTypeDef params;
 	TIM_TimeBaseStructInit(&params);
@@ -103,7 +103,7 @@ mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer,
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -214,7 +214,7 @@ default:
 }
 }
 
-static TIM_TypeDef* get_timer_typedef(mal_hspec_timer_e timer) {
+TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_hspec_timer_e timer) {
 	switch (timer) {
 	case MAL_HSPEC_TIMER_1:
 		return TIM1;
@@ -411,7 +411,7 @@ void TIM17_IRQHandler(void) {
 
 mal_error_e mal_hspec_stm32f0_timer_free(mal_hspec_timer_e timer) {
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// Disable timer
 	TIM_Cmd(tim, DISABLE);
 	// Disable interrupt
@@ -496,7 +496,7 @@ mal_error_e mal_hspec_stm32f0_timer_get_resolution(mal_hspec_timer_e timer, uint
 mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
@@ -585,7 +585,7 @@ mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer,
 													   mal_hspec_timer_pwm_value_t duty_cycle) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// We need to compute the duty cycle
 	uint32_t compare_value = tim->ARR * duty_cycle;
 	compare_value /= MAL_HSPEC_TIMER_PWM_VALUE_MAX;
@@ -619,7 +619,7 @@ mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer,
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -663,7 +663,7 @@ mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer,
 														mal_hspec_timer_value_t *frequency) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	if (NULL == tim) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
@@ -682,7 +682,7 @@ mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer,
 
 mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t *count) {
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	if (NULL == tim) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
@@ -695,7 +695,7 @@ mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t 
 mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_hspec_timer_intput_capture_init_s *init) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
