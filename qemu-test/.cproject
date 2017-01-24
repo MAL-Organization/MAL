@@ -159,6 +159,7 @@
 									<listOptionValue builtIn="false" value="TRACE"/>
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_STDOUT"/>
 									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
+									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.748960941" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -185,7 +186,7 @@
 									<listOptionValue builtIn="false" value="TRACE"/>
 									<listOptionValue builtIn="false" value="OS_USE_TRACE_SEMIHOSTING_STDOUT"/>
 									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
-									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME=&quot;STM32F072CB&quot;"/>
+									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.849030414" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>

@@ -25,6 +25,13 @@
 
 #include "uCUnit-v1.0.h"
 
+#include "timer/test_mal_timer.h"
+
+static void run_tests(void) {
+	test_mal_timer();
+	UCUNIT_WriteSummary();
+}
+
 int main(void) {
 	UCUNIT_Init();
     UCUNIT_WriteString("\n**************************************");
@@ -37,6 +44,7 @@ int main(void) {
     UCUNIT_WriteString("\nVersion:  ");
     UCUNIT_WriteString(UCUNIT_VERSION);
     UCUNIT_WriteString("\n**************************************\n");
+    run_tests();
     UCUNIT_Shutdown();
     // Flush last string
     UCUNIT_WriteString("\n");

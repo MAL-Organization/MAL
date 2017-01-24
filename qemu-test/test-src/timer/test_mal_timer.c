@@ -26,6 +26,7 @@
 #include "uCUnit-v1.0.h"
 #include "timer/mal_timer.h"
 #include "hspec/test_mal_hspec.h"
+#include "hspec/mal_hspec.h"
 
 static void test_mal_timer_init_tick_1khz(void) {
 	uint8_t i;
@@ -66,5 +67,9 @@ static void test_mal_timer_init_tick_1khz(void) {
 	}
 
 	UCUNIT_TestcaseEnd();
+}
+
+void test_mal_timer(void) {
+	test_mal_timer_init_tick_1khz();
 }
 
