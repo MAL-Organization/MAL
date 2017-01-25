@@ -27,7 +27,18 @@
 #define HSPEC_STM_STM32F0_TEST_MAL_HSPEC_STM32F0_TIMER_H_
 
 #include "timer/mal_timer.h"
+#include "gpio/mal_gpio.h"
 
-void test_mal_hspec_stm32f0_init_tick_1khz(mal_hspec_timer_e timer);
+void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer);
+
+void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_hspec_timer_e timer, const void **direct_init);
+
+void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_hspec_timer_e timer);
+
+void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer);
+
+void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_hspec_timer_e timer);
+
+void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io);
 
 #endif /* HSPEC_STM_STM32F0_TEST_MAL_HSPEC_STM32F0_TIMER_H_ */

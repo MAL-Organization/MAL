@@ -32,7 +32,18 @@
 
 // TIMER
 
-#define test_mal_hspec_init_tick_1khz(timer) test_mal_hspec_stm32f0_init_tick_1khz(timer)
+#define test_mal_hspec_timer_init_tick_1khz(timer) test_mal_hspec_stm32f0_timer_init_tick_1khz(timer)
+
+#define test_mal_hspec_timer_get_1khz_direct_init(timer, direct_init) test_mal_hspec_stm32f0_timer_get_1khz_direct_init(timer, direct_init)
+
+#define test_mal_hspec_timer_direct_init_tick_1khz(timer) test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(timer)
+
+#define test_mal_hspec_timer_init_count_1khz(timer) test_mal_hspec_stm32f0_timer_init_count_1khz(timer)
+
+#define test_mal_hspec_timer_init_pwm_1khz(timer) test_mal_hspec_stm32f0_timer_init_pwm_1khz(timer)
+
+
+#define test_mal_hspec_timer_pwm_50pc_dc_1khz(timer, io) test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(timer, io)
 
 #else
 #error No hardware specfic family symbol specified...

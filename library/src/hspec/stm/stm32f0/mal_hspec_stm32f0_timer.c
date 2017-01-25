@@ -47,8 +47,6 @@ static uint32_t get_rcc_timer(mal_hspec_timer_e timer);
 
 TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_hspec_timer_e timer);
 
-static uint16_t get_timer_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer);
-
 static void timer_input_capture_interrupt(mal_hspec_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
 
 static timer_callback_u timer_callbacks[MAL_HSPEC_TIMER_SIZE];
@@ -436,7 +434,7 @@ bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer) {
 	return active;
 }
 
-static uint16_t get_timer_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer) {
+uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
@@ -546,7 +544,7 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 	channel_init.TIM_OCIdleState = TIM_OCIdleState_Reset;
 	channel_init.TIM_OCNIdleState = TIM_OCNIdleState_Reset;
 	// Chose the correct init function
-	switch (get_timer_channel(init->pwm_io, init->timer)) {
+	switch (mal_hspec_stm32f0_timer_get_channel(init->pwm_io, init->timer)) {
 		case TIM_Channel_1:
 			TIM_OC1Init(tim, &channel_init);
 			break;
@@ -590,7 +588,7 @@ mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer,
 	uint32_t compare_value = tim->ARR * duty_cycle;
 	compare_value /= MAL_HSPEC_TIMER_PWM_VALUE_MAX;
 	// Chose the correct set function
-	switch (get_timer_channel(gpio, timer)) {
+	switch (mal_hspec_stm32f0_timer_get_channel(gpio, timer)) {
 		case TIM_Channel_1:
 			TIM_SetCompare1(tim, compare_value);
 			break;
@@ -735,7 +733,7 @@ mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_hspec_timer_intput_ca
 	// Disable timer while we set the PWM output
 	TIM_Cmd(tim, DISABLE);
 	// Get timer channel
-	uint16_t timer_channel = get_timer_channel(init->input_io, init->timer);
+	uint16_t timer_channel = mal_hspec_stm32f0_timer_get_channel(init->input_io, init->timer);
 	// Configure input channel
 	TIM_ICInitTypeDef input_capture_init;
 	TIM_ICStructInit(&input_capture_init);

@@ -425,6 +425,9 @@ extern int ucunit_index; /* Tracepoint index */
 #define UCUNIT_CheckIsEqual(expected,actual)         \
     UCUNIT_Check( (expected) == (actual), "IsEqual", #expected "," #actual )
 
+#define UCUNIT_CheckIsNotEqual(expected,actual)         \
+    UCUNIT_Check( (expected) != (actual), "IsNotEqual", #expected "," #actual )
+
 /**
  * @Macro:       UCUNIT_CheckIsNull(pointer)
  *
