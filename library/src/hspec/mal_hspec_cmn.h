@@ -732,4 +732,30 @@ typedef struct {
  * @}
  */
 
+/**
+ * @addtogroup POWER
+ * @{
+ */
+
+typedef enum {
+	MAL_HSPEC_POWER_RAIL_VDDA
+} mal_hspec_power_rail_e;
+
+/**
+ * This type is used to represent a power rail value of the MCU. If MAL_FLOAT is
+ * defined, this type defines volts directly using a float. Otherwise, it
+ * contains mV. For example, let's take an MCU with a rail at 1.8V. If
+ * MAL_FLOAT is defines, the value will be 1.8f. If not, the value will be
+ * 1800.
+ */
+#ifdef MAL_FLOAT
+typedef float mal_hspec_power_rail_value_t;
+#else
+typedef uint16_t mal_hspec_power_rail_value_t;
+#endif
+
+/**
+ * @}
+ */
+
 #endif /* HSPEC_MAL_HSPEC_CMN_H_ */
