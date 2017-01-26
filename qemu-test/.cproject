@@ -157,6 +157,7 @@
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.849568307" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -183,6 +184,7 @@
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.724366192" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>
@@ -198,7 +200,7 @@
 								</option>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.usenewlibnano.179543271" name="Use newlib-nano (--specs=nano.specs)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.usenewlibnano" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart.831419873" name="Do not use standard start files (-nostartfiles)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.nostart" value="true" valueType="boolean"/>
-								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other.1299197589" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other" value="--specs=rdimon.specs" valueType="string"/>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other.1299197589" name="Other linker flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.linker.other" value="--specs=rdimon.specs" valueType="string"/>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input.782260602" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>

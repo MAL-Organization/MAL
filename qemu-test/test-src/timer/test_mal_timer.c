@@ -23,10 +23,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdio.h>
+
 #include "uCUnit-v1.0.h"
 #include "timer/mal_timer.h"
 #include "hspec/test_mal_hspec.h"
 #include "hspec/mal_hspec.h"
+#include "utils/char_buffer.h"
 
 /**
  * Test the timer tick initializer. Makes sure that the timer init algorithms
@@ -56,6 +59,8 @@ static void test_mal_timer_init_tick_1khz(void) {
 	// Test timers
 	if (MAL_ERROR_OK == result) {
 		for (i = 0; i < size; i++) {
+			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
+			UCUNIT_WriteString(char_buffer);
 			mal_hspec_timer_e test_handle;
 			result = mal_timer_init_tick(timers[i],
 										 test_frequency,
@@ -103,6 +108,8 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 	// Test timers
 	if (MAL_ERROR_OK == result) {
 		for (i = 0; i < size; i++) {
+			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
+			UCUNIT_WriteString(char_buffer);
 			// Get direct init
 			const void *direct_init;
 			test_mal_hspec_timer_get_1khz_direct_init(timers[i], &direct_init);
@@ -167,6 +174,8 @@ static void test_mal_timer_count_1khz(void) {
 	// Test timers
 	if (MAL_ERROR_OK == result) {
 		for (i = 0; i < size; i++) {
+			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
+			UCUNIT_WriteString(char_buffer);
 			mal_hspec_timer_e test_handle;
 			result = mal_timer_init_count(timers[i],
 										  test_frequency,
@@ -248,6 +257,12 @@ static void test_mal_timer_pwm_1khz(void) {
 			}
 			// Test IOs
 			for (io_index = 0; io_index < ios_size; io_index++) {
+				sprintf(char_buffer,
+						"Testing timer %i on port %i of io %i\n",
+						timers[timer_index] + 1,
+						ios[io_index].port,
+						ios[io_index].pin);
+				UCUNIT_WriteString(char_buffer);
 				mal_hspec_timer_pwm_init_s pwm_init;
 				pwm_init.frequency = test_frequency;
 				pwm_init.delta = test_delta;

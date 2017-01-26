@@ -428,6 +428,9 @@ extern int ucunit_index; /* Tracepoint index */
 #define UCUNIT_CheckIsNotEqual(expected,actual)         \
     UCUNIT_Check( (expected) != (actual), "IsNotEqual", #expected "," #actual )
 
+#define UCUNIT_CheckIsAlmostEqual(expected,actual,delta)         \
+    UCUNIT_Check( ((actual) >= ((expected) - (delta))) && ((actual) <= ((expected) + (delta))), "IsAlmostEqual", #expected "," #actual )
+
 /**
  * @Macro:       UCUNIT_CheckIsNull(pointer)
  *
