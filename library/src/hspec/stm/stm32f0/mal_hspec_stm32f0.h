@@ -77,6 +77,8 @@
 
 #define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size)
 
+#define mal_hspec_stm32f0_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_input_capture_ios(timer, ios, size)
+
 #define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072_get_timer_compare_irq(timer)
 
 #define mal_hspec_stm32f0_get_valid_dac_ios(dac, ios, size) mal_hspec_stm32f072_get_valid_dac_ios(dac, ios, size)

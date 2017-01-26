@@ -94,6 +94,13 @@ mal_error_e mal_gpio_init(mal_hspec_gpio_init_s *gpio_init);
 mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio_event_init_s *event_init);
 
 /**
+ * @brief Return the GPIO to a safe state.
+ * @param gpio The GPIO to reset.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_gpio_deinit(const mal_hspec_gpio_s *gpio);
+
+/**
  * @}
  */
 

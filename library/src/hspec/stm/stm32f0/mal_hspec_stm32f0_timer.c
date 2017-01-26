@@ -253,8 +253,9 @@ mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer,
 	return MAL_ERROR_OK;
 }
 
-void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
-	// Check if this is a capture interrupt
+
+void TIM1_CC_IRQHandler(void) {
+	// Check which this is a capture interrupt
 	uint16_t cc_flags = 0;
 	if (TIM1->DIER & TIM_DIER_CC1IE) {
 		cc_flags |= TIM1->SR & TIM_FLAG_CC1;
@@ -269,13 +270,18 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 		cc_flags |= TIM1->SR & TIM_FLAG_CC4;
 	}
 	// Clear interrupts
-	TIM_ClearFlag(TIM1, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
+	TIM_ClearFlag(TIM1, TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
 		timer_input_capture_interrupt(MAL_HSPEC_TIMER_1, TIM1, cc_flags);
-	} else {
-		INVOKE_TASK_CALLBACK(MAL_HSPEC_TIMER_1);
 	}
+}
+
+void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
+	// Clear interrupts
+	TIM_ClearFlag(TIM1, TIM_FLAG_Update);
+	// Handles interrupt
+	INVOKE_TASK_CALLBACK(MAL_HSPEC_TIMER_1);
 }
 
 void TIM2_IRQHandler(void) {

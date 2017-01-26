@@ -26,7 +26,7 @@
 #ifndef UTILS_CHAR_BUFFER_H_
 #define UTILS_CHAR_BUFFER_H_
 
-#define CHAR_BUFFER_SIZE	200
+#define CHAR_BUFFER_SIZE	300
 
 extern char char_buffer[CHAR_BUFFER_SIZE];
 

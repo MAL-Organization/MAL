@@ -37,12 +37,6 @@
 #define mal_hspec_startup() mal_hspec_stm32f0_startup()
 
 // GPIO mappings
-/**
- * \def mal_hspec_set_gpio_dir(port, pin)
- * \param[in] port The port defined by #mal_hspec_port_e.
- * \param[in] pin  The pin number.
- * \return Returns a #mal_error_e code.
- */
 #define mal_hspec_gpio_init(init) mal_hspec_stm32f0_gpio_init(init)
 
 #define mal_hspec_get_valid_ports(ports, size) mal_hspec_stm32f0_get_valid_ports(ports, size)
@@ -95,7 +89,7 @@
 
 #define mal_hspec_timer_get_count(timer, count) mal_hspec_stm32f0_timer_get_count(timer, count)
 
-#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size)
+#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_input_capture_ios(timer, ios, size)
 
 #define mal_hspec_timer_input_capture_init(init) mal_hspec_stm32f0_timer_input_capture_init(init)
 

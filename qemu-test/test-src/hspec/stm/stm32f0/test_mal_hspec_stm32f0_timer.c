@@ -26,6 +26,8 @@
 #include "test_mal_hspec_stm32f0_timer.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 #include "uCUnit-v1.0.h"
+#include "stm32f0/stm32f0xx_gpio.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h"
 
 static const mal_hspec_stm32f0_timer_direct_init_s direct_init_1khz = {
 	.prescaler = 0,
@@ -97,4 +99,40 @@ void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, cons
 	mal_hspec_timer_pwm_value_t dc;
 	dc = (compare_value * MAL_HSPEC_TIMER_PWM_VALUE_MAX) / tim->ARR;
 	UCUNIT_CheckIsAlmostEqual(MAL_HSPEC_TIMER_PWM_VALUE_MAX / 2, dc, 2);
+}
+
+void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_hspec_timer_e timer,
+													 const mal_hspec_gpio_s *io,
+													 volatile test_mal_hspec_timer_input_capture_t *input_capture_info) {
+	mal_error_e result;
+	test_mal_hspec_stm32f0_timer_init_count_1khz(timer);
+	// Force pull down on GPIO
+	GPIO_TypeDef *gpio = mal_hspec_stm32f0_get_gpio_typedef(io->port);
+    gpio->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (io->pin * 2));
+    gpio->PUPDR |= (GPIO_PuPd_DOWN << (io->pin * 2));
+	// Reset input data
+	input_capture_info->timer = timer + 1;
+	input_capture_info->count = UINT64_MAX;
+	// Wait for count to change
+	uint64_t ref_count;
+	result = mal_timer_get_count(timer, &ref_count);
+	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
+	for (int i = 0; i < 10000; i++) {
+		uint64_t new_count;
+		mal_timer_get_count(timer, &new_count);
+		if (new_count != ref_count) {
+			break;
+		}
+	}
+	// Set pull up
+	gpio->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (io->pin * 2));
+	gpio->PUPDR |= (GPIO_PuPd_UP << (io->pin * 2));
+	// Wait callback execution
+	for (int i = 0; i < 10000; i++) {
+		if (timer == input_capture_info->timer) {
+			break;
+		}
+	}
+	UCUNIT_CheckIsEqual(timer, input_capture_info->timer);
+	UCUNIT_CheckIsNotEqual(UINT64_MAX, input_capture_info->count);
 }

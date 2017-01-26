@@ -32,6 +32,20 @@
 #include "utils/char_buffer.h"
 
 /**
+ * Since not all implementations of init capture may be able to test the
+ * capture event without external hardware, we will let the hardware specific
+ * tests test this part. But since the timer is initialized in the hardware
+ * abstracted section, we must forward test info.
+ */
+static volatile test_mal_hspec_timer_input_capture_t input_capture_info;
+
+static mal_error_e input_capture_callback(mal_hspec_timer_e timer, uint64_t count) {
+	input_capture_info.timer = timer;
+	input_capture_info.count = count;
+	return MAL_ERROR_OK;
+}
+
+/**
  * Test the timer tick initializer. Makes sure that the timer init algorithms
  * can still find proper parameters.
  */
@@ -282,6 +296,76 @@ static void test_mal_timer_pwm_1khz(void) {
 				test_mal_hspec_timer_pwm_50pc_dc_1khz(timers[timer_index], &ios[io_index]);
 				// Free timer
 				mal_timer_free(timers[timer_index]);
+				// Set IO to input to clear settings
+				mal_gpio_deinit(&ios[io_index]);
+			}
+		}
+	}
+
+	UCUNIT_TestcaseEnd();
+}
+
+/**
+ * Test the timer input capture functionality. Makes sure that the timer init
+ * algorithms can still find proper parameters.
+ */
+static void test_mal_timer_input_capture_1khz(void) {
+	uint8_t timer_index;
+	uint8_t io_index;
+	mal_error_e result;
+	const mal_hspec_timer_e *timers;
+	uint8_t timers_size;
+	const mal_hspec_gpio_s *ios;
+	uint8_t ios_size;
+
+	UCUNIT_TestcaseBegin("test_mal_timer_input_capture_1khz");
+
+	// Get timers to test
+	result = mal_hspec_get_valid_timers(&timers, &timers_size);
+	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
+
+	// Prepare test frequency and delta
+	mal_hspec_timer_value_t test_frequency; // 1kHz
+#ifdef MAL_FLOAT
+	test_frequency = 1000.0f;
+#else
+	test_frequency = 1000000;
+#endif
+
+	// Test timers
+	if (MAL_ERROR_OK == result) {
+		for (timer_index = 0; timer_index < timers_size; timer_index++) {
+			// Fetch IOs
+			result = mal_hspec_get_valid_input_capture_ios(timers[timer_index], &ios, &ios_size);
+			if (MAL_ERROR_OK != result) {
+				continue;
+			}
+			// Test IOs
+			for (io_index = 0; io_index < ios_size; io_index++) {
+				sprintf(char_buffer,
+						"Testing timer %i on port %i of io %i\n",
+						timers[timer_index] + 1,
+						ios[io_index].port,
+						ios[io_index].pin);
+				UCUNIT_WriteString(char_buffer);
+				mal_hspec_timer_intput_capture_init_s ic_init;
+				ic_init.timer = timers[timer_index];
+				ic_init.input_io = &ios[io_index];
+				ic_init.frequency = test_frequency;
+				ic_init.input_divider = 1;
+				ic_init.input_event = MAL_HSPEC_TIMER_INPUT_BOTH;
+				ic_init.callback = &input_capture_callback;
+				result = mal_timer_init_input_capture(&ic_init);
+				// Check result
+				UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
+				// Execute hardware specific test
+				test_mal_hspec_timer_input_capture_1khz(timers[timer_index],
+														&ios[io_index],
+														&input_capture_info);
+				// Free timer
+				mal_timer_free(timers[timer_index]);
+				// Set IO to input to clear settings
+				mal_gpio_deinit(&ios[io_index]);
 			}
 		}
 	}
@@ -294,5 +378,6 @@ void test_mal_timer(void) {
 	test_mal_timer_direct_init_tick_1khz();
 	test_mal_timer_count_1khz();
 	test_mal_timer_pwm_1khz();
+	test_mal_timer_input_capture_1khz();
 }
 

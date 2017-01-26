@@ -78,6 +78,8 @@
 
 #define mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_channel_ios(timer, ios, size)
 
+#define mal_hspec_stm32f072_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_input_capture_ios(timer, ios, size)
+
 #define mal_hspec_stm32f072_get_timer_afs(afs) mal_hspec_stm32f072cb_get_timer_afs(afs)
 
 #define mal_hspec_stm32f072_flash_get_page_count() mal_hspec_stm32f072cb_flash_get_page_count()

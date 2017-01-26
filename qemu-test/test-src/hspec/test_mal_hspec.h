@@ -42,8 +42,9 @@
 
 #define test_mal_hspec_timer_init_pwm_1khz(timer) test_mal_hspec_stm32f0_timer_init_pwm_1khz(timer)
 
-
 #define test_mal_hspec_timer_pwm_50pc_dc_1khz(timer, io) test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(timer, io)
+
+#define test_mal_hspec_timer_input_capture_1khz(timer, io, input_capture_info) test_mal_hspec_stm32f0_timer_input_capture_1khz(timer, io, input_capture_info)
 
 #else
 #error No hardware specfic family symbol specified...
