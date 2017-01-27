@@ -43,6 +43,7 @@
 #include "mal_hspec_stm32f0_flash.h"
 #include "mal_hspec_stm32f0_watchdog.h"
 #include "mal_hspec_stm32f0_dac.h"
+#include "mal_hspec_stm32f0_power.h"
 
 // Device specific function mapping section.
 #if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)

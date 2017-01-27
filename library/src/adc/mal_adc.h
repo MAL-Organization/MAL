@@ -28,7 +28,7 @@
 
 /**
  * @defgroup ADC
- * @brief @copybrief mal_can.h
+ * @brief @copybrief mal_adc.h
  * @{
  */
 
@@ -91,7 +91,7 @@ mal_error_e mal_adc_init(mal_hspec_adc_init_s *init);
  * @param value The value read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value);
+mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_hspec_adc_value_t *value);
 
 /**
  * @brief Convert a bit value of an ADC to volts.
@@ -100,7 +100,7 @@ mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value);
  * @param value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, float *value);
+mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_hspec_adc_value_t *value);
 
 /**
  * @}

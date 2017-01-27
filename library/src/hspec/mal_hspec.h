@@ -219,6 +219,10 @@
 
 #define mal_hspec_dac_resolution(dac, resolution) mal_hspec_stm32f0_dac_resolution(dac, resolution)
 
+// POWER
+
+#define mal_hspec_power_get_rail_voltage(rail, value) mal_hspec_stm32f0_power_get_rail_voltage(rail, value)
+
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
 
