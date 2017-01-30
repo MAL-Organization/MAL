@@ -25,6 +25,7 @@
 
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
+#include "std/mal_types.h"
 
 /**
  * @addtogroup Clock
@@ -544,19 +545,6 @@ typedef struct {
 typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64_t value);
 
 /**
- * This type is used to represent an ADC value in volts. If MAL_FLOAT is
- * defined, this type defines volts directly using a float. Otherwise, it
- * contains mV. For example, let's take an ADC with a value of 1.8V. If
- * MAL_FLOAT is defined, the value will be 1.8f. If not, the value will be
- * 1800.
- */
-#ifdef MAL_FLOAT
-typedef float mal_hspec_adc_value_t;
-#else
-typedef uint32_t mal_hspec_adc_value_t;
-#endif
-
-/**
  * @}
  */
 
@@ -751,21 +739,9 @@ typedef struct {
  */
 
 typedef enum {
-	MAL_HSPEC_POWER_RAIL_VDDA
+	MAL_HSPEC_POWER_RAIL_VDDA = 0,
+	MAL_HSPEC_POWER_RAIL_SIZE = 1
 } mal_hspec_power_rail_e;
-
-/**
- * This type is used to represent a power rail value of the MCU. If MAL_FLOAT is
- * defined, this type defines volts directly using a float. Otherwise, it
- * contains mV. For example, let's take an MCU with a rail at 1.8V. If
- * MAL_FLOAT is defined, the value will be 1.8f. If not, the value will be
- * 1800.
- */
-#ifdef MAL_FLOAT
-typedef float mal_hspec_power_rail_value_t;
-#else
-typedef uint16_t mal_hspec_power_rail_value_t;
-#endif
 
 /**
  * @}

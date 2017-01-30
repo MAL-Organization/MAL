@@ -37,7 +37,7 @@ mal_error_e mal_adc_init(mal_hspec_adc_init_s *init) {
 	return mal_hspec_adc_init(init);
 }
 
-mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_hspec_adc_value_t *value) {
+mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_volts_t *value) {
 	mal_error_e result;
 	// Read bit value
 	uint64_t bit_value;
@@ -49,7 +49,7 @@ mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_hspec_adc_value_t *value
 	return mal_adc_bits_to_volts(adc, bit_value, value);
 }
 
-mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_hspec_adc_value_t *value) {
+mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_volts_t *value) {
 	mal_error_e result;
 	// Get ADC resolution
 	uint8_t resolution;
@@ -58,7 +58,7 @@ mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_h
 		return result;
 	}
 	// Get VDDA value
-	mal_hspec_power_rail_value_t vdda_value;
+	mal_volts_t vdda_value;
 	result = mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda_value);
 	if (MAL_ERROR_OK != result) {
 		return result;
@@ -66,6 +66,6 @@ mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_h
 	// Compute maximum value
 	uint64_t maximum_value = (((uint64_t)1) << resolution) - 1;
 	// Compute value
-	*value = ((mal_hspec_adc_value_t)bit_value * (mal_hspec_adc_value_t)vdda_value) / (mal_hspec_adc_value_t)maximum_value;
+	*value = ((mal_volts_t)bit_value * vdda_value) / (mal_volts_t)maximum_value;
 	return MAL_ERROR_OK;
 }

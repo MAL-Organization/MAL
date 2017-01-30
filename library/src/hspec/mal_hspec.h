@@ -415,6 +415,10 @@
 
 #define mal_hspec_dac_resolution(dac, resolution) mal_hspec_mingw_dac_resolution(dac, resolution)
 
+// POWER
+
+#define mal_hspec_power_get_rail_voltage(rail, value) mal_hspec_mingw_power_get_rail_voltage(rail, value)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif

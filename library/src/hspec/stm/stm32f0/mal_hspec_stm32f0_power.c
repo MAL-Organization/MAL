@@ -25,10 +25,10 @@
 
 #include "mal_hspec_stm32f0_power.h"
 
-extern mal_hspec_power_rail_value_t mal_hspec_power_rail_vdda_value;
+extern mal_volts_t mal_hspec_power_rail_vdda_value;
 
 mal_error_e mal_hspec_stm32f0_power_get_rail_voltage(mal_hspec_power_rail_e rail,
-													 mal_hspec_power_rail_value_t *value) {
+													 mal_volts_t *value) {
 	switch (rail) {
 		case MAL_HSPEC_POWER_RAIL_VDDA:
 			*value = mal_hspec_power_rail_vdda_value;

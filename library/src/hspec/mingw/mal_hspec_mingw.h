@@ -38,5 +38,6 @@
 #include "mal_hspec_mingw_reset.h"
 #include "mal_hspec_mingw_flash.h"
 #include "mal_hspec_mingw_dac.h"
+#include "mal_hspec_mingw_power.h"
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */

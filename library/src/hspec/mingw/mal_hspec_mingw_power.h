@@ -1,7 +1,7 @@
 /*
- * mal_hspec_stm32f0_power.h
+ * mal_hspec_mingw_power.h
  *
- *  Created on: Jan 26, 2017
+ *  Created on: Jan 30, 2017
  *      Author: Olivier
  */
 /*
@@ -23,12 +23,14 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_POWER_H_
-#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_POWER_H_
+#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
+#define HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
 
 #include "std/mal_error.h"
 #include "hspec/mal_hspec_cmn.h"
 
-mal_error_e mal_hspec_stm32f0_power_get_rail_voltage(mal_hspec_power_rail_e rail, mal_volts_t *value);
+mal_error_e mal_hspec_mingw_power_get_rail_voltage(mal_hspec_power_rail_e rail, mal_hspec_power_rail_value_t *value);
 
-#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_POWER_H_ */
+void mal_hspec_mingw_power_set_rail_voltage(mal_hspec_power_rail_e rail, mal_hspec_power_rail_value_t value);
+
+#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_ */
