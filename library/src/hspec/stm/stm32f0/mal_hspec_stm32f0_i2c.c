@@ -78,7 +78,7 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s 
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
 	// See STM32F0 user manual for I2C clock requirements.
-	uint64_t min_clk = ((float)(8 * init->bitrate)) / (1.0f - 0.00000052f * ((float)init->bitrate));
+	uint64_t min_clk = 8 * init->bitrate;
 	if (MAL_HSPEC_I2C_1 == init->interface) {
 		if (SystemCoreClock > min_clk) {
 			RCC_I2CCLKConfig(RCC_I2C1CLK_SYSCLK);
