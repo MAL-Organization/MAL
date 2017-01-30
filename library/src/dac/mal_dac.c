@@ -37,11 +37,11 @@ mal_error_e mal_dac_init(mal_hspec_dac_init_s *init) {
 	return mal_hspec_dac_init(init);
 }
 
-mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, float value) {
+mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, mal_volts_t value) {
 	mal_error_e result;
 	// Convert value
 	uint64_t bit_value;
-	result = mal_dac_millivolts_to_bits(dac, value, &bit_value);
+	result = mal_dac_volts_to_bits(dac, value, &bit_value);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

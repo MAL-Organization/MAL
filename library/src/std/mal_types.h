@@ -70,9 +70,9 @@ typedef int64_t mal_volts_t;
  * 1.8V (1800) to the correct mal_volts_t type.
  */
 #ifdef MAL_FLOAT
-#define MAL_TYPES_VOLTS_TO_MAL_VOLTS(value)			((float)value / 1000.0f)
+#define MAL_TYPES_MILLIVOLTS_TO_MAL_VOLTS(value)	((float)value / 1000.0f)
 #else
-#define MAL_TYPES_VOLTS_TO_MAL_VOLTS(value)			(value)
+#define MAL_TYPES_MILLIVOLTS_TO_MAL_VOLTS(value)	(value)
 #endif
 
 #endif /* STD_MAL_TYPES_H_ */
