@@ -79,6 +79,15 @@
 #define mal_adc_enable_interrupt(adc, active) mal_hspec_enable_adc_interrupt(adc, active)
 
 /**
+ * @brief Get the maximum resolution of the ADC.
+ * @param adc The ADC to get the resolution from.
+ * @param resolution A pointer of type uint8_t that will contain the
+ * resolution.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_adc_maximum_resolution(adc, resolution) mal_hspec_adc_maximum_resolution(adc, resolution)
+
+/**
  * @brief Initialize an ADC.
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.

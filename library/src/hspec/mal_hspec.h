@@ -153,6 +153,8 @@
 
 #define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
 
+#define mal_hspec_adc_maximum_resolution(adc, resolution) mal_hspec_stm32f0_adc_maximum_resolution(adc, resolution)
+
 // SPI
 
 #define mal_hspec_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)

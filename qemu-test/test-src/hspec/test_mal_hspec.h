@@ -46,6 +46,10 @@
 
 #define test_mal_hspec_timer_input_capture_1khz(timer, io, input_capture_info) test_mal_hspec_stm32f0_timer_input_capture_1khz(timer, io, input_capture_info)
 
+// ADC
+
+#define test_mal_hspec_adc_init(adc, io) test_mal_hspec_stm32f0_adc_init(adc, io)
+
 #else
 #error No hardware specfic family symbol specified...
 #endif

@@ -26,9 +26,11 @@
 #include "uCUnit-v1.0.h"
 
 #include "timer/test_mal_timer.h"
+#include "adc/test_mal_adc.h"
 
 static void run_tests(void) {
-	test_mal_timer();
+//	test_mal_timer();
+	test_mal_adc();
 	UCUNIT_WriteSummary();
 }
 
