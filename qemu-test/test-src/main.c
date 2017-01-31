@@ -29,7 +29,7 @@
 #include "adc/test_mal_adc.h"
 
 static void run_tests(void) {
-//	test_mal_timer();
+	test_mal_timer();
 	test_mal_adc();
 	UCUNIT_WriteSummary();
 }

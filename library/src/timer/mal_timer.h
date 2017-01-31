@@ -40,8 +40,8 @@
 typedef struct {
 	mal_hspec_timer_mode_e mode; //!< The current mode of the timer.
 	bool is_available; //!< true if the timer is available, false otherwise.
-	mal_hspec_timer_value_t frequency; //!< Frequency of the timer.
-	mal_hspec_timer_value_t delta; //!< Frequency error tolerance.
+	mal_hertz_t frequency; //!< Frequency of the timer.
+	mal_hertz_t delta; //!< Frequency error tolerance.
 	// Tick timer variables
 	volatile uint64_t tick_counter; //!< Contains the count of the timer in tick mode.
 } mal_timer_state_s;
@@ -69,8 +69,8 @@ typedef struct {
  * @brief Set the duty cycle of an initialized PWM IO.
  * @param timer The timer of the PWM IO.
  * @param gpio The GPIO the PWM is on.
- * @param duty_cyle A mal_hspec_timer_pwm_value_t that should go from 0 to 1. 0
- * is 0% duty cycle and 1 is 100% duty cycle.
+ * @param duty_cyle A mal_ratio_t value representing the duty cycle on/off
+ * ratio.
  * @return #MAL_ERROR_OK on success.
  */
 #define mal_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle) mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)
@@ -88,8 +88,8 @@ typedef struct {
 /**
  * @brief Get the actual counting frequency of a timer.
  * @param timer The timer to get the frequency from.
- * @param frequency A pointer to a mal_hspec_timer_value_t that will contain
- * the counting frequency.
+ * @param frequency A pointer to a mal_hertz_t that will contain the counting
+ * frequency.
  * @return Returns #MAL_ERROR_OK on success.
  */
 #define mal_timer_get_count_frequency(timer, frequency) mal_hspec_timer_get_count_frequency(timer, frequency)
@@ -124,7 +124,7 @@ typedef struct {
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_value_t delta, mal_hspec_timer_e *handle);
+mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_e *handle);
 
 /**
  * @brief Function to initialize directly the timer. Using this function
@@ -141,7 +141,7 @@ mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer, mal_hspec_timer_value_t
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_value_t delta, const void *direct_init, mal_hspec_timer_e *handle);
+mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, const void *direct_init, mal_hspec_timer_e *handle);
 
 /**
  * This is a simple timer initialization. The main difference between this and
@@ -154,7 +154,7 @@ mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer, mal_hspec_timer_
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_count(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_e *handle);
+mal_error_e mal_timer_init_count(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hspec_timer_e *handle);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task).
@@ -167,7 +167,7 @@ mal_error_e mal_timer_init_count(mal_hspec_timer_e timer, mal_hspec_timer_value_
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_task(mal_hspec_timer_e timer, mal_hspec_timer_value_t frequency, mal_hspec_timer_value_t delta, mal_hspec_timer_callback_t callback, mal_hspec_timer_e *handle);
+mal_error_e mal_timer_init_task(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_callback_t callback, mal_hspec_timer_e *handle);
 
 /**
  * @brief Return the tick of a timer when initialized in tick mode.

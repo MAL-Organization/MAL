@@ -194,41 +194,14 @@ typedef enum {
 typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
 
 /**
- * Type for timer values. When MAL_FLOAT is defined, the type is float,
- * otherwise it is int64_t. When MAL_FLOAT is defined, this type contains Hz.
- * Otherwise, this number contains mHz. For example here is a case where a
- * timer is initialized with a target frequency of 1 kHz with a delta 0.1 Hz.
- * When MAL_FLOAT is defined, frequency will be 1000.0f and delta will be 0.1f.
- * If MAL_FLOAT is not defined, frequency will be 1000000 and delta will be
- * 100.
- */
-#ifdef MAL_FLOAT
-typedef float mal_hspec_timer_value_t;
-#else
-typedef int64_t mal_hspec_timer_value_t;
-#endif
-
-/**
  * Initialization parameters of a PWM input.
  */
 typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the PWM output.*/
-	mal_hspec_timer_value_t frequency; /**< The frequency of the PWM.*/
-	mal_hspec_timer_value_t delta; /**< The acceptable frequency delta.*/
+	mal_hertz_t frequency; /**< The frequency of the PWM.*/
+	mal_hertz_t delta; /**< The acceptable frequency delta.*/
 	const mal_hspec_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_hspec_timer_pwm_init_s;
-
-/**
- * This type is used to represent duty cycle values. When MAL_FLOAT is defined,
- * accepted values are between 0.0f and 1.0f. Otherwise, this value is a
- * uint16_t. Percentage is scaled from 0 to 65535.
- */
-#ifdef MAL_FLOAT
-typedef float mal_hspec_timer_pwm_value_t;
-#else
-typedef uint16_t mal_hspec_timer_pwm_value_t;
-#define MAL_HSPEC_TIMER_PWM_VALUE_MAX	UINT16_MAX
-#endif
 
 /**
  * Possible timer input triggers.
@@ -253,7 +226,7 @@ typedef mal_error_e (*mal_hspec_timer_input_capture_callback_t)(mal_hspec_timer_
  */
 typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the input capture.*/
-	mal_hspec_timer_value_t frequency; /**< The frequency to count to.*/
+	mal_hertz_t frequency; /**< The frequency to count to.*/
 	const mal_hspec_gpio_s *input_io; /**< The gpio of the input capture.*/
 	mal_hspec_timer_input_e input_event; /**< The input event to capture.*/
 	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/

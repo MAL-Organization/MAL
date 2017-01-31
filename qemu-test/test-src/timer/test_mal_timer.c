@@ -61,14 +61,9 @@ static void test_mal_timer_init_tick_1khz(void) {
 	result = mal_hspec_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
-	// Prepare test frequency and delta
-	mal_hspec_timer_value_t test_frequency; // 1kHz
-	mal_hspec_timer_value_t test_delta = 0;
-#ifdef MAL_FLOAT
-	test_frequency = 1000.0f;
-#else
-	test_frequency = 1000000;
-#endif
+	// Prepare test frequency of 1kHz and delta of 0Hz
+	mal_hertz_t test_frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(1000000);
+	mal_hertz_t test_delta = 0;
 
 	// Test timers
 	if (MAL_ERROR_OK == result) {
@@ -110,14 +105,9 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 	result = mal_hspec_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
-	// Prepare test frequency and delta
-	mal_hspec_timer_value_t test_frequency; // 1kHz
-	mal_hspec_timer_value_t test_delta = 0;
-#ifdef MAL_FLOAT
-	test_frequency = 1000.0f;
-#else
-	test_frequency = 1000000;
-#endif
+	// Prepare test frequency of 1kHz and delta of 0Hz
+	mal_hertz_t test_frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(1000000);
+	mal_hertz_t test_delta = 0;
 
 	// Test timers
 	if (MAL_ERROR_OK == result) {
@@ -177,13 +167,8 @@ static void test_mal_timer_count_1khz(void) {
 	result = mal_hspec_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
-	// Prepare test frequency and delta
-	mal_hspec_timer_value_t test_frequency; // 1kHz
-#ifdef MAL_FLOAT
-	test_frequency = 1000.0f;
-#else
-	test_frequency = 1000000;
-#endif
+	// Prepare test frequency of 1kHz and delta of 0Hz
+	mal_hertz_t test_frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(1000000);
 
 	// Test timers
 	if (MAL_ERROR_OK == result) {
@@ -249,17 +234,10 @@ static void test_mal_timer_pwm_1khz(void) {
 	result = mal_hspec_get_valid_timers(&timers, &timers_size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
-	// Prepare test frequency and delta
-	mal_hspec_timer_value_t test_frequency; // 1kHz
-	mal_hspec_timer_value_t test_delta = 0;
-	mal_hspec_timer_pwm_value_t test_duty_cycle;
-#ifdef MAL_FLOAT
-	test_frequency = 1000.0f;
-	test_duty_cycle = 0.5f;
-#else
-	test_frequency = 1000000;
-	test_duty_cycle = MAL_HSPEC_TIMER_PWM_VALUE_MAX / 2;
-#endif
+	// Prepare test frequency of 1kHz and delta of 0Hz
+	mal_hertz_t test_frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(1000000);
+	mal_hertz_t test_delta = 0;
+	mal_ratio_t test_duty_cycle = MAL_TYPES_RATIO_NORMALIZER / 2;
 
 	// Test timers
 	if (MAL_ERROR_OK == result) {
@@ -324,13 +302,8 @@ static void test_mal_timer_input_capture_1khz(void) {
 	result = mal_hspec_get_valid_timers(&timers, &timers_size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
-	// Prepare test frequency and delta
-	mal_hspec_timer_value_t test_frequency; // 1kHz
-#ifdef MAL_FLOAT
-	test_frequency = 1000.0f;
-#else
-	test_frequency = 1000000;
-#endif
+	// Prepare test frequency of 1kHz and delta of 0Hz
+	mal_hertz_t test_frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(1000000);
 
 	// Test timers
 	if (MAL_ERROR_OK == result) {

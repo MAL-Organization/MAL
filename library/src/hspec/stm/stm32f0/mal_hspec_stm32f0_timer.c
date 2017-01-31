@@ -52,8 +52,8 @@ static void timer_input_capture_interrupt(mal_hspec_timer_e timer, TIM_TypeDef *
 static timer_callback_u timer_callbacks[MAL_HSPEC_TIMER_SIZE];
 
 mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer,
-												mal_hspec_timer_value_t frequency,
-												mal_hspec_timer_value_t delta,
+												mal_hertz_t frequency,
+												mal_hertz_t delta,
 												const void *direct_init,
 												mal_hspec_timer_callback_t callback) {
 	mal_error_e result;
@@ -91,8 +91,8 @@ mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer,
 }
 
 mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer,
-										 mal_hspec_timer_value_t frequency,
-										 mal_hspec_timer_value_t delta,
+										 mal_hertz_t frequency,
+										 mal_hertz_t delta,
 										 mal_hspec_timer_callback_t callback) {
 	mal_error_e result;
 	// Initialise peripheral clock
@@ -586,13 +586,14 @@ mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
 
 mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer,
 													   const mal_hspec_gpio_s *gpio,
-													   mal_hspec_timer_pwm_value_t duty_cycle) {
+													   mal_ratio_t duty_cycle) {
 	mal_error_e result;
 	// Get timer
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// We need to compute the duty cycle
-	uint32_t compare_value = tim->ARR * duty_cycle;
-	compare_value /= MAL_HSPEC_TIMER_PWM_VALUE_MAX;
+	uint32_t compare_value = MAL_TYPES_RATIO_OF_INT_VALUE(duty_cycle,
+														  uint32_t,
+														  tim->ARR);
 	// Chose the correct set function
 	switch (mal_hspec_stm32f0_timer_get_channel(gpio, timer)) {
 		case TIM_Channel_1:
@@ -615,7 +616,7 @@ mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer,
 }
 
 mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer,
-											   mal_hspec_timer_value_t frequency) {
+											   mal_hertz_t frequency) {
 	mal_error_e result;
 	// Initialize peripheral clock
 	result = init_timer_rcc(timer);
@@ -664,7 +665,7 @@ mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer,
 }
 
 mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer,
-														mal_hspec_timer_value_t *frequency) {
+														mal_hertz_t *frequency) {
 	mal_error_e result;
 	// Get timer
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
@@ -678,8 +679,8 @@ mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer,
 		return result;
 	}
 	// Compute frequency
-	mal_hspec_timer_value_t prescaler_value = (uint32_t)tim->PSC + 1;
-	*frequency = (mal_hspec_timer_value_t)timer_frequency / prescaler_value;
+	mal_hertz_t prescaler_value = (uint32_t)tim->PSC + 1;
+	*frequency = (mal_hertz_t)timer_frequency / prescaler_value;
 
 	return MAL_ERROR_OK;
 }

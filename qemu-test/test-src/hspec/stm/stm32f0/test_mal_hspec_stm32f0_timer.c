@@ -96,9 +96,8 @@ void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, cons
 			break;
 	}
 	// Check duty cycle
-	mal_hspec_timer_pwm_value_t dc;
-	dc = (compare_value * MAL_HSPEC_TIMER_PWM_VALUE_MAX) / tim->ARR;
-	UCUNIT_CheckIsAlmostEqual(MAL_HSPEC_TIMER_PWM_VALUE_MAX / 2, dc, 2);
+	mal_ratio_t dc = MAL_TYPES_INT_RATIO_TO_RATIO(compare_value, tim->ARR);
+	UCUNIT_CheckIsAlmostEqual(MAL_TYPES_RATIO_NORMALIZER / 2, dc, 2);
 }
 
 void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_hspec_timer_e timer,
