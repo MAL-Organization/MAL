@@ -448,7 +448,6 @@ void i2c_common(i2c_handle_s *handle) {
 			// We are in error
 			handle->state = I2C_STATE_ERROR;
 		} else {
-			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_SUCCESS, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		}
@@ -457,10 +456,12 @@ void i2c_common(i2c_handle_s *handle) {
 	if (I2C_GetITStatus(handle->stm_handle, I2C_IT_STOPF) == SET) {
 		// Clear interrupt
 		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_STOPF);
-		// Check if stop is expected
+		// Notify
+		mal_hspec_i2c_result_e i2c_result = MAL_HSPEC_I2C_SUCCESS;
 		if (I2C_STATE_WAIT_STOP != handle->state) {
-			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_BUS_ERROR, &handle->msg);
+			i2c_result = MAL_HSPEC_I2C_BUS_ERROR;
 		}
+		handle->msg->callback(handle->interface, &handle->msg->packet, i2c_result, &handle->msg);
 		// Check if a new message can be started
 		if (handle->msg != NULL) {
 			i2c_start_transfer(handle);
