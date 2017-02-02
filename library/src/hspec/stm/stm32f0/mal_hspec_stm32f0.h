@@ -1,13 +1,9 @@
-/*
- * mal_hspec_stm32.h
- *
- *  Created on: May 2, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
- *
- * This file is part of MAL.
+/**
+ * @file mal_hspec_stm32
+ * @author Olivier Allaire
+ * @date May 2 2015
+ * @copyright Copyright (c) 2015 Olivier Allaire
+ * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,6 +17,8 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ * @brief Definitions for STM32F0.
+ * @note MAL_FLOAT is not defined for all STM32F0 platforms.
  */
 
 #ifndef HSPEC_STM_MAL_HSPEC_STM32F0_H_
@@ -45,6 +43,7 @@
 #include "mal_hspec_stm32f0_flash.h"
 #include "mal_hspec_stm32f0_watchdog.h"
 #include "mal_hspec_stm32f0_dac.h"
+#include "mal_hspec_stm32f0_power.h"
 
 // Device specific function mapping section.
 #if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)
@@ -78,6 +77,8 @@
 #define mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
 
 #define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size)
+
+#define mal_hspec_stm32f0_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_input_capture_ios(timer, ios, size)
 
 #define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072_get_timer_compare_irq(timer)
 

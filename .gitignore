@@ -15,3 +15,5 @@ library/Release/
 eclipse/
 *.pyc
 library/build-scripts/.idea/
+qemu-test/.settings/language.settings.xml
+qemu-test/.settings/org.eclipse.cdt.codan.core.prefs

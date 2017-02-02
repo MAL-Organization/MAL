@@ -24,8 +24,7 @@
  */
 
 #include "mal_dac.h"
-
-extern float mal_external_vdda;
+#include "power/mal_power.h"
 
 mal_error_e mal_dac_init(mal_hspec_dac_init_s *init) {
 	mal_error_e result;
@@ -38,7 +37,7 @@ mal_error_e mal_dac_init(mal_hspec_dac_init_s *init) {
 	return mal_hspec_dac_init(init);
 }
 
-mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, float value) {
+mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, mal_volts_t value) {
 	mal_error_e result;
 	// Convert value
 	uint64_t bit_value;
@@ -50,7 +49,7 @@ mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, float value) {
 	return mal_dac_write_bits(dac, bit_value);
 }
 
-mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, float value, uint64_t *bit_value) {
+mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, mal_volts_t value, uint64_t *bit_value) {
 	mal_error_e result;
 	// Get DAC resolution
 	uint8_t resolution;
@@ -58,10 +57,16 @@ mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, float value, uint64_t *bi
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
+	// Get VDDA voltage
+	mal_volts_t vdda;
+    result = mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
 	// Compute maximum value
 	uint64_t maximum_value = (((uint64_t)1) << resolution) - 1;
 	// Compute bit value
-	*bit_value = (uint64_t)((value * (float)maximum_value) / mal_external_vdda);
+	*bit_value = (uint64_t)((value * (mal_volts_t)maximum_value) / vdda);
 	if (*bit_value > maximum_value) {
 		*bit_value = maximum_value;
 	}

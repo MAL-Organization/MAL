@@ -244,3 +244,28 @@ bool mal_hspec_stm32f0_disable_adc_interrupt(mal_hspec_adc_e adc) {
 
 	return active;
 }
+
+mal_error_e mal_hspec_stm32f0_adc_maximum_resolution(mal_hspec_adc_e adc, uint8_t *resolution) {
+	switch (adc) {
+		case MAL_HSPEC_ADC_0:
+		case MAL_HSPEC_ADC_1:
+		case MAL_HSPEC_ADC_2:
+		case MAL_HSPEC_ADC_3:
+		case MAL_HSPEC_ADC_4:
+		case MAL_HSPEC_ADC_5:
+		case MAL_HSPEC_ADC_6:
+		case MAL_HSPEC_ADC_7:
+		case MAL_HSPEC_ADC_8:
+		case MAL_HSPEC_ADC_9:
+		case MAL_HSPEC_ADC_10:
+		case MAL_HSPEC_ADC_11:
+		case MAL_HSPEC_ADC_12:
+		case MAL_HSPEC_ADC_13:
+		case MAL_HSPEC_ADC_14:
+		case MAL_HSPEC_ADC_15:
+			*resolution = 12;
+			return MAL_ERROR_OK;
+		default:
+			return MAL_ERROR_HARDWARE_INVALID;
+	}
+}

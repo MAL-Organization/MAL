@@ -54,6 +54,10 @@ extern unsigned int __bss_end__;
 
 extern void mal_clock_set_system_clock(uint64_t clock);
 
+#ifdef MAL_SEMIHOSTING
+extern void initialise_monitor_handles(void);
+#endif
+
 static void initialise_memory(void);
 
 static const uint32_t hse_prediv_values[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
@@ -90,6 +94,11 @@ void mal_hspec_stm32f0_startup() {
 
 	// Relocate vector table
 	mal_stm32f0_relocate_vector_table();
+
+#ifdef MAL_SEMIHOSTING
+	// Initialize monitor handles for semihosting
+	initialise_monitor_handles();
+#endif
 }
 
 mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) {

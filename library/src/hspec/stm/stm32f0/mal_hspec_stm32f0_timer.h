@@ -45,9 +45,9 @@ typedef struct {
 	} \
 } while(0)
 
-mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback);
+mal_error_e mal_hspec_stm32f0_timer_init(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_callback_t callback);
 
-mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, float frequency, float delta, const void *direct_init, mal_hspec_timer_callback_t callback);
+mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, const void *direct_init, mal_hspec_timer_callback_t callback);
 
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_hspec_timer_e timer, uint64_t *clock);
 
@@ -57,16 +57,22 @@ bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer);
 
 mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_hspec_timer_pwm_init_s *init);
 
-mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, float duty_cycle);
+mal_error_e mal_hspec_stm32f0_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, mal_ratio_t duty_cycle);
 
-mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer, float frequency);
+mal_error_e mal_hspec_stm32f0_timer_count_init(mal_hspec_timer_e timer, mal_hertz_t frequency);
+
+mal_error_e mal_hspec_stm32f0_timer_count_direct_init(mal_hspec_timer_e timer, mal_hertz_t frequency, const void *direct_init);
 
 mal_error_e mal_hspec_stm32f0_timer_get_resolution(mal_hspec_timer_e timer, uint8_t *resolution);
 
-mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency);
+mal_error_e mal_hspec_stm32f0_timer_get_count_frequency(mal_hspec_timer_e timer, mal_hertz_t *frequency);
 
 mal_error_e mal_hspec_stm32f0_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
 
 mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_hspec_timer_intput_capture_init_s *init);
+
+TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_hspec_timer_e timer);
+
+uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

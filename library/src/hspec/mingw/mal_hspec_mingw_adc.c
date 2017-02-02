@@ -26,6 +26,7 @@
 #include "mal_hspec_mingw_adc.h"
 #include "mal_hspec_mingw_cmn.h"
 #include "std/mal_stdlib.h"
+#include "power/mal_power.h"
 
 typedef struct {
 	mal_hspec_adc_e adc;
@@ -33,8 +34,6 @@ typedef struct {
 	mal_hspec_adc_read_callback_t callback;
 	float value;
 } adc_info_s;
-
-extern float mal_external_vdda;
 
 static adc_info_s adc_array[MAL_HSPEC_ADC_SIZE];
 
@@ -53,8 +52,10 @@ mal_error_e mal_hspec_mingw_adc_init(mal_hspec_adc_init_s *init) {
 }
 
 mal_error_e mal_hspec_mingw_adc_read(mal_error_e adc, uint64_t *value) {
+	mal_volts_t vdda;
+	mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda);
 	// Compute ratio
-	float ratio = adc_array[adc].value / mal_external_vdda;
+	float ratio = adc_array[adc].value / MAL_TYPES_MAL_VOLTS_TO_VOLTS(vdda);
 	// Get resolution
 	uint8_t resolution;
 	mal_hspec_mingw_adc_resolution(adc, &resolution);

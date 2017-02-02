@@ -61,7 +61,7 @@ mal_error_e mal_dac_init(mal_hspec_dac_init_s *init);
  * @param value The value to write.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, float value);
+mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, mal_volts_t value);
 
 /**
  * @brief Convert a bit value of a DAC to volts.
@@ -70,7 +70,7 @@ mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, float value);
  * @param bit_value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, float value, uint64_t *bit_value);
+mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, mal_volts_t value, uint64_t *bit_value);
 
 /**
  * @}

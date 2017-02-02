@@ -57,10 +57,10 @@ mal_error_e mal_hspec_mingw_get_valid_timers(const mal_hspec_timer_e **timers, u
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback) {
+mal_error_e mal_hspec_mingw_timer_init(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_callback_t callback) {
 	// Save timer parameters
 	mingw_timers[timer].timer = timer;
-	mingw_timers[timer].frequency = frequency;
+	mingw_timers[timer].frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(frequency);
 	mingw_timers[timer].callack = callback;
 	// Set timer active
 	mingw_timers[timer].active = true;
@@ -106,7 +106,7 @@ mal_error_e mal_hspec_mingw_timer_free(mal_hspec_timer_e timer) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_count_init(mal_hspec_timer_e timer, float frequency) {
+mal_error_e mal_hspec_mingw_timer_count_init(mal_hspec_timer_e timer, mal_hertz_t frequency) {
 	return mal_hspec_mingw_timer_init(timer, frequency, 0, &count_timer_callback);
 }
 
@@ -120,8 +120,8 @@ mal_error_e mal_hspec_mingw_timer_get_resolution(mal_hspec_timer_e timer, uint8_
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency) {
-	*frequency = mingw_timers[timer].frequency;
+mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, mal_hertz_t *frequency) {
+	*frequency = MAL_TYPES_HERTZ_TO_MAL_HERTZ(mingw_timers[timer].frequency);
 	return MAL_ERROR_OK;
 }
 

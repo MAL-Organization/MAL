@@ -37,12 +37,6 @@
 #define mal_hspec_startup() mal_hspec_stm32f0_startup()
 
 // GPIO mappings
-/**
- * \def mal_hspec_set_gpio_dir(port, pin)
- * \param[in] port The port defined by #mal_hspec_port_e.
- * \param[in] pin  The pin number.
- * \return Returns a #mal_error_e code.
- */
 #define mal_hspec_gpio_init(init) mal_hspec_stm32f0_gpio_init(init)
 
 #define mal_hspec_get_valid_ports(ports, size) mal_hspec_stm32f0_get_valid_ports(ports, size)
@@ -95,7 +89,7 @@
 
 #define mal_hspec_timer_get_count(timer, count) mal_hspec_stm32f0_timer_get_count(timer, count)
 
-#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size)
+#define mal_hspec_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f0_get_valid_input_capture_ios(timer, ios, size)
 
 #define mal_hspec_timer_input_capture_init(init) mal_hspec_stm32f0_timer_input_capture_init(init)
 
@@ -158,6 +152,8 @@
 #define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
 
 #define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
+
+#define mal_hspec_adc_maximum_resolution(adc, resolution) mal_hspec_stm32f0_adc_maximum_resolution(adc, resolution)
 
 // SPI
 
@@ -224,6 +220,10 @@
 #define mal_hspec_dac_write(dac, value) mal_hspec_stm32f0_dac_write(dac, value)
 
 #define mal_hspec_dac_resolution(dac, resolution) mal_hspec_stm32f0_dac_resolution(dac, resolution)
+
+// POWER
+
+#define mal_hspec_power_get_rail_voltage(rail, value) mal_hspec_stm32f0_power_get_rail_voltage(rail, value)
 
 #elif defined(MAL_MINGW)
 #include "mingw/mal_hspec_mingw.h"
@@ -414,6 +414,10 @@
 #define mal_hspec_dac_write(dac, value) mal_hspec_mingw_dac_write(dac, value)
 
 #define mal_hspec_dac_resolution(dac, resolution) mal_hspec_mingw_dac_resolution(dac, resolution)
+
+// POWER
+
+#define mal_hspec_power_get_rail_voltage(rail, value) mal_hspec_mingw_power_get_rail_voltage(rail, value)
 
 #else
 #error No hardware specfic family symbol specified...

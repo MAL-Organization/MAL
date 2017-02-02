@@ -25,6 +25,7 @@
 
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
+#include "std/mal_types.h"
 
 /**
  * @addtogroup Clock
@@ -197,8 +198,8 @@ typedef mal_error_e (*mal_hspec_timer_callback_t)(mal_hspec_timer_e timer);
  */
 typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the PWM output.*/
-	float frequency; /**< The frequency of the PWM.*/
-	float delta; /**< The acceptable frequency delta.*/
+	mal_hertz_t frequency; /**< The frequency of the PWM.*/
+	mal_hertz_t delta; /**< The acceptable frequency delta.*/
 	const mal_hspec_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_hspec_timer_pwm_init_s;
 
@@ -225,7 +226,7 @@ typedef mal_error_e (*mal_hspec_timer_input_capture_callback_t)(mal_hspec_timer_
  */
 typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the input capture.*/
-	float frequency; /**< The frequency to count to.*/
+	mal_hertz_t frequency; /**< The frequency to count to.*/
 	const mal_hspec_gpio_s *input_io; /**< The gpio of the input capture.*/
 	mal_hspec_timer_input_e input_event; /**< The input event to capture.*/
 	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
@@ -700,6 +701,20 @@ typedef struct {
 	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the DAC.*/
 	uint8_t bit_resolution; /**< The resolution of the DAC.*/
 } mal_hspec_dac_init_s;
+
+/**
+ * @}
+ */
+
+/**
+ * @addtogroup POWER
+ * @{
+ */
+
+typedef enum {
+	MAL_HSPEC_POWER_RAIL_VDDA = 0,
+	MAL_HSPEC_POWER_RAIL_SIZE = 1
+} mal_hspec_power_rail_e;
 
 /**
  * @}

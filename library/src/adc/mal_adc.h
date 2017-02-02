@@ -28,7 +28,7 @@
 
 /**
  * @defgroup ADC
- * @brief @copybrief mal_can.h
+ * @brief @copybrief mal_adc.h
  * @{
  */
 
@@ -79,6 +79,15 @@
 #define mal_adc_enable_interrupt(adc, active) mal_hspec_enable_adc_interrupt(adc, active)
 
 /**
+ * @brief Get the maximum resolution of the ADC.
+ * @param adc The ADC to get the resolution from.
+ * @param resolution A pointer of type uint8_t that will contain the
+ * resolution.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_adc_maximum_resolution(adc, resolution) mal_hspec_adc_maximum_resolution(adc, resolution)
+
+/**
  * @brief Initialize an ADC.
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
@@ -91,7 +100,7 @@ mal_error_e mal_adc_init(mal_hspec_adc_init_s *init);
  * @param value The value read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value);
+mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_volts_t *value);
 
 /**
  * @brief Convert a bit value of an ADC to volts.
@@ -100,7 +109,7 @@ mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, float *value);
  * @param value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, float *value);
+mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_volts_t *value);
 
 /**
  * @}

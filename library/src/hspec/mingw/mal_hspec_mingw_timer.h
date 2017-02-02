@@ -31,15 +31,15 @@
 
 mal_error_e mal_hspec_mingw_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size);
 
-mal_error_e mal_hspec_mingw_timer_init(mal_hspec_timer_e timer, float frequency, float delta, mal_hspec_timer_callback_t callback);
+mal_error_e mal_hspec_mingw_timer_init(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_callback_t callback);
 
 mal_error_e mal_hspec_mingw_timer_free(mal_hspec_timer_e timer);
 
-mal_error_e mal_hspec_mingw_timer_count_init(mal_hspec_timer_e timer, float frequency);
+mal_error_e mal_hspec_mingw_timer_count_init(mal_hspec_timer_e timer, mal_hertz_t frequency);
 
 mal_error_e mal_hspec_mingw_timer_get_resolution(mal_hspec_timer_e timer, uint8_t *resolution);
 
-mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, float *frequency);
+mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, mal_hertz_t *frequency);
 
 mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count);
 
