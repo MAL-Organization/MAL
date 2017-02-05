@@ -1,9 +1,11 @@
 # MAL - MCU Abstraction Library
-This library as for goal to abstract the MCU from your code allowing you to change MCU more easily.
+This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.
 
-At the moment, the library only support 2 MCUs:
+At the moment, the library supports the following MCUs:
 * STM32F072CB
-* STM32F072RB
+
+## API Documentation
+http://mal-organization.github.io/MAL/
 
 ## Build process
 Since we never have infinite time to work on projects , the build process is not yet fully automated.
