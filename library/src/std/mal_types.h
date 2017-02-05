@@ -29,6 +29,8 @@
  */
 
 /**
+ * @cond 0
+ * @internal
  * Macro to convert a type value to an int with 10^-3 representation. This will
  * always convert 1.8 to 1800 regardless of if MAL_FLOAT is defined.
  */
@@ -37,8 +39,12 @@
 #else
 #define __MAL_TYPES_TYPE_TO_MILLI(type, value)			(value)
 #endif
+/**
+ * @endcond
+ */
 
 /**
+ * @cond 0
  * Macro to convert an int with 10^-3 representation to a float. This will
  * always convert 1.8 (1800) to 1.8f regardless of if MAL_FLOAT is defined.
  */
@@ -47,8 +53,12 @@
 #else
 #define __MAL_TYPES_TYPE_TO_FLOAT(value)					((float)value / 1000.0f)
 #endif
+/**
+ * @endcond
+ */
 
 /**
+ * @cond 0
  * Macro to convert a float to a type value which is an int with 10^-3
  * representation when MAL_FLOAT is not defined. This will always convert 1.8
  * (1.8f) to the correct type representation.
@@ -58,8 +68,12 @@
 #else
 #define __MAL_TYPES_FLOAT_TO_TYPE(type, value)				((type)(value * 1000.0f))
 #endif
+/**
+ * @endcond
+ */
 
 /**
+ * @cond 0
  * Macro to convert an int with 10^-3 representation to a type value which is
  * an int with 10^-3 representation when MAL_FLOAT is not defined. This will
  * always convert 1.8 (1800) to the correct type representation.
@@ -69,6 +83,9 @@
 #else
 #define __MAL_TYPES_MILLI_TO_TYPE(value)					(value)
 #endif
+/**
+ * @endcond
+ */
 
 /**
  * This type is used to represent a value in volts. If MAL_FLOAT is
@@ -153,9 +170,17 @@ typedef int64_t mal_hertz_t;
  */
 #ifdef MAL_FLOAT
 typedef float mal_ratio_t;
-#define MAL_TYPES_RATIO_NORMALIZER								1.0f
 #else
 typedef uint32_t mal_ratio_t;
+#endif
+
+/**
+ * This type is used to normalize ratio values. When MAL_FLOAT is defined,
+ * it is 1.0f. Otherwise, this value is 65535.
+ */
+#ifdef MAL_FLOAT
+#define MAL_TYPES_RATIO_NORMALIZER								1.0f
+#else
 #define MAL_TYPES_RATIO_NORMALIZER								UINT16_MAX
 #endif
 

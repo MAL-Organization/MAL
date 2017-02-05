@@ -13,6 +13,9 @@
 		<build.excludes />
 		<optimization.levels>optimize,more,most,size,debug,none</optimization.levels>
 		<path.to.workspace>${basedir}/../eclipse</path.to.workspace>
+		<path.to.doc>${basedir}/../docs</path.to.doc>
+		<path.to.doc.resources>${basedir}/../docs-resources</path.to.doc.resources>
+		<path.to.src>${basedir}/src</path.to.src>
 	</properties>
 
 	<scm>
@@ -113,6 +116,22 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+					<execution>
+                        <id>generate-doc</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <target>
+                                <echoproperties destfile="${project.build.directory}/doc.properties" />
+                                <exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\generate_doc.py" />
+									<arg value="${project.build.directory}/doc.properties" />
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                     <execution>
                         <id>default-install</id>
                         <phase>install</phase>
@@ -159,6 +178,38 @@
 					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
 				</configuration>
 			</plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.shared</groupId>
+                        <artifactId>maven-filtering</artifactId>
+                        <version>1.3</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>prepare-doxygen</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/..</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${path.to.doc.resources}</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>Doxyfile</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 </project>
