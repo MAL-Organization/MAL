@@ -44,7 +44,7 @@ static void test_mal_adc_init(void) {
 	UCUNIT_TestcaseBegin("test_mal_adc_init");
 
 	// Test ADCs
-	for (adc_index = 0; adc_index < MAL_HSPEC_ADC_SIZE; adc_index++) {
+	for (adc_index = 0; adc_index < MAL_ADC_SIZE; adc_index++) {
 		// Fetch IOs
 		result = mal_hspec_get_valid_adc_ios(adc_index, &ios, &ios_size);
 		if (MAL_ERROR_OK != result) {

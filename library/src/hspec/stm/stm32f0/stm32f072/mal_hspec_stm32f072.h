@@ -72,8 +72,6 @@
 
 #define mal_hspec_stm32f072_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072cb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
 
-#define mal_hspec_stm32f072_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072cb_get_valid_adc_ios(adc, ios, size)
-
 #define mal_hspec_stm32f072_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072cb_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
 
 #define mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_channel_ios(timer, ios, size)

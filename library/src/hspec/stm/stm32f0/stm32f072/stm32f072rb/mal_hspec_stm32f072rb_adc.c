@@ -140,67 +140,67 @@ static const mal_hspec_gpio_s valid_adc15_gpios[] = {
 
 mal_error_e mal_hspec_stm32f072rb_get_valid_adc_ios(mal_hspec_adc_e adc, const mal_hspec_gpio_s **ios, uint8_t *size) {
 	switch (adc) {
-		case MAL_HSPEC_ADC_0:
+		case MAL_ADC_0:
 			*ios = valid_adc0_gpios;
 			*size = sizeof(valid_adc0_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_1:
+		case MAL_ADC_1:
 			*ios = valid_adc1_gpios;
 			*size = sizeof(valid_adc1_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_2:
+		case MAL_ADC_2:
 			*ios = valid_adc2_gpios;
 			*size = sizeof(valid_adc2_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_3:
+		case MAL_ADC_3:
 			*ios = valid_adc3_gpios;
 			*size = sizeof(valid_adc3_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_4:
+		case MAL_ADC_4:
 			*ios = valid_adc4_gpios;
 			*size = sizeof(valid_adc4_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_5:
+		case MAL_ADC_5:
 			*ios = valid_adc5_gpios;
 			*size = sizeof(valid_adc5_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_6:
+		case MAL_ADC_6:
 			*ios = valid_adc6_gpios;
 			*size = sizeof(valid_adc6_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_7:
+		case MAL_ADC_7:
 			*ios = valid_adc7_gpios;
 			*size = sizeof(valid_adc7_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_8:
+		case MAL_ADC_8:
 			*ios = valid_adc8_gpios;
 			*size = sizeof(valid_adc8_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_9:
+		case MAL_ADC_9:
 			*ios = valid_adc9_gpios;
 			*size = sizeof(valid_adc9_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_10:
+		case MAL_ADC_10:
 			*ios = valid_adc10_gpios;
 			*size = sizeof(valid_adc10_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_11:
+		case MAL_ADC_11:
 			*ios = valid_adc11_gpios;
 			*size = sizeof(valid_adc11_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_12:
+		case MAL_ADC_12:
 			*ios = valid_adc12_gpios;
 			*size = sizeof(valid_adc12_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_13:
+		case MAL_ADC_13:
 			*ios = valid_adc13_gpios;
 			*size = sizeof(valid_adc13_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_14:
+		case MAL_ADC_14:
 			*ios = valid_adc14_gpios;
 			*size = sizeof(valid_adc14_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_ADC_15:
+		case MAL_ADC_15:
 			*ios = valid_adc15_gpios;
 			*size = sizeof(valid_adc15_gpios) / sizeof(mal_hspec_gpio_s);
 			break;

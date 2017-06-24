@@ -26,7 +26,6 @@
 #ifndef HSPEC_STM_MAL_HSPEC_STM32F072CB_H_
 #define HSPEC_STM_MAL_HSPEC_STM32F072CB_H_
 
-#include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_adc.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_can.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_flash.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_gpio.h"

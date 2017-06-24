@@ -26,18 +26,7 @@
 #include "mal_adc.h"
 #include "power/mal_power.h"
 
-mal_error_e mal_adc_init(mal_hspec_adc_init_s *init) {
-	mal_error_e result;
-	// Check if IO is valid
-	result = mal_hspec_is_adc_valid(init->adc, init->gpio);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-
-	return mal_hspec_adc_init(init);
-}
-
-mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_volts_t *value) {
+mal_error_e mal_adc_read_volts(mal_adc_e adc, mal_volts_t *value) {
 	mal_error_e result;
 	// Read bit value
 	uint64_t bit_value;
@@ -49,7 +38,7 @@ mal_error_e mal_adc_read_volts(mal_hspec_adc_e adc, mal_volts_t *value) {
 	return mal_adc_bits_to_volts(adc, bit_value, value);
 }
 
-mal_error_e mal_adc_bits_to_volts(mal_hspec_adc_e adc, uint64_t bit_value, mal_volts_t *value) {
+mal_error_e mal_adc_bits_to_volts(mal_adc_e adc, uint64_t bit_value, mal_volts_t *value) {
 	mal_error_e result;
 	// Get ADC resolution
 	uint8_t resolution;

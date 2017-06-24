@@ -137,24 +137,6 @@
 
 #define mal_hspec_uuid_read(uuid) mal_hspec_stm32f0_uuid_read(uuid)
 
-// ADC
-
-#define mal_hspec_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size)
-
-#define mal_hspec_adc_init(init) mal_hspec_stm32f0_adc_init(init)
-
-#define mal_hspec_adc_read(adc, value) mal_hspec_stm32f0_adc_read(adc, value)
-
-#define mal_hspec_adc_resolution(adc, resolution) mal_hspec_stm32f0_adc_resolution(adc, resolution)
-
-#define mal_hspec_adc_async_read(adc, callback) mal_hspec_stm32f0_adc_async_read(adc, callback)
-
-#define mal_hspec_disable_adc_interrupt(adc) mal_hspec_stm32f0_disable_adc_interrupt(adc)
-
-#define mal_hspec_enable_adc_interrupt(adc, active) mal_hspec_stm32f0_enable_adc_interrupt(adc, active)
-
-#define mal_hspec_adc_maximum_resolution(adc, resolution) mal_hspec_stm32f0_adc_maximum_resolution(adc, resolution)
-
 // SPI
 
 #define mal_hspec_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
@@ -436,8 +418,6 @@ mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_hspec_gpio_s *scl, const mal_hspec_gpio_s *sda);
 
 mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx);
-
-mal_error_e mal_hspec_is_adc_valid(mal_hspec_adc_e adc, const mal_hspec_gpio_s *gpio);
 
 mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_hspec_gpio_s *mosi, const mal_hspec_gpio_s *miso, const mal_hspec_gpio_s *clk, const mal_hspec_gpio_s *select);
 

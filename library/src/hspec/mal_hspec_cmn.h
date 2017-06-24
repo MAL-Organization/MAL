@@ -472,56 +472,6 @@ typedef struct {
  */
 
 /**
- * @addtogroup ADC
- * @{
- */
-
-/**
- * The possible ADCs.
- */
-typedef enum {
-	MAL_HSPEC_ADC_0 = 0,   //!< MAL_HSPEC_ADC_0
-	MAL_HSPEC_ADC_1 = 1,   //!< MAL_HSPEC_ADC_1
-	MAL_HSPEC_ADC_2 = 2,   //!< MAL_HSPEC_ADC_2
-	MAL_HSPEC_ADC_3 = 3,   //!< MAL_HSPEC_ADC_3
-	MAL_HSPEC_ADC_4 = 4,   //!< MAL_HSPEC_ADC_4
-	MAL_HSPEC_ADC_5 = 5,   //!< MAL_HSPEC_ADC_5
-	MAL_HSPEC_ADC_6 = 6,   //!< MAL_HSPEC_ADC_6
-	MAL_HSPEC_ADC_7 = 7,   //!< MAL_HSPEC_ADC_7
-	MAL_HSPEC_ADC_8 = 8,   //!< MAL_HSPEC_ADC_8
-	MAL_HSPEC_ADC_9 = 9,   //!< MAL_HSPEC_ADC_9
-	MAL_HSPEC_ADC_10 = 10, //!< MAL_HSPEC_ADC_10
-	MAL_HSPEC_ADC_11 = 11, //!< MAL_HSPEC_ADC_11
-	MAL_HSPEC_ADC_12 = 12, //!< MAL_HSPEC_ADC_12
-	MAL_HSPEC_ADC_13 = 13, //!< MAL_HSPEC_ADC_13
-	MAL_HSPEC_ADC_14 = 14, //!< MAL_HSPEC_ADC_14
-	MAL_HSPEC_ADC_15 = 15, //!< MAL_HSPEC_ADC_15
-	MAL_HSPEC_ADC_SIZE = 16//!< MAL_HSPEC_ADC_SIZE
-} mal_hspec_adc_e;
-
-/**
- * The initialization parameters of an ADC.
- */
-typedef struct {
-	mal_hspec_adc_e adc; /**< To ADC to initialize.*/
-	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the ADC.*/
-	uint8_t bit_resolution; /**< The resolution of the ADC.*/
-} mal_hspec_adc_init_s;
-
-/**
- * @brief This callback will be executed when an ADC read is complete.
- * @param adc The ADC the value was read from.
- * @param value The value read.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
- */
-typedef mal_error_e (*mal_hspec_adc_read_callback_t)(mal_hspec_adc_e adc, uint64_t value);
-
-/**
- * @}
- */
-
-/**
  * @addtogroup SPI
  * @{
  */
