@@ -335,22 +335,22 @@ static const mal_hspec_stm32f0_af_e port_f_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT
 
 mal_error_e mal_hspec_stm32f072cb_get_port_afs(mal_hspec_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]) {
 	switch (port) {
-	case MAL_HSPEC_GPIO_PORT_A:
+	case MAL_GPIO_PORT_A:
 		*afs = &port_a_valid_afs;
 		break;
-	case MAL_HSPEC_GPIO_PORT_B:
+	case MAL_GPIO_PORT_B:
 		*afs = &port_b_valid_afs;
 		break;
-	case MAL_HSPEC_GPIO_PORT_C:
+	case MAL_GPIO_PORT_C:
 		*afs = &port_c_valid_afs;
 		break;
-	case MAL_HSPEC_GPIO_PORT_D:
+	case MAL_GPIO_PORT_D:
 		*afs = &port_d_valid_afs;
 		break;
-	case MAL_HSPEC_GPIO_PORT_E:
+	case MAL_GPIO_PORT_E:
 		*afs = &port_e_valid_afs;
 		break;
-	case MAL_HSPEC_GPIO_PORT_F:
+	case MAL_GPIO_PORT_F:
 		*afs = &port_f_valid_afs;
 		break;
 	default:

@@ -28,112 +28,112 @@
 
 static const mal_hspec_gpio_s valid_adc0_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc1_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc2_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 2
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc3_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 3
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc4_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc5_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 5
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc6_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 6
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc7_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 7
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc8_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc9_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc10_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 0
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc11_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 1
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc12_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 2
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc13_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 3
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc14_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_adc15_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 5
 	}
 };

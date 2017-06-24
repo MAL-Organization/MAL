@@ -28,14 +28,14 @@
 
 static const mal_hspec_gpio_s valid_dac1_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_dac2_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 5
 	}
 };

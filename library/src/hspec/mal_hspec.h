@@ -405,9 +405,9 @@
 #error No hardware specfic family symbol specified...
 #endif
 
-mal_error_e mal_hspec_is_port_valid(mal_hspec_gpio_port_e port);
+mal_error_e mal_hspec_is_port_valid(mal_gpio_port_e port);
 
-mal_error_e mal_hspec_is_gpio_valid(mal_hspec_gpio_s *gpio);
+mal_error_e mal_hspec_is_gpio_valid(mal_gpio_s *gpio);
 
 mal_error_e mal_hspec_initialise_system_clk(void);
 
@@ -415,18 +415,18 @@ uint64_t mal_hspec_get_external_clk_freq(void);
 
 mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer);
 
-mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_hspec_gpio_s *scl, const mal_hspec_gpio_s *sda);
+mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_gpio_s *scl, const mal_gpio_s *sda);
 
-mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_hspec_gpio_s *tx, const mal_hspec_gpio_s *rx);
+mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const mal_gpio_s *tx, const mal_gpio_s *rx);
 
-mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_hspec_gpio_s *mosi, const mal_hspec_gpio_s *miso, const mal_hspec_gpio_s *clk, const mal_hspec_gpio_s *select);
+mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_gpio_s *mosi, const mal_gpio_s *miso, const mal_gpio_s *clk, const mal_gpio_s *select);
 
-mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
+mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_gpio_s *gpio);
 
-mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio);
+mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_gpio_s *gpio);
 
 mal_error_e mal_hspec_flash_is_page_valid(uint32_t page);
 
-mal_error_e mal_hspec_is_dac_valid(mal_hspec_dac_e dac, const mal_hspec_gpio_s *gpio);
+mal_error_e mal_hspec_is_dac_valid(mal_hspec_dac_e dac, const mal_gpio_s *gpio);
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

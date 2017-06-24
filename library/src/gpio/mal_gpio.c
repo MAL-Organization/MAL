@@ -44,7 +44,7 @@ mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio
 	return mal_hspec_gpio_event_init(event_init);
 }
 
-mal_error_e mal_gpio_deinit(const mal_hspec_gpio_s *gpio) {
+mal_error_e mal_gpio_deinit(const mal_gpio_s *gpio) {
 	// Disable IRQ interrupt
 	mal_gpio_event_disable_interrupt(gpio);
 	// Set IO to input

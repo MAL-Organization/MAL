@@ -28,88 +28,88 @@
 
 static const mal_hspec_gpio_s valid_spi1_miso_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 6
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 4
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi2_miso_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 2
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 14
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi1_mosi_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 7
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 5
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi2_mosi_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_C,
+		.port = MAL_GPIO_PORT_C,
 		.pin = 3
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 15
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi1_clk_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 5
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 3
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi2_clk_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 10
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 13
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi1_select_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 4
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_A,
+		.port = MAL_GPIO_PORT_A,
 		.pin = 15
 	}
 };
 
 static const mal_hspec_gpio_s valid_spi2_select_gpios[] = {
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 12
 	},
 	{
-		.port = MAL_HSPEC_GPIO_PORT_B,
+		.port = MAL_GPIO_PORT_B,
 		.pin = 9
 	}
 };

@@ -28,44 +28,44 @@
 static const mal_hspec_gpio_s valid_i2c1_scl_gpios[] = {
 	{
 		.pin = 6,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	},
 	{
 		.pin = 8,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c1_sda_gpios[] = {
 	{
 		.pin = 7,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	},
 	{
 		.pin = 9,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c2_scl_gpios[] = {
 	{
 		.pin = 10,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	},
 	{
 		.pin = 13,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_i2c2_sda_gpios[] = {
 	{
 		.pin = 11,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	},
 	{
 		.pin = 14,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 

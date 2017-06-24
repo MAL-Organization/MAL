@@ -441,7 +441,7 @@ bool mal_hspec_stm32f0_disable_timer_interrupt(mal_hspec_timer_e timer) {
 }
 
 uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer) {
-	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_HSPEC_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE];
+	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
 	switch ((*timer_afs)[gpio->port][gpio->pin][timer]) {

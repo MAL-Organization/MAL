@@ -44,7 +44,7 @@ TEST_F(TestMalDac, VoltsToBits) {
 	mal_hspec_dac_e test_dac = MAL_HSPEC_DAC_0;
 	uint8_t test_resolution = 16;
 	mal_hspec_gpio_s test_gpio;
-	test_gpio.port = MAL_HSPEC_GPIO_PORT_A;
+	test_gpio.port = MAL_GPIO_PORT_A;
 	test_gpio.pin = 0;
 	// Setup DAC
 	mal_hspec_dac_init_s init;

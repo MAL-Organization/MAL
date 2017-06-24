@@ -26,14 +26,14 @@
 #include "mal_hspec_stm32f072cb_gpio.h"
 
 static const mal_hspec_gpio_port_e valid_ports[] = {
-	MAL_HSPEC_GPIO_PORT_A,
-	MAL_HSPEC_GPIO_PORT_B,
-	MAL_HSPEC_GPIO_PORT_C,
-	MAL_HSPEC_GPIO_PORT_D,
-	MAL_HSPEC_GPIO_PORT_F
+	MAL_GPIO_PORT_A,
+	MAL_GPIO_PORT_B,
+	MAL_GPIO_PORT_C,
+	MAL_GPIO_PORT_D,
+	MAL_GPIO_PORT_F
 };
 
-static const uint64_t valid_pins[MAL_HSPEC_GPIO_PORT_SIZE] = {
+static const uint64_t valid_pins[MAL_GPIO_PORT_SIZE] = {
 	0b1111111111111111,	// PA[0:15]
 	0b1111111111111111, // PB[0:15]
 	0b1110000000000000, // PC[13:15]

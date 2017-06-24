@@ -23,13 +23,34 @@
 #ifndef MAL_GPIO_H_
 #define MAL_GPIO_H_
 
-#include "hspec/mal_hspec.h"
+#include "std/mal_stdint.h"
 
 /**
  * @defgroup GPIO
  * @brief @copybrief mal_gpio.h
  * @{
  */
+
+/**
+ * Possible GPIO ports.
+ */
+typedef enum {
+	MAL_GPIO_PORT_A = 0,  //!< MAL_PORT_A
+	MAL_GPIO_PORT_B = 1,  //!< MAL_PORT_B
+	MAL_GPIO_PORT_C = 2,  //!< MAL_PORT_C
+	MAL_GPIO_PORT_D = 3,  //!< MAL_PORT_D
+	MAL_GPIO_PORT_E = 4,  //!< MAL_PORT_E
+	MAL_GPIO_PORT_F = 5,  //!< MAL_PORT_F
+	MAL_GPIO_PORT_SIZE = 6//!< MAL_PORT_SIZE
+} mal_gpio_port_e;
+
+/**
+ * Defines a GPIO.
+ */
+typedef struct {
+	mal_gpio_port_e port; /**< The port of the GPIO.*/
+	uint8_t pin; /**< The pin of the GPIO.*/
+} mal_gpio_s;
 
 /**
  * @brief Will set a gpio to the given value.
@@ -98,7 +119,7 @@ mal_error_e mal_gpio_event_init(mal_hspec_gpio_init_s *gpio_init, mal_hspec_gpio
  * @param gpio The GPIO to reset.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_deinit(const mal_hspec_gpio_s *gpio);
+mal_error_e mal_gpio_deinit(const mal_gpio_s *gpio);
 
 /**
  * @}

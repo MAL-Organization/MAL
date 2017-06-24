@@ -59,27 +59,6 @@ typedef struct {
  */
 
 /**
- * Possible GPIO ports.
- */
-typedef enum {
-	MAL_HSPEC_GPIO_PORT_A = 0,  //!< MAL_HSPEC_PORT_A
-	MAL_HSPEC_GPIO_PORT_B = 1,  //!< MAL_HSPEC_PORT_B
-	MAL_HSPEC_GPIO_PORT_C = 2,  //!< MAL_HSPEC_PORT_C
-	MAL_HSPEC_GPIO_PORT_D = 3,  //!< MAL_HSPEC_PORT_D
-	MAL_HSPEC_GPIO_PORT_E = 4,  //!< MAL_HSPEC_PORT_E
-	MAL_HSPEC_GPIO_PORT_F = 5,  //!< MAL_HSPEC_PORT_F
-	MAL_HSPEC_GPIO_PORT_SIZE = 6//!< MAL_HSPEC_PORT_SIZE
-} mal_hspec_gpio_port_e;
-
-/**
- * Defines a GPIO.
- */
-typedef struct {
-	mal_hspec_gpio_port_e port; /**< The port of the GPIO.*/
-	uint8_t pin; /**< The pin of the GPIO.*/
-} mal_hspec_gpio_s;
-
-/**
  * Possible GPIO directions.
  */
 typedef enum {
@@ -108,7 +87,7 @@ typedef enum {
  * Parameters to initialise a GPIO.
  */
 typedef struct {
-	mal_hspec_gpio_s gpio; /**< The gpio to initialize.*/
+	mal_gpio_s gpio; /**< The gpio to initialize.*/
 	mal_hspec_gpio_dir_e direction; /**< The direction of the GPIO.*/
 	mal_hspec_gpio_out_e output_config; /**< The output configuration (type) of the GPIO.*/
 	mal_hspec_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
@@ -128,13 +107,13 @@ typedef enum {
  * @brief GPIO event callback.
  * @return Return a status of the callback.
  */
-typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(mal_hspec_gpio_s *gpio);
+typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(mal_gpio_s *gpio);
 
 /**
  * Parameters to initialize an event.
  */
 typedef struct {
-	const mal_hspec_gpio_s *gpio; /**< The gpio for the event.*/
+	const mal_gpio_s *gpio; /**< The gpio for the event.*/
 	mal_hspec_gpio_event_e event; /**< The event that will trigger.*/
 	mal_hspec_gpio_event_callback_t callback; /**< The callback to execute upon event.*/
 } mal_hspec_gpio_event_init_s;
@@ -200,7 +179,7 @@ typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the PWM output.*/
 	mal_hertz_t frequency; /**< The frequency of the PWM.*/
 	mal_hertz_t delta; /**< The acceptable frequency delta.*/
-	const mal_hspec_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
+	const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_hspec_timer_pwm_init_s;
 
 /**
@@ -227,7 +206,7 @@ typedef mal_error_e (*mal_hspec_timer_input_capture_callback_t)(mal_hspec_timer_
 typedef struct {
 	mal_hspec_timer_e timer; /**< The timer to use for the input capture.*/
 	mal_hertz_t frequency; /**< The frequency to count to.*/
-	const mal_hspec_gpio_s *input_io; /**< The gpio of the input capture.*/
+	const mal_gpio_s *input_io; /**< The gpio of the input capture.*/
 	mal_hspec_timer_input_e input_event; /**< The input event to capture.*/
 	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
 	mal_hspec_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
@@ -297,8 +276,8 @@ typedef mal_error_e (*mal_hspec_serial_rx_callbacl_t)(uint16_t data);
  */
 typedef struct {
 	mal_hspec_serial_port_e port; /**< The port to initialize.*/
-	mal_hspec_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
-	mal_hspec_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
+	mal_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
+	mal_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
 	uint64_t baudrate; /**< The baudrate.*/
 	mal_hspec_serial_data_size_e data_size; /**< The word size.*/
 	mal_hspec_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
@@ -330,8 +309,8 @@ typedef enum {
  */
 typedef struct {
 	mal_hspec_i2c_e interface; /**< The I2C interface.*/
-	const mal_hspec_gpio_s *scl_gpio; /**< The GPIO of the scl pin.*/
-	const mal_hspec_gpio_s *sda_gpio; /**< The GPIO of the sda pin.*/
+	const mal_gpio_s *scl_gpio; /**< The GPIO of the scl pin.*/
+	const mal_gpio_s *sda_gpio; /**< The GPIO of the sda pin.*/
 	uint64_t bitrate; /**< The bitrate of the interface.*/
 } mal_hspec_i2c_init_s;
 
@@ -450,8 +429,8 @@ typedef mal_error_e (*mal_hspec_can_rx_callback_t)(mal_hspec_can_e interface, ma
  */
 typedef struct {
 	mal_hspec_can_e interface; /**< The CAN interface to initialize.*/
-	const mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	const mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	const mal_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	const mal_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	mal_hspec_can_tx_callback_t tx_callback; /**< The callback to be executed when a message is transmitted.*/
 	mal_hspec_can_rx_callback_t rx_callback; /**< The callback to be executed when a message is received.*/
@@ -553,10 +532,10 @@ typedef enum {
 typedef struct {
 	mal_hspec_spi_e interface;/**< The SPI interface to initialize.*/
 	uint64_t clock_speed;/**< The clock speed to set in Hz.*/
-	const mal_hspec_gpio_s *mosi;/**< The master out slave in pin.*/
-	const mal_hspec_gpio_s *miso;/**< The master in slave out pin.*/
-	const mal_hspec_gpio_s *clk;/**< The clock pin.*/
-	const mal_hspec_gpio_s *select;/**< The select pin. This can be set to NULL if it
+	const mal_gpio_s *mosi;/**< The master out slave in pin.*/
+	const mal_gpio_s *miso;/**< The master in slave out pin.*/
+	const mal_gpio_s *clk;/**< The clock pin.*/
+	const mal_gpio_s *select;/**< The select pin. This can be set to NULL if it
 								  is to be omitted. This could be because the
 								  mode is user or there is no global select
 								  pin. If not NULL, it should point to static
@@ -587,7 +566,7 @@ typedef mal_error_e (*mal_hspec_spi_master_transaction_complete_t)(mal_hspec_spi
  * This structures contains all the data to do an SPI transaction.
  */
 typedef struct MAL_HSPEC_SPI_MSG {
-	mal_hspec_gpio_s *select;/**< The select pin for this message. If no pins
+	mal_gpio_s *select;/**< The select pin for this message. If no pins
 								  should be used (such as the default pin was
 								  set by the initialization), set this to
 								  #NULL.*/
@@ -648,7 +627,7 @@ typedef enum {
  */
 typedef struct {
 	mal_hspec_dac_e dac; /**< To DAC to initialize.*/
-	const mal_hspec_gpio_s *gpio; /**< The GPIO pin of the DAC.*/
+	const mal_gpio_s *gpio; /**< The GPIO pin of the DAC.*/
 	uint8_t bit_resolution; /**< The resolution of the DAC.*/
 } mal_hspec_dac_init_s;
 

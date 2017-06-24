@@ -48,8 +48,8 @@ typedef struct {
  */
 typedef struct {
 	mal_hspec_can_e interface; /**< The CAN interface to initialize and use.*/
-	const mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	const mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	const mal_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	const mal_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	uint8_t *rx_buffer; /**< This should be an array of bytes in multiple of size of ::mal_hspec_can_msg_s.*/
 	uint64_t rx_buffer_size; /**< The size of the rx buffer in bytes.*/

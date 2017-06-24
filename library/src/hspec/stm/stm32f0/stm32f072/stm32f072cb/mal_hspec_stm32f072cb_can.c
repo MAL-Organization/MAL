@@ -28,22 +28,22 @@
 static const mal_hspec_gpio_s valid_can1_tx_gpios[] = {
 	{
 		.pin = 12,
-		.port = MAL_HSPEC_GPIO_PORT_A
+		.port = MAL_GPIO_PORT_A
 	},
 	{
 		.pin = 9,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 
 static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
 	{
 		.pin = 11,
-		.port = MAL_HSPEC_GPIO_PORT_A
+		.port = MAL_GPIO_PORT_A
 	},
 	{
 		.pin = 8,
-		.port = MAL_HSPEC_GPIO_PORT_B
+		.port = MAL_GPIO_PORT_B
 	}
 };
 

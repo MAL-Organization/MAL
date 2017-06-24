@@ -160,15 +160,15 @@ IRQn_Type mal_hspec_stm32f0_gpio_get_exti_irq(uint8_t pin) {
 
 static uint8_t get_exti_port_source(mal_hspec_gpio_port_e port) {
 	switch (port) {
-		case MAL_HSPEC_GPIO_PORT_A:
+		case MAL_GPIO_PORT_A:
 			return EXTI_PortSourceGPIOA;
-		case MAL_HSPEC_GPIO_PORT_B:
+		case MAL_GPIO_PORT_B:
 			return EXTI_PortSourceGPIOB;
-		case MAL_HSPEC_GPIO_PORT_C:
+		case MAL_GPIO_PORT_C:
 			return EXTI_PortSourceGPIOC;
-		case MAL_HSPEC_GPIO_PORT_D:
+		case MAL_GPIO_PORT_D:
 			return EXTI_PortSourceGPIOD;
-		case MAL_HSPEC_GPIO_PORT_E:
+		case MAL_GPIO_PORT_E:
 			return EXTI_PortSourceGPIOE;
 		default:
 			return EXTI_PortSourceGPIOF;
