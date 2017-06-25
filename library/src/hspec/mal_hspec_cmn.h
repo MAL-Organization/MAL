@@ -54,75 +54,6 @@ typedef struct {
  */
 
 /**
- * @addtogroup GPIO
- * @{
- */
-
-/**
- * Possible GPIO directions.
- */
-typedef enum {
-	MAL_HSPEC_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
-	MAL_HSPEC_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
-} mal_hspec_gpio_dir_e;
-
-/**
- * Possible GPIO types.
- */
-typedef enum {
-	MAL_HSPEC_GPIO_OUT_PP,//!< Push-Pull
-	MAL_HSPEC_GPIO_OUT_OD //!< Open Drain
-} mal_hspec_gpio_out_e;
-
-/**
- * Possible pull-up and pull-down values.
- */
-typedef enum {
-	MAL_HSPEC_GPIO_PUPD_NONE,//!< No pull-up or pull-down.
-	MAL_HSPEC_GPIO_PUPD_PU,  //!< Pull-up.
-	MAL_HSPEC_GPIO_PUPD_PD   //!< Pull-down.
-} mal_hspec_gpio_pupd_e;
-
-/**
- * Parameters to initialise a GPIO.
- */
-typedef struct {
-	mal_gpio_s gpio; /**< The gpio to initialize.*/
-	mal_hspec_gpio_dir_e direction; /**< The direction of the GPIO.*/
-	mal_hspec_gpio_out_e output_config; /**< The output configuration (type) of the GPIO.*/
-	mal_hspec_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
-	uint64_t speed; /**< The refresh speed of the GPIO in hertz.*/
-} mal_hspec_gpio_init_s;
-
-/**
- * Possible GPIO event triggers.
- */
-typedef enum {
-	MAL_HSPEC_GPIO_EVENT_RISING, //!< MAL_HSPEC_GPIO_EVENT_RISING
-	MAL_HSPEC_GPIO_EVENT_FALLING,//!< MAL_HSPEC_GPIO_EVENT_FALLING
-	MAL_HSPEC_GPIO_EVENT_BOTH    //!< MAL_HSPEC_GPIO_EVENT_BOTH
-} mal_hspec_gpio_event_e;
-
-/**
- * @brief GPIO event callback.
- * @return Return a status of the callback.
- */
-typedef mal_error_e (*mal_hspec_gpio_event_callback_t)(mal_gpio_s *gpio);
-
-/**
- * Parameters to initialize an event.
- */
-typedef struct {
-	const mal_gpio_s *gpio; /**< The gpio for the event.*/
-	mal_hspec_gpio_event_e event; /**< The event that will trigger.*/
-	mal_hspec_gpio_event_callback_t callback; /**< The callback to execute upon event.*/
-} mal_hspec_gpio_event_init_s;
-
-/**
- * @}
- */
-
-/**
  * @addtogroup Timer
  * @{
  */
@@ -187,8 +118,8 @@ typedef struct {
  */
 typedef enum {
 	MAL_HSPEC_TIMER_INPUT_RISING, //!< MAL_HSPEC_GPIO_EVENT_RISING
-	MAL_HSPEC_TIMER_INPUT_FALLING,//!< MAL_HSPEC_GPIO_EVENT_FALLING
-	MAL_HSPEC_TIMER_INPUT_BOTH    //!< MAL_HSPEC_GPIO_EVENT_BOTH
+	MAL_HSPEC_TIMER_INPUT_FALLING,//!< MAL_GPIO_EVENT_FALLING
+	MAL_HSPEC_TIMER_INPUT_BOTH    //!< MAL_GPIO_EVENT_BOTH
 } mal_hspec_timer_input_e;
 
 /**

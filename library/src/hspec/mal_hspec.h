@@ -405,10 +405,6 @@
 #error No hardware specfic family symbol specified...
 #endif
 
-mal_error_e mal_hspec_is_port_valid(mal_gpio_port_e port);
-
-mal_error_e mal_hspec_is_gpio_valid(mal_gpio_s *gpio);
-
 mal_error_e mal_hspec_initialise_system_clk(void);
 
 uint64_t mal_hspec_get_external_clk_freq(void);

@@ -28,7 +28,6 @@
 
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_can.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_flash.h"
-#include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_gpio.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_i2c.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_spi.h"
 #include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_timer.h"
@@ -36,7 +35,7 @@
 #include "std/mal_error.h"
 #include "hspec/mal_hspec_cmn.h"
 
-mal_error_e mal_hspec_stm32f072cb_get_port_afs(mal_hspec_gpio_port_e port,
+mal_error_e mal_hspec_stm32f072cb_get_port_afs(mal_gpio_port_e port,
 											   const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F072CB_H_ */

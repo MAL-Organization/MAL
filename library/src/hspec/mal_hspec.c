@@ -41,42 +41,6 @@ uint64_t mal_hspec_get_external_clk_freq(void) {
 	return mal_external_clk_freq;
 }
 
-// GPIO
-
-mal_error_e mal_hspec_is_port_valid(mal_gpio_port_e port) {
-	// Get valid ports
-	mal_error_e result;
-	const mal_gpio_port_e *ports;
-	uint8_t size;
-	result = mal_hspec_get_valid_ports(&ports, &size);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Check if port is valid
-	uint8_t i;
-	for (i = 0; i < size; i++) {
-		if (port == ports[i]) {
-			return MAL_ERROR_OK;
-		}
-	}
-
-	return MAL_ERROR_HARDWARE_INVALID;
-}
-
-mal_error_e mal_hspec_is_gpio_valid(mal_gpio_s *gpio) {
-	mal_error_e result;
-	const uint64_t *pins;
-	result = mal_hspec_get_valid_pins(&pins);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	if ((pins[gpio->port] >> gpio->pin) & 1) {
-		return MAL_ERROR_OK;
-	}
-
-	return MAL_ERROR_HARDWARE_INVALID;
-}
-
 // Timer
 
 mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer) {
