@@ -30,18 +30,18 @@
 #include "gpio/mal_gpio.h"
 #include "hspec/test_mal_hspec_cmn.h"
 
-void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer);
+void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_timer_e timer);
 
-void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_hspec_timer_e timer, const void **direct_init);
+void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_timer_e timer, const void **direct_init);
 
-void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_hspec_timer_e timer);
+void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_timer_e timer);
 
-void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer);
+void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_timer_e timer);
 
-void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_hspec_timer_e timer);
+void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_timer_e timer);
 
-void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io);
+void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_timer_e timer, const mal_hspec_gpio_s *io);
 
-void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io, volatile test_mal_hspec_timer_input_capture_t *input_capture_info);
+void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_timer_e timer, const mal_hspec_gpio_s *io, volatile test_mal_hspec_timer_input_capture_t *input_capture_info);
 
 #endif /* HSPEC_STM_STM32F0_TEST_MAL_HSPEC_STM32F0_TIMER_H_ */

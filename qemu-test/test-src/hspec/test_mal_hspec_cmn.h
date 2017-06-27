@@ -13,7 +13,7 @@
 // TIMER
 
 typedef struct {
-	mal_hspec_timer_e timer;
+	mal_timer_e timer;
 	uint64_t count;
 } test_mal_hspec_timer_input_capture_t;
 

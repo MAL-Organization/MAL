@@ -31,8 +31,8 @@
 #include "std/mal_stdint.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h"
 
-mal_error_e mal_hspec_stm32f072cb_get_valid_channel_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
-mal_error_e mal_hspec_stm32f072cb_get_valid_input_capture_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
-void mal_hspec_stm32f072cb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_TIMER_SIZE]);
+mal_error_e mal_hspec_stm32f072cb_get_valid_channel_ios(mal_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
+mal_error_e mal_hspec_stm32f072cb_get_valid_input_capture_ios(mal_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);
+void mal_hspec_stm32f072cb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]);
 
 #endif /* HSPEC_STM_STM32F0_STM32F072_STM32F072CB_MAL_HSPEC_STM32F072CB_TIMER_H_ */

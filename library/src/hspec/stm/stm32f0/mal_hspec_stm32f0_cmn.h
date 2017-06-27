@@ -178,6 +178,6 @@ uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port);
 
 mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
 
-mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_hspec_timer_e timer, uint8_t *function);
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_timer_e timer, uint8_t *function);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CMN_H_ */

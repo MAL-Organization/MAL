@@ -39,7 +39,7 @@
  */
 static volatile test_mal_hspec_timer_input_capture_t input_capture_info;
 
-static mal_error_e input_capture_callback(mal_hspec_timer_e timer, uint64_t count) {
+static mal_error_e input_capture_callback(mal_timer_e timer, uint64_t count) {
 	input_capture_info.timer = timer;
 	input_capture_info.count = count;
 	return MAL_ERROR_OK;
@@ -52,7 +52,7 @@ static mal_error_e input_capture_callback(mal_hspec_timer_e timer, uint64_t coun
 static void test_mal_timer_init_tick_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_init_tick_1khz");
@@ -70,7 +70,7 @@ static void test_mal_timer_init_tick_1khz(void) {
 		for (i = 0; i < size; i++) {
 			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
 			UCUNIT_WriteString(char_buffer);
-			mal_hspec_timer_e test_handle;
+			mal_timer_e test_handle;
 			result = mal_timer_init_tick(timers[i],
 										 test_frequency,
 										 test_delta,
@@ -96,7 +96,7 @@ static void test_mal_timer_init_tick_1khz(void) {
 static void test_mal_timer_direct_init_tick_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_direct_init_tick_1khz");
@@ -118,7 +118,7 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 			const void *direct_init;
 			test_mal_hspec_timer_get_1khz_direct_init(timers[i], &direct_init);
 			// Initialize timer
-			mal_hspec_timer_e test_handle;
+			mal_timer_e test_handle;
 			result = mal_timer_direct_init_tick(timers[i],
 												test_frequency,
 												test_delta,
@@ -158,7 +158,7 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 static void test_mal_timer_count_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_count_1khz");
@@ -175,7 +175,7 @@ static void test_mal_timer_count_1khz(void) {
 		for (i = 0; i < size; i++) {
 			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
 			UCUNIT_WriteString(char_buffer);
-			mal_hspec_timer_e test_handle;
+			mal_timer_e test_handle;
 			result = mal_timer_init_count(timers[i],
 										  test_frequency,
 										  &test_handle);
@@ -223,7 +223,7 @@ static void test_mal_timer_pwm_1khz(void) {
 	uint8_t timer_index;
 	uint8_t io_index;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t timers_size;
 	const mal_hspec_gpio_s *ios;
 	uint8_t ios_size;
@@ -255,7 +255,7 @@ static void test_mal_timer_pwm_1khz(void) {
 						ios[io_index].port,
 						ios[io_index].pin);
 				UCUNIT_WriteString(char_buffer);
-				mal_hspec_timer_pwm_init_s pwm_init;
+				mal_timer_pwm_init_s pwm_init;
 				pwm_init.frequency = test_frequency;
 				pwm_init.delta = test_delta;
 				pwm_init.timer = timers[timer_index];
@@ -291,7 +291,7 @@ static void test_mal_timer_input_capture_1khz(void) {
 	uint8_t timer_index;
 	uint8_t io_index;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t timers_size;
 	const mal_hspec_gpio_s *ios;
 	uint8_t ios_size;
@@ -321,12 +321,12 @@ static void test_mal_timer_input_capture_1khz(void) {
 						ios[io_index].port,
 						ios[io_index].pin);
 				UCUNIT_WriteString(char_buffer);
-				mal_hspec_timer_intput_capture_init_s ic_init;
+				mal_timer_intput_capture_init_s ic_init;
 				ic_init.timer = timers[timer_index];
 				ic_init.input_io = &ios[io_index];
 				ic_init.frequency = test_frequency;
 				ic_init.input_divider = 1;
-				ic_init.input_event = MAL_HSPEC_TIMER_INPUT_BOTH;
+				ic_init.input_event = MAL_TIMER_INPUT_BOTH;
 				ic_init.callback = &input_capture_callback;
 				result = mal_timer_init_input_capture(&ic_init);
 				// Check result

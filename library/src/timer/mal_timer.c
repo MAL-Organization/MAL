@@ -35,62 +35,62 @@
 
 void mal_timer_init(void);
 
-static mal_error_e reserve_timer(mal_hspec_timer_e timer, mal_hspec_timer_mode_e mode, mal_hspec_timer_e *handle);
+static mal_error_e reserve_timer(mal_timer_e timer, mal_timer_mode_e mode, mal_timer_e *handle);
 
-static mal_error_e get_available_timer(mal_hspec_timer_e *timer);
+static mal_error_e get_available_timer(mal_timer_e *timer);
 
-static mal_error_e timer_tick_callback(mal_hspec_timer_e timer);
+static mal_error_e timer_tick_callback(mal_timer_e timer);
 
-static mal_error_e mal_timer_internal_init_common(mal_hspec_timer_e timer,
-												  mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_init_common(mal_timer_e timer,
+												  mal_timer_mode_e mode,
 												  mal_hertz_t frequency,
 												  mal_hertz_t delta,
-												  mal_hspec_timer_e *handle);
+												  mal_timer_e *handle);
 
-static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
-										   mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_init(mal_timer_e timer,
+										   mal_timer_mode_e mode,
 										   mal_hertz_t frequency,
 										   mal_hertz_t delta,
-										   mal_hspec_timer_callback_t callback,
-										   mal_hspec_timer_e *handle);
+										   mal_timer_callback_t callback,
+										   mal_timer_e *handle);
 
-static mal_error_e mal_timer_internal_direct_init(mal_hspec_timer_e timer,
-										   	   	  mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_direct_init(mal_timer_e timer,
+										   	   	  mal_timer_mode_e mode,
 												  mal_hertz_t frequency,
 												  mal_hertz_t delta,
-												  mal_hspec_timer_callback_t callback,
+												  mal_timer_callback_t callback,
 												  const void *direct_init,
-												  mal_hspec_timer_e *handle);
+												  mal_timer_e *handle);
 
-static mal_timer_state_s timer_states[MAL_HSPEC_TIMER_SIZE];
+static mal_timer_state_s timer_states[MAL_TIMER_SIZE];
 
-mal_error_e mal_timer_init_tick(mal_hspec_timer_e timer,
+mal_error_e mal_timer_init_tick(mal_timer_e timer,
 								mal_hertz_t frequency,
 								mal_hertz_t delta,
-								mal_hspec_timer_e *handle) {
+								mal_timer_e *handle) {
 	return mal_timer_internal_init(timer,
-								   MAL_HSPEC_TIMER_MODE_TICK,
+								   MAL_TIMER_MODE_TICK,
 								   frequency, delta,
 								   &timer_tick_callback,
 								   handle);
 }
 
-mal_error_e mal_timer_direct_init_tick(mal_hspec_timer_e timer,
+mal_error_e mal_timer_direct_init_tick(mal_timer_e timer,
 									   mal_hertz_t frequency,
 									   mal_hertz_t delta,
 									   const void *direct_init,
-									   mal_hspec_timer_e *handle) {
+									   mal_timer_e *handle) {
 	return mal_timer_internal_direct_init(timer,
-								   	   	  MAL_HSPEC_TIMER_MODE_TICK,
+								   	   	  MAL_TIMER_MODE_TICK,
 										  frequency, delta,
 										  &timer_tick_callback,
 										  direct_init,
 										  handle);
 }
 
-mal_error_e get_available_timer(mal_hspec_timer_e *timer) {
+mal_error_e get_available_timer(mal_timer_e *timer) {
 	int i;
-	for (i = 0; i < MAL_HSPEC_TIMER_SIZE; i++) {
+	for (i = 0; i < MAL_TIMER_SIZE; i++) {
 		if (timer_states[i].is_available) {
 			*timer = i;
 			return MAL_ERROR_OK;
@@ -101,8 +101,8 @@ mal_error_e get_available_timer(mal_hspec_timer_e *timer) {
 }
 
 void mal_timer_init(void) {
-	mal_hspec_timer_e i;
-	for (i = 0; i < MAL_HSPEC_TIMER_SIZE; i++) {
+	mal_timer_e i;
+	for (i = 0; i < MAL_TIMER_SIZE; i++) {
 		if (MAL_ERROR_OK == mal_hspec_is_timer_valid(i)) {
 			timer_states[i].is_available = true;
 		} else {
@@ -111,7 +111,7 @@ void mal_timer_init(void) {
 	}
 }
 
-uint64_t mal_timer_get_tick(mal_hspec_timer_e handle) {
+uint64_t mal_timer_get_tick(mal_timer_e handle) {
 	uint64_t tick;
 	bool active = mal_timer_disable_interrupt(handle);
 	tick = timer_states[handle].tick_counter;
@@ -119,7 +119,7 @@ uint64_t mal_timer_get_tick(mal_hspec_timer_e handle) {
 	return tick;
 }
 
-mal_error_e mal_timer_free(mal_hspec_timer_e timer) {
+mal_error_e mal_timer_free(mal_timer_e timer) {
 	mal_error_e result = MAL_ERROR_OK;
 	// Free timer
 	if (!timer_states[timer].is_available) {
@@ -129,24 +129,24 @@ mal_error_e mal_timer_free(mal_hspec_timer_e timer) {
 	return result;
 }
 
-mal_error_e mal_timer_init_task(mal_hspec_timer_e timer,
+mal_error_e mal_timer_init_task(mal_timer_e timer,
 								mal_hertz_t frequency,
 								mal_hertz_t delta,
-								mal_hspec_timer_callback_t callback,
-								mal_hspec_timer_e *handle) {
+								mal_timer_callback_t callback,
+								mal_timer_e *handle) {
 	return mal_timer_internal_init(timer,
-								   MAL_HSPEC_TIMER_MODE_TASK,
+								   MAL_TIMER_MODE_TASK,
 								   frequency,
 								   delta,
 								   callback,
 								   handle);
 }
 
-static mal_error_e mal_timer_internal_init_common(mal_hspec_timer_e timer,
-												  mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_init_common(mal_timer_e timer,
+												  mal_timer_mode_e mode,
 												  mal_hertz_t frequency,
 												  mal_hertz_t delta,
-												  mal_hspec_timer_e *handle) {
+												  mal_timer_e *handle) {
 	mal_error_e result;
 	// Reserve timer
 	result = reserve_timer(timer, mode, handle);
@@ -160,12 +160,12 @@ static mal_error_e mal_timer_internal_init_common(mal_hspec_timer_e timer,
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
-										   mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_init(mal_timer_e timer,
+										   mal_timer_mode_e mode,
 										   mal_hertz_t frequency,
 										   mal_hertz_t delta,
-										   mal_hspec_timer_callback_t callback,
-										   mal_hspec_timer_e *handle) {
+										   mal_timer_callback_t callback,
+										   mal_timer_e *handle) {
 	mal_error_e result;
 	result = mal_timer_internal_init_common(timer, mode, frequency, delta, handle);
 	if (MAL_ERROR_OK != result) {
@@ -177,13 +177,13 @@ static mal_error_e mal_timer_internal_init(mal_hspec_timer_e timer,
 	return result;
 }
 
-static mal_error_e mal_timer_internal_direct_init(mal_hspec_timer_e timer,
-										   	   	  mal_hspec_timer_mode_e mode,
+static mal_error_e mal_timer_internal_direct_init(mal_timer_e timer,
+										   	   	  mal_timer_mode_e mode,
 												  mal_hertz_t frequency,
 												  mal_hertz_t delta,
-												  mal_hspec_timer_callback_t callback,
+												  mal_timer_callback_t callback,
 												  const void *direct_init,
-												  mal_hspec_timer_e *handle) {
+												  mal_timer_e *handle) {
 	mal_error_e result;
 	result = mal_timer_internal_init_common(timer, mode, frequency, delta, handle);
 	if (MAL_ERROR_OK != result) {
@@ -195,10 +195,10 @@ static mal_error_e mal_timer_internal_direct_init(mal_hspec_timer_e timer,
 	return result;
 }
 
-static mal_error_e reserve_timer(mal_hspec_timer_e timer, mal_hspec_timer_mode_e mode, mal_hspec_timer_e *handle) {
+static mal_error_e reserve_timer(mal_timer_e timer, mal_timer_mode_e mode, mal_timer_e *handle) {
 	mal_error_e result;
 	// Check if timer is specified
-	if (MAL_HSPEC_TIMER_ANY == timer) {
+	if (MAL_TIMER_ANY == timer) {
 		result = get_available_timer(&timer);
 		if (MAL_ERROR_OK != result) {
 			return result;
@@ -216,12 +216,12 @@ static mal_error_e reserve_timer(mal_hspec_timer_e timer, mal_hspec_timer_mode_e
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e timer_tick_callback(mal_hspec_timer_e timer) {
+static mal_error_e timer_tick_callback(mal_timer_e timer) {
 	timer_states[timer].tick_counter++;
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init) {
+mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init) {
 	mal_error_e result;
 	// Check PWM io
 	result = mal_hspec_is_pwm_valid(init->timer, init->pwm_io);
@@ -229,7 +229,7 @@ mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init) {
 		return result;
 	}
 	// Reserve timer
-	result = reserve_timer(init->timer, MAL_HSPEC_TIMER_MODE_PWM, &init->timer);
+	result = reserve_timer(init->timer, MAL_TIMER_MODE_PWM, &init->timer);
 	if (MAL_ERROR_OK != result && MAL_ERROR_HARDWARE_UNAVAILABLE != result) {
 		return result;
 	}
@@ -240,19 +240,19 @@ mal_error_e mal_timer_init_pwm(mal_hspec_timer_pwm_init_s *init) {
 	return mal_hspec_timer_pwm_init(init);
 }
 
-mal_error_e mal_timer_get_state(mal_hspec_timer_e timer, mal_timer_state_s *state) {
+mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state) {
 	// Copy timer
 	*state = timer_states[timer];
 	// Check if timer is valid
 	return mal_hspec_is_timer_valid(timer);
 }
 
-mal_error_e mal_timer_init_count(mal_hspec_timer_e timer,
+mal_error_e mal_timer_init_count(mal_timer_e timer,
 		mal_hertz_t frequency,
-								 mal_hspec_timer_e *handle) {
+								 mal_timer_e *handle) {
 	mal_error_e result;
 	// Reserve timer
-	result = reserve_timer(timer, MAL_HSPEC_TIMER_MODE_COUNT, handle);
+	result = reserve_timer(timer, MAL_TIMER_MODE_COUNT, handle);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -273,7 +273,7 @@ mal_error_e mal_timer_init_count(mal_hspec_timer_e timer,
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask) {
+mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask) {
 	mal_error_e result;
 	// Get timer resolution
 	uint8_t resolution;
@@ -290,7 +290,7 @@ mal_error_e mal_timer_get_count_mask(mal_hspec_timer_e timer, uint64_t *mask) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_init_input_capture(mal_hspec_timer_intput_capture_init_s *init) {
+mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init) {
 	mal_error_e result;
 	// Check input io
 	result = mal_hspec_is_input_capture_valid(init->timer, init->input_io);
@@ -298,7 +298,7 @@ mal_error_e mal_timer_init_input_capture(mal_hspec_timer_intput_capture_init_s *
 		return result;
 	}
 	// Reserve timer
-	result = reserve_timer(init->timer, MAL_HSPEC_TIMER_MODE_INPUT_CAPTURE, &init->timer);
+	result = reserve_timer(init->timer, MAL_TIMER_MODE_INPUT_CAPTURE, &init->timer);
 	if (MAL_ERROR_OK != result && MAL_ERROR_HARDWARE_UNAVAILABLE != result) {
 		return result;
 	}

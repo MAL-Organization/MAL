@@ -34,7 +34,7 @@ static const mal_hspec_stm32f0_timer_direct_init_s direct_init_1khz = {
 	.period = 48000
 };
 
-void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
@@ -48,15 +48,15 @@ void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer) {
 	UCUNIT_CheckIsEqual(1000, tick_freq);
 }
 
-void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_hspec_timer_e timer, const void **direct_init) {
+void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_timer_e timer, const void **direct_init) {
 	*direct_init = &direct_init_1khz;
 }
 
-void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_timer_e timer) {
 	test_mal_hspec_stm32f0_timer_init_tick_1khz(timer);
 }
 
-void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
@@ -69,11 +69,11 @@ void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer) {
 	UCUNIT_CheckIsEqual(1000, timer_count_freq);
 }
 
-void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_timer_e timer) {
 	test_mal_hspec_stm32f0_timer_init_tick_1khz(timer);
 }
 
-void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io) {
+void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_timer_e timer, const mal_hspec_gpio_s *io) {
 	// Get timer
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
 	// Get compare value
@@ -100,7 +100,7 @@ void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, cons
 	UCUNIT_CheckIsAlmostEqual(MAL_TYPES_RATIO_NORMALIZER / 2, dc, 2);
 }
 
-void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_hspec_timer_e timer,
+void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_timer_e timer,
 													 const mal_hspec_gpio_s *io,
 													 volatile test_mal_hspec_timer_input_capture_t *input_capture_info) {
 	mal_error_e result;

@@ -43,10 +43,10 @@ uint64_t mal_hspec_get_external_clk_freq(void) {
 
 // Timer
 
-mal_error_e mal_hspec_is_timer_valid(mal_hspec_timer_e timer) {
+mal_error_e mal_hspec_is_timer_valid(mal_timer_e timer) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 	result = mal_hspec_get_valid_timers(&timers, &size);
 	if (MAL_ERROR_OK != result) {
@@ -212,7 +212,7 @@ mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface,
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_gpio_s *gpio) {
+mal_error_e mal_hspec_is_pwm_valid(mal_timer_e timer, const mal_gpio_s *gpio) {
 	mal_error_e result;
 	const mal_gpio_s *ios;
 	uint8_t size;
@@ -238,7 +238,7 @@ mal_error_e mal_hspec_is_pwm_valid(mal_hspec_timer_e timer, const mal_gpio_s *gp
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_is_input_capture_valid(mal_hspec_timer_e timer, const mal_gpio_s *gpio) {
+mal_error_e mal_hspec_is_input_capture_valid(mal_timer_e timer, const mal_gpio_s *gpio) {
 	mal_error_e result;
 	const mal_gpio_s *ios;
 	uint8_t size;
