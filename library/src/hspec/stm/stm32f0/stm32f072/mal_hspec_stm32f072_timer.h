@@ -31,7 +31,6 @@
 #include "std/mal_stdint.h"
 #include "stm32f0/stm32f0xx.h"
 
-mal_error_e mal_hspec_stm32f072_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
 IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_timer_e timer);
 IRQn_Type mal_hspec_stm32f072_get_timer_compare_irq(mal_timer_e timer);
 

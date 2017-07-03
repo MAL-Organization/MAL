@@ -417,8 +417,6 @@ mal_error_e mal_hspec_is_can_interface_valid(mal_hspec_can_e interface, const ma
 
 mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface, const mal_gpio_s *mosi, const mal_gpio_s *miso, const mal_gpio_s *clk, const mal_gpio_s *select);
 
-mal_error_e mal_hspec_is_pwm_valid(mal_timer_e timer, const mal_gpio_s *gpio);
-
 mal_error_e mal_hspec_is_input_capture_valid(mal_timer_e timer, const mal_gpio_s *gpio);
 
 mal_error_e mal_hspec_flash_is_page_valid(uint32_t page);

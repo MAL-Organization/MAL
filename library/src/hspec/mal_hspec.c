@@ -41,27 +41,6 @@ uint64_t mal_hspec_get_external_clk_freq(void) {
 	return mal_external_clk_freq;
 }
 
-// Timer
-
-mal_error_e mal_hspec_is_timer_valid(mal_timer_e timer) {
-	uint8_t i;
-	mal_error_e result;
-	const mal_timer_e *timers;
-	uint8_t size;
-	result = mal_hspec_get_valid_timers(&timers, &size);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-
-	for (i = 0; i < size; i++) {
-		if (timers[i] == timer) {
-			return MAL_ERROR_OK;
-		}
-	}
-
-	return MAL_ERROR_HARDWARE_INVALID;
-}
-
 // I2C
 
 mal_error_e mal_hspec_is_i2c_interface_valid(mal_hspec_i2c_e interface, const mal_gpio_s *scl, const mal_gpio_s *sda) {
@@ -208,32 +187,6 @@ mal_error_e mal_hspec_is_spi_interface_valid(mal_hspec_spi_e interface,
 		if (!found) {
 			return MAL_ERROR_HARDWARE_INVALID;
 		}
-	}
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_is_pwm_valid(mal_timer_e timer, const mal_gpio_s *gpio) {
-	mal_error_e result;
-	const mal_gpio_s *ios;
-	uint8_t size;
-	// Make sure timer is valid
-	result = mal_hspec_is_timer_valid(timer);
-	// Fetch IOs
-	result = mal_hspec_get_valid_pwm_ios(timer, &ios, &size);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Check io
-	uint8_t i;
-	bool found = false;
-	for (i = 0; i < size; i++) {
-		if (ios[i].pin == gpio->pin && ios[i].port == gpio->port) {
-			found = true;
-			break;
-		}
-	}
-	if (!found) {
-		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	return MAL_ERROR_OK;
 }

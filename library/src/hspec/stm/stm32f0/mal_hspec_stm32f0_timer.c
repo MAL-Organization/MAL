@@ -51,22 +51,18 @@ static void timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_ti
 
 static timer_callback_u timer_callbacks[MAL_TIMER_SIZE];
 
-mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_timer_e timer,
-												mal_hertz_t frequency,
-												mal_hertz_t delta,
-												const void *direct_init,
-												mal_timer_callback_t callback) {
+mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init) {
 	mal_error_e result;
 	// Read direct init
 	mal_hspec_stm32f0_timer_direct_init_s *stm_direct_init;
 	stm_direct_init = (mal_hspec_stm32f0_timer_direct_init_s*)direct_init;
 	// Initialise peripheral clock
-	result = init_timer_rcc(timer);
+	result = init_timer_rcc(init->timer);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
 	// Initialise time base timer
 	TIM_TimeBaseInitTypeDef params;
 	TIM_TimeBaseStructInit(&params);
@@ -75,10 +71,10 @@ mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_timer_e timer,
 	params.TIM_Period = stm_direct_init->period;
 	TIM_TimeBaseInit(tim, &params);
 	// Save tick handle
-	timer_callbacks[timer].task_cb = callback;
+	timer_callbacks[init->timer].task_cb = init->callback;
 	// Enable NVIC interrupt for timer
-	if (NULL != callback) {
-		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
+	if (NULL != init->callback) {
+		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(init->timer);
 		NVIC_EnableIRQ(irq);
 		NVIC_SetPriority(irq, 2); // Find a way to manage priorities for interrupts
 		// Enable timer interrupt
@@ -90,21 +86,18 @@ mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_timer_e timer,
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_timer_init(mal_timer_e timer,
-										 mal_hertz_t frequency,
-										 mal_hertz_t delta,
-										 mal_timer_callback_t callback) {
+mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	mal_error_e result;
 	// Initialise peripheral clock
-	result = init_timer_rcc(timer);
+	result = init_timer_rcc(init->timer);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
-	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
+	result = mal_hspec_stm32f0_timer_get_input_clk(init->timer, &timer_frequency);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -122,12 +115,12 @@ mal_error_e mal_hspec_stm32f0_timer_init(mal_timer_e timer,
 			// Resolution is in mHz to handle fractions of Hz
 			uint64_t potential_frequency = (timer_frequency * 1000) / ((uint64_t)period * (uint64_t)prescaler);
 			uint64_t actual_delta;
-			if (potential_frequency >= frequency) {
-				actual_delta = potential_frequency - frequency;
+			if (potential_frequency >= init->frequency) {
+				actual_delta = potential_frequency - init->frequency;
 			} else {
-				actual_delta = frequency - potential_frequency;
+				actual_delta = init->frequency - potential_frequency;
 			}
-			if (actual_delta <= delta) {
+			if (actual_delta <= init->delta) {
 				found = true;
 				break;
 			} else {
@@ -138,7 +131,7 @@ mal_error_e mal_hspec_stm32f0_timer_init(mal_timer_e timer,
 			// If we get here and the potential frequency is smaller than the
 			// target frequency, we can change the period as the potential
 			// frequency is just gonna keep getting smaller if we continue
-			if (potential_frequency < frequency) {
+			if (potential_frequency < init->frequency) {
 				break;
 			}
 		}
@@ -153,10 +146,10 @@ mal_error_e mal_hspec_stm32f0_timer_init(mal_timer_e timer,
 	params.TIM_Period = period;
 	TIM_TimeBaseInit(tim, &params);
 	// Save tick handle
-	timer_callbacks[timer].task_cb = callback;
+	timer_callbacks[init->timer].task_cb = init->callback;
 	// Enable NVIC interrupt for timer
-	if (NULL != callback) {
-		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
+	if (NULL != init->callback) {
+		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(init->timer);
 		NVIC_EnableIRQ(irq);
 		NVIC_SetPriority(irq, 2); // Find a way to manage priorities for interrupts
 		// Enable timer interrupt
@@ -503,7 +496,7 @@ mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_timer_pwm_init_s *init) {
+mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
 	mal_error_e result;
 	// Get timer
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);

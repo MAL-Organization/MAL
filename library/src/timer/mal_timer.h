@@ -62,17 +62,6 @@ typedef enum {
 } mal_timer_e;
 
 /**
- * Possible timer modes.
- */
-typedef enum {
-	MAL_TIMER_MODE_TICK,			//!< Timer mode where time is stored as a tick.
-	MAL_TIMER_MODE_TASK,			//!< Periodic task
-	MAL_TIMER_MODE_PWM,				//!< Pulse width modulation
-	MAL_TIMER_MODE_COUNT,			//!< Timer mode where time is stored only in the timer count.
-	MAL_TIMER_MODE_INPUT_CAPTURE	//!< Timer with input capture trigger.
-} mal_timer_mode_e;
-
-/**
  * @brief Function pointer typdef for timer in task mode.
  * @param timer Will provide the timer executing the callback.
  * @return Return a status once you executed your callback. For now, nothing is
@@ -124,13 +113,31 @@ typedef struct {
  * Structure that contains basic info about a timer.
  */
 typedef struct {
-	mal_timer_mode_e mode; //!< The current mode of the timer.
 	bool is_available; //!< true if the timer is available, false otherwise.
 	mal_hertz_t frequency; //!< Frequency of the timer.
 	mal_hertz_t delta; //!< Frequency error tolerance.
 	// Tick timer variables
 	volatile uint64_t tick_counter; //!< Contains the count of the timer in tick mode.
 } mal_timer_state_s;
+
+/**
+ * Initialization parameters of a timer.
+ */
+typedef struct {
+	mal_timer_e timer; //!< The timer to use for the input capture.
+	mal_hertz_t frequency; //!< The frequency to count to.
+	mal_hertz_t delta; //!< Frequency error tolerance.
+	mal_timer_callback_t callback; //!< The callback to be executed on overflow.
+} mal_timer_init_s;
+
+/**
+ * Initialization parameters of a tick timer.
+ */
+typedef struct {
+	mal_timer_e timer; //!< The timer to use for the tick count.
+	mal_hertz_t frequency; //!< The frequency at which the tick will increment.
+	mal_hertz_t delta; //!< Frequency error tolerance.
+} mal_timer_init_tick_s;
 
 /**
  * @brief Disable interrupts for a timer.
@@ -200,34 +207,60 @@ mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *freque
 mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count);
 
 /**
+ * @brief Check if a timer is available for this MCU.
+ * @param timer The timer to check.
+ * @return Returns #MAL_ERROR_OK if available.
+ */
+mal_error_e mal_timer_is_valid(mal_timer_e timer);
+
+/**
+ * @brief Get a list of valid timers for this MCU.
+ * @param timers The returned list.
+ * @param size The size of the returned list.
+ * @return Returns #MAL_ERROR_OK if available.
+ */
+mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
+
+/**
+ * @brief Initialize a timer. Note that this method does support the any timer.
+ * @param init Timer initialization parameters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init(mal_timer_init_s *init);
+
+/**
+ * @brief Initialize directly a timer. Note that this method does support the
+ * any timer. Using this function will reduce code size at the cost of
+ * flexibility and safety. Usually use this in a code closer to final.
+ * @param init Timer initialization parameters.
+ * @param direct_init A pointer to direct initialization parameter. See the
+ * hardware specific implementation to know what type this should be.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init);
+
+/**
  * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
  * to read ticks.
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param delta The allowed delta of frequency. This means the actual
- * frequency of the timer can be frequency +/- delta.
+ * @param init Tick timer initialize parameters.
  * @param handle This handle will return the used timer. Useful when using
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_tick(mal_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_timer_e *handle);
+mal_error_e mal_timer_init_tick(mal_timer_init_tick_s *init, mal_timer_e *handle);
 
 /**
  * @brief Function to initialize directly the timer. Using this function
  * will reduce code size at the cost of flexibility and safety. Usually use
  * this in a code closer to final.
- * @param timer The desired timer to initialize. It is not recommended to use
- * timer ANY when using this function.
- * @param frequency The frequency to count at.
- * @param delta The allowed delta of frequency. This means the actual
- * frequency of the timer can be frequency +/- delta.
+ * @param init Tick timer initialize parameters.
  * @param direct_init A pointer to direct initialization parameter. See the
  * hardware specific implementation to know what type this should be.
  * @param handle This handle will return the used timer. Useful when using
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_direct_init_tick(mal_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, const void *direct_init, mal_timer_e *handle);
+mal_error_e mal_timer_direct_init_tick(mal_timer_init_tick_s *init, const void *direct_init, mal_timer_e *handle);
 
 /**
  * This is a simple timer initialization. The main difference between this and
@@ -243,17 +276,15 @@ mal_error_e mal_timer_direct_init_tick(mal_timer_e timer, mal_hertz_t frequency,
 mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
 
 /**
- * @brief Initialize a timer that periodically calls a function (task).
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param delta delta The allowed delta of frequency. This means the actual
- * frequency of the timer can be frequency +/- delta.
- * @param callback The callback to execute at every count.
+ * @brief Initialize a timer that periodically calls a function (task). Similar
+ * to mal_timer_init, but will be unmanaged. This means this timer will not be
+ * flagged as busy and the use of timer ANY will not work properly.
+ * @param init Task timer initialize parameters.
  * @param handle This handle will return the used timer. Useful when using
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_task(mal_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_timer_callback_t callback, mal_timer_e *handle);
+mal_error_e mal_timer_init_task(mal_timer_init_s *init, mal_timer_e *handle);
 
 /**
  * @brief Return the tick of a timer when initialized in tick mode.
@@ -275,6 +306,15 @@ mal_error_e mal_timer_free(mal_timer_e timer);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init);
+
+/**
+ * @brief Similar to mal_timer_init_pwm, but will be unmanaged. This means this
+ * timer will not be flagged as busy and the use of timer ANY will not work
+ * properly.
+ * @param init The initialize structure of the pwm.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init);
 
 /**
  * @brief Returns the state of the timer.

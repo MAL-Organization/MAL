@@ -39,15 +39,9 @@ typedef struct {
 	uint32_t period;	//!< Period register
 } mal_hspec_stm32f0_timer_direct_init_s;
 
-mal_error_e mal_hspec_stm32f0_timer_init(mal_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_timer_callback_t callback);
-
-mal_error_e mal_hspec_stm32f0_timer_direct_init(mal_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, const void *direct_init, mal_timer_callback_t callback);
-
 mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
 
 mal_error_e mal_hspec_stm32f0_timer_free(mal_timer_e timer);
-
-mal_error_e mal_hspec_stm32f0_timer_pwm_init(mal_timer_pwm_init_s *init);
 
 mal_error_e mal_hspec_stm32f0_timer_count_init(mal_timer_e timer, mal_hertz_t frequency);
 

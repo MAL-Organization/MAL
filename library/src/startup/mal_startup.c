@@ -25,17 +25,17 @@
 
 #include "hspec/mal_hspec.h"
 
-extern void mal_reset_init(void);
-extern void mal_timer_init(void);
-extern int main(void);
+void mal_timer_states_init(void);
+void mal_reset_init(void);
+int main(void);
 
 void mal_startup_hardware(void) {
 	// Hardware specific startup
 	mal_hspec_startup();
 
 	// Initialise library components
+	mal_timer_states_init();
 	mal_reset_init();
-	mal_timer_init();
 }
 
 void __attribute__ ((section(".after_vectors"),noreturn)) mal_startup(void) {

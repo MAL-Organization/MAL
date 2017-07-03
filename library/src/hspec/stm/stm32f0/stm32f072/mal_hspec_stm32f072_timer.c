@@ -37,7 +37,7 @@ static const mal_timer_e valid_timers[] = {
 	MAL_TIMER_17
 };
 
-mal_error_e mal_hspec_stm32f072_get_valid_timers(const mal_timer_e **timers, uint8_t *size) {
+mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size) {
 	*timers = valid_timers;
 	*size = sizeof(valid_timers) / sizeof(mal_timer_e);
 	return MAL_ERROR_OK;
