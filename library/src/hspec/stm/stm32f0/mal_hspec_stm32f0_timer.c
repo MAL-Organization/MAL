@@ -27,7 +27,7 @@
 #include "std/mal_stdlib.h"
 #include "std/mal_math.h"
 #include "stm32f0/stm32f0xx_rcc.h"
-#include "mal_hspec_stm32f0_gpio.h"
+#include "mal_hspec_stm32f0_cmn.h"
 #include "timer/mal_timer.h"
 
 #define INVOKE_TASK_CALLBACK(timer) do { \
@@ -41,13 +41,17 @@ typedef union {
 	mal_timer_input_capture_callback_t ic_cb;
 } timer_callback_u;
 
-static mal_error_e init_timer_rcc(mal_timer_e timer);
+static mal_error_e mal_hspec_stm32f0_timer_init_timer_rcc(mal_timer_e timer);
 
-static uint32_t get_rcc_timer(mal_timer_e timer);
+static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer);
 
-TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_timer_e timer);
+static TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer);
 
-static void timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
+static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
+
+static mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
+
+static uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer);
 
 static timer_callback_u timer_callbacks[MAL_TIMER_SIZE];
 
@@ -57,12 +61,12 @@ mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_ini
 	mal_hspec_stm32f0_timer_direct_init_s *stm_direct_init;
 	stm_direct_init = (mal_hspec_stm32f0_timer_direct_init_s*)direct_init;
 	// Initialise peripheral clock
-	result = init_timer_rcc(init->timer);
+	result = mal_hspec_stm32f0_timer_init_timer_rcc(init->timer);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Initialise time base timer
 	TIM_TimeBaseInitTypeDef params;
 	TIM_TimeBaseStructInit(&params);
@@ -89,12 +93,12 @@ mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_ini
 mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	mal_error_e result;
 	// Initialise peripheral clock
-	result = init_timer_rcc(init->timer);
+	result = mal_hspec_stm32f0_timer_init_timer_rcc(init->timer);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(init->timer, &timer_frequency);
@@ -161,13 +165,13 @@ mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e init_timer_rcc(mal_timer_e timer) {
+static mal_error_e mal_hspec_stm32f0_timer_init_timer_rcc(mal_timer_e timer) {
 switch (timer) {
 case MAL_TIMER_1:
 case MAL_TIMER_15:
 case MAL_TIMER_16:
 case MAL_TIMER_17:
-	RCC_APB2PeriphClockCmd(get_rcc_timer(timer), ENABLE);
+	RCC_APB2PeriphClockCmd(mal_hspec_stm32f0_timer_get_rcc_timer(timer), ENABLE);
 	break;
 case MAL_TIMER_2:
 case MAL_TIMER_3:
@@ -175,13 +179,13 @@ case MAL_TIMER_6:
 case MAL_TIMER_7:
 case MAL_TIMER_14:
 default:
-	RCC_APB1PeriphClockCmd(get_rcc_timer(timer), ENABLE);
+	RCC_APB1PeriphClockCmd(mal_hspec_stm32f0_timer_get_rcc_timer(timer), ENABLE);
 	break;
 }
 return MAL_ERROR_OK;
 }
 
-static uint32_t get_rcc_timer(mal_timer_e timer) {
+static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer) {
 switch (timer) {
 case MAL_TIMER_1:
 	return RCC_APB2Periph_TIM1;
@@ -205,7 +209,7 @@ default:
 }
 }
 
-TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_timer_e timer) {
+static TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer) {
 	switch (timer) {
 	case MAL_TIMER_1:
 		return TIM1;
@@ -230,8 +234,8 @@ TIM_TypeDef* mal_hspec_stm32f0_timer_get_timer_typedef(mal_timer_e timer) {
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
-												  uint64_t *clock) {
+static mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
+												  	  	 uint64_t *clock) {
 	// MCU clocks
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
@@ -266,7 +270,7 @@ void TIM1_CC_IRQHandler(void) {
 	TIM_ClearFlag(TIM1, TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_1, TIM1, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_1, TIM1, cc_flags);
 	}
 }
 
@@ -296,7 +300,7 @@ void TIM2_IRQHandler(void) {
 	TIM_ClearFlag(TIM2, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_2, TIM2, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_2, TIM2, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_2);
 	}
@@ -321,7 +325,7 @@ void TIM3_IRQHandler(void) {
 	TIM_ClearFlag(TIM3, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_3, TIM3, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_3, TIM3, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_3);
 	}
@@ -349,7 +353,7 @@ void TIM14_IRQHandler(void) {
 	TIM_ClearFlag(TIM14, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_14, TIM14, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_14, TIM14, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_14);
 	}
@@ -368,7 +372,7 @@ void TIM15_IRQHandler(void) {
 	TIM_ClearFlag(TIM15, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_15, TIM15, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_15, TIM15, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_15);
 	}
@@ -384,7 +388,7 @@ void TIM16_IRQHandler(void) {
 	TIM_ClearFlag(TIM16, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_16, TIM16, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_16, TIM16, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_16);
 	}
@@ -400,15 +404,15 @@ void TIM17_IRQHandler(void) {
 	TIM_ClearFlag(TIM17, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		timer_input_capture_interrupt(MAL_TIMER_17, TIM17, cc_flags);
+		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_17, TIM17, cc_flags);
 	} else {
 		INVOKE_TASK_CALLBACK(MAL_TIMER_17);
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_timer_free(mal_timer_e timer) {
+mal_error_e mal_timer_free_unmanaged(mal_timer_e timer) {
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Disable timer
 	TIM_Cmd(tim, DISABLE);
 	// Disable interrupt
@@ -439,7 +443,7 @@ inline void mal_timer_enable_interrupt(mal_timer_e timer, bool active) {
 	}
 }
 
-uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_hspec_gpio_s *gpio, mal_timer_e timer) {
+static uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
@@ -499,7 +503,7 @@ mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution) {
 mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
@@ -586,7 +590,7 @@ mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
 mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gpio, mal_ratio_t duty_cycle) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// We need to compute the duty cycle
 	uint32_t compare_value = MAL_TYPES_RATIO_OF_INT_VALUE(duty_cycle,
 														  uint32_t,
@@ -612,16 +616,16 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gp
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_timer_count_init(mal_timer_e timer,
-											   mal_hertz_t frequency) {
+mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer,
+						                   mal_hertz_t frequency) {
 	mal_error_e result;
 	// Initialize peripheral clock
-	result = init_timer_rcc(timer);
+	result = mal_hspec_stm32f0_timer_init_timer_rcc(timer);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -664,7 +668,7 @@ mal_error_e mal_hspec_stm32f0_timer_count_init(mal_timer_e timer,
 mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *frequency) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	if (NULL == tim) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
@@ -683,7 +687,7 @@ mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *freque
 
 mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count) {
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	if (NULL == tim) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
@@ -693,10 +697,10 @@ mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_timer_intput_capture_init_s *init) {
+mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init) {
 	mal_error_e result;
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(init->timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
@@ -746,13 +750,13 @@ mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_timer_intput_capture_
 	input_capture_init.TIM_Channel = timer_channel;
 	// Set requested polarity
 	switch (init->input_event) {
-		case MAL_HSPEC_TIMER_INPUT_FALLING:
+		case MAL_TIMER_INPUT_FALLING:
 			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_Falling;
 			break;
-		case MAL_HSPEC_TIMER_INPUT_RISING:
+		case MAL_TIMER_INPUT_RISING:
 			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_Rising;
 			break;
-		case MAL_HSPEC_TIMER_INPUT_BOTH:
+		case MAL_TIMER_INPUT_BOTH:
 		default:
 			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
 			break;
@@ -808,7 +812,7 @@ mal_error_e mal_hspec_stm32f0_timer_input_capture_init(mal_timer_intput_capture_
 	return MAL_ERROR_OK;
 }
 
-static void timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags) {
+static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags) {
 	// Check every channel and execute callbacks
 	if (flags & TIM_FLAG_CC1) {
 		if (timer_callbacks[timer].ic_cb != NULL) {

@@ -37,7 +37,7 @@ static const mal_hspec_stm32f0_timer_direct_init_s direct_init_1khz = {
 void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -59,7 +59,7 @@ void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_timer_e timer) {
 void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -75,7 +75,7 @@ void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_timer_e timer) {
 
 void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_timer_e timer, const mal_hspec_gpio_s *io) {
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get compare value
 	uint32_t compare_value = 0;
 	switch (mal_hspec_stm32f0_timer_get_channel(io, timer)) {

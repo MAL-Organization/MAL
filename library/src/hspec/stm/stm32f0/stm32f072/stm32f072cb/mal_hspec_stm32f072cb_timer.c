@@ -26,66 +26,6 @@
 #include "mal_hspec_stm32f072cb_timer.h"
 #include "std/mal_stdlib.h"
 
-static const mal_hspec_gpio_s valid_timer1_input_capture_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 8
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 9
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 10
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 11
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer15_input_capture_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 2
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 3
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 14
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 15
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer16_input_capture_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 6
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 8
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer17_input_capture_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 9
-	}
-};
-
 static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE] = {
 		{ // Port A
 			{MAL_HSPEC_STM32F0_AF_NONE}, // No timer channels on PA0
@@ -196,49 +136,6 @@ static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_H
 				{MAL_HSPEC_STM32F0_AF_NONE} // No timer channels on PF15
 		}
 };
-
-mal_error_e mal_hspec_stm32f072cb_get_valid_input_capture_ios(mal_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
-	switch (timer) {
-		case MAL_TIMER_1:
-			*ios = valid_timer1_input_capture_gpios;
-			*size = sizeof(valid_timer1_input_capture_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_2:
-			// All available channels are valid input capture IOs
-			*ios = valid_timer2_gpios;
-			*size = sizeof(valid_timer2_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_3:
-			// All available channels are valid input capture IOs
-			*ios = valid_timer3_gpios;
-			*size = sizeof(valid_timer3_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_14:
-			// All available channels are valid input capture IOs
-			*ios = valid_timer14_gpios;
-			*size = sizeof(valid_timer14_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_15:
-			*ios = valid_timer15_input_capture_gpios;
-			*size = sizeof(valid_timer15_input_capture_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_16:
-			*ios = valid_timer16_input_capture_gpios;
-			*size = sizeof(valid_timer16_input_capture_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_17:
-			*ios = valid_timer17_input_capture_gpios;
-			*size = sizeof(valid_timer17_input_capture_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		default:
-			*ios = NULL;
-			break;
-	}
-	if (NULL == *ios) {
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	return MAL_ERROR_OK;
-}
 
 void mal_hspec_stm32f072cb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
 	*afs = &timer_channels_afs;

@@ -24,69 +24,16 @@
 #ifndef HSPEC_STM_MAL_HSPEC_STM32F0_H_
 #define HSPEC_STM_MAL_HSPEC_STM32F0_H_
 
-#include "mal_hspec_stm32f0_cmn.h"
 #include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
-#include "gpio/mal_gpio.h"
-#include "std/mal_bool.h"
 #include "stm32f0/stm32f0xx.h"
 #include "cmsis/core_cmInstr.h"
-#include "mal_hspec_stm32f0_gpio.h"
-#include "mal_hspec_stm32f0_timer.h"
-#include "mal_hspec_stm32f0_i2c.h"
-#include "mal_hspec_stm32f0_can.h"
-#include "mal_hspec_stm32f0_uuid.h"
 #include "stm32f0/stm32f0xx_rcc.h"
-#include "mal_hspec_stm32f0_adc.h"
-#include "mal_hspec_stm32f0_spi.h"
-#include "mal_hspec_stm32f0_reset.h"
-#include "mal_hspec_stm32f0_flash.h"
-#include "mal_hspec_stm32f0_watchdog.h"
-#include "mal_hspec_stm32f0_dac.h"
-#include "mal_hspec_stm32f0_power.h"
-
-// Device specific function mapping section.
-#if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)
-
-#include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI
-
-#define mal_hspec_stm32f0_is_pll_div_available(source) mal_hspec_stm32f072_is_pll_div_available(source)
-
-#define mal_hspec_stm32f0_get_valid_ports(ports, size) mal_hspec_stm32f072_get_valid_ports(ports, size)
-
-#define mal_hspec_stm32f0_get_valid_pins(pins) mal_hspec_stm32f072_get_valid_pins(pins)
-
-#define mal_hspec_stm32f0_get_valid_timers(timers, size) mal_hspec_stm32f072_get_valid_timers(timers, size)
-
-#define mal_hspec_stm32f0_get_timer_update_irq(timer) mal_hspec_stm32f072_get_timer_update_irq(timer)
-
-#define mal_hspec_stm32f0_get_valid_i2c_interfaces(interfaces, size) mal_hspec_stm32f072_get_valid_i2c_interfaces(interfaces, size)
-
-#define mal_hspec_stm32f0_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
-
-#define mal_hspec_stm32f0_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
-
-#define mal_hspec_stm32f0_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072_get_valid_adc_ios(adc, ios, size)
-
-#define mal_hspec_stm32f0_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
-
-#define mal_hspec_stm32f0_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size)
-
-#define mal_hspec_stm32f0_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f072_get_valid_input_capture_ios(timer, ios, size)
-
-#define mal_hspec_stm32f0_get_timer_compare_irq(timer) mal_hspec_stm32f072_get_timer_compare_irq(timer)
-
-#define mal_hspec_stm32f0_get_valid_dac_ios(dac, ios, size) mal_hspec_stm32f072_get_valid_dac_ios(dac, ios, size)
-
-#else
-#error No valid hardware specfic device symbol specified...
-#endif
 
 void mal_hspec_stm32f0_startup();
 

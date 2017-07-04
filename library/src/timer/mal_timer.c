@@ -94,7 +94,7 @@ static mal_error_e get_available_timer(mal_timer_e *timer) {
 void mal_timer_states_init(void) {
 	mal_timer_e i;
 	for (i = 0; i < MAL_TIMER_SIZE; i++) {
-		if (MAL_ERROR_OK == mal_hspec_is_timer_valid(i)) {
+		if (MAL_ERROR_OK == mal_timer_is_valid(i)) {
 			timer_states[i].is_available = true;
 		} else {
 			timer_states[i].is_available = false;
@@ -239,7 +239,7 @@ mal_error_e mal_timer_init_count(mal_timer_e timer,
 		return result;
 	}
 	// Initialize timer
-	result = mal_hspec_timer_count_init(*handle, frequency);
+	result = mal_timer_init_count_unmanaged(*handle, frequency);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -274,22 +274,19 @@ mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask) {
 
 mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init) {
 	mal_error_e result;
-	// Check input io
-	result = mal_hspec_is_input_capture_valid(init->timer, init->input_io);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
 	// Reserve timer
-	result = reserve_timer(init->timer, MAL_TIMER_MODE_INPUT_CAPTURE, &init->timer);
+	result = reserve_timer(init->timer, &init->timer);
 	if (MAL_ERROR_OK != result && MAL_ERROR_HARDWARE_UNAVAILABLE != result) {
 		return result;
 	}
 	// Save info
 	timer_states[init->timer].frequency = init->frequency;
-	mal_hertz_t count_frequency;
-	result = mal_timer_get_count_frequency(init->timer, &count_frequency);
-	if (MAL_ERROR_OK != result) {
-		return result;
+	mal_hertz_t count_frequency = init->frequency;
+	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
+		result = mal_timer_get_count_frequency(init->timer, &count_frequency);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
 	}
 	timer_states[init->timer].delta = mal_timer_abs(init->frequency - count_frequency);
 	// Initialize timer

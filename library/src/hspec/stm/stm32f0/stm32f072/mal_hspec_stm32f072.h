@@ -33,57 +33,6 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_bool.h"
 
-// Device specific function mapping section.
-#if defined(MAL_STM32F072RB)
-
-#include "hspec/stm/stm32f0/stm32f072/stm32f072rb/mal_hspec_stm32f072rb.h"
-
-#define mal_hspec_stm32f072_get_port_afs(port, afs) mal_hspec_stm32f072rb_get_port_afs(port, afs)
-
-#define mal_hspec_stm32f072_get_valid_ports(ports, size) mal_hspec_stm32f072rb_get_valid_ports(ports, size)
-
-#define mal_hspec_stm32f072_get_valid_pins(pins) mal_hspec_stm32f072rb_get_valid_pins(pins)
-
-#define mal_hspec_stm32f072_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072rb_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
-
-#define mal_hspec_stm32f072_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072rb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
-
-#define mal_hspec_stm32f072_get_valid_adc_ios(adc, ios, size) mal_hspec_stm32f072rb_get_valid_adc_ios(adc, ios, size)
-
-#define mal_hspec_stm32f072_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072rb_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
-
-#define mal_hspec_stm32f072_get_valid_channel_ios(timer, ios, size) mal_hspec_stm32f072rb_get_valid_channel_ios(timer, ios, size)
-
-#define mal_hspec_stm32f072_get_timer_afs(afs) mal_hspec_stm32f072rb_get_timer_afs(afs)
-
-#define mal_hspec_stm32f072_flash_get_page_count() mal_hspec_stm32f072rb_flash_get_page_count()
-
-#elif defined(MAL_STM32F072CB)
-
-#include "hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb.h"
-
-#define mal_hspec_stm32f072_get_port_afs(port, afs) mal_hspec_stm32f072cb_get_port_afs(port, afs)
-
-#define mal_hspec_stm32f072_get_valid_ports(ports, size) mal_hspec_stm32f072cb_get_valid_ports(ports, size)
-
-#define mal_hspec_stm32f072_get_valid_pins(pins) mal_hspec_stm32f072cb_get_valid_pins(pins)
-
-#define mal_hspec_stm32f072_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size) mal_hspec_stm32f072cb_get_valid_i2c_ios(interface, scls, scls_size, sdas, sdas_size)
-
-#define mal_hspec_stm32f072_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size) mal_hspec_stm32f072cb_get_valid_can_ios(interface, txs, txs_size, rxs, rxs_size)
-
-#define mal_hspec_stm32f072_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size) mal_hspec_stm32f072cb_get_valid_spi_ios(interface, mosis, mosis_size, misos, misos_size, clks, clks_size, selects, selects_size)
-
-#define mal_hspec_stm32f072_get_valid_input_capture_ios(timer, ios, size) mal_hspec_stm32f072cb_get_valid_input_capture_ios(timer, ios, size)
-
-#define mal_hspec_stm32f072_get_timer_afs(afs) mal_hspec_stm32f072cb_get_timer_afs(afs)
-
-#define mal_hspec_stm32f072_flash_get_page_count() mal_hspec_stm32f072cb_flash_get_page_count()
-
-#else
-#error No valid hardware specfic device symbol specified...
-#endif
-
 bool mal_hspec_stm32f072_is_pll_div_available(mal_hspec_system_clk_src_e source);
 
 #endif /* HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_H_ */

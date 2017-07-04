@@ -276,6 +276,18 @@ mal_error_e mal_timer_direct_init_tick(mal_timer_init_tick_s *init, const void *
 mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
 
 /**
+ * @brief Similar to mal_timer_free, but will be unmanaged. This means this
+ * timer will not be flagged as busy and the use of timer ANY will not work
+ * properly.
+ * @param timer The desired timer to initialize.
+ * @param frequency The frequency to count at.
+ * @param handle This handle will return the used timer. Useful when using
+ * #MAL_HSPEC_TIMER_ANY.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
+
+/**
  * @brief Initialize a timer that periodically calls a function (task). Similar
  * to mal_timer_init, but will be unmanaged. This means this timer will not be
  * flagged as busy and the use of timer ANY will not work properly.
@@ -299,6 +311,15 @@ uint64_t mal_timer_get_tick(mal_timer_e handle);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_free(mal_timer_e timer);
+
+/**
+ * @brief Similar to mal_timer_free, but will be unmanaged. This means this
+ * timer will not be flagged as busy and the use of timer ANY will not work
+ * properly.
+ * @param timer
+ * @return
+ */
+mal_error_e mal_timer_free_unmanaged(mal_timer_e timer);
 
 /**
  * @brief Initializes a timer and the IO as a PWM generator.
@@ -339,6 +360,15 @@ mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask);
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init);
+
+/**
+ * @brief Similar to mal_timer_init_input_capture, but will be unmanaged. This
+ * means this timer will not be flagged as busy and the use of timer ANY will
+ * not work properly.
+ * @param The initialization parameters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init);
 
 /**
  * @}
