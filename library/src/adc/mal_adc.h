@@ -28,6 +28,8 @@
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
+#include "std/mal_types.h"
+#include "std/mal_defs.h"
 
 /**
  * @defgroup ADC
@@ -110,7 +112,7 @@ mal_error_e mal_adc_async_read(mal_adc_e adc, mal_adc_read_callback_t callback);
  * ::mal_hspec_adc_e.
  * @return Returns true if interrupt was active before disabling it.
  */
-inline bool mal_adc_disable_interrupt(mal_adc_e adc);
+MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc);
 
 /**
  * @brief Enable interrupts for an ADC.
@@ -120,7 +122,7 @@ inline bool mal_adc_disable_interrupt(mal_adc_e adc);
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-inline void mal_adc_enable_interrupt(mal_adc_e adc, bool active);
+MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active);
 
 /**
  * @brief Get the maximum resolution of the ADC.

@@ -232,7 +232,7 @@ void ADC1_COMP_IRQHandler(void) {
 	}
 }
 
-inline bool mal_adc_disable_interrupt(mal_adc_e adc) {
+MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc) {
 	// 12 equates to ADC_IRQ. However, the name of the constant changes based
 	// on the MCU because it is multiplex with other interrupts in some of them. It
 	// is simpler to use the constant directly.
@@ -245,7 +245,7 @@ inline bool mal_adc_disable_interrupt(mal_adc_e adc) {
 	return active;
 }
 
-inline void mal_adc_enable_interrupt(mal_adc_e adc, bool active) {
+MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active) {
 	if (active) {
 		NVIC_EnableIRQ(12);
 	}

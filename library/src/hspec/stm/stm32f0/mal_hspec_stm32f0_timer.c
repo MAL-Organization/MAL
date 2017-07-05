@@ -28,7 +28,6 @@
 #include "std/mal_math.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
-#include "timer/mal_timer.h"
 
 #define INVOKE_TASK_CALLBACK(timer) do { \
 	if (timer_callbacks[timer].task_cb != NULL) { \
@@ -428,7 +427,7 @@ mal_error_e mal_timer_free_unmanaged(mal_timer_e timer) {
 	return MAL_ERROR_OK;
 }
 
-inline bool mal_timer_disable_interrupt(mal_timer_e timer) {
+MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_e timer) {
 	IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
 	bool active = NVIC_GetActive(irq);
 	NVIC_DisableIRQ(irq);
@@ -437,7 +436,7 @@ inline bool mal_timer_disable_interrupt(mal_timer_e timer) {
 	return active;
 }
 
-inline void mal_timer_enable_interrupt(mal_timer_e timer, bool active) {
+MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active) {
 	if (active) {
 		NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer));
 	}
@@ -507,7 +506,12 @@ mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
-		result = mal_hspec_stm32f0_timer_init(init->timer, init->frequency, init->delta, NULL);
+	    mal_timer_init_s timer_init;
+	    timer_init.timer = init->timer;
+	    timer_init.frequency = init->frequency;
+	    timer_init.delta = init->delta;
+	    timer_init.callback = NULL;
+		result = mal_timer_init(&timer_init);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
@@ -651,7 +655,7 @@ mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer,
 	params.TIM_Prescaler = prescaler - 1;
 	// Set maximum value
 	uint8_t resolution;
-	result = mal_hspec_stm32f0_timer_get_resolution(timer, &resolution);
+	result = mal_timer_get_resolution(timer, &resolution);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -704,7 +708,7 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
-		result = mal_hspec_stm32f0_timer_count_init(init->timer, init->frequency);
+		result = mal_timer_init_count_unmanaged(init->timer, init->frequency);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}

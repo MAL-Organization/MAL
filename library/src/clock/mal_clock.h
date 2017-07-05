@@ -24,7 +24,8 @@
 #define CLOCK_MAL_CLOCK_H_
 
 #include "std/mal_stdint.h"
-#include "hspec/mal_hspec.h"
+#include "std/mal_types.h"
+#include "std/mal_error.h"
 
 /**
  * @defgroup Clock
@@ -33,19 +34,56 @@
  */
 
 /**
- * @brief Will return the source clock a given timer.
- * @param timer Valid values are defined by ::mal_hspec_timer_e.
- * @param clock A pointer of type uint64_t. If the function returns
- * #MAL_ERROR_OK, clock will contain the frequency in hertz.
- * @return Return #MAL_ERROR_OK on success.
+ * @brief Possible clock sources for the MCU
  */
-#define mal_clock_get_timer_input_clk(timer, clock) mal_hspec_get_timer_input_clk(timer, clock)
+typedef enum {
+    MAL_SYSTEM_CLK_SRC_INTERNAL, //!< Source is an internal oscillator.
+    MAL_SYSTEM_CLK_SRC_EXTERNAL, //!< Source is an external crystal or oscillator.
+    MAL_SYSTEM_CLK_SRC_AUTO      //!< MAL will select the source. Note it is safer to define a known source.
+} mal_system_clk_src_e;
 
 /**
- * @brief Returns the system clock in hertz.
- * @return Returns the system clock in hertz.
+ * @brief Structure to define the system clock source.
  */
-uint64_t mal_clock_get_system_clock(void);
+typedef struct {
+    mal_hertz_t frequency; /**< The frequency to run at.*/
+    mal_system_clk_src_e src; /**< The source of the frequency.*/
+} mal_system_clk_s;
+
+/**
+ * @brief Do not use this function outside of startup. Will do all calls to
+ * initialize system clock.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_clock_initialise_system_clock(void);
+
+/**
+ * @brief Set the system clock. Note that unless you want to change it at run
+ * time, the clock is automatically initialized at boot.
+ * @param clk The clock to set.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_clock_set_system_clock(const mal_system_clk_s *clk);
+
+/**
+ * @brief Similar to mal_clock_set_system_clock but using this directly will
+ * break mal_clock_get_system_clock. Use mal_clock_set_system_clock instead.
+ * @param clk The clock paramaters.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk);
+
+/**
+ * Get the external frequency that can feed the system clock.
+ * @return Returns the external frequency.
+ */
+mal_hertz_t mal_clock_get_external_clock_frequency(void);
+
+/**
+ * @brief Returns the system clock frequency.
+ * @return Returns the system clock in frequency.
+ */
+mal_hertz_t mal_clock_get_system_clock(void);
 
 /**
  * @}

@@ -28,6 +28,7 @@
 #include "std/mal_bool.h"
 #include "std/mal_types.h"
 #include "gpio/mal_gpio.h"
+#include "std/mal_defs.h"
 
 /**
  * @defgroup Timer
@@ -145,7 +146,7 @@ typedef struct {
  * ::mal_hspec_timer_e.
  * @return Returns true if interrupt was active before disabling it.
  */
-inline bool mal_timer_disable_interrupt(mal_timer_e timer);
+MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_e timer);
 
 /**
  * @brief Enable interrupts for a timer.
@@ -156,7 +157,7 @@ inline bool mal_timer_disable_interrupt(mal_timer_e timer);
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-inline void mal_timer_enable_interrupt(mal_timer_e timer, bool active);
+MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active);
 
 /**
  * @brief Set the duty cycle of an initialized PWM IO.
@@ -285,7 +286,7 @@ mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_t
  * #MAL_HSPEC_TIMER_ANY.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
+mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task). Similar

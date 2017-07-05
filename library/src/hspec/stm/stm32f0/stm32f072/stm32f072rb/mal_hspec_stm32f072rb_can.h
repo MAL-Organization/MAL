@@ -30,7 +30,7 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface,
+mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_can_e interface,
 													const mal_hspec_gpio_s **txs,
 													uint8_t *txs_size,
 													const mal_hspec_gpio_s **rxs,

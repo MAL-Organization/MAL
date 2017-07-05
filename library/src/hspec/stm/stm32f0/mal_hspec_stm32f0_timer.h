@@ -26,10 +26,10 @@
 #ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_
 #define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_
 
-#include "std/mal_error.h"
-#include "hspec/mal_hspec.h"
 #include "std/mal_stdint.h"
-#include "std/mal_bool.h"
+#include "stm32f0/stm32f0xx.h"
+#include "timer/mal_timer.h"
+#include "mal_hspec_stm32f0_cmn.h"
 
 /**
  * Struct for direct initialization of a timer interface.
@@ -39,8 +39,20 @@ typedef struct {
 	uint32_t period;	//!< Period register
 } mal_hspec_stm32f0_timer_direct_init_s;
 
-mal_error_e mal_hspec_stm32f0_timer_count_direct_init(mal_timer_e timer, mal_hertz_t frequency, const void *direct_init);
+/**
+ * @brief Returns the proper IRQ for the given timer. Must be defined for every
+ * family.
+ * @param timer The timer to get the IRQ from.
+ * @return Returns the IRQ of the timer.
+ */
+IRQn_Type mal_hspec_stm32f0_get_timer_update_irq(mal_timer_e timer);
 
-TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer);
+/**
+ * @brief Returns the IRQ for the compare interrupt of a timer. Must be defined
+ * for every family.
+ * @param timer The timer to get the IRQ from.
+ * @return Returns the IRQ of the timer.
+ */
+IRQn_Type mal_hspec_stm32f0_get_timer_compare_irq(mal_timer_e timer);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

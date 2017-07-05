@@ -23,8 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072cb_timer.h"
 #include "std/mal_stdlib.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 
 static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE] = {
 		{ // Port A
@@ -137,6 +137,6 @@ static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_H
 		}
 };
 
-void mal_hspec_stm32f072cb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
+void mal_hspec_stm32f0_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
 	*afs = &timer_channels_afs;
 }

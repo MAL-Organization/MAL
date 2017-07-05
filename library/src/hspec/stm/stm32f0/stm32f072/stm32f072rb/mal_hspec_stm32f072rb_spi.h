@@ -30,7 +30,7 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface,
+mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_spi_e interface,
 													const mal_hspec_gpio_s **mosis,
 													uint8_t *mosis_size,
 													const mal_hspec_gpio_s **misos,

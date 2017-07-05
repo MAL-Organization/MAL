@@ -23,7 +23,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072_timer.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 
 static const mal_timer_e valid_timers[] = {
 	MAL_TIMER_1,
@@ -43,7 +43,7 @@ mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size
 	return MAL_ERROR_OK;
 }
 
-IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_timer_e timer) {
+IRQn_Type mal_hspec_stm32f0_get_timer_update_irq(mal_timer_e timer) {
 	switch (timer) {
 	case MAL_TIMER_1:
 		return TIM1_BRK_UP_TRG_COM_IRQn;
@@ -67,7 +67,7 @@ IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_timer_e timer) {
 	}
 }
 
-IRQn_Type mal_hspec_stm32f072_get_timer_compare_irq(mal_timer_e timer) {
+IRQn_Type mal_hspec_stm32f0_get_timer_compare_irq(mal_timer_e timer) {
 	switch (timer) {
 	case MAL_TIMER_1:
 		return TIM1_CC_IRQn;

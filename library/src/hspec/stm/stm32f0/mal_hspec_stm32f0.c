@@ -25,7 +25,6 @@
 
 #include <stdbool.h>
 
-#include "hspec/mal_hspec.h"
 #include "mal_hspec_stm32f0.h"
 #include "std/mal_stdint.h"
 #include "std/mal_math.h"
@@ -51,8 +50,6 @@ extern unsigned int _edata;
 extern unsigned int __bss_start__;
 // End address for the .bss section; defined in linker script
 extern unsigned int __bss_end__;
-
-extern void mal_clock_set_system_clock(uint64_t clock);
 
 #ifdef MAL_SEMIHOSTING
 extern void initialise_monitor_handles(void);
@@ -82,12 +79,12 @@ RCC_CFGR_PLLMULL15, RCC_CFGR_PLLMULL16 };
 extern uint64_t mal_external_clk_freq;
 void mal_stm32f0_relocate_vector_table(void);
 
-void mal_hspec_stm32f0_startup() {
+void mal_startup_hardware(void) {
 	// Initialises basic clocks and systems
 	SystemInit();
 
 	initialise_memory();
-	mal_hspec_initialise_system_clk();
+	mal_clock_initialise_system_clock();
 
 	// Update system core clock for stm32f0-stdperiph drivers
 	SystemCoreClockUpdate(mal_external_clk_freq);
@@ -101,39 +98,40 @@ void mal_hspec_stm32f0_startup() {
 #endif
 }
 
-mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) {
+mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 	uint32_t timeout_counter;
 	uint32_t hserdy_status;
 	uint64_t src_clk_freq;
-	mal_hspec_system_clk_src_e clk_src = clk->src;
-	uint64_t target_frequency = clk->frequency;
+	mal_system_clk_src_e clk_src = clk->src;
+	// This MCU does support floats natively, so frequency is in millihertz
+	uint32_t target_frequency = clk->frequency / 1000;
 	// Choose clk source
 	switch (clk->src) {
-	case MAL_HSPEC_SYSTEM_CLK_SRC_AUTO:
+	case MAL_SYSTEM_CLK_SRC_AUTO:
 		// Since external clock is more precise than internal, MAL will favor
 		// external in this case.
-	case MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL:
+	case MAL_SYSTEM_CLK_SRC_EXTERNAL:
 		// Check if there is an external source
-		clk_src = MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL;
-		src_clk_freq = mal_hspec_get_external_clk_freq();
+		clk_src = MAL_SYSTEM_CLK_SRC_EXTERNAL;
+		src_clk_freq = mal_clock_get_external_clock_frequency() / 1000;
 		if (0 == src_clk_freq) {
 			// No external, switch to internal
 			src_clk_freq = HSI_VALUE;
-			clk_src = MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL;
+			clk_src = MAL_SYSTEM_CLK_SRC_INTERNAL;
 		}
 		break;
-	case MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL:
+	case MAL_SYSTEM_CLK_SRC_INTERNAL:
 	default:
 		// Set HSI on
 		src_clk_freq = HSI_VALUE;
 		break;
 	}
 	// Start HSE clock if source
-	if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
+	if (MAL_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
 		RCC_HSEConfig(RCC_HSE_ON);
 		if (SUCCESS != RCC_WaitForHSEStartUp()) {
 			// HSE startup was unsuccessful, use HSI
-			clk_src = MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL;
+			clk_src = MAL_SYSTEM_CLK_SRC_INTERNAL;
 			src_clk_freq = HSI_VALUE;
 		}
 	}
@@ -146,7 +144,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 			FLASH_SetLatency(FLASH_Latency_1);
 		}
 		// Set SW
-		if (MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL == clk_src) {
+		if (MAL_SYSTEM_CLK_SRC_INTERNAL == clk_src) {
 			RCC_SYSCLKConfig(RCC_SYSCLKSource_HSI);
 		} else {
 			RCC_SYSCLKConfig(RCC_SYSCLKSource_HSE);
@@ -158,7 +156,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		}
 		// Select PLL input clock
 		uint64_t pll_src_clock;
-		if (clk_src == MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL) {
+		if (clk_src == MAL_SYSTEM_CLK_SRC_INTERNAL) {
 			pll_src_clock = HSI_VALUE / MAL_HSPEC_STM32F0_HSI_PLL_DIV;
 		} else {
 			pll_src_clock = src_clk_freq;
@@ -205,7 +203,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		}
 		// Set PLL multiplier and input
 		uint32_t pll_source = MAL_HSPEC_STM32F0_HSI_PLL_SRC;
-		if (MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
+		if (MAL_SYSTEM_CLK_SRC_EXTERNAL == clk_src) {
 			pll_source = RCC_PLLSource_HSE;
 		}
 		RCC_PLLConfig(pll_source, pll_mul_reg_values[j]);
@@ -217,10 +215,7 @@ mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk) 
 		while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
 	}
 
-	// Set system clock
-	mal_clock_set_system_clock(target_frequency);
-
-	if (clk->src != MAL_HSPEC_SYSTEM_CLK_SRC_AUTO && clk->src != clk_src) {
+	if (clk->src != MAL_SYSTEM_CLK_SRC_AUTO && clk->src != clk_src) {
 		return MAL_ERROR_CLOCK_ERROR;
 	} else if (SystemCoreClock != clk->frequency) {
 		return MAL_ERROR_CLOCK_ERROR;

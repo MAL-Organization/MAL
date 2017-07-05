@@ -23,24 +23,25 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "hspec/mal_hspec.h"
+#include "startup/mal_startup.h"
+#include "std/mal_defs.h"
 
 void mal_timer_states_init(void);
 void mal_reset_init(void);
 int main(void);
 
-void mal_startup_hardware(void) {
+void mal_startup_top_level(void) {
 	// Hardware specific startup
-	mal_hspec_startup();
+    mal_startup_hardware();
 
-	// Initialise library components
+	// Initialize library components
 	mal_timer_states_init();
 	mal_reset_init();
 }
 
-void __attribute__ ((section(".after_vectors"),noreturn)) mal_startup(void) {
+void MAL_DEFS_NO_RETURN mal_startup(void) {
 
-	mal_startup_hardware();
+    mal_startup_top_level();
 
 	main();
 

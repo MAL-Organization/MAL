@@ -30,12 +30,12 @@
  */
 void mal_reset_init(void);
 
-static mal_hspec_reset_source_e reset_source;
+static mal_reset_source_e reset_source;
 
 void mal_reset_init(void) {
-	reset_source = mal_hspec_reset_handle_reset_source();
+	reset_source = mal_reset_get_source_unmanaged();
 }
 
-mal_hspec_reset_source_e mal_reset_get_source(void) {
+mal_reset_source_e mal_reset_get_source(void) {
 	return reset_source;
 }

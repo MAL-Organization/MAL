@@ -150,34 +150,27 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 #define MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE	2
 
 #include "stm32f0/stm32f0xx_gpio.h"
-#include "hspec/mal_hspec.h"
+#include "gpio/mal_gpio.h"
+#include "timer/mal_timer.h"
 
 
 #define MAL_HSPEC_STM32F0_GET_GPIO_PIN(pin) (1 << pin)
 
-// Device specific function mapping section.
-#if defined(MAL_STM32F072RB) || defined(MAL_STM32F072CB)
+GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_gpio_port_e port);
 
-#include "hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072.h"
+uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_gpio_port_e port);
 
-#define mal_hspec_stm32f0_get_port_afs(port, afs) mal_hspec_stm32f072_get_port_afs(port, afs)
+mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
 
-#define mal_hspec_stm32f0_get_timer_afs(afs) mal_hspec_stm32f072_get_timer_afs(afs)
+/**
+ * @brief Get the supported alternate functions by pin for the current MCU.
+ * Must be defined for every family.
+ * @param afs Alternate functions.
+ */
+void mal_hspec_stm32f0_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]);
 
-#define mal_hspec_stm32f0_flash_get_page_size(page) mal_hspec_stm32f072_flash_get_page_size(page)
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_gpio_s *gpio, mal_timer_e timer, uint8_t *function);
 
-#define mal_hspec_stm32f0_flash_get_page_count() mal_hspec_stm32f072_flash_get_page_count()
-
-#else
-#error No valid hardware specfic device symbol specified...
-#endif
-
-GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port);
-
-uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port);
-
-mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
-
-mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_timer_e timer, uint8_t *function);
+mal_error_e mal_hspec_stm32f0_get_port_afs(mal_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CMN_H_ */

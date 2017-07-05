@@ -29,18 +29,35 @@
  * @{
  */
 
-#include "hspec/mal_hspec.h"
+/**
+ * The possible reset sources.
+ */
+typedef enum {
+    MAL_RESET_SOURCE_RESET_PIN,//!< The physical reset pin was asserted for a reset.
+    MAL_RESET_SOURCE_SOFTWARE, //!< The reset occurred because of a software request.
+    MAL_RESET_SOURCE_POWER,    //!< The reset occurred because of a power anomaly such as POR.
+    MAL_RESET_SOURCE_SLEEP,    //!< The MCU experienced a reset because of a transition of sleep condition.
+    MAL_RESET_SOURCE_WATCHDOG, //!< The reset occurred because of the watchdog.
+    MAL_RESET_SOURCE_UNKNOWN   //!< The source is not known.
+} mal_reset_source_e;
 
 /**
- * Calling this will reset the MCU.
+ * @brief Calling this will reset the MCU.
  */
-#define mal_reset_mcu() mal_hspec_reset_mcu()
+void mal_reset_mcu(void);
 
 /**
  * Return the last reset source.
  * @return Return the last reset source.
  */
-mal_hspec_reset_source_e mal_reset_get_source(void);
+mal_reset_source_e mal_reset_get_source(void);
+
+/**
+ * Return the last reset source. Note that on some systems, getting the source
+ * clears it. Use mal_reset_get_source to have the last reset source at boot.
+ * @return Return the last reset source.
+ */
+mal_reset_source_e mal_reset_get_source_unmanaged(void);
 
 /**
  * @}

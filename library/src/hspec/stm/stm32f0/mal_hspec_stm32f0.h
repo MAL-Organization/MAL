@@ -24,10 +24,11 @@
 #ifndef HSPEC_STM_MAL_HSPEC_STM32F0_H_
 #define HSPEC_STM_MAL_HSPEC_STM32F0_H_
 
-#include "std/mal_error.h"
 #include "stm32f0/stm32f0xx.h"
 #include "cmsis/core_cmInstr.h"
 #include "stm32f0/stm32f0xx_rcc.h"
+#include "clock/mal_clock.h"
+#include "std/mal_bool.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
@@ -35,12 +36,12 @@
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_SRC	RCC_PLLSource_HSI
 
-void mal_hspec_stm32f0_startup();
-
-mal_error_e mal_hspec_stm32f0_set_system_clk(const mal_hspec_system_clk_s *clk);
-
-mal_error_e mal_hspec_stm32f0_serial_init(mal_hspec_serial_init_s *init);
-
-mal_error_e mal_hspec_stm32f0_serial_transmit(mal_hspec_serial_port_e port, uint16_t data);
+/**
+ * @brief Indicates if a PLL division is available for the current family of
+ * STM32F0. Must be defined for every family.
+ * @param source The source of the clock.
+ * @return Returns true if available.
+ */
+bool mal_hspec_stm32f0_is_pll_div_available(mal_system_clk_src_e source);
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM32F0_H_ */

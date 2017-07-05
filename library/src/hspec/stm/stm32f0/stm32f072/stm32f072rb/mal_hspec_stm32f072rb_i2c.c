@@ -69,15 +69,15 @@ static const mal_hspec_gpio_s valid_i2c2_sda_gpios[] = {
 	}
 };
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_hspec_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size) {
+mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size) {
 	switch (interface) {
-	case MAL_HSPEC_I2C_1:
+	case MAL_I2C_1:
 		*scls = valid_i2c1_scl_gpios;
 		*scls_size = sizeof(valid_i2c1_scl_gpios) / sizeof(mal_hspec_gpio_s);
 		*sdas = valid_i2c1_sda_gpios;
 		*sdas_size = sizeof(valid_i2c1_sda_gpios) / sizeof(mal_hspec_gpio_s);
 		break;
-	case MAL_HSPEC_I2C_2:
+	case MAL_I2C_2:
 		*scls = valid_i2c2_scl_gpios;
 		*scls_size = sizeof(valid_i2c2_scl_gpios) / sizeof(mal_hspec_gpio_s);
 		*sdas = valid_i2c2_sda_gpios;

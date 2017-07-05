@@ -47,8 +47,8 @@ static const mal_hspec_gpio_s valid_can1_rx_gpios[] = {
 	}
 };
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_hspec_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size) {
-	if (MAL_HSPEC_CAN_1 != interface) {
+mal_error_e mal_hspec_stm32f072rb_get_valid_can_ios(mal_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size) {
+	if (MAL_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 

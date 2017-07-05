@@ -23,12 +23,12 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_dac.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "stm32f0/stm32f0xx_dac.h"
 #include "mal_hspec_stm32f0_cmn.h"
+#include "dac/mal_dac.h"
 
-mal_error_e mal_hspec_stm32f0_dac_init(mal_hspec_dac_init_s *init) {
+mal_error_e mal_dac_init(mal_dac_init_s *init) {
 	static bool initialized = false;
 	// Enable clock, all DACs are on port A for this MCU.
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
@@ -45,7 +45,7 @@ mal_error_e mal_hspec_stm32f0_dac_init(mal_hspec_dac_init_s *init) {
 	}
 	// Choose DAC channel
 	uint32_t channel = DAC_Channel_1;
-	if (MAL_HSPEC_DAC_1 != init->dac) {
+	if (MAL_DAC_1 != init->dac) {
 		channel = DAC_Channel_2;
 	}
 	// Initialize DAC
@@ -64,12 +64,12 @@ mal_error_e mal_hspec_stm32f0_dac_init(mal_hspec_dac_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_dac_write(mal_hspec_dac_e dac, uint64_t value) {
+mal_error_e mal_dac_write_bits(mal_dac_e dac, uint64_t value) {
 	switch (dac) {
-		case MAL_HSPEC_DAC_1:
+		case MAL_DAC_1:
 			DAC_SetChannel1Data(DAC_Align_12b_R, value);
 			break;
-		case MAL_HSPEC_DAC_2:
+		case MAL_DAC_2:
 			DAC_SetChannel2Data(DAC_Align_12b_R, value);
 			break;
 		default:
@@ -78,10 +78,10 @@ mal_error_e mal_hspec_stm32f0_dac_write(mal_hspec_dac_e dac, uint64_t value) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_dac_resolution(mal_hspec_dac_e dac, uint8_t *resolution) {
+mal_error_e mal_dac_resolution(mal_dac_e dac, uint8_t *resolution) {
 	switch (dac) {
-		case MAL_HSPEC_DAC_1:
-		case MAL_HSPEC_DAC_2:
+		case MAL_DAC_1:
+		case MAL_DAC_2:
 			*resolution = 12;
 			return MAL_ERROR_OK;
 		default:

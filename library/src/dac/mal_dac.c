@@ -26,18 +26,7 @@
 #include "mal_dac.h"
 #include "power/mal_power.h"
 
-mal_error_e mal_dac_init(mal_hspec_dac_init_s *init) {
-	mal_error_e result;
-	// Check if IO is valid
-	result = mal_hspec_is_dac_valid(init->dac, init->gpio);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-
-	return mal_hspec_dac_init(init);
-}
-
-mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, mal_volts_t value) {
+mal_error_e mal_dac_write_volts(mal_dac_e dac, mal_volts_t value) {
 	mal_error_e result;
 	// Convert value
 	uint64_t bit_value;
@@ -49,7 +38,7 @@ mal_error_e mal_dac_write_volts(mal_hspec_dac_e dac, mal_volts_t value) {
 	return mal_dac_write_bits(dac, bit_value);
 }
 
-mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, mal_volts_t value, uint64_t *bit_value) {
+mal_error_e mal_dac_volts_to_bits(mal_dac_e dac, mal_volts_t value, uint64_t *bit_value) {
 	mal_error_e result;
 	// Get DAC resolution
 	uint8_t resolution;
@@ -59,7 +48,7 @@ mal_error_e mal_dac_volts_to_bits(mal_hspec_dac_e dac, mal_volts_t value, uint64
 	}
 	// Get VDDA voltage
 	mal_volts_t vdda;
-    result = mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda);
+    result = mal_power_get_rail_voltage(MAL_POWER_RAIL_VDDA, &vdda);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

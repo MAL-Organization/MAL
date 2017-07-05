@@ -48,7 +48,7 @@ mal_error_e mal_adc_bits_to_volts(mal_adc_e adc, uint64_t bit_value, mal_volts_t
 	}
 	// Get VDDA value
 	mal_volts_t vdda_value;
-	result = mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda_value);
+	result = mal_power_get_rail_voltage(MAL_POWER_RAIL_VDDA, &vdda_value);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

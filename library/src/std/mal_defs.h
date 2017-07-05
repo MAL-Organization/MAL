@@ -1,13 +1,9 @@
-/*
- * mal_hspec_stm32f072_timer.h
- *
- *  Created on: Sep 6, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
- *
- * This file is part of MAL.
+/**
+ * @file mal_types.h
+ * @author Olivier Allaire
+ * @date July 05 2017
+ * @copyright Copyright (c) 2015 Olivier Allaire
+ * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,17 +17,24 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
+ * @brief Definitions of key elements for different platforms.
  */
 
-#ifndef HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_
-#define HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_
+#ifndef STD_MAL_DEFS_H_
+#define STD_MAL_DEFS_H_
 
-#include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
-#include "std/mal_stdint.h"
-#include "stm32f0/stm32f0xx.h"
+/**
+ * @defgroup DEFINITIONS
+ * @brief @copybrief mal_defs.h
+ * @{
+ */
 
-IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_timer_e timer);
-IRQn_Type mal_hspec_stm32f072_get_timer_compare_irq(mal_timer_e timer);
+#define MAL_DEFS_INLINE     __attribute__ ((gnu_inline)) inline
 
-#endif /* HSPEC_STM_STM32F0_STM32F072_MAL_HSPEC_STM32F072_TIMER_H_ */
+#define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
+
+/**
+ * @}
+ */
+
+#endif /* STD_MAL_DEFS_H_ */

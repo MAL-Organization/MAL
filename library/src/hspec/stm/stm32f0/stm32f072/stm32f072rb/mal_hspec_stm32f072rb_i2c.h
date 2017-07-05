@@ -30,7 +30,7 @@
 #include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_hspec_i2c_e interface,
+mal_error_e mal_hspec_stm32f072rb_get_valid_i2c_ios(mal_i2c_e interface,
 													const mal_hspec_gpio_s **scls,
 													uint8_t *scls_size,
 													const mal_hspec_gpio_s **sdas,

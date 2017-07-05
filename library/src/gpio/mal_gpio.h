@@ -26,6 +26,7 @@
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
+#include "std/mal_defs.h"
 
 /**
  * @defgroup GPIO
@@ -148,7 +149,7 @@ mal_error_e mal_gpio_event_remove(const mal_gpio_s *gpio);
  * @param gpio A pointer of type ::mal_hspec_gpio_s.
  * @return Returns true if interrupt was active before disabling it.
  */
-inline bool mal_gpio_event_disable_interrupt(const mal_gpio_s *gpio);
+MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(const mal_gpio_s *gpio);
 
 /**
  * @brief Enable interrupt for a GPIO event.
@@ -158,7 +159,7 @@ inline bool mal_gpio_event_disable_interrupt(const mal_gpio_s *gpio);
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-inline void mal_gpio_event_enable_interrupt(const mal_gpio_s *gpio, bool active);
+MAL_DEFS_INLINE void mal_gpio_event_enable_interrupt(const mal_gpio_s *gpio, bool active);
 
 /**
  * @brief Initialize a GPIO.

@@ -26,10 +26,6 @@
 #ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
 #define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
 
-#include "hspec/mal_hspec.h"
-#include "stm32f0/stm32f0xx_misc.h"
-#include "std/mal_error.h"
-#include "std/mal_bool.h"
 #include "std/mal_stdint.h"
 
 /**
@@ -41,25 +37,5 @@ typedef struct {
 	uint8_t sjw;		//!< SJW register
 	uint16_t prescaler;	//!< Prescaler register
 } mal_hspec_stm32f0_can_direct_init_s;
-
-#define mal_hspec_stm32f0_enable_can_interrupt(interface, active) do {\
-	if (active) { \
-		NVIC_EnableIRQ(30); \
-	} \
-} while(0)
-
-mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init);
-
-mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const void *direct_init);
-
-void mal_hspec_stm32f0_can_deinit(mal_hspec_can_e interface);
-
-mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg);
-
-mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
-
-mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter);
-
-bool mal_hspec_stm32f0_disable_can_interrupt(mal_hspec_can_e interface);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_ */

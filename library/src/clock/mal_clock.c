@@ -26,14 +26,27 @@
 #include "clock/mal_clock.h"
 #include "std/mal_stdint.h"
 
-void mal_clock_set_system_clock(uint64_t clock);
+static mal_hertz_t system_clock;
 
-static uint64_t system_clock;
-
-void mal_clock_set_system_clock(uint64_t clock) {
-	system_clock = clock;
+mal_error_e mal_clock_set_system_clock(const mal_system_clk_s *clk) {
+    mal_error_e result = mal_clock_set_system_clock_unmanaged(clk);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+	system_clock = clk->frequency;
+	return MAL_ERROR_OK;
 }
 
-uint64_t mal_clock_get_system_clock(void) {
+mal_hertz_t mal_clock_get_system_clock(void) {
 	return system_clock;
+}
+
+extern const mal_system_clk_s mal_target_system_clock;
+mal_error_e mal_clock_initialise_system_clock(void) {
+    return mal_clock_set_system_clock(&mal_target_system_clock);
+}
+
+extern uint64_t mal_external_clk_freq;
+mal_hertz_t mal_clock_get_external_clock_frequency(void) {
+    return mal_external_clk_freq;
 }

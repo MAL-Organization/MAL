@@ -24,7 +24,6 @@
  */
 
 #include "timer/mal_timer.h"
-#include "hspec/mal_hspec.h"
 #include "std/mal_math.h"
 
 #ifdef MAL_FLOAT
@@ -53,7 +52,6 @@ static mal_error_e mal_timer_internal_init(mal_timer_e timer,
 										   mal_timer_e *handle);
 
 static mal_error_e mal_timer_internal_direct_init(mal_timer_e timer,
-										   	   	  mal_timer_mode_e mode,
 												  mal_hertz_t frequency,
 												  mal_hertz_t delta,
 												  mal_timer_callback_t callback,
@@ -114,7 +112,7 @@ mal_error_e mal_timer_free(mal_timer_e timer) {
 	mal_error_e result = MAL_ERROR_OK;
 	// Free timer
 	if (!timer_states[timer].is_available) {
-		result = mal_hspec_timer_free(timer);
+		result = mal_timer_free_unmanaged(timer);
 		timer_states[timer].is_available = true;
 	}
 	return result;
@@ -156,7 +154,12 @@ static mal_error_e mal_timer_internal_init(mal_timer_e timer,
 		return result;
 	}
 	// Initialise timer
-	result = mal_hspec_timer_init(*handle, frequency, delta, callback);
+	mal_timer_init_s init;
+	init.timer = *handle;
+	init.frequency = frequency;
+	init.delta = delta;
+	init.callback = callback;
+	result = mal_timer_init(&init);
 
 	return result;
 }
@@ -226,7 +229,7 @@ mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state) {
 	// Copy timer
 	*state = timer_states[timer];
 	// Check if timer is valid
-	return mal_hspec_is_timer_valid(timer);
+	return mal_timer_is_valid(timer);
 }
 
 mal_error_e mal_timer_init_count(mal_timer_e timer,
@@ -290,7 +293,7 @@ mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init) 
 	}
 	timer_states[init->timer].delta = mal_timer_abs(init->frequency - count_frequency);
 	// Initialize timer
-	return mal_hspec_timer_input_capture_init(init);
+	return mal_timer_init_input_capture_unmanaged(init);
 }
 
 mal_error_e mal_timer_is_valid(mal_timer_e timer) {

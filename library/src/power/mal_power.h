@@ -23,14 +23,19 @@
 #ifndef POWER_MAL_POWER_H_
 #define POWER_MAL_POWER_H_
 
-#include "hspec/mal_hspec.h"
 #include "std/mal_error.h"
+#include "std/mal_types.h"
 
 /**
  * @defgroup POWER
  * @brief @copybrief mal_power.h
  * @{
  */
+
+typedef enum {
+    MAL_POWER_RAIL_VDDA = 0, //!< Analog power rail
+    MAL_POWER_RAIL_SIZE = 1  //!< Number of power rail
+} mal_power_rail_e;
 
 /**
  * @brief Get the voltage of a rail of the MCU.
@@ -40,7 +45,7 @@
  * rail voltage.
  * @return #MAL_ERROR_OK on success.
  */
-#define mal_power_get_rail_voltage(rail, value) mal_hspec_power_get_rail_voltage(rail, value)
+mal_error_e mal_power_get_rail_voltage(mal_power_rail_e rail, mal_volts_t *value);
 
 /**
  * @}

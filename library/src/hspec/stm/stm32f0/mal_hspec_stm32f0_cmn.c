@@ -26,7 +26,7 @@
 #include "mal_hspec_stm32f0_cmn.h"
 #include "std/mal_stdlib.h"
 
-GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port) {
+GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_gpio_port_e port) {
 	switch (port) {
 	case MAL_GPIO_PORT_A:
 		return GPIOA;
@@ -45,7 +45,7 @@ GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_hspec_gpio_port_e port) {
 	}
 }
 
-uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port) {
+uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_gpio_port_e port) {
 	switch (port) {
 	case MAL_GPIO_PORT_A:
 		return RCC_AHBPeriph_GPIOA;
@@ -63,7 +63,7 @@ uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_hspec_gpio_port_e port) {
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function) {
+mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function) {
 	const mal_hspec_stm32f0_af_e (*afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE];
 	mal_error_e result;
 	int port_af, pin_af;
@@ -85,7 +85,7 @@ mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_hspec_gpio_s *gpio, mal_hspec
 	return MAL_ERROR_HARDWARE_INVALID;
 }
 
-mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_hspec_gpio_s *gpio, mal_timer_e timer, uint8_t *function) {
+mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_gpio_s *gpio, mal_timer_e timer, uint8_t *function) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);

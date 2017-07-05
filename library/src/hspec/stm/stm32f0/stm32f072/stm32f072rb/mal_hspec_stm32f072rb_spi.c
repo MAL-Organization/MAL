@@ -114,7 +114,7 @@ static const mal_hspec_gpio_s valid_spi2_select_gpios[] = {
 	}
 };
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface,
+mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_spi_e interface,
 													const mal_hspec_gpio_s **mosis,
 													uint8_t *mosis_size,
 													const mal_hspec_gpio_s **misos,
@@ -124,7 +124,7 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface,
 													const mal_hspec_gpio_s **selects,
 													uint8_t *selects_size) {
 	switch (interface) {
-		case MAL_HSPEC_SPI_1:
+		case MAL_SPI_1:
 			*mosis = valid_spi1_mosi_gpios;
 			*mosis_size = sizeof(valid_spi1_mosi_gpios) / sizeof(mal_hspec_gpio_s);
 			*misos = valid_spi1_miso_gpios;
@@ -134,7 +134,7 @@ mal_error_e mal_hspec_stm32f072rb_get_valid_spi_ios(mal_hspec_spi_e interface,
 			*selects = valid_spi1_select_gpios;
 			*selects_size = sizeof(valid_spi1_select_gpios) / sizeof(mal_hspec_gpio_s);
 			break;
-		case MAL_HSPEC_SPI_2:
+		case MAL_SPI_2:
 			*mosis = valid_spi2_mosi_gpios;
 			*mosis_size = sizeof(valid_spi2_mosi_gpios) / sizeof(mal_hspec_gpio_s);
 			*misos = valid_spi2_miso_gpios;
