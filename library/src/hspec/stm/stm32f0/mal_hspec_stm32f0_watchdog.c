@@ -23,10 +23,11 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_watchdog.h"
+#include "watchdog/mal_watchdog.h"
+#include "stm32f0/stm32f0xx_iwdg.h"
 #include "std/mal_bool.h"
 
-mal_error_e mal_hspec_stm32f0_watchdog_init(uint32_t timeout_ms) {
+mal_error_e mal_watchdog_init(uint32_t timeout_ms) {
 	// Enable watchdog access
 	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
 	// Find prescaler and reload values
@@ -90,4 +91,8 @@ mal_error_e mal_hspec_stm32f0_watchdog_init(uint32_t timeout_ms) {
 	IWDG_Enable();
 
 	return MAL_ERROR_OK;
+}
+
+void mal_watchdog_feed(void) {
+    IWDG_ReloadCounter();
 }

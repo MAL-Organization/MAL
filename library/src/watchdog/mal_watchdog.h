@@ -23,7 +23,8 @@
 #ifndef WATCHDOG_MAL_WATCHDOG_H_
 #define WATCHDOG_MAL_WATCHDOG_H_
 
-#include "hspec/mal_hspec.h"
+#include "std/mal_stdint.h"
+#include "std/mal_error.h"
 
 /**
  * @defgroup Watchdog
@@ -39,13 +40,13 @@
  * @note Watchdog clock sources may have a large delta. Check your MCU's
  * datasheet and choose a timeout accordingly.
  */
-#define mal_watchdog_init(timeout_ms) mal_hspec_watchdog_init(timeout_ms)
+mal_error_e mal_watchdog_init(uint32_t timeout_ms);
 
 /**
  * @brief Call this function to reset the watchdog timeout.
  * @return Returns nothing.
  */
-#define mal_watchdog_feed() mal_hspec_watchdog_feed()
+void mal_watchdog_feed(void);
 
 /**
  * @}

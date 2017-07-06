@@ -23,10 +23,10 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_uuid.h"
+#include "uuid/mal_uuid.h"
 #include "stm32f0/stm32f0xx_flash.h"
 
-mal_error_e mal_hspec_stm32f0_uuid_read(uint64_t *uuid) {
+mal_error_e mal_uuid_read(uint64_t *uuid) {
 	FLASH_Unlock();
 	*uuid = *((volatile uint32_t*)0x1FFFF7AC);
 	FLASH_Lock();
