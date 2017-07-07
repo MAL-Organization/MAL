@@ -1,7 +1,7 @@
 /*
  * mal_hspec_stm32f051r8.c
  *
- *  Created on: May 3, 2015
+ *  Created on: July 7, 2017
  *      Author: Olivier
  */
 /*
@@ -25,79 +25,7 @@
 
 #include <stdlib.h>
 
-#include "mal_hspec_stm32f051r8.h"
-
-static const mal_hspec_port_e valid_ports[] = {
-	MAL_HSPEC_PORT_A,
-	MAL_HSPEC_PORT_B,
-	MAL_HSPEC_PORT_C,
-	MAL_HSPEC_PORT_D,
-	MAL_HSPEC_PORT_F
-};
-
-static const uint64_t valid_pins[MAL_HSPEC_PORT_SIZE] = {
-	0b1111111111111111,	// PA[0:15]
-	0b1111111111111111, // PB[0:15]
-	0b1111111111111111, // PC[0:15]
-	0b100,				// PD2
-	0,
-	0b11110011			// PF[0:1,4:7]
-};
-
-static const mal_hspec_timer_e valid_timers[] = {
-	MAL_HSPEC_TIMER_1,
-	MAL_HSPEC_TIMER_2,
-	MAL_HSPEC_TIMER_3,
-	MAL_HSPEC_TIMER_6,
-	MAL_HSPEC_TIMER_14,
-	MAL_HSPEC_TIMER_15,
-	MAL_HSPEC_TIMER_16,
-	MAL_HSPEC_TIMER_17
-};
-
-static const mal_hspec_gpio_s valid_i2c1_scl_gpios[] = {
-	{
-		.pin = 6,
-		.port = MAL_HSPEC_PORT_B
-	},
-	{
-		.pin = 8,
-		.port = MAL_HSPEC_PORT_B
-	}
-};
-
-static const mal_hspec_gpio_s valid_i2c1_sda_gpios[] = {
-	{
-		.pin = 7,
-		.port = MAL_HSPEC_PORT_B
-	},
-	{
-		.pin = 9,
-		.port = MAL_HSPEC_PORT_B
-	}
-};
-
-static const mal_hspec_gpio_s valid_i2c2_scl_gpios[] = {
-	{
-		.pin = 10,
-		.port = MAL_HSPEC_PORT_B
-	},
-	{
-		.pin = 6,
-		.port = MAL_HSPEC_PORT_F
-	}
-};
-
-static const mal_hspec_gpio_s valid_i2c2_sda_gpios[] = {
-	{
-		.pin = 11,
-		.port = MAL_HSPEC_PORT_B
-	},
-	{
-		.pin = 7,
-		.port = MAL_HSPEC_PORT_F
-	}
-};
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h"
 
 static const mal_hspec_stm32f0_af_e port_a_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE] = {
 	{
@@ -146,7 +74,7 @@ static const mal_hspec_stm32f0_af_e port_a_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT
 		{MAL_HSPEC_STM32F0_AF_SWCLK},{MAL_HSPEC_STM32F0_AF_USART2_TX},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE}
 	},
 	{
-		{MAL_HSPEC_STM32F0_AF_SPI1_NSS,MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_I2S1_WS},{MAL_HSPEC_STM32F0_AF_USART2_RX},{MAL_HSPEC_STM32F0_AF_TIM2_CH1_ETR},{MAL_HSPEC_STM32F0_AF_EVENTOUT},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE}
+		{MAL_HSPEC_STM32F0_AF_SPI1_NSS,MAL_HSPEC_STM32F0_AF_I2S1_WS},{MAL_HSPEC_STM32F0_AF_USART2_RX},{MAL_HSPEC_STM32F0_AF_TIM2_CH1_ETR},{MAL_HSPEC_STM32F0_AF_EVENTOUT},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE},{MAL_HSPEC_STM32F0_AF_NONE}
 	}
 };
 
@@ -201,73 +129,12 @@ static const mal_hspec_stm32f0_af_e port_b_valid_afs[MAL_HSPEC_STM32F0_GPIO_PORT
 	}
 };
 
-
-
-mal_error_e mal_hspec_stm32f051r8_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
-	*ports = valid_ports;
-	*size = sizeof(valid_ports) / sizeof(mal_hspec_port_e);
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_stm32f051r8_get_valid_pins(const uint64_t **pins) {
-	*pins = valid_pins;
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_stm32f051r8_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size) {
-	*timers = valid_timers;
-	*size = sizeof(valid_timers) / sizeof(mal_hspec_timer_e);
-	return MAL_ERROR_OK;
-}
-
-IRQn_Type mal_hspec_stm32f051r8_get_timer_update_irq(mal_hspec_timer_e timer) {
-	switch (timer) {
-	case MAL_HSPEC_TIMER_1:
-		return TIM1_BRK_UP_TRG_COM_IRQn;
-	case MAL_HSPEC_TIMER_2:
-		return TIM2_IRQn;
-	case MAL_HSPEC_TIMER_3:
-		return TIM3_IRQn;
-	case MAL_HSPEC_TIMER_6:
-		return TIM6_DAC_IRQn;
-	case MAL_HSPEC_TIMER_14:
-		return TIM14_IRQn;
-	case MAL_HSPEC_TIMER_15:
-		return TIM15_IRQn;
-	case MAL_HSPEC_TIMER_16:
-		return TIM16_IRQn;
-	case MAL_HSPEC_TIMER_17:
-	default:
-		return TIM17_IRQn;
-	}
-}
-
-mal_error_e mal_hspec_stm32f051r8_get_valid_i2c_ios(mal_hspec_i2c_e interface, const mal_hspec_gpio_s **scls, uint8_t *scls_size, const mal_hspec_gpio_s **sdas, uint8_t *sdas_size) {
-	switch (interface) {
-	case MAL_HSPEC_I2C_1:
-		*scls = valid_i2c1_scl_gpios;
-		*scls_size = sizeof(valid_i2c1_scl_gpios) / sizeof(mal_hspec_gpio_s);
-		*sdas = valid_i2c1_sda_gpios;
-		*sdas_size = sizeof(valid_i2c1_sda_gpios) / sizeof(mal_hspec_gpio_s);
-		break;
-	case MAL_HSPEC_I2C_2:
-		*scls = valid_i2c2_scl_gpios;
-		*scls_size = sizeof(valid_i2c2_scl_gpios) / sizeof(mal_hspec_gpio_s);
-		*sdas = valid_i2c2_sda_gpios;
-		*sdas_size = sizeof(valid_i2c2_sda_gpios) / sizeof(mal_hspec_gpio_s);
-		break;
-	default:
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_stm32f051r8_get_port_afs(mal_hspec_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]) {
+mal_error_e mal_hspec_stm32f0_get_port_afs(mal_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]) {
 	switch (port) {
-	case MAL_HSPEC_PORT_A:
+	case MAL_GPIO_PORT_A:
 		*afs = &port_a_valid_afs;
 		break;
-	case MAL_HSPEC_PORT_B:
+	case MAL_GPIO_PORT_B:
 		*afs = &port_b_valid_afs;
 		break;
 	default:

@@ -110,7 +110,10 @@ static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resoluti
 
 mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value) {
 	// Disable interrupt
-	NVIC_DisableIRQ(ADC1_COMP_IRQn);
+    // 12 equates to ADC_IRQ. However, the name of the constant changes based
+    // on the MCU because it is multiplex with other interrupts in some of them. It
+    // is simpler to use the constant directly.
+	NVIC_DisableIRQ(12);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, DISABLE);
 	// Start conversion
 	start_adc_conversion(adc);

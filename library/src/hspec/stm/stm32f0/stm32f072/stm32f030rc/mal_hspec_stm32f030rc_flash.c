@@ -1,7 +1,7 @@
 /*
- * mal_hspec_stm32f030r8.h
+ * mal_hspec_stm32f030rc_flash.c
  *
- *  Created on: May 3, 2015
+ *  Created on: July 7, 2017
  *      Author: Olivier
  */
 /*
@@ -23,14 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_MAL_HSPEC_STM32F030R8_H_
-#define HSPEC_STM_MAL_HSPEC_STM32F030R8_H_
+#include "flash/mal_flash.h"
 
-#include "std/mal_stdint.h"
-#include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
-
-mal_error_e mal_hspec_stm32f030r8_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size);
-mal_error_e mal_hspec_stm32f030r8_get_valid_pins(const uint64_t **pins);
-
-#endif /* HSPEC_STM_MAL_HSPEC_STM32F030R8_H_ */
+uint32_t mal_flash_get_page_count(void) {
+	return 128;
+}

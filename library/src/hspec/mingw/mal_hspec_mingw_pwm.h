@@ -27,7 +27,6 @@
 #define HSPEC_MINGW_MAL_HSPEC_MINGW_PWM_H_
 
 #include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
 
 mal_error_e mal_hspec_mingw_get_valid_pwm_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size);

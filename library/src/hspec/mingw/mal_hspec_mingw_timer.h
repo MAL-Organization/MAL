@@ -26,7 +26,6 @@
 #ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_
 #define HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_
 
-#include "hspec/mal_hspec_cmn.h"
 #include "std/mal_stdint.h"
 
 mal_error_e mal_hspec_mingw_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size);

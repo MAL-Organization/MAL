@@ -23,189 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072rb_timer.h"
 #include "std/mal_stdlib.h"
-
-static const mal_hspec_gpio_s valid_timer1_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 0
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 1
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 13
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 14
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 15
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 8
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 9
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 10
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 11
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer2_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 1
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 2
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 3
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 10
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 11
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 3
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer3_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 6
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 0
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 1
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 4
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 5
-	},
-	{
-		.port = MAL_GPIO_PORT_C,
-		.pin = 6
-	},
-	{
-		.port = MAL_GPIO_PORT_C,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_C,
-		.pin = 8
-	},
-	{
-		.port = MAL_GPIO_PORT_C,
-		.pin = 9
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer14_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 4
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 1
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer15_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 1
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 2
-	},
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 3
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 14
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 15
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer16_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 6
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 6
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 8
-	}
-};
-
-static const mal_hspec_gpio_s valid_timer17_gpios[] = {
-	{
-		.port = MAL_GPIO_PORT_A,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 7
-	},
-	{
-		.port = MAL_GPIO_PORT_B,
-		.pin = 9
-	}
-};
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 
 static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE] = {
 		{ // Port A
@@ -318,46 +137,54 @@ static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_H
 		}
 };
 
-mal_error_e mal_hspec_stm32f072rb_get_valid_channel_ios(mal_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
-	switch (timer) {
-		case MAL_TIMER_1:
-			*ios = valid_timer1_gpios;
-			*size = sizeof(valid_timer1_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_2:
-			*ios = valid_timer2_gpios;
-			*size = sizeof(valid_timer2_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_3:
-			*ios = valid_timer3_gpios;
-			*size = sizeof(valid_timer3_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_14:
-			*ios = valid_timer14_gpios;
-			*size = sizeof(valid_timer14_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_15:
-			*ios = valid_timer15_gpios;
-			*size = sizeof(valid_timer15_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_16:
-			*ios = valid_timer16_gpios;
-			*size = sizeof(valid_timer16_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		case MAL_TIMER_17:
-			*ios = valid_timer17_gpios;
-			*size = sizeof(valid_timer17_gpios) / sizeof(mal_hspec_gpio_s);
-			break;
-		default:
-			*ios = NULL;
-			break;
-	}
-	if (NULL == *ios) {
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	return MAL_ERROR_OK;
-}
-
 void mal_hspec_stm32f072rb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
 	*afs = &timer_channels_afs;
+}
+
+IRQn_Type mal_hspec_stm32f0_get_timer_update_irq(mal_timer_e timer) {
+    switch (timer) {
+    case MAL_TIMER_1:
+        return TIM1_BRK_UP_TRG_COM_IRQn;
+    case MAL_TIMER_2:
+        return TIM2_IRQn;
+    case MAL_TIMER_3:
+        return TIM3_IRQn;
+    case MAL_TIMER_6:
+        return TIM6_DAC_IRQn;
+    case MAL_TIMER_7:
+        return TIM7_IRQn;
+    case MAL_TIMER_14:
+        return TIM14_IRQn;
+    case MAL_TIMER_15:
+        return TIM15_IRQn;
+    case MAL_TIMER_16:
+        return TIM16_IRQn;
+    case MAL_TIMER_17:
+    default:
+        return TIM17_IRQn;
+    }
+}
+
+IRQn_Type mal_hspec_stm32f0_get_timer_compare_irq(mal_timer_e timer) {
+    switch (timer) {
+    case MAL_TIMER_1:
+        return TIM1_CC_IRQn;
+    case MAL_TIMER_2:
+        return TIM2_IRQn;
+    case MAL_TIMER_3:
+        return TIM3_IRQn;
+    case MAL_TIMER_6:
+        return TIM6_DAC_IRQn;
+    case MAL_TIMER_7:
+        return TIM7_IRQn;
+    case MAL_TIMER_14:
+        return TIM14_IRQn;
+    case MAL_TIMER_15:
+        return TIM15_IRQn;
+    case MAL_TIMER_16:
+        return TIM16_IRQn;
+    case MAL_TIMER_17:
+    default:
+        return TIM17_IRQn;
+    }
 }

@@ -1,7 +1,7 @@
 /*
- * mal_hspec_stm32f030r8.c
+ * mal_hspec_stm32f051r8_flash.c
  *
- *  Created on: May 3, 2015
+ *  Created on: July 7, 2017
  *      Author: Olivier
  */
 /*
@@ -23,32 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f030r8.h"
+#include "flash/mal_flash.h"
 
-static const mal_hspec_port_e valid_ports[] = {
-	MAL_GPIO_PORT_A,
-	MAL_GPIO_PORT_B,
-	MAL_GPIO_PORT_C,
-	MAL_GPIO_PORT_D,
-	MAL_GPIO_PORT_F
-};
-
-static const uint64_t valid_pins[MAL_GPIO_PORT_SIZE] = {
-	0b1111111111111111,	// PA[0:15]
-	0b1111111111111111, // PB[0:15]
-	0b1111111111111111, // PC[0:15]
-	0b100,				// PD2
-	0,
-	0b1111011			// PF[0:1,3:7]
-};
-
-mal_error_e mal_hspec_stm32f030r8_get_valid_ports(const mal_hspec_port_e **ports, uint8_t *size) {
-	*ports = valid_ports;
-	*size = sizeof(valid_ports);
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_stm32f030r8_get_valid_pins(const uint64_t **pins) {
-	*pins = valid_pins;
-	return MAL_ERROR_OK;
+uint32_t mal_flash_get_page_count(void) {
+	return 64;
 }
