@@ -23,19 +23,12 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_pwm.h"
-#include "mal_hspec_mingw_cmn.h"
+#include "timer/mal_timer.h"
 
-mal_error_e mal_hspec_mingw_get_valid_pwm_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
-	mal_hspec_mingw_cmn_valid_ios(ios, size);
-
+mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_pwm_init(mal_hspec_timer_pwm_init_s *init) {
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_mingw_timer_set_pwm_duty_cycle(mal_hspec_timer_e timer, const mal_hspec_gpio_s *gpio, mal_ratio_t duty_cycle) {
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gpio, mal_ratio_t duty_cycle) {
 	return MAL_ERROR_OK;
 }

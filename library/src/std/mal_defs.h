@@ -29,7 +29,18 @@
  * @{
  */
 
+#ifdef MAL_MINGW
+
+/**
+ * Skip inlines for MINGW.
+ */
+#define MAL_DEFS_INLINE
+
+#else
+
 #define MAL_DEFS_INLINE     __attribute__ ((gnu_inline)) inline
+
+#endif
 
 #define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
 

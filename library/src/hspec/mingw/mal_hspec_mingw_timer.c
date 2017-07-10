@@ -27,51 +27,50 @@
 #include "std/mal_bool.h"
 #include "std/mal_stdlib.h"
 #include "std/mal_stdint.h"
-#include "mal_hspec_mingw_cmn.h"
 #include <windows.h> // Leave this include last, windows defines the word interface and it creates conflicts.
 
 typedef struct {
-	mal_hspec_timer_e timer;
+	mal_timer_e timer;
 	float frequency;
-	mal_hspec_timer_callback_t callack;
+	mal_timer_callback_t callack;
 	HANDLE thread;
 	volatile bool active;
 	volatile uint32_t count;
-	mal_hspec_timer_input_capture_callback_t intput_capture_cb[MAL_HSPEC_GPIO_PORT_SIZE][PORT_SIZE];
+	mal_timer_input_capture_callback_t intput_capture_cb[MAL_GPIO_PORT_SIZE][PORT_SIZE];
 } mingw_timer_s;
 
 static DWORD WINAPI timer_thread(LPVOID lpParameter);
-static mal_error_e count_timer_callback(mal_hspec_timer_e timer);
+static mal_error_e count_timer_callback(mal_timer_e timer);
 
-static mal_hspec_timer_e available_timers[MAL_HSPEC_TIMER_SIZE];
-static mingw_timer_s mingw_timers[MAL_HSPEC_TIMER_SIZE];
+static mal_timer_e available_timers[MAL_TIMER_SIZE];
+static mingw_timer_s mingw_timers[MAL_TIMER_SIZE];
 
-mal_error_e mal_hspec_mingw_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size) {
+mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size) {
 	// Initialize timers
-	for (int i = 0; i < MAL_HSPEC_TIMER_SIZE; i++) {
+	for (int i = 0; i < MAL_TIMER_SIZE; i++) {
 		available_timers[i] = i;
 	}
 	// Set values
 	*timers = available_timers;
-	*size = MAL_HSPEC_TIMER_SIZE;
+	*size = MAL_TIMER_SIZE;
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_init(mal_hspec_timer_e timer, mal_hertz_t frequency, mal_hertz_t delta, mal_hspec_timer_callback_t callback) {
+mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	// Save timer parameters
-	mingw_timers[timer].timer = timer;
-	mingw_timers[timer].frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(frequency);
-	mingw_timers[timer].callack = callback;
+	mingw_timers[init->timer].timer = init->timer;
+	mingw_timers[init->timer].frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(init->frequency);
+	mingw_timers[init->timer].callack = init->callback;
 	// Set timer active
-	mingw_timers[timer].active = true;
+	mingw_timers[init->timer].active = true;
 	// Create thread
-	mingw_timers[timer].thread = CreateThread(NULL, /*Default security settings*/
-											  0, /*Default stack size*/
-											  &timer_thread,
-											  &mingw_timers[timer],
-											  0 /*Thread starts now*/,
-											  NULL /*No thread identifier*/);
-	if (NULL == mingw_timers[timer].thread) {
+	mingw_timers[init->timer].thread = CreateThread(NULL, /*Default security settings*/
+											        0, /*Default stack size*/
+											        &timer_thread,
+											        &mingw_timers[init->timer],
+											        0 /*Thread starts now*/,
+											        NULL /*No thread identifier*/);
+	if (NULL == mingw_timers[init->timer].thread) {
 		return MAL_ERROR_INIT_FAILED;
 	}
 
@@ -97,7 +96,7 @@ static DWORD WINAPI timer_thread(LPVOID lpParameter) {
 	return 0;
 }
 
-mal_error_e mal_hspec_mingw_timer_free(mal_hspec_timer_e timer) {
+mal_error_e mal_timer_free_unmanaged(mal_timer_e timer) {
 	// Set timer as not active
 	mingw_timers[timer].active = false;
 	// Join thread
@@ -106,37 +105,36 @@ mal_error_e mal_hspec_mingw_timer_free(mal_hspec_timer_e timer) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_count_init(mal_hspec_timer_e timer, mal_hertz_t frequency) {
-	return mal_hspec_mingw_timer_init(timer, frequency, 0, &count_timer_callback);
+mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency) {
+    mal_timer_init_s init;
+    init.timer = timer;
+    init.frequency = frequency;
+    init.delta = 0;
+    init.callback = &count_timer_callback;
+	return mal_timer_init(&init);
 }
 
-static mal_error_e count_timer_callback(mal_hspec_timer_e timer) {
+static mal_error_e count_timer_callback(mal_timer_e timer) {
 	mingw_timers[timer].count++;
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_get_resolution(mal_hspec_timer_e timer, uint8_t *resolution) {
+mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution) {
 	*resolution = 32;
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_get_count_frequency(mal_hspec_timer_e timer, mal_hertz_t *frequency) {
+mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *frequency) {
 	*frequency = MAL_TYPES_HERTZ_TO_MAL_HERTZ(mingw_timers[timer].frequency);
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_get_count(mal_hspec_timer_e timer, uint64_t *count) {
+mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count) {
 	*count = mingw_timers[timer].count;
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_get_valid_input_capture_ios(mal_hspec_timer_e timer, const mal_hspec_gpio_s **ios, uint8_t *size) {
-	mal_hspec_mingw_cmn_valid_ios(ios, size);
-
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_mingw_timer_input_capture_init(mal_hspec_timer_intput_capture_init_s *init) {
+mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init) {
 	// Save timer parameters
 	mingw_timers[init->timer].timer = init->timer;
 	mingw_timers[init->timer].frequency = init->frequency;
@@ -147,6 +145,6 @@ mal_error_e mal_hspec_mingw_timer_input_capture_init(mal_hspec_timer_intput_capt
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io, uint64_t value) {
+mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_timer_e timer, const mal_gpio_s *io, uint64_t value) {
 	return mingw_timers[timer].intput_capture_cb[io->port][io->pin](timer, value);
 }

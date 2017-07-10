@@ -24,40 +24,30 @@
  */
 
 #include "mal_hspec_mingw_can.h"
-#include "mal_hspec_mingw_cmn.h"
 #include "utils/mal_circular_buffer.h"
 
 #define MESSAGE_BUFFER_SIZE	3
 
 typedef struct {
-	mal_hspec_can_init_s init;
+	mal_can_init_s init;
 	mal_circular_buffer_s tx_circular_buffer;
-	mal_hspec_can_msg_s message_buffer[MESSAGE_BUFFER_SIZE];
+	mal_can_msg_s message_buffer[MESSAGE_BUFFER_SIZE];
 } mingw_can_interface_s;
 
-static mingw_can_interface_s can_interfaces[MAL_HSPEC_CAN_SIZE];
+static mingw_can_interface_s can_interfaces[MAL_CAN_SIZE];
 
-mal_error_e mal_hspec_mingw_get_valid_can_ios(mal_hspec_can_e interface, const mal_hspec_gpio_s **txs, uint8_t *txs_size, const mal_hspec_gpio_s **rxs, uint8_t *rxs_size) {
-	// Fetch IOs
-	mal_hspec_mingw_cmn_valid_ios(txs, txs_size);
-	*rxs = *txs;
-	*rxs_size = *txs_size;
-
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_hspec_mingw_can_init(mal_hspec_can_init_s *init) {
+mal_error_e mal_can_init(mal_can_init_s *init) {
 	// Save init
 	can_interfaces[init->interface].init = *init;
 	// Initialise circular buffer
 	mal_circular_buffer_init((void*)can_interfaces[init->interface].message_buffer,
-							 sizeof(mal_hspec_can_msg_s),
-							 sizeof(mal_hspec_can_msg_s) * MESSAGE_BUFFER_SIZE,
+							 sizeof(mal_can_msg_s),
+							 sizeof(mal_can_msg_s) * MESSAGE_BUFFER_SIZE,
 							 &can_interfaces[init->interface].tx_circular_buffer);
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
+mal_error_e mal_can_transmit(mal_can_e interface, mal_can_msg_s *msg) {
 	mal_error_e result;
 	// Write to buffer
 	result = mal_circular_buffer_write(&can_interfaces[interface].tx_circular_buffer, msg);
@@ -67,7 +57,7 @@ mal_error_e mal_hspec_mingw_can_transmit(mal_hspec_can_e interface, mal_hspec_ca
 	return result;
 }
 
-mal_error_e mal_hspec_mingw_can_get_tx_msg(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
+mal_error_e mal_hspec_mingw_can_get_tx_msg(mal_can_e interface, mal_can_msg_s *msg) {
 	mal_error_e result;
 	// Remove message from buffer
 	result = mal_circular_buffer_read(&can_interfaces[interface].tx_circular_buffer, msg);
@@ -75,23 +65,23 @@ mal_error_e mal_hspec_mingw_can_get_tx_msg(mal_hspec_can_e interface, mal_hspec_
 		return result;
 	}
 	// Execute tx callback
-	mal_hspec_can_msg_s next_msg;
+	mal_can_msg_s next_msg;
 	result = can_interfaces[interface].init.tx_callback(interface, &next_msg);
 	if (MAL_ERROR_OK == result) {
-		mal_hspec_mingw_can_transmit(interface, &next_msg);
+	    mal_can_transmit(interface, &next_msg);
 	}
 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+mal_error_e mal_can_add_filter(mal_can_e interface, mal_can_filter_s *filter) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+mal_error_e mal_can_remove_filter(mal_can_e interface, mal_can_filter_s *filter) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_can_push_rx_msg(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
+mal_error_e mal_hspec_mingw_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg) {
 	return can_interfaces[interface].init.rx_callback(interface, msg);
 }

@@ -34,7 +34,7 @@ typedef struct {
 	float value;
 } adc_info_s;
 
-static adc_info_s adc_array[MAL_HSPEC_ADC_SIZE];
+static adc_info_s adc_array[MAL_ADC_SIZE];
 
 mal_error_e mal_adc_init(mal_adc_init_s *init) {
 	// Save info
@@ -43,9 +43,9 @@ mal_error_e mal_adc_init(mal_adc_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_adc_read_bits(mal_error_e adc, uint64_t *value) {
+mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value) {
 	mal_volts_t vdda;
-	mal_power_get_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, &vdda);
+	mal_power_get_rail_voltage(MAL_POWER_RAIL_VDDA, &vdda);
 	// Compute ratio
 	float ratio = adc_array[adc].value / MAL_TYPES_MAL_VOLTS_TO_VOLTS(vdda);
 	// Get resolution
@@ -83,7 +83,7 @@ void mal_hspec_mingw_adc_do_async(mal_adc_e adc) {
 		adc_array[adc].callback = NULL;
 		// Fetch value
 		uint64_t value;
-		mal_hspec_mingw_adc_read(adc, &value);
+		mal_adc_read_bits(adc, &value);
 		// Execute
 		cb(adc, value);
 	}

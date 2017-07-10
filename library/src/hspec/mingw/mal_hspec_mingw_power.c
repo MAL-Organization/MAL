@@ -25,13 +25,13 @@
 
 #include "mal_hspec_mingw_power.h"
 
-static mal_volts_t rail_values[MAL_HSPEC_POWER_RAIL_SIZE];
+static mal_volts_t rail_values[MAL_POWER_RAIL_SIZE];
 
-mal_error_e mal_hspec_mingw_power_get_rail_voltage(mal_hspec_power_rail_e rail, mal_volts_t *value) {
+mal_error_e mal_power_get_rail_voltage(mal_power_rail_e rail, mal_volts_t *value) {
 	*value = rail_values[rail];
 	return MAL_ERROR_OK;
 }
 
-void mal_hspec_mingw_power_set_rail_voltage(mal_hspec_power_rail_e rail, mal_volts_t value) {
+void mal_hspec_mingw_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value) {
 	rail_values[rail] = value;
 }
