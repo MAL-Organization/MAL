@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw_flash.h
+ * mal_hspec_mingw_startup.c
  *
- *  Created on: Sep 8, 2016
+ *  Created on: Jul 10, 2017
  *      Author: Olivier
  */
 /*
@@ -23,24 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_
+#include "startup/mal_startup.h"
 
-#include "std/mal_error.h"
-#include "std/mal_stdint.h"
-#include "flash/mal_flash.h"
+void mal_startup_hardware(void) {
 
-typedef struct {
-	uint32_t size;
-} mal_hspec_mingw_flash_page_info_s;
-
-typedef struct {
-	mal_hspec_mingw_flash_page_info_s *pages;
-	uint32_t page_count;
-} mal_hspec_mingw_flash_info_s;
-
-void mal_hspec_mingw_flash_set_flash(mal_hspec_mingw_flash_info_s *info);
-
-mal_error_e mal_hspec_mingw_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count);
-
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_ */
+}

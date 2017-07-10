@@ -26,6 +26,7 @@
 extern "C" {
 #include "utils/mal_e3prom.h"
 #include "hspec/mingw/mal_hspec_mingw_flash.h"
+#include "flash/mal_flash.h"
 }
 
 #include "gtest/gtest.h"
@@ -283,14 +284,14 @@ TEST_F(TestMalE3prom, InitWithPrimaryDecommissioned) {
 	// Make sure we switched to secondary section
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_SECONDARY) << "Secondary section should be active";
 	// Force state of secondary to init
-	uint64_t key_address = mal_hspec_mingw_flash_get_page_start_address(3);
-	key_address += mal_hspec_mingw_flash_get_page_size(3);
+	uint64_t key_address = mal_flash_get_page_start_address(3);
+	key_address += mal_flash_get_page_size(3);
 	key_address -= sizeof(uint32_t) * 2;
 	uint32_t key = MAL_E3PROM_STATE_KEY;
-	mal_hspec_mingw_flash_write_uint32_values(key_address, &key, 1);
+	mal_flash_write_uint32_values(key_address, &key, 1);
 	uint64_t value_address = key_address + sizeof(uint32_t);
 	value = MAL_E3PROM_STATE_INITIALIZING;
-	mal_hspec_mingw_flash_write_uint32_values(value_address, &value, 1);
+	mal_flash_write_uint32_values(value_address, &value, 1);
 	// Now, the emulated flash is initialized. We will reinitialize to make
 	// sure the e3prom handles initialized flash.
 	init.primary_start_page = 0;
@@ -355,14 +356,14 @@ TEST_F(TestMalE3prom, InitWithSecondaryDecommissioned) {
 	// Make sure we switched to primary section
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Force state of primary to init
-	uint64_t key_address = mal_hspec_mingw_flash_get_page_start_address(1);
-	key_address += mal_hspec_mingw_flash_get_page_size(1);
+	uint64_t key_address = mal_flash_get_page_start_address(1);
+	key_address += mal_flash_get_page_size(1);
 	key_address -= sizeof(uint32_t) * 2;
 	uint32_t key = MAL_E3PROM_STATE_KEY;
-	mal_hspec_mingw_flash_write_uint32_values(key_address, &key, 1);
+	mal_flash_write_uint32_values(key_address, &key, 1);
 	uint64_t value_address = key_address + sizeof(uint32_t);
 	value = MAL_E3PROM_STATE_INITIALIZING;
-	mal_hspec_mingw_flash_write_uint32_values(value_address, &value, 1);
+	mal_flash_write_uint32_values(value_address, &value, 1);
 	// Now, the emulated flash is initialized. We will reinitialize to make
 	// sure the e3prom handles initialized flash.
 	init.primary_start_page = 0;

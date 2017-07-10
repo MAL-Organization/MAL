@@ -32,7 +32,7 @@ extern "C" {
 
 void TestMalTimer::SetUp() {
 	// Set up MAL library
-	mal_startup_hardware();
+	mal_startup_top_level();
 }
 
 void TestMalTimer::TearDown() {

@@ -25,7 +25,6 @@
 
 extern "C" {
 #include "dac/mal_dac.h"
-#include "hspec/mingw/mal_hspec_mingw_dac.h"
 #include "hspec/mingw/mal_hspec_mingw_power.h"
 }
 
@@ -39,11 +38,11 @@ TEST_F(TestMalDac, VoltsToBits) {
 	mal_error_e result;
 	// Setup power rail
 	mal_volts_t	vdda = MAL_TYPES_VOLTS_TO_MAL_VOLTS(3.3f);
-	mal_hspec_mingw_power_set_rail_voltage(MAL_HSPEC_POWER_RAIL_VDDA, vdda);
+	mal_hspec_mingw_power_set_rail_voltage(MAL_POWER_RAIL_VDDA, vdda);
 	// Test data
-	mal_dac_e test_dac = MAL_HSPEC_DAC_0;
+	mal_dac_e test_dac = MAL_DAC_0;
 	uint8_t test_resolution = 16;
-	mal_hspec_gpio_s test_gpio;
+	mal_gpio_s test_gpio;
 	test_gpio.port = MAL_GPIO_PORT_A;
 	test_gpio.pin = 0;
 	// Setup DAC

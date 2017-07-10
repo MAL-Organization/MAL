@@ -56,6 +56,10 @@ mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size
 	return MAL_ERROR_OK;
 }
 
+mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init) {
+    return mal_timer_init(init);
+}
+
 mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	// Save timer parameters
 	mingw_timers[init->timer].timer = init->timer;
@@ -147,4 +151,12 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 
 mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_timer_e timer, const mal_gpio_s *io, uint64_t value) {
 	return mingw_timers[timer].intput_capture_cb[io->port][io->pin](timer, value);
+}
+
+MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_e timer) {
+    return false;
+}
+
+MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active) {
+
 }
