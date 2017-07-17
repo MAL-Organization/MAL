@@ -55,4 +55,19 @@ IRQn_Type mal_hspec_stm32f0_get_timer_update_irq(mal_timer_e timer);
  */
 IRQn_Type mal_hspec_stm32f0_get_timer_compare_irq(mal_timer_e timer);
 
+/**
+ * Needed by tests.
+ */
+TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer);
+
+/**
+ * Needed by tests.
+ */
+mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
+
+/**
+ * Needed by tests.
+ */
+uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

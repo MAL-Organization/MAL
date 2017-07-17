@@ -44,13 +44,7 @@ static mal_error_e mal_hspec_stm32f0_timer_init_timer_rcc(mal_timer_e timer);
 
 static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer);
 
-static TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer);
-
 static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
-
-static mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
-
-static uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer);
 
 static timer_callback_u timer_callbacks[MAL_TIMER_SIZE];
 
@@ -208,7 +202,7 @@ default:
 }
 }
 
-static TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer) {
+TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer) {
 	switch (timer) {
 	case MAL_TIMER_1:
 		return TIM1;
@@ -233,8 +227,8 @@ static TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer) {
 	}
 }
 
-static mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
-												  	  	 uint64_t *clock) {
+mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
+  										  	  	  uint64_t *clock) {
 	// MCU clocks
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
@@ -442,7 +436,7 @@ MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active) 
 	}
 }
 
-static uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer) {
+uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
