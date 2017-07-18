@@ -1,19 +1,19 @@
 var group___d_a_c =
 [
-    [ "mal_hspec_dac_init_s", "structmal__hspec__dac__init__s.html", [
-      [ "bit_resolution", "structmal__hspec__dac__init__s.html#ab028429405131f71983cd49d94547baf", null ],
-      [ "dac", "structmal__hspec__dac__init__s.html#a1b37673043687606ad3291c02027df3b", null ],
-      [ "gpio", "structmal__hspec__dac__init__s.html#abd4c773a6091f151aa4cd2127a3bbecf", null ]
+    [ "mal_dac_init_s", "structmal__dac__init__s.html", [
+      [ "bit_resolution", "structmal__dac__init__s.html#ab028429405131f71983cd49d94547baf", null ],
+      [ "dac", "structmal__dac__init__s.html#a04e7c9496554d4565df12e471ca14d21", null ],
+      [ "gpio", "structmal__dac__init__s.html#a6f6845e612fef4b9dc132c684b4ee991", null ]
     ] ],
-    [ "mal_dac_resolution", "group___d_a_c.html#ga40b3e075ee0a786d0236378ce8f187ea", null ],
-    [ "mal_dac_write_bits", "group___d_a_c.html#ga5fb31c27770014f451388b74d7baafb6", null ],
-    [ "mal_hspec_dac_e", "group___d_a_c.html#ga7a36d5fd0e2a787cf85e8464c9a673fb", [
-      [ "MAL_HSPEC_DAC_0", "group___d_a_c.html#gga7a36d5fd0e2a787cf85e8464c9a673fbae4c821e6515f84f9e3d1d993019ca3f3", null ],
-      [ "MAL_HSPEC_DAC_1", "group___d_a_c.html#gga7a36d5fd0e2a787cf85e8464c9a673fba3d3ce14f9ceba277f57b2b16f1c334f4", null ],
-      [ "MAL_HSPEC_DAC_2", "group___d_a_c.html#gga7a36d5fd0e2a787cf85e8464c9a673fba58faf64e893e969e1b05d167b114fd52", null ],
-      [ "MAL_HSPEC_DAC_SIZE", "group___d_a_c.html#gga7a36d5fd0e2a787cf85e8464c9a673fba3853278c56d899811abaed16b58fbbf5", null ]
+    [ "mal_dac_e", "group___d_a_c.html#gaa71042522a8a3499774251d2888d125a", [
+      [ "MAL_DAC_0", "group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa83f5b22616ae8c45ccbdc7751986c294", null ],
+      [ "MAL_DAC_1", "group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa567eab75d61f45e6bc513915d6406c43", null ],
+      [ "MAL_DAC_2", "group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aaa83cc82b7825621ec15955e807bbf84b", null ],
+      [ "MAL_DAC_SIZE", "group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa3542b20802cf26f77d214eb683491cb7", null ]
     ] ],
-    [ "mal_dac_init", "group___d_a_c.html#ga3411c027874ff9a133fe4d59eb422e97", null ],
-    [ "mal_dac_volts_to_bits", "group___d_a_c.html#ga778ef852694d7128070cb016ec4bd6c4", null ],
-    [ "mal_dac_write_volts", "group___d_a_c.html#ga64b47d6efd161a442e4b20037b637912", null ]
+    [ "mal_dac_init", "group___d_a_c.html#ga0ca6676144e8b51a73414bd5793c31d6", null ],
+    [ "mal_dac_resolution", "group___d_a_c.html#gaa55ec9bca3fdd01e7b33886c51582d99", null ],
+    [ "mal_dac_volts_to_bits", "group___d_a_c.html#ga15a48cc615aa4648820319fab12e09ed", null ],
+    [ "mal_dac_write_bits", "group___d_a_c.html#ga9e40938979d15736a1529469cc4bcdd3", null ],
+    [ "mal_dac_write_volts", "group___d_a_c.html#gaefcc02e714e6993456fecd69aa3910c9", null ]
 ];

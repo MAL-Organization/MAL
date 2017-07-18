@@ -1,5 +1,5 @@
 var group___watchdog =
 [
-    [ "mal_watchdog_feed", "group___watchdog.html#gaa3b5d70f629a20b500744747db731d34", null ],
-    [ "mal_watchdog_init", "group___watchdog.html#ga204563c36c914caacd302ad1b0a88dba", null ]
+    [ "mal_watchdog_feed", "group___watchdog.html#ga8ea6bd49f56fe71d13ad11d853e08e95", null ],
+    [ "mal_watchdog_init", "group___watchdog.html#ga21b32566e70c678aced3afb4d340e98c", null ]
 ];

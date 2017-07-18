@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -83,7 +83,6 @@ $(document).ready(function(){initNavTree('group___i2_c.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -97,224 +96,79 @@ $(document).ready(function(){initNavTree('group___i2_c.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__i2c__init__s.html">mal_hspec_i2c_init_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__i2c__init__s.html">mal_i2c_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__i2c__packet__s.html">mal_hspec_i2c_packet_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__i2c__packet__s.html">mal_i2c_packet_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__i2c__buffer__init__s.html">mal_i2c_buffer_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga378e15cfd808ee59f3a217945a9b1a34"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga378e15cfd808ee59f3a217945a9b1a34">mal_i2c_master_direct_init</a>(init,  direct_init)&#160;&#160;&#160;mal_hspec_i2c_master_direct_init(init, direct_init)</td></tr>
-<tr class="memdesc:ga378e15cfd808ee59f3a217945a9b1a34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final version.  <a href="#ga378e15cfd808ee59f3a217945a9b1a34">More...</a><br /></td></tr>
-<tr class="separator:ga378e15cfd808ee59f3a217945a9b1a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafdc683634ef1866aef01494eb1c15be3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gafdc683634ef1866aef01494eb1c15be3">mal_i2c_transfer</a>(interface,  msg)&#160;&#160;&#160;mal_hspec_i2c_transfer(interface, msg)</td></tr>
-<tr class="memdesc:gafdc683634ef1866aef01494eb1c15be3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an I2C transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result.  <a href="#gafdc683634ef1866aef01494eb1c15be3">More...</a><br /></td></tr>
-<tr class="separator:gafdc683634ef1866aef01494eb1c15be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3dd2f91f365c738c807266600c48d1ef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga3dd2f91f365c738c807266600c48d1ef">mal_i2c_disable_interrupt</a>(interface)&#160;&#160;&#160;mal_hspec_i2c_disable_interrupt(interface)</td></tr>
-<tr class="memdesc:ga3dd2f91f365c738c807266600c48d1ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable an I2C interrupt.  <a href="#ga3dd2f91f365c738c807266600c48d1ef">More...</a><br /></td></tr>
-<tr class="separator:ga3dd2f91f365c738c807266600c48d1ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga36abbdaf24808fc4eb84af3f8b956f69"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga36abbdaf24808fc4eb84af3f8b956f69">mal_i2c_enable_interrupt</a>(interface,  active)&#160;&#160;&#160;mal_hspec_i2c_enable_interrupt(interface, active)</td></tr>
-<tr class="memdesc:ga36abbdaf24808fc4eb84af3f8b956f69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable an I2C interrupt.  <a href="#ga36abbdaf24808fc4eb84af3f8b956f69">More...</a><br /></td></tr>
-<tr class="separator:ga36abbdaf24808fc4eb84af3f8b956f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga3b03405cc5612c905d41a5b409cd7d42"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga3b03405cc5612c905d41a5b409cd7d42">mal_hspec_i2c_callback_t</a>) (<a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a> interface, <a class="el" href="structmal__hspec__i2c__packet__s.html">mal_hspec_i2c_packet_s</a> *packet, <a class="el" href="group___i2_c.html#gaf3214fe6bf65d0678d1817e6839bc96b">mal_hspec_i2c_result_e</a> result, <a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a> **next_msg)</td></tr>
-<tr class="memdesc:ga3b03405cc5612c905d41a5b409cd7d42"><td class="mdescLeft">&#160;</td><td class="mdescRight">This callback is used when a transaction completes.  <a href="#ga3b03405cc5612c905d41a5b409cd7d42">More...</a><br /></td></tr>
-<tr class="separator:ga3b03405cc5612c905d41a5b409cd7d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa291333d44f9b6f4438a74b345e5b9ff"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaa291333d44f9b6f4438a74b345e5b9ff">mal_i2c_callback_t</a>) (<a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> interface, <a class="el" href="structmal__i2c__packet__s.html">mal_i2c_packet_s</a> *packet, <a class="el" href="group___i2_c.html#gae9203f6933f190cafbcce85224851690">mal_i2c_result_e</a> result, <a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> **next_msg)</td></tr>
+<tr class="memdesc:gaa291333d44f9b6f4438a74b345e5b9ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">This callback is used when a transaction completes.  <a href="#gaa291333d44f9b6f4438a74b345e5b9ff">More...</a><br /></td></tr>
+<tr class="separator:gaa291333d44f9b6f4438a74b345e5b9ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gafaef88212661b06981d279d2fedfdc70"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a> { <a class="el" href="group___i2_c.html#ggafaef88212661b06981d279d2fedfdc70a5d5a7385e9fa763e82df2e7067d88ee3">MAL_HSPEC_I2C_1</a> = 0, 
-<a class="el" href="group___i2_c.html#ggafaef88212661b06981d279d2fedfdc70a600eb8a490f5c970e87faa9848b7360c">MAL_HSPEC_I2C_2</a> = 1, 
-<a class="el" href="group___i2_c.html#ggafaef88212661b06981d279d2fedfdc70ade66bbc9db108be07e28f603d7280613">MAL_HSPEC_I2C_SIZE</a> = 2
+<tr class="memitem:gaa1cf343634ed06daff6ecb6168225fd2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> { <a class="el" href="group___i2_c.html#ggaa1cf343634ed06daff6ecb6168225fd2ae75f11f3b1e1091f226844edae899073">MAL_I2C_1</a> = 0, 
+<a class="el" href="group___i2_c.html#ggaa1cf343634ed06daff6ecb6168225fd2a789feeab2b4b42bdac81d0b538a00a1a">MAL_I2C_2</a> = 1, 
+<a class="el" href="group___i2_c.html#ggaa1cf343634ed06daff6ecb6168225fd2a316687a973127eb356d747eeeaf0999b">MAL_I2C_SIZE</a> = 2
  }</td></tr>
-<tr class="separator:gafaef88212661b06981d279d2fedfdc70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga202ce26a74e61d990a648a34ed0f3d14"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga202ce26a74e61d990a648a34ed0f3d14">mal_hspec_i2c_cmd_e</a> { <a class="el" href="group___i2_c.html#gga202ce26a74e61d990a648a34ed0f3d14a561346392b1b3151b91584dca1a757c4">MAL_HSPEC_I2C_READ</a>, 
-<a class="el" href="group___i2_c.html#gga202ce26a74e61d990a648a34ed0f3d14a525b6972d9c38a3cdc85d84f0af1cb40">MAL_HSPEC_I2C_WRITE</a>
+<tr class="separator:gaa1cf343634ed06daff6ecb6168225fd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29e887ca6237925a9642b7944fb4afa2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga29e887ca6237925a9642b7944fb4afa2">mal_i2c_cmd_e</a> { <a class="el" href="group___i2_c.html#gga29e887ca6237925a9642b7944fb4afa2a8a58678478f2e5302207a9cd32f2eb2f">MAL_I2C_READ</a>, 
+<a class="el" href="group___i2_c.html#gga29e887ca6237925a9642b7944fb4afa2a81987a2f60ad03815a19dfc75cb95ca1">MAL_I2C_WRITE</a>
  }</td></tr>
-<tr class="separator:ga202ce26a74e61d990a648a34ed0f3d14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf3214fe6bf65d0678d1817e6839bc96b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaf3214fe6bf65d0678d1817e6839bc96b">mal_hspec_i2c_result_e</a> { <a class="el" href="group___i2_c.html#ggaf3214fe6bf65d0678d1817e6839bc96baba24b6495acff8324362041f2a79f3e2">MAL_HSPEC_I2C_SUCCESS</a>, 
-<a class="el" href="group___i2_c.html#ggaf3214fe6bf65d0678d1817e6839bc96bab4186f53049766cb36420df0441bbc5b">MAL_HSPEC_I2C_NACK_COMPLETE</a>, 
-<a class="el" href="group___i2_c.html#ggaf3214fe6bf65d0678d1817e6839bc96ba520628ed472ae87087d91bd9bcdf4504">MAL_HSPEC_I2C_NACK_INCOMPLETE</a>, 
-<a class="el" href="group___i2_c.html#ggaf3214fe6bf65d0678d1817e6839bc96ba2c457315b55fb31e050cd987afa8817d">MAL_HSPEC_I2C_BUS_ERROR</a>
+<tr class="separator:ga29e887ca6237925a9642b7944fb4afa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae9203f6933f190cafbcce85224851690"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gae9203f6933f190cafbcce85224851690">mal_i2c_result_e</a> { <a class="el" href="group___i2_c.html#ggae9203f6933f190cafbcce85224851690a8508e5d44ec5362fe42473b2f3c2a403">MAL_I2C_SUCCESS</a>, 
+<a class="el" href="group___i2_c.html#ggae9203f6933f190cafbcce85224851690a2bf5a085f69c3b7e5f79f47b55875e0d">MAL_I2C_NACK_COMPLETE</a>, 
+<a class="el" href="group___i2_c.html#ggae9203f6933f190cafbcce85224851690a591b5797d6577525ac7a4974983f49a8">MAL_I2C_NACK_INCOMPLETE</a>, 
+<a class="el" href="group___i2_c.html#ggae9203f6933f190cafbcce85224851690a9a277da55868724e943349546fb867d8">MAL_I2C_BUS_ERROR</a>
  }</td></tr>
-<tr class="separator:gaf3214fe6bf65d0678d1817e6839bc96b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gae9203f6933f190cafbcce85224851690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga0ef2e6338b04b304b9682b3c481498a8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga0ef2e6338b04b304b9682b3c481498a8">mal_i2c_init_master</a> (<a class="el" href="structmal__hspec__i2c__init__s.html">mal_hspec_i2c_init_s</a> *init)</td></tr>
-<tr class="memdesc:ga0ef2e6338b04b304b9682b3c481498a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an I2C interface as a master interface.  <a href="#ga0ef2e6338b04b304b9682b3c481498a8">More...</a><br /></td></tr>
-<tr class="separator:ga0ef2e6338b04b304b9682b3c481498a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3a576ea6416190a862962b8afb9cd1bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga3a576ea6416190a862962b8afb9cd1bd">mal_i2c_master_direct_init</a> (<a class="el" href="structmal__i2c__init__s.html">mal_i2c_init_s</a> *init, const void *direct_init)</td></tr>
+<tr class="memdesc:ga3a576ea6416190a862962b8afb9cd1bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final version.  <a href="#ga3a576ea6416190a862962b8afb9cd1bd">More...</a><br /></td></tr>
+<tr class="separator:ga3a576ea6416190a862962b8afb9cd1bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf0c308a429e9f98b1f2dd3313d473e63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaf0c308a429e9f98b1f2dd3313d473e63">mal_i2c_transfer</a> (<a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> interface, <a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:gaf0c308a429e9f98b1f2dd3313d473e63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an I2C transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result.  <a href="#gaf0c308a429e9f98b1f2dd3313d473e63">More...</a><br /></td></tr>
+<tr class="separator:gaf0c308a429e9f98b1f2dd3313d473e63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf385a275bc8d8c11e34cef41c803dd6c"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaf385a275bc8d8c11e34cef41c803dd6c">mal_i2c_disable_interrupt</a> (<a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> interface)</td></tr>
+<tr class="memdesc:gaf385a275bc8d8c11e34cef41c803dd6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable an I2C interrupt.  <a href="#gaf385a275bc8d8c11e34cef41c803dd6c">More...</a><br /></td></tr>
+<tr class="separator:gaf385a275bc8d8c11e34cef41c803dd6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4df3e61347c08078696fc5fa12593689"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga4df3e61347c08078696fc5fa12593689">mal_i2c_enable_interrupt</a> (<a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> interface, bool active)</td></tr>
+<tr class="memdesc:ga4df3e61347c08078696fc5fa12593689"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable an I2C interrupt.  <a href="#ga4df3e61347c08078696fc5fa12593689">More...</a><br /></td></tr>
+<tr class="separator:ga4df3e61347c08078696fc5fa12593689"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0fb6e20ece3f52065202094ea80f0f33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga0fb6e20ece3f52065202094ea80f0f33">mal_i2c_init_master</a> (<a class="el" href="structmal__i2c__init__s.html">mal_i2c_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga0fb6e20ece3f52065202094ea80f0f33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an I2C interface as a master interface.  <a href="#ga0fb6e20ece3f52065202094ea80f0f33">More...</a><br /></td></tr>
+<tr class="separator:ga0fb6e20ece3f52065202094ea80f0f33"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa5b478bf7aab75bc015143dd0c9dc8d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gaa5b478bf7aab75bc015143dd0c9dc8d8">mal_i2c_buffer_init</a> (<a class="el" href="structmal__i2c__buffer__init__s.html">mal_i2c_buffer_init_s</a> *init, <a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle)</td></tr>
 <tr class="memdesc:gaa5b478bf7aab75bc015143dd0c9dc8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize an I2C buffer.  <a href="#gaa5b478bf7aab75bc015143dd0c9dc8d8">More...</a><br /></td></tr>
 <tr class="separator:gaa5b478bf7aab75bc015143dd0c9dc8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac705ea4178218cd16f19b45ebad0a7f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gac705ea4178218cd16f19b45ebad0a7f0">mal_i2c_buffer_direct_init</a> (<a class="el" href="structmal__i2c__buffer__init__s.html">mal_i2c_buffer_init_s</a> *init, <a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, const void *direct_init)</td></tr>
 <tr class="memdesc:gac705ea4178218cd16f19b45ebad0a7f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an I2C buffer and an I2C interface using direct initialization.  <a href="#gac705ea4178218cd16f19b45ebad0a7f0">More...</a><br /></td></tr>
 <tr class="separator:gac705ea4178218cd16f19b45ebad0a7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga094b5f730da24044674227a562971a5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga094b5f730da24044674227a562971a5e">mal_i2c_buffer_write</a> (<a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga094b5f730da24044674227a562971a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to the buffer.  <a href="#ga094b5f730da24044674227a562971a5e">More...</a><br /></td></tr>
-<tr class="separator:ga094b5f730da24044674227a562971a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga0b1cd6668395d2b0588c0eb1160e1a3f">mal_i2c_buffer_write</a> (<a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, <a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to the buffer.  <a href="#ga0b1cd6668395d2b0588c0eb1160e1a3f">More...</a><br /></td></tr>
+<tr class="separator:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to access and configure the I2C interfaces of the MCU. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga3dd2f91f365c738c807266600c48d1ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3dd2f91f365c738c807266600c48d1ef">&#9670;&nbsp;</a></span>mal_i2c_disable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_i2c_disable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_i2c_disable_interrupt(interface)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable an I2C interrupt. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The interface to disable the interrupt from of type <a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
-
-</div>
-</div>
-<a id="ga36abbdaf24808fc4eb84af3f8b956f69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga36abbdaf24808fc4eb84af3f8b956f69">&#9670;&nbsp;</a></span>mal_i2c_enable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_i2c_enable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">active&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_i2c_enable_interrupt(interface, active)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable an I2C interrupt. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The interface to enable the interrupt from of type <a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a>. </td></tr>
-    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
-
-</div>
-</div>
-<a id="ga378e15cfd808ee59f3a217945a9b1a34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga378e15cfd808ee59f3a217945a9b1a34">&#9670;&nbsp;</a></span>mal_i2c_master_direct_init</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_i2c_master_direct_init</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">init, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">direct_init&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_i2c_master_direct_init(init, direct_init)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final version. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">init</td><td>Initialization parameters. </td></tr>
-    <tr><td class="paramname">direc_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="gafdc683634ef1866aef01494eb1c15be3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafdc683634ef1866aef01494eb1c15be3">&#9670;&nbsp;</a></span>mal_i2c_transfer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_i2c_transfer</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">msg&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_i2c_transfer(interface, msg)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Start an I2C transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The I2C interface from <a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a>. </td></tr>
-    <tr><td class="paramname">msg</td><td>A pointer to the I2C message of type <a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>on success. </dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga3b03405cc5612c905d41a5b409cd7d42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3b03405cc5612c905d41a5b409cd7d42">&#9670;&nbsp;</a></span>mal_hspec_i2c_callback_t</h2>
+<a id="gaa291333d44f9b6f4438a74b345e5b9ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa291333d44f9b6f4438a74b345e5b9ff">&#9670;&nbsp;</a></span>mal_i2c_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_i2c_callback_t) (<a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a> interface, <a class="el" href="structmal__hspec__i2c__packet__s.html">mal_hspec_i2c_packet_s</a> *packet, <a class="el" href="group___i2_c.html#gaf3214fe6bf65d0678d1817e6839bc96b">mal_hspec_i2c_result_e</a> result, <a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a> **next_msg)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_i2c_callback_t) (<a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a> interface, <a class="el" href="structmal__i2c__packet__s.html">mal_i2c_packet_s</a> *packet, <a class="el" href="group___i2_c.html#gae9203f6933f190cafbcce85224851690">mal_i2c_result_e</a> result, <a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> **next_msg)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -334,70 +188,70 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ga202ce26a74e61d990a648a34ed0f3d14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga202ce26a74e61d990a648a34ed0f3d14">&#9670;&nbsp;</a></span>mal_hspec_i2c_cmd_e</h2>
+<a id="ga29e887ca6237925a9642b7944fb4afa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga29e887ca6237925a9642b7944fb4afa2">&#9670;&nbsp;</a></span>mal_i2c_cmd_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___i2_c.html#ga202ce26a74e61d990a648a34ed0f3d14">mal_hspec_i2c_cmd_e</a></td>
+          <td class="memname">enum <a class="el" href="group___i2_c.html#ga29e887ca6237925a9642b7944fb4afa2">mal_i2c_cmd_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The possible command types. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga202ce26a74e61d990a648a34ed0f3d14a561346392b1b3151b91584dca1a757c4"></a>MAL_HSPEC_I2C_READ&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_READ. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga29e887ca6237925a9642b7944fb4afa2a8a58678478f2e5302207a9cd32f2eb2f"></a>MAL_I2C_READ&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_READ. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga202ce26a74e61d990a648a34ed0f3d14a525b6972d9c38a3cdc85d84f0af1cb40"></a>MAL_HSPEC_I2C_WRITE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_WRITE. </p>
+<tr><td class="fieldname"><a id="gga29e887ca6237925a9642b7944fb4afa2a81987a2f60ad03815a19dfc75cb95ca1"></a>MAL_I2C_WRITE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_WRITE. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="gafaef88212661b06981d279d2fedfdc70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafaef88212661b06981d279d2fedfdc70">&#9670;&nbsp;</a></span>mal_hspec_i2c_e</h2>
+<a id="gaa1cf343634ed06daff6ecb6168225fd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa1cf343634ed06daff6ecb6168225fd2">&#9670;&nbsp;</a></span>mal_i2c_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___i2_c.html#gafaef88212661b06981d279d2fedfdc70">mal_hspec_i2c_e</a></td>
+          <td class="memname">enum <a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible I2C interfaces. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggafaef88212661b06981d279d2fedfdc70a5d5a7385e9fa763e82df2e7067d88ee3"></a>MAL_HSPEC_I2C_1&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_1. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaa1cf343634ed06daff6ecb6168225fd2ae75f11f3b1e1091f226844edae899073"></a>MAL_I2C_1&#160;</td><td class="fielddoc"><p>I2C interface 1. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggafaef88212661b06981d279d2fedfdc70a600eb8a490f5c970e87faa9848b7360c"></a>MAL_HSPEC_I2C_2&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_2. </p>
+<tr><td class="fieldname"><a id="ggaa1cf343634ed06daff6ecb6168225fd2a789feeab2b4b42bdac81d0b538a00a1a"></a>MAL_I2C_2&#160;</td><td class="fielddoc"><p>I2C interface 2. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggafaef88212661b06981d279d2fedfdc70ade66bbc9db108be07e28f603d7280613"></a>MAL_HSPEC_I2C_SIZE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_I2C_SIZE. </p>
+<tr><td class="fieldname"><a id="ggaa1cf343634ed06daff6ecb6168225fd2a316687a973127eb356d747eeeaf0999b"></a>MAL_I2C_SIZE&#160;</td><td class="fielddoc"><p>Number of possible I2C interfaces. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="gaf3214fe6bf65d0678d1817e6839bc96b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf3214fe6bf65d0678d1817e6839bc96b">&#9670;&nbsp;</a></span>mal_hspec_i2c_result_e</h2>
+<a id="gae9203f6933f190cafbcce85224851690"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae9203f6933f190cafbcce85224851690">&#9670;&nbsp;</a></span>mal_i2c_result_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___i2_c.html#gaf3214fe6bf65d0678d1817e6839bc96b">mal_hspec_i2c_result_e</a></td>
+          <td class="memname">enum <a class="el" href="group___i2_c.html#gae9203f6933f190cafbcce85224851690">mal_i2c_result_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible I2C transactions results. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf3214fe6bf65d0678d1817e6839bc96baba24b6495acff8324362041f2a79f3e2"></a>MAL_HSPEC_I2C_SUCCESS&#160;</td><td class="fielddoc"><p>Successful transaction. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggae9203f6933f190cafbcce85224851690a8508e5d44ec5362fe42473b2f3c2a403"></a>MAL_I2C_SUCCESS&#160;</td><td class="fielddoc"><p>Successful transaction. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaf3214fe6bf65d0678d1817e6839bc96bab4186f53049766cb36420df0441bbc5b"></a>MAL_HSPEC_I2C_NACK_COMPLETE&#160;</td><td class="fielddoc"><p>Transaction completed, but device did not acknowledge. </p>
+<tr><td class="fieldname"><a id="ggae9203f6933f190cafbcce85224851690a2bf5a085f69c3b7e5f79f47b55875e0d"></a>MAL_I2C_NACK_COMPLETE&#160;</td><td class="fielddoc"><p>Transaction completed, but device did not acknowledge. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaf3214fe6bf65d0678d1817e6839bc96ba520628ed472ae87087d91bd9bcdf4504"></a>MAL_HSPEC_I2C_NACK_INCOMPLETE&#160;</td><td class="fielddoc"><p>Transaction is incomplete, and the device did not acknowledge. </p>
+<tr><td class="fieldname"><a id="ggae9203f6933f190cafbcce85224851690a591b5797d6577525ac7a4974983f49a8"></a>MAL_I2C_NACK_INCOMPLETE&#160;</td><td class="fielddoc"><p>Transaction is incomplete, and the device did not acknowledge. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaf3214fe6bf65d0678d1817e6839bc96ba2c457315b55fb31e050cd987afa8817d"></a>MAL_HSPEC_I2C_BUS_ERROR&#160;</td><td class="fielddoc"><p>An error occurred on the bus during the transaction. </p>
+<tr><td class="fieldname"><a id="ggae9203f6933f190cafbcce85224851690a9a277da55868724e943349546fb867d8"></a>MAL_I2C_BUS_ERROR&#160;</td><td class="fielddoc"><p>An error occurred on the bus during the transaction. </p>
 </td></tr>
 </table>
 
@@ -487,8 +341,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga094b5f730da24044674227a562971a5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga094b5f730da24044674227a562971a5e">&#9670;&nbsp;</a></span>mal_i2c_buffer_write()</h2>
+<a id="ga0b1cd6668395d2b0588c0eb1160e1a3f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b1cd6668395d2b0588c0eb1160e1a3f">&#9670;&nbsp;</a></span>mal_i2c_buffer_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -502,7 +356,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -525,8 +379,73 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga0ef2e6338b04b304b9682b3c481498a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0ef2e6338b04b304b9682b3c481498a8">&#9670;&nbsp;</a></span>mal_i2c_init_master()</h2>
+<a id="gaf385a275bc8d8c11e34cef41c803dd6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf385a275bc8d8c11e34cef41c803dd6c">&#9670;&nbsp;</a></span>mal_i2c_disable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE bool mal_i2c_disable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable an I2C interrupt. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The interface to disable the interrupt from of type ::mal_hspec_i2c_e. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
+
+</div>
+</div>
+<a id="ga4df3e61347c08078696fc5fa12593689"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4df3e61347c08078696fc5fa12593689">&#9670;&nbsp;</a></span>mal_i2c_enable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE void mal_i2c_enable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>active</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable an I2C interrupt. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The interface to enable the interrupt from of type ::mal_hspec_i2c_e. </td></tr>
+    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
+
+</div>
+</div>
+<a id="ga0fb6e20ece3f52065202094ea80f0f33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0fb6e20ece3f52065202094ea80f0f33">&#9670;&nbsp;</a></span>mal_i2c_init_master()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -534,7 +453,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_i2c_init_master </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__i2c__init__s.html">mal_hspec_i2c_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__i2c__init__s.html">mal_i2c_init_s</a> *&#160;</td>
           <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
         </tr>
@@ -549,6 +468,82 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga3a576ea6416190a862962b8afb9cd1bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3a576ea6416190a862962b8afb9cd1bd">&#9670;&nbsp;</a></span>mal_i2c_master_direct_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_i2c_master_direct_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__i2c__init__s.html">mal_i2c_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>direct_init</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">init</td><td>Initialization parameters. </td></tr>
+    <tr><td class="paramname">direc_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaf0c308a429e9f98b1f2dd3313d473e63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf0c308a429e9f98b1f2dd3313d473e63">&#9670;&nbsp;</a></span>mal_i2c_transfer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_i2c_transfer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___i2_c.html#gaa1cf343634ed06daff6ecb6168225fd2">mal_i2c_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> *&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start an I2C transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The I2C interface from ::mal_hspec_i2c_e. </td></tr>
+    <tr><td class="paramname">msg</td><td>A pointer to the I2C message of type ::mal_hspec_i2c_msg_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>on success. </dd></dl>
 
 </div>
 </div>

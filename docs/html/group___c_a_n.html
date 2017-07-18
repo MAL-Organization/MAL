@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -97,126 +97,88 @@ $(document).ready(function(){initNavTree('group___c_a_n.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__can__init__s.html">mal_can_init_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__can__filter__s.html">mal_can_filter_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__can__buffer__init__s.html">mal_can_buffer_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__can__init__s.html">mal_hspec_can_init_s</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__can__filter__s.html">mal_hspec_can_filter_s</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga5e57ed6cf81b0578b10a948594065ab7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga5e57ed6cf81b0578b10a948594065ab7">mal_can_direct_init</a>(init,  direct_init)&#160;&#160;&#160;mal_hspec_can_direct_init(init, direct_init)</td></tr>
-<tr class="memdesc:ga5e57ed6cf81b0578b10a948594065ab7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final.  <a href="#ga5e57ed6cf81b0578b10a948594065ab7">More...</a><br /></td></tr>
-<tr class="separator:ga5e57ed6cf81b0578b10a948594065ab7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacf59c6f7bf770497d1f75d6c01987329"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gacf59c6f7bf770497d1f75d6c01987329">mal_can_deinit</a>(interface)&#160;&#160;&#160;mal_hspec_can_deinit(interface)</td></tr>
-<tr class="memdesc:gacf59c6f7bf770497d1f75d6c01987329"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will uninitialize the given interface.  <a href="#gacf59c6f7bf770497d1f75d6c01987329">More...</a><br /></td></tr>
-<tr class="separator:gacf59c6f7bf770497d1f75d6c01987329"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7925e449f763f080eaa2bd5386b60642"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga7925e449f763f080eaa2bd5386b60642">mal_can_add_filter</a>(interface,  filter)&#160;&#160;&#160;mal_hspec_can_add_filter(interface, filter)</td></tr>
-<tr class="memdesc:ga7925e449f763f080eaa2bd5386b60642"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a filter to a CAN interface.  <a href="#ga7925e449f763f080eaa2bd5386b60642">More...</a><br /></td></tr>
-<tr class="separator:ga7925e449f763f080eaa2bd5386b60642"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga875f8a2555e69b90de1bdfa4e19369f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga875f8a2555e69b90de1bdfa4e19369f2">mal_can_remove_filter</a>(interface,  filter)&#160;&#160;&#160;mal_hspec_can_remove_filter(interface, filter)</td></tr>
-<tr class="memdesc:ga875f8a2555e69b90de1bdfa4e19369f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a filter from a CAN interface.  <a href="#ga875f8a2555e69b90de1bdfa4e19369f2">More...</a><br /></td></tr>
-<tr class="separator:ga875f8a2555e69b90de1bdfa4e19369f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga10a6be84a7371e9bf3feec814b73cf21"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga10a6be84a7371e9bf3feec814b73cf21">mal_can_transmit</a>(interface,  msg)&#160;&#160;&#160;mal_hspec_can_transmit(interface, msg)</td></tr>
-<tr class="memdesc:ga10a6be84a7371e9bf3feec814b73cf21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a message on a CAN interface.  <a href="#ga10a6be84a7371e9bf3feec814b73cf21">More...</a><br /></td></tr>
-<tr class="separator:ga10a6be84a7371e9bf3feec814b73cf21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga17af18047fd91854c71bd7b9780ef75c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga17af18047fd91854c71bd7b9780ef75c">mal_can_disable_interrupt</a>(interface)&#160;&#160;&#160;mal_hspec_disable_can_interrupt(interface)</td></tr>
-<tr class="memdesc:ga17af18047fd91854c71bd7b9780ef75c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for a CAN interface.  <a href="#ga17af18047fd91854c71bd7b9780ef75c">More...</a><br /></td></tr>
-<tr class="separator:ga17af18047fd91854c71bd7b9780ef75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1022b363683648010f38d9640554925f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga1022b363683648010f38d9640554925f">mal_can_enable_interrupt</a>(interface,  active)&#160;&#160;&#160;mal_hspec_enable_can_interrupt(interface, active)</td></tr>
-<tr class="memdesc:ga1022b363683648010f38d9640554925f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for a CAN interface.  <a href="#ga1022b363683648010f38d9640554925f">More...</a><br /></td></tr>
-<tr class="separator:ga1022b363683648010f38d9640554925f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f">mal_can_buffer_deinit</a>(handle)&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#gacf59c6f7bf770497d1f75d6c01987329">mal_can_deinit</a>((handle)-&gt;interface)</td></tr>
+<tr class="memitem:gad99f30d785a13a0c04b2a6f76bf15424"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gad99f30d785a13a0c04b2a6f76bf15424">MAL_CAN_MAX_DATA_SIZE</a>&#160;&#160;&#160;8</td></tr>
+<tr class="separator:gad99f30d785a13a0c04b2a6f76bf15424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f">mal_can_buffer_deinit</a>(handle)&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#ga5d70eaec0e95d9ea2323a5d378645750">mal_can_deinit</a>((handle)-&gt;interface)</td></tr>
 <tr class="memdesc:gae7660e5eb6e564edf51dace3a7667d9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will uninitialize a CAN buffer.  <a href="#gae7660e5eb6e564edf51dace3a7667d9f">More...</a><br /></td></tr>
 <tr class="separator:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gade5525920e4f7923cacefe66b9c3b84f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gade5525920e4f7923cacefe66b9c3b84f">MAL_HSPEC_CAN_MAX_DATA_SIZE</a>&#160;&#160;&#160;8</td></tr>
-<tr class="separator:gade5525920e4f7923cacefe66b9c3b84f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga92d0dd17bb4f5a92bc3edd5f965c6df2"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga92d0dd17bb4f5a92bc3edd5f965c6df2">mal_hspec_can_tx_callback_t</a>) (<a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a> interface, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *next_msg)</td></tr>
-<tr class="memdesc:ga92d0dd17bb4f5a92bc3edd5f965c6df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will be called when a CAN message is transmitted.  <a href="#ga92d0dd17bb4f5a92bc3edd5f965c6df2">More...</a><br /></td></tr>
-<tr class="separator:ga92d0dd17bb4f5a92bc3edd5f965c6df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga79a8fdbbedc5b360da51e7a72dae782a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga79a8fdbbedc5b360da51e7a72dae782a">mal_hspec_can_rx_callback_t</a>) (<a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a> interface, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga79a8fdbbedc5b360da51e7a72dae782a"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will be called when a CAN message is received.  <a href="#ga79a8fdbbedc5b360da51e7a72dae782a">More...</a><br /></td></tr>
-<tr class="separator:ga79a8fdbbedc5b360da51e7a72dae782a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c8ecbedeeaa092f331dd3ba914f8ecf"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga5c8ecbedeeaa092f331dd3ba914f8ecf">mal_can_tx_callback_t</a>) (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *next_msg)</td></tr>
+<tr class="memdesc:ga5c8ecbedeeaa092f331dd3ba914f8ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will be called when a CAN message is transmitted.  <a href="#ga5c8ecbedeeaa092f331dd3ba914f8ecf">More...</a><br /></td></tr>
+<tr class="separator:ga5c8ecbedeeaa092f331dd3ba914f8ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1e19ed5ecb39fad069a983694cc566d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gac1e19ed5ecb39fad069a983694cc566d">mal_can_rx_callback_t</a>) (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:gac1e19ed5ecb39fad069a983694cc566d"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will be called when a CAN message is received.  <a href="#gac1e19ed5ecb39fad069a983694cc566d">More...</a><br /></td></tr>
+<tr class="separator:gac1e19ed5ecb39fad069a983694cc566d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gaa83fb7297485becd086a5db90b0c3eb9"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a> { <a class="el" href="group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9a2c1b86a22d764bb95221b5d9c14023dd">MAL_HSPEC_CAN_1</a> = 0, 
-<a class="el" href="group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9adb8c98ae5124ee4f34cdd93e8348449a">MAL_HSPEC_CAN_2</a> = 1, 
-<a class="el" href="group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9a8604dd5f27d76decba88b932efbdde40">MAL_HSPEC_CAN_SIZE</a> = 2
+<tr class="memitem:gaf70e1efb9c12261c76417995f1536e48"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> { <a class="el" href="group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a96eab96efb6739bca47f48f816949236">MAL_CAN_1</a> = 0, 
+<a class="el" href="group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a0bb84927591a08cb92df6c7884975580">MAL_CAN_2</a> = 1, 
+<a class="el" href="group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a382f495888b72b3c337e8e471ebccdaa">MAL_CAN_SIZE</a> = 2
  }</td></tr>
-<tr class="separator:gaa83fb7297485becd086a5db90b0c3eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5dc47f7b7687d275e3bf223082971976"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga5dc47f7b7687d275e3bf223082971976">mal_hspec_can_id_type_e</a> { <a class="el" href="group___c_a_n.html#gga5dc47f7b7687d275e3bf223082971976a3f6b140769c2d137991c297366c00404">MAL_HSPEC_CAN_ID_STANDARD</a>, 
-<a class="el" href="group___c_a_n.html#gga5dc47f7b7687d275e3bf223082971976a6204cbaa4ff7e89427bc41b04864d96d">MAL_HSPEC_CAN_ID_EXTENDED</a>
+<tr class="separator:gaf70e1efb9c12261c76417995f1536e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63e6c324299805c9d80ad5c537874ee4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga63e6c324299805c9d80ad5c537874ee4">mal_can_id_type_e</a> { <a class="el" href="group___c_a_n.html#gga63e6c324299805c9d80ad5c537874ee4aa8d391e8e0f333c631a625471cb0e4bc">MAL_CAN_ID_STANDARD</a>, 
+<a class="el" href="group___c_a_n.html#gga63e6c324299805c9d80ad5c537874ee4a600349b2c07d8070bc630c9cdaec7b7c">MAL_CAN_ID_EXTENDED</a>
  }</td></tr>
-<tr class="separator:ga5dc47f7b7687d275e3bf223082971976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ga63e6c324299805c9d80ad5c537874ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad4fc9db34816e290759d5f1c48bf5ae8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gad4fc9db34816e290759d5f1c48bf5ae8">mal_can_init</a> (<a class="el" href="structmal__hspec__can__init__s.html">mal_hspec_can_init_s</a> *init)</td></tr>
-<tr class="memdesc:gad4fc9db34816e290759d5f1c48bf5ae8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a CAN interface.  <a href="#gad4fc9db34816e290759d5f1c48bf5ae8">More...</a><br /></td></tr>
-<tr class="separator:gad4fc9db34816e290759d5f1c48bf5ae8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga78508300a084daefeeafa3b252082cc9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga78508300a084daefeeafa3b252082cc9">mal_can_direct_init</a> (<a class="el" href="structmal__can__init__s.html">mal_can_init_s</a> *init, const void *direct_init)</td></tr>
+<tr class="memdesc:ga78508300a084daefeeafa3b252082cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final.  <a href="#ga78508300a084daefeeafa3b252082cc9">More...</a><br /></td></tr>
+<tr class="separator:ga78508300a084daefeeafa3b252082cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5d70eaec0e95d9ea2323a5d378645750"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga5d70eaec0e95d9ea2323a5d378645750">mal_can_deinit</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface)</td></tr>
+<tr class="memdesc:ga5d70eaec0e95d9ea2323a5d378645750"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will uninitialize the given interface.  <a href="#ga5d70eaec0e95d9ea2323a5d378645750">More...</a><br /></td></tr>
+<tr class="separator:ga5d70eaec0e95d9ea2323a5d378645750"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2d371018524fb778fd13b6f76dee4338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga2d371018524fb778fd13b6f76dee4338">mal_can_add_filter</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__filter__s.html">mal_can_filter_s</a> *filter)</td></tr>
+<tr class="memdesc:ga2d371018524fb778fd13b6f76dee4338"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a filter to a CAN interface.  <a href="#ga2d371018524fb778fd13b6f76dee4338">More...</a><br /></td></tr>
+<tr class="separator:ga2d371018524fb778fd13b6f76dee4338"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafffce2842e120dba998bc93c6b31d37a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gafffce2842e120dba998bc93c6b31d37a">mal_can_remove_filter</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__filter__s.html">mal_can_filter_s</a> *filter)</td></tr>
+<tr class="memdesc:gafffce2842e120dba998bc93c6b31d37a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a filter from a CAN interface.  <a href="#gafffce2842e120dba998bc93c6b31d37a">More...</a><br /></td></tr>
+<tr class="separator:gafffce2842e120dba998bc93c6b31d37a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1c279ae2707adcdab08bfdbdd9dedf7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga1c279ae2707adcdab08bfdbdd9dedf7f">mal_can_transmit</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga1c279ae2707adcdab08bfdbdd9dedf7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a message on a CAN interface.  <a href="#ga1c279ae2707adcdab08bfdbdd9dedf7f">More...</a><br /></td></tr>
+<tr class="separator:ga1c279ae2707adcdab08bfdbdd9dedf7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga14affb350a28f754be979343d14283bf"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga14affb350a28f754be979343d14283bf">mal_can_disable_interrupt</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface)</td></tr>
+<tr class="memdesc:ga14affb350a28f754be979343d14283bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for a CAN interface.  <a href="#ga14affb350a28f754be979343d14283bf">More...</a><br /></td></tr>
+<tr class="separator:ga14affb350a28f754be979343d14283bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaffd6d9deb00ecba824296fc0f80a1b66"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gaffd6d9deb00ecba824296fc0f80a1b66">mal_can_enable_interrupt</a> (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, bool active)</td></tr>
+<tr class="memdesc:gaffd6d9deb00ecba824296fc0f80a1b66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for a CAN interface.  <a href="#gaffd6d9deb00ecba824296fc0f80a1b66">More...</a><br /></td></tr>
+<tr class="separator:gaffd6d9deb00ecba824296fc0f80a1b66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabacbaf2d93b403a66d5bd089fe230760"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gabacbaf2d93b403a66d5bd089fe230760">mal_can_init</a> (<a class="el" href="structmal__can__init__s.html">mal_can_init_s</a> *init)</td></tr>
+<tr class="memdesc:gabacbaf2d93b403a66d5bd089fe230760"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a CAN interface.  <a href="#gabacbaf2d93b403a66d5bd089fe230760">More...</a><br /></td></tr>
+<tr class="separator:gabacbaf2d93b403a66d5bd089fe230760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafdafc1d92854c7fa960263989764f019"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gafdafc1d92854c7fa960263989764f019">mal_can_buffer_init</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__buffer__init__s.html">mal_can_buffer_init_s</a> *init)</td></tr>
 <tr class="memdesc:gafdafc1d92854c7fa960263989764f019"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a CAN buffer and a CAN interface.  <a href="#gafdafc1d92854c7fa960263989764f019">More...</a><br /></td></tr>
 <tr class="separator:gafdafc1d92854c7fa960263989764f019"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga4ad777ec3f97d9da65d7b4128ee1b734">mal_can_buffer_direct_init</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__buffer__init__s.html">mal_can_buffer_init_s</a> *init, const void *direct_init)</td></tr>
 <tr class="memdesc:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a CAN buffer and a CAN interface using direct initialization.  <a href="#ga4ad777ec3f97d9da65d7b4128ee1b734">More...</a><br /></td></tr>
 <tr class="separator:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga1040c764dcbfcf9a644cb6fb5b7c2f40">mal_can_buffer_write</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to a buffer.  <a href="#ga1040c764dcbfcf9a644cb6fb5b7c2f40">More...</a><br /></td></tr>
-<tr class="separator:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0edde750013e94ed0170d7be7fd968a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga0edde750013e94ed0170d7be7fd968a7">mal_can_buffer_read</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga0edde750013e94ed0170d7be7fd968a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a message from a buffer.  <a href="#ga0edde750013e94ed0170d7be7fd968a7">More...</a><br /></td></tr>
-<tr class="separator:ga0edde750013e94ed0170d7be7fd968a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25eff0e35a438cbe6418b040e2213a7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga25eff0e35a438cbe6418b040e2213a7b">mal_can_buffer_write</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga25eff0e35a438cbe6418b040e2213a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to a buffer.  <a href="#ga25eff0e35a438cbe6418b040e2213a7b">More...</a><br /></td></tr>
+<tr class="separator:ga25eff0e35a438cbe6418b040e2213a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga4b3253f89b40c7ba3dd7975374ffab15">mal_can_buffer_read</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a message from a buffer.  <a href="#ga4b3253f89b40c7ba3dd7975374ffab15">More...</a><br /></td></tr>
+<tr class="separator:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to access and configure the CAN interfaces of the MCU. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga7925e449f763f080eaa2bd5386b60642"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7925e449f763f080eaa2bd5386b60642">&#9670;&nbsp;</a></span>mal_can_add_filter</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_add_filter</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">filter&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_can_add_filter(interface, filter)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Add a filter to a CAN interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The CAN interface to add the filter to. Should be of type <a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a>. </td></tr>
-    <tr><td class="paramname">filter</td><td>The filter of type <a class="el" href="structmal__hspec__can__filter__s.html">mal_hspec_can_filter_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
 <a id="gae7660e5eb6e564edf51dace3a7667d9f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae7660e5eb6e564edf51dace3a7667d9f">&#9670;&nbsp;</a></span>mal_can_buffer_deinit</h2>
 
@@ -228,7 +190,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">handle</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#gacf59c6f7bf770497d1f75d6c01987329">mal_can_deinit</a>((handle)-&gt;interface)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#ga5d70eaec0e95d9ea2323a5d378645750">mal_can_deinit</a>((handle)-&gt;interface)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -243,219 +205,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gacf59c6f7bf770497d1f75d6c01987329"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacf59c6f7bf770497d1f75d6c01987329">&#9670;&nbsp;</a></span>mal_can_deinit</h2>
+<a id="gad99f30d785a13a0c04b2a6f76bf15424"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad99f30d785a13a0c04b2a6f76bf15424">&#9670;&nbsp;</a></span>MAL_CAN_MAX_DATA_SIZE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define mal_can_deinit</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_can_deinit(interface)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This function will uninitialize the given interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>Interface to disable. Must be of type mal_hspec_can_id_type_e. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ga5e57ed6cf81b0578b10a948594065ab7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5e57ed6cf81b0578b10a948594065ab7">&#9670;&nbsp;</a></span>mal_can_direct_init</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_direct_init</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">init, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">direct_init&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_can_direct_init(init, direct_init)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">init</td><td>Initialization parameters. </td></tr>
-    <tr><td class="paramname">direc_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga17af18047fd91854c71bd7b9780ef75c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga17af18047fd91854c71bd7b9780ef75c">&#9670;&nbsp;</a></span>mal_can_disable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_disable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_disable_can_interrupt(interface)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable interrupts for a CAN interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The interface to disable the interrupt. Should be of type <a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
-
-</div>
-</div>
-<a id="ga1022b363683648010f38d9640554925f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1022b363683648010f38d9640554925f">&#9670;&nbsp;</a></span>mal_can_enable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_enable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">active&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_enable_can_interrupt(interface, active)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable interrupts for a CAN interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The interface to enable the interrupt. </td></tr>
-    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
-
-</div>
-</div>
-<a id="ga875f8a2555e69b90de1bdfa4e19369f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga875f8a2555e69b90de1bdfa4e19369f2">&#9670;&nbsp;</a></span>mal_can_remove_filter</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_remove_filter</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">filter&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_can_remove_filter(interface, filter)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Remove a filter from a CAN interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">interface</td><td>The CAN interface to remove the filter from. Should be of type <a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a>. </td></tr>
-    <tr><td class="paramname">filter</td><td>The filter of type <a class="el" href="structmal__hspec__can__filter__s.html">mal_hspec_can_filter_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga10a6be84a7371e9bf3feec814b73cf21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga10a6be84a7371e9bf3feec814b73cf21">&#9670;&nbsp;</a></span>mal_can_transmit</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_can_transmit</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">interface, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">msg&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_can_transmit(interface, msg)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Send a message on a CAN interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">The</td><td>CAN interface to send a message on. Should be of type <a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a>. </td></tr>
-    <tr><td class="paramname">msg</td><td>The message to send of type <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="gade5525920e4f7923cacefe66b9c3b84f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gade5525920e4f7923cacefe66b9c3b84f">&#9670;&nbsp;</a></span>MAL_HSPEC_CAN_MAX_DATA_SIZE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define MAL_HSPEC_CAN_MAX_DATA_SIZE&#160;&#160;&#160;8</td>
+          <td class="memname">#define MAL_CAN_MAX_DATA_SIZE&#160;&#160;&#160;8</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -464,14 +221,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga79a8fdbbedc5b360da51e7a72dae782a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga79a8fdbbedc5b360da51e7a72dae782a">&#9670;&nbsp;</a></span>mal_hspec_can_rx_callback_t</h2>
+<a id="gac1e19ed5ecb39fad069a983694cc566d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1e19ed5ecb39fad069a983694cc566d">&#9670;&nbsp;</a></span>mal_can_rx_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_can_rx_callback_t) (<a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a> interface, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_can_rx_callback_t) (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -488,14 +245,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga92d0dd17bb4f5a92bc3edd5f965c6df2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga92d0dd17bb4f5a92bc3edd5f965c6df2">&#9670;&nbsp;</a></span>mal_hspec_can_tx_callback_t</h2>
+<a id="ga5c8ecbedeeaa092f331dd3ba914f8ecf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5c8ecbedeeaa092f331dd3ba914f8ecf">&#9670;&nbsp;</a></span>mal_can_tx_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_can_tx_callback_t) (<a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a> interface, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *next_msg)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_can_tx_callback_t) (<a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a> interface, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *next_msg)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -513,51 +270,89 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="gaa83fb7297485becd086a5db90b0c3eb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa83fb7297485becd086a5db90b0c3eb9">&#9670;&nbsp;</a></span>mal_hspec_can_e</h2>
+<a id="gaf70e1efb9c12261c76417995f1536e48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf70e1efb9c12261c76417995f1536e48">&#9670;&nbsp;</a></span>mal_can_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9">mal_hspec_can_e</a></td>
+          <td class="memname">enum <a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The possible CAN interfaces. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaa83fb7297485becd086a5db90b0c3eb9a2c1b86a22d764bb95221b5d9c14023dd"></a>MAL_HSPEC_CAN_1&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_1. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf70e1efb9c12261c76417995f1536e48a96eab96efb6739bca47f48f816949236"></a>MAL_CAN_1&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_1. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaa83fb7297485becd086a5db90b0c3eb9adb8c98ae5124ee4f34cdd93e8348449a"></a>MAL_HSPEC_CAN_2&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_2. </p>
+<tr><td class="fieldname"><a id="ggaf70e1efb9c12261c76417995f1536e48a0bb84927591a08cb92df6c7884975580"></a>MAL_CAN_2&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_2. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaa83fb7297485becd086a5db90b0c3eb9a8604dd5f27d76decba88b932efbdde40"></a>MAL_HSPEC_CAN_SIZE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_SIZE. </p>
+<tr><td class="fieldname"><a id="ggaf70e1efb9c12261c76417995f1536e48a382f495888b72b3c337e8e471ebccdaa"></a>MAL_CAN_SIZE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_SIZE. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga5dc47f7b7687d275e3bf223082971976"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5dc47f7b7687d275e3bf223082971976">&#9670;&nbsp;</a></span>mal_hspec_can_id_type_e</h2>
+<a id="ga63e6c324299805c9d80ad5c537874ee4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga63e6c324299805c9d80ad5c537874ee4">&#9670;&nbsp;</a></span>mal_can_id_type_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___c_a_n.html#ga5dc47f7b7687d275e3bf223082971976">mal_hspec_can_id_type_e</a></td>
+          <td class="memname">enum <a class="el" href="group___c_a_n.html#ga63e6c324299805c9d80ad5c537874ee4">mal_can_id_type_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The possible ID types. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5dc47f7b7687d275e3bf223082971976a3f6b140769c2d137991c297366c00404"></a>MAL_HSPEC_CAN_ID_STANDARD&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_ID_STANDARD. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga63e6c324299805c9d80ad5c537874ee4aa8d391e8e0f333c631a625471cb0e4bc"></a>MAL_CAN_ID_STANDARD&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_ID_STANDARD. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5dc47f7b7687d275e3bf223082971976a6204cbaa4ff7e89427bc41b04864d96d"></a>MAL_HSPEC_CAN_ID_EXTENDED&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_ID_EXTENDED. </p>
+<tr><td class="fieldname"><a id="gga63e6c324299805c9d80ad5c537874ee4a600349b2c07d8070bc630c9cdaec7b7c"></a>MAL_CAN_ID_EXTENDED&#160;</td><td class="fielddoc"><p>MAL_HSPEC_CAN_ID_EXTENDED. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga2d371018524fb778fd13b6f76dee4338"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2d371018524fb778fd13b6f76dee4338">&#9670;&nbsp;</a></span>mal_can_add_filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_can_add_filter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structmal__can__filter__s.html">mal_can_filter_s</a> *&#160;</td>
+          <td class="paramname"><em>filter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add a filter to a CAN interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The CAN interface to add the filter to. Should be of type ::mal_hspec_can_e. </td></tr>
+    <tr><td class="paramname">filter</td><td>The filter of type ::mal_hspec_can_filter_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
 <a id="ga4ad777ec3f97d9da65d7b4128ee1b734"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga4ad777ec3f97d9da65d7b4128ee1b734">&#9670;&nbsp;</a></span>mal_can_buffer_direct_init()</h2>
 
@@ -641,8 +436,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga0edde750013e94ed0170d7be7fd968a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0edde750013e94ed0170d7be7fd968a7">&#9670;&nbsp;</a></span>mal_can_buffer_read()</h2>
+<a id="ga4b3253f89b40c7ba3dd7975374ffab15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4b3253f89b40c7ba3dd7975374ffab15">&#9670;&nbsp;</a></span>mal_can_buffer_read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -656,7 +451,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -679,8 +474,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga1040c764dcbfcf9a644cb6fb5b7c2f40"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1040c764dcbfcf9a644cb6fb5b7c2f40">&#9670;&nbsp;</a></span>mal_can_buffer_write()</h2>
+<a id="ga25eff0e35a438cbe6418b040e2213a7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga25eff0e35a438cbe6418b040e2213a7b">&#9670;&nbsp;</a></span>mal_can_buffer_write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -694,7 +489,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -717,8 +512,137 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gad4fc9db34816e290759d5f1c48bf5ae8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad4fc9db34816e290759d5f1c48bf5ae8">&#9670;&nbsp;</a></span>mal_can_init()</h2>
+<a id="ga5d70eaec0e95d9ea2323a5d378645750"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5d70eaec0e95d9ea2323a5d378645750">&#9670;&nbsp;</a></span>mal_can_deinit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void mal_can_deinit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This function will uninitialize the given interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>Interface to disable. Must be of type mal_hspec_can_id_type_e. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga78508300a084daefeeafa3b252082cc9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga78508300a084daefeeafa3b252082cc9">&#9670;&nbsp;</a></span>mal_can_direct_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_can_direct_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__can__init__s.html">mal_can_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>direct_init</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to initialize directly the interface. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">init</td><td>Initialization parameters. </td></tr>
+    <tr><td class="paramname">direc_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga14affb350a28f754be979343d14283bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga14affb350a28f754be979343d14283bf">&#9670;&nbsp;</a></span>mal_can_disable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE bool mal_can_disable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable interrupts for a CAN interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The interface to disable the interrupt. Should be of type ::mal_hspec_can_e. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
+
+</div>
+</div>
+<a id="gaffd6d9deb00ecba824296fc0f80a1b66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaffd6d9deb00ecba824296fc0f80a1b66">&#9670;&nbsp;</a></span>mal_can_enable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE void mal_can_enable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>active</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable interrupts for a CAN interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The interface to enable the interrupt. </td></tr>
+    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
+
+</div>
+</div>
+<a id="gabacbaf2d93b403a66d5bd089fe230760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabacbaf2d93b403a66d5bd089fe230760">&#9670;&nbsp;</a></span>mal_can_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -726,7 +650,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_can_init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__can__init__s.html">mal_hspec_can_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__can__init__s.html">mal_can_init_s</a> *&#160;</td>
           <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
         </tr>
@@ -737,6 +661,82 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">init</td><td>Initialization parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gafffce2842e120dba998bc93c6b31d37a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafffce2842e120dba998bc93c6b31d37a">&#9670;&nbsp;</a></span>mal_can_remove_filter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_can_remove_filter </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structmal__can__filter__s.html">mal_can_filter_s</a> *&#160;</td>
+          <td class="paramname"><em>filter</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Remove a filter from a CAN interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">interface</td><td>The CAN interface to remove the filter from. Should be of type ::mal_hspec_can_e. </td></tr>
+    <tr><td class="paramname">filter</td><td>The filter of type ::mal_hspec_can_filter_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga1c279ae2707adcdab08bfdbdd9dedf7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1c279ae2707adcdab08bfdbdd9dedf7f">&#9670;&nbsp;</a></span>mal_can_transmit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_can_transmit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48">mal_can_e</a>&#160;</td>
+          <td class="paramname"><em>interface</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Send a message on a CAN interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>CAN interface to send a message on. Should be of type ::mal_hspec_can_e. </td></tr>
+    <tr><td class="paramname">msg</td><td>The message to send of type ::mal_hspec_can_msg_s. </td></tr>
   </table>
   </dd>
 </dl>

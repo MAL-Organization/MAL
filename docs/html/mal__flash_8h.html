@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/flash/mal_flash.h File Reference</title>
+<title>MAL: src/flash/mal_flash.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,6 @@ $(document).ready(function(){initNavTree('mal__flash_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">mal_flash.h File Reference</div>  </div>
@@ -93,59 +92,61 @@ $(document).ready(function(){initNavTree('mal__flash_8h.html','');});
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="mal__error_8h_source.html">std/mal_error.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mal__stdint_8h_source.html">std/mal_stdint.h</a>&quot;</code><br />
-<code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
+<code>#include &quot;std/mal_defs.h&quot;</code><br />
 </div>
 <p><a href="mal__flash_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga6cb2bde74ec490438f7898031421006a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga6cb2bde74ec490438f7898031421006a">mal_flash_read_uint8</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_uint8(address)</td></tr>
-<tr class="memdesc:ga6cb2bde74ec490438f7898031421006a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 8 bit integer from memory.  <a href="group___flash.html#ga6cb2bde74ec490438f7898031421006a">More...</a><br /></td></tr>
-<tr class="separator:ga6cb2bde74ec490438f7898031421006a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad3d4694efb6f5e9ccad6bc28967a4f71"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gad3d4694efb6f5e9ccad6bc28967a4f71">mal_flash_read_int8</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_int8(address)</td></tr>
-<tr class="memdesc:gad3d4694efb6f5e9ccad6bc28967a4f71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 8 bit integer from memory.  <a href="group___flash.html#gad3d4694efb6f5e9ccad6bc28967a4f71">More...</a><br /></td></tr>
-<tr class="separator:gad3d4694efb6f5e9ccad6bc28967a4f71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga642d552464cd995d114744835a9d0eff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga642d552464cd995d114744835a9d0eff">mal_flash_read_uint16</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_uint16(address)</td></tr>
-<tr class="memdesc:ga642d552464cd995d114744835a9d0eff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 16 bit integer from memory.  <a href="group___flash.html#ga642d552464cd995d114744835a9d0eff">More...</a><br /></td></tr>
-<tr class="separator:ga642d552464cd995d114744835a9d0eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga410bee2f31d751f7e219074151f3c454"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga410bee2f31d751f7e219074151f3c454">mal_flash_read_int16</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_int16(address)</td></tr>
-<tr class="memdesc:ga410bee2f31d751f7e219074151f3c454"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 16 bit integer from memory.  <a href="group___flash.html#ga410bee2f31d751f7e219074151f3c454">More...</a><br /></td></tr>
-<tr class="separator:ga410bee2f31d751f7e219074151f3c454"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga77765dce85e83afccf157f05010ccb28"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga77765dce85e83afccf157f05010ccb28">mal_flash_read_uint32</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_uint32(address)</td></tr>
-<tr class="memdesc:ga77765dce85e83afccf157f05010ccb28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 32 bit integer from memory.  <a href="group___flash.html#ga77765dce85e83afccf157f05010ccb28">More...</a><br /></td></tr>
-<tr class="separator:ga77765dce85e83afccf157f05010ccb28"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e6d497c7cc722fd27a5054b4ccedd60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga3e6d497c7cc722fd27a5054b4ccedd60">mal_flash_read_int32</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_int32(address)</td></tr>
-<tr class="memdesc:ga3e6d497c7cc722fd27a5054b4ccedd60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 32 bit integer from memory.  <a href="group___flash.html#ga3e6d497c7cc722fd27a5054b4ccedd60">More...</a><br /></td></tr>
-<tr class="separator:ga3e6d497c7cc722fd27a5054b4ccedd60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac10587ba5441e54d5319278f5f187721"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gac10587ba5441e54d5319278f5f187721">mal_flash_read_uint64</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_uint64(address)</td></tr>
-<tr class="memdesc:gac10587ba5441e54d5319278f5f187721"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 64 bit integer from memory.  <a href="group___flash.html#gac10587ba5441e54d5319278f5f187721">More...</a><br /></td></tr>
-<tr class="separator:gac10587ba5441e54d5319278f5f187721"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga407a55db4969f36dd4fd556d191dd951"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga407a55db4969f36dd4fd556d191dd951">mal_flash_read_int64</a>(address)&#160;&#160;&#160;mal_hspec_flash_read_int64(address)</td></tr>
-<tr class="memdesc:ga407a55db4969f36dd4fd556d191dd951"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 64 bit integer from memory.  <a href="group___flash.html#ga407a55db4969f36dd4fd556d191dd951">More...</a><br /></td></tr>
-<tr class="separator:ga407a55db4969f36dd4fd556d191dd951"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga71ea0528ad03ce7b34fc3113bb7be086"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga71ea0528ad03ce7b34fc3113bb7be086">mal_flash_write_uint16_values</a>(start_address,  values,  count)&#160;&#160;&#160;mal_hspec_flash_write_uint16_values(start_address, values, count)</td></tr>
-<tr class="memdesc:ga71ea0528ad03ce7b34fc3113bb7be086"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will write an array of uint16 values to flash from the given start address.  <a href="group___flash.html#ga71ea0528ad03ce7b34fc3113bb7be086">More...</a><br /></td></tr>
-<tr class="separator:ga71ea0528ad03ce7b34fc3113bb7be086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga284ff6dbcd5fac880e215eae8762cad5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga284ff6dbcd5fac880e215eae8762cad5">mal_flash_write_uint32_values</a>(start_address,  values,  count)&#160;&#160;&#160;mal_hspec_flash_write_uint32_values(start_address, values, count)</td></tr>
-<tr class="memdesc:ga284ff6dbcd5fac880e215eae8762cad5"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will write an array of uint32 values to flash from the given start address.  <a href="group___flash.html#ga284ff6dbcd5fac880e215eae8762cad5">More...</a><br /></td></tr>
-<tr class="separator:ga284ff6dbcd5fac880e215eae8762cad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaada4bbfbf7cb920a06a0b95fff798010"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gaada4bbfbf7cb920a06a0b95fff798010">mal_flash_get_page_count</a>()&#160;&#160;&#160;mal_hspec_flash_get_page_count()</td></tr>
-<tr class="memdesc:gaada4bbfbf7cb920a06a0b95fff798010"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the flash page count of the MCU.  <a href="group___flash.html#gaada4bbfbf7cb920a06a0b95fff798010">More...</a><br /></td></tr>
-<tr class="separator:gaada4bbfbf7cb920a06a0b95fff798010"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf6c066a078a3dcb6c13591f2561e4a79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gaf6c066a078a3dcb6c13591f2561e4a79">mal_flash_get_page_start_address</a>(page)&#160;&#160;&#160;mal_hspec_flash_get_page_start_address(page)</td></tr>
-<tr class="memdesc:gaf6c066a078a3dcb6c13591f2561e4a79"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the start address of a flash page.  <a href="group___flash.html#gaf6c066a078a3dcb6c13591f2561e4a79">More...</a><br /></td></tr>
-<tr class="separator:gaf6c066a078a3dcb6c13591f2561e4a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae7457445698e8075c0fb596c49abda1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gae7457445698e8075c0fb596c49abda1b">mal_flash_get_page_from_address</a>(address)&#160;&#160;&#160;mal_hspec_flash_get_page_from_address(address)</td></tr>
-<tr class="memdesc:gae7457445698e8075c0fb596c49abda1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the page which contains the given address.  <a href="group___flash.html#gae7457445698e8075c0fb596c49abda1b">More...</a><br /></td></tr>
-<tr class="separator:gae7457445698e8075c0fb596c49abda1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga92daa2f310cb7702da51b01e410fa1e4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga92daa2f310cb7702da51b01e410fa1e4">mal_flash_get_page_size</a>(page)&#160;&#160;&#160;mal_hspec_flash_get_page_size(page)</td></tr>
-<tr class="memdesc:ga92daa2f310cb7702da51b01e410fa1e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the size of a flash page.  <a href="group___flash.html#ga92daa2f310cb7702da51b01e410fa1e4">More...</a><br /></td></tr>
-<tr class="separator:ga92daa2f310cb7702da51b01e410fa1e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gad3dd0db97028a21779d5e2400941c253"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gad3dd0db97028a21779d5e2400941c253">mal_flash_read_uint8</a> (unsigned int address)</td></tr>
+<tr class="memdesc:gad3dd0db97028a21779d5e2400941c253"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 8 bit integer from memory.  <a href="group___flash.html#gad3dd0db97028a21779d5e2400941c253">More...</a><br /></td></tr>
+<tr class="separator:gad3dd0db97028a21779d5e2400941c253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5e071302548af3691a805e52fc29aae5"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga5e071302548af3691a805e52fc29aae5">mal_flash_read_int8</a> (unsigned int address)</td></tr>
+<tr class="memdesc:ga5e071302548af3691a805e52fc29aae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 8 bit integer from memory.  <a href="group___flash.html#ga5e071302548af3691a805e52fc29aae5">More...</a><br /></td></tr>
+<tr class="separator:ga5e071302548af3691a805e52fc29aae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga16cec0ad37537bd4092a94347ae12a85"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga16cec0ad37537bd4092a94347ae12a85">mal_flash_read_uint16</a> (unsigned int address)</td></tr>
+<tr class="memdesc:ga16cec0ad37537bd4092a94347ae12a85"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 16 bit integer from memory.  <a href="group___flash.html#ga16cec0ad37537bd4092a94347ae12a85">More...</a><br /></td></tr>
+<tr class="separator:ga16cec0ad37537bd4092a94347ae12a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga29ae36c41cb123464c3050a3b16065be"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE int16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga29ae36c41cb123464c3050a3b16065be">mal_flash_read_int16</a> (unsigned int address)</td></tr>
+<tr class="memdesc:ga29ae36c41cb123464c3050a3b16065be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 16 bit integer from memory.  <a href="group___flash.html#ga29ae36c41cb123464c3050a3b16065be">More...</a><br /></td></tr>
+<tr class="separator:ga29ae36c41cb123464c3050a3b16065be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae4f8edb7a7749ed79018f9d78b47e0e3"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gae4f8edb7a7749ed79018f9d78b47e0e3">mal_flash_read_uint32</a> (unsigned int address)</td></tr>
+<tr class="memdesc:gae4f8edb7a7749ed79018f9d78b47e0e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 32 bit integer from memory.  <a href="group___flash.html#gae4f8edb7a7749ed79018f9d78b47e0e3">More...</a><br /></td></tr>
+<tr class="separator:gae4f8edb7a7749ed79018f9d78b47e0e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga92e38ff86562e59b923fe689a55dc212"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga92e38ff86562e59b923fe689a55dc212">mal_flash_read_int32</a> (unsigned int address)</td></tr>
+<tr class="memdesc:ga92e38ff86562e59b923fe689a55dc212"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 32 bit integer from memory.  <a href="group___flash.html#ga92e38ff86562e59b923fe689a55dc212">More...</a><br /></td></tr>
+<tr class="separator:ga92e38ff86562e59b923fe689a55dc212"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf027304e9cbe73921134fe016737714e"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gaf027304e9cbe73921134fe016737714e">mal_flash_read_uint64</a> (unsigned int address)</td></tr>
+<tr class="memdesc:gaf027304e9cbe73921134fe016737714e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an unsigned 64 bit integer from memory.  <a href="group___flash.html#gaf027304e9cbe73921134fe016737714e">More...</a><br /></td></tr>
+<tr class="separator:gaf027304e9cbe73921134fe016737714e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae0c3cf0e913a08c00086a51a97f89131"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gae0c3cf0e913a08c00086a51a97f89131">mal_flash_read_int64</a> (unsigned int address)</td></tr>
+<tr class="memdesc:gae0c3cf0e913a08c00086a51a97f89131"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a signed 64 bit integer from memory.  <a href="group___flash.html#gae0c3cf0e913a08c00086a51a97f89131">More...</a><br /></td></tr>
+<tr class="separator:gae0c3cf0e913a08c00086a51a97f89131"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c5af21c1ff79f9068821fc8945f95c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga5c5af21c1ff79f9068821fc8945f95c0">mal_flash_write_uint16_values</a> (unsigned int start_address, uint16_t *values, uint32_t count)</td></tr>
+<tr class="memdesc:ga5c5af21c1ff79f9068821fc8945f95c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will write an array of uint16 values to flash from the given start address.  <a href="group___flash.html#ga5c5af21c1ff79f9068821fc8945f95c0">More...</a><br /></td></tr>
+<tr class="separator:ga5c5af21c1ff79f9068821fc8945f95c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86398f632122409cdca9e7a29092aceb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga86398f632122409cdca9e7a29092aceb">mal_flash_write_uint32_values</a> (unsigned int start_address, uint32_t *values, uint32_t count)</td></tr>
+<tr class="memdesc:ga86398f632122409cdca9e7a29092aceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will write an array of uint32 values to flash from the given start address.  <a href="group___flash.html#ga86398f632122409cdca9e7a29092aceb">More...</a><br /></td></tr>
+<tr class="separator:ga86398f632122409cdca9e7a29092aceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga284a1cb7186dec2ad1e9cce251b185fe"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga284a1cb7186dec2ad1e9cce251b185fe">mal_flash_get_page_count</a> (void)</td></tr>
+<tr class="memdesc:ga284a1cb7186dec2ad1e9cce251b185fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function return the flash page count of the MCU.  <a href="group___flash.html#ga284a1cb7186dec2ad1e9cce251b185fe">More...</a><br /></td></tr>
+<tr class="separator:ga284a1cb7186dec2ad1e9cce251b185fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf496edeadd1dce92af70fdb92ba8d8d8"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gaf496edeadd1dce92af70fdb92ba8d8d8">mal_flash_get_page_start_address</a> (uint32_t page)</td></tr>
+<tr class="memdesc:gaf496edeadd1dce92af70fdb92ba8d8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the start address of a flash page.  <a href="group___flash.html#gaf496edeadd1dce92af70fdb92ba8d8d8">More...</a><br /></td></tr>
+<tr class="separator:gaf496edeadd1dce92af70fdb92ba8d8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf46cd527d068b275372206cbc0b6ddbd"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gaf46cd527d068b275372206cbc0b6ddbd">mal_flash_get_page_from_address</a> (unsigned int address)</td></tr>
+<tr class="memdesc:gaf46cd527d068b275372206cbc0b6ddbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the page which contains the given address.  <a href="group___flash.html#gaf46cd527d068b275372206cbc0b6ddbd">More...</a><br /></td></tr>
+<tr class="separator:gaf46cd527d068b275372206cbc0b6ddbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac12aa07c83173de8bdada173134a0981"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gac12aa07c83173de8bdada173134a0981">mal_flash_get_page_size</a> (uint32_t page)</td></tr>
+<tr class="memdesc:gac12aa07c83173de8bdada173134a0981"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will return the size of a flash page.  <a href="group___flash.html#gac12aa07c83173de8bdada173134a0981">More...</a><br /></td></tr>
+<tr class="separator:gac12aa07c83173de8bdada173134a0981"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad089a48fec0048f583d8f7b6c643e693"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gad089a48fec0048f583d8f7b6c643e693">mal_flash_erase_page</a> (uint32_t page)</td></tr>
 <tr class="separator:gad089a48fec0048f583d8f7b6c643e693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga545650b2777c7760cb804536f264e94e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#ga545650b2777c7760cb804536f264e94e">mal_flash_safe_erase_page</a> (uint32_t page)</td></tr>
+<tr class="separator:ga545650b2777c7760cb804536f264e94e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad71f4c240412f9082d314383568178f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___flash.html#gad71f4c240412f9082d314383568178f0">mal_flash_is_page_valid</a> (uint32_t page)</td></tr>
+<tr class="memdesc:gad71f4c240412f9082d314383568178f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a page is valid for the current MCU.  <a href="group___flash.html#gad71f4c240412f9082d314383568178f0">More...</a><br /></td></tr>
+<tr class="separator:gad71f4c240412f9082d314383568178f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to write and erase the flash. </p>

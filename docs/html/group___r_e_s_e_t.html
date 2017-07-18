@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,6 @@ $(document).ready(function(){initNavTree('group___r_e_s_e_t.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -93,90 +92,72 @@ $(document).ready(function(){initNavTree('group___r_e_s_e_t.html','');});
 <p>Functions to handle the reset of the MCU from user code.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gad82c4a9d2112b766fe5436a9bb068b5c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gad82c4a9d2112b766fe5436a9bb068b5c">mal_reset_mcu</a>()&#160;&#160;&#160;mal_hspec_reset_mcu()</td></tr>
-<tr class="separator:gad82c4a9d2112b766fe5436a9bb068b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gaedfb986bc688f5735bfa366865a2cff2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gaedfb986bc688f5735bfa366865a2cff2">mal_hspec_reset_source_e</a> { <br />
-&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2a1674b964be5e4d641ccfc563f32f5f52">MAL_HSPEC_RESET_SOURCE_RESET_PIN</a>, 
-<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2a399b6e7d61e020572606091df9db5ba0">MAL_HSPEC_RESET_SOURCE_SOFTWARE</a>, 
-<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2ac1ad3cfeebe9b53fd124a7a23d837d3f">MAL_HSPEC_RESET_SOURCE_POWER</a>, 
-<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2abbefc2adfcbe2488778bb9bf51bd25c5">MAL_HSPEC_RESET_SOURCE_SLEEP</a>, 
+<tr class="memitem:gab791db01c176d1a36c008639ba01ad5e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a> { <br />
+&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eab082ad47c94a8e07e3481b450852cd33">MAL_RESET_SOURCE_RESET_PIN</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eae200c576e1fb5530bf21f736cdb3322f">MAL_RESET_SOURCE_SOFTWARE</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea0723307a285a4479f2186d7d17c8c5ea">MAL_RESET_SOURCE_POWER</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea185044766a5e54246f51c258a0635123">MAL_RESET_SOURCE_SLEEP</a>, 
 <br />
-&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2a758a7a8b934893ae054230d75d009b14">MAL_HSPEC_RESET_SOURCE_WATCHDOG</a>, 
-<a class="el" href="group___r_e_s_e_t.html#ggaedfb986bc688f5735bfa366865a2cff2ac30ed190bcb2a23f34c56eb7885a2e72">MAL_HSPEC_RESET_SOURCE_UNKNOWN</a>
+&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea8bd5bfed8e7293a82fb81265a37577e1">MAL_RESET_SOURCE_WATCHDOG</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eac33a2d95ed81954547feb7ff2a809dec">MAL_RESET_SOURCE_UNKNOWN</a>
 <br />
  }</td></tr>
-<tr class="separator:gaedfb986bc688f5735bfa366865a2cff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gab791db01c176d1a36c008639ba01ad5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8c905646a37d0402c56ee99019d54e15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gaedfb986bc688f5735bfa366865a2cff2">mal_hspec_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#ga8c905646a37d0402c56ee99019d54e15">mal_reset_get_source</a> (void)</td></tr>
-<tr class="separator:ga8c905646a37d0402c56ee99019d54e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad58a5038b99104175b81cc63a89bc19f"><td class="memItemLeft" align="right" valign="top"><a id="gad58a5038b99104175b81cc63a89bc19f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gad58a5038b99104175b81cc63a89bc19f">mal_reset_mcu</a> (void)</td></tr>
+<tr class="memdesc:gad58a5038b99104175b81cc63a89bc19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calling this will reset the MCU. <br /></td></tr>
+<tr class="separator:gad58a5038b99104175b81cc63a89bc19f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae20f28600b2716df3839f3050c1bc067"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gae20f28600b2716df3839f3050c1bc067">mal_reset_get_source</a> (void)</td></tr>
+<tr class="separator:gae20f28600b2716df3839f3050c1bc067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga466f7d7ea001285898fc83999f2e1d9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#ga466f7d7ea001285898fc83999f2e1d9d">mal_reset_get_source_unmanaged</a> (void)</td></tr>
+<tr class="separator:ga466f7d7ea001285898fc83999f2e1d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to handle the reset of the MCU from user code. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gad82c4a9d2112b766fe5436a9bb068b5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad82c4a9d2112b766fe5436a9bb068b5c">&#9670;&nbsp;</a></span>mal_reset_mcu</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_reset_mcu</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_reset_mcu()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Calling this will reset the MCU. </p>
-
-</div>
-</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="gaedfb986bc688f5735bfa366865a2cff2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaedfb986bc688f5735bfa366865a2cff2">&#9670;&nbsp;</a></span>mal_hspec_reset_source_e</h2>
+<a id="gab791db01c176d1a36c008639ba01ad5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab791db01c176d1a36c008639ba01ad5e">&#9670;&nbsp;</a></span>mal_reset_source_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___r_e_s_e_t.html#gaedfb986bc688f5735bfa366865a2cff2">mal_hspec_reset_source_e</a></td>
+          <td class="memname">enum <a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The possible reset sources. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2a1674b964be5e4d641ccfc563f32f5f52"></a>MAL_HSPEC_RESET_SOURCE_RESET_PIN&#160;</td><td class="fielddoc"><p>The physical reset pin was asserted for a reset. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5eab082ad47c94a8e07e3481b450852cd33"></a>MAL_RESET_SOURCE_RESET_PIN&#160;</td><td class="fielddoc"><p>The physical reset pin was asserted for a reset. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2a399b6e7d61e020572606091df9db5ba0"></a>MAL_HSPEC_RESET_SOURCE_SOFTWARE&#160;</td><td class="fielddoc"><p>The reset occurred because of a software request. </p>
+<tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5eae200c576e1fb5530bf21f736cdb3322f"></a>MAL_RESET_SOURCE_SOFTWARE&#160;</td><td class="fielddoc"><p>The reset occurred because of a software request. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2ac1ad3cfeebe9b53fd124a7a23d837d3f"></a>MAL_HSPEC_RESET_SOURCE_POWER&#160;</td><td class="fielddoc"><p>The reset occurred because of a power anomaly such as POR. </p>
+<tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5ea0723307a285a4479f2186d7d17c8c5ea"></a>MAL_RESET_SOURCE_POWER&#160;</td><td class="fielddoc"><p>The reset occurred because of a power anomaly such as POR. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2abbefc2adfcbe2488778bb9bf51bd25c5"></a>MAL_HSPEC_RESET_SOURCE_SLEEP&#160;</td><td class="fielddoc"><p>The MCU experienced a reset because of a transition of sleep condition. </p>
+<tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5ea185044766a5e54246f51c258a0635123"></a>MAL_RESET_SOURCE_SLEEP&#160;</td><td class="fielddoc"><p>The MCU experienced a reset because of a transition of sleep condition. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2a758a7a8b934893ae054230d75d009b14"></a>MAL_HSPEC_RESET_SOURCE_WATCHDOG&#160;</td><td class="fielddoc"><p>The reset occurred because of the watchdog. </p>
+<tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5ea8bd5bfed8e7293a82fb81265a37577e1"></a>MAL_RESET_SOURCE_WATCHDOG&#160;</td><td class="fielddoc"><p>The reset occurred because of the watchdog. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaedfb986bc688f5735bfa366865a2cff2ac30ed190bcb2a23f34c56eb7885a2e72"></a>MAL_HSPEC_RESET_SOURCE_UNKNOWN&#160;</td><td class="fielddoc"><p>The source is not known. </p>
+<tr><td class="fieldname"><a id="ggab791db01c176d1a36c008639ba01ad5eac33a2d95ed81954547feb7ff2a809dec"></a>MAL_RESET_SOURCE_UNKNOWN&#160;</td><td class="fielddoc"><p>The source is not known. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga8c905646a37d0402c56ee99019d54e15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8c905646a37d0402c56ee99019d54e15">&#9670;&nbsp;</a></span>mal_reset_get_source()</h2>
+<a id="gae20f28600b2716df3839f3050c1bc067"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae20f28600b2716df3839f3050c1bc067">&#9670;&nbsp;</a></span>mal_reset_get_source()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___r_e_s_e_t.html#gaedfb986bc688f5735bfa366865a2cff2">mal_hspec_reset_source_e</a> mal_reset_get_source </td>
+          <td class="memname"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a> mal_reset_get_source </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -185,6 +166,25 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Return the last reset source. </p><dl class="section return"><dt>Returns</dt><dd>Return the last reset source. </dd></dl>
+
+</div>
+</div>
+<a id="ga466f7d7ea001285898fc83999f2e1d9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga466f7d7ea001285898fc83999f2e1d9d">&#9670;&nbsp;</a></span>mal_reset_get_source_unmanaged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a> mal_reset_get_source_unmanaged </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return the last reset source. Note that on some systems, getting the source clears it. Use mal_reset_get_source to have the last reset source at boot. </p><dl class="section return"><dt>Returns</dt><dd>Return the last reset source. </dd></dl>
 
 </div>
 </div>

@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -97,350 +97,144 @@ $(document).ready(function(){initNavTree('group___timer.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__timer__pwm__init__s.html">mal_hspec_timer_pwm_init_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__timer__pwm__init__s.html">mal_timer_pwm_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__timer__intput__capture__init__s.html">mal_hspec_timer_intput_capture_init_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__timer__intput__capture__init__s.html">mal_timer_intput_capture_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__timer__state__s.html">mal_timer_state_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__timer__init__tick__s.html">mal_timer_init_tick_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga9b9d540b22f1e2cadec5a0276b8c84de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga9b9d540b22f1e2cadec5a0276b8c84de">mal_timer_disable_interrupt</a>(timer)&#160;&#160;&#160;mal_hspec_disable_timer_interrupt(timer)</td></tr>
-<tr class="memdesc:ga9b9d540b22f1e2cadec5a0276b8c84de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for a timer.  <a href="#ga9b9d540b22f1e2cadec5a0276b8c84de">More...</a><br /></td></tr>
-<tr class="separator:ga9b9d540b22f1e2cadec5a0276b8c84de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad1fec1e21a9ce6101e8fcce2dbbc930c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gad1fec1e21a9ce6101e8fcce2dbbc930c">mal_timer_enable_interrupt</a>(timer,  active)&#160;&#160;&#160;mal_hspec_enable_timer_interrupt(timer, active)</td></tr>
-<tr class="memdesc:gad1fec1e21a9ce6101e8fcce2dbbc930c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for a timer.  <a href="#gad1fec1e21a9ce6101e8fcce2dbbc930c">More...</a><br /></td></tr>
-<tr class="separator:gad1fec1e21a9ce6101e8fcce2dbbc930c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6082e2ee9a0bbf1e0845cccbac31616e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga6082e2ee9a0bbf1e0845cccbac31616e">mal_timer_set_pwm_duty_cycle</a>(timer,  gpio,  duty_cycle)&#160;&#160;&#160;mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)</td></tr>
-<tr class="memdesc:ga6082e2ee9a0bbf1e0845cccbac31616e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the duty cycle of an initialized PWM IO.  <a href="#ga6082e2ee9a0bbf1e0845cccbac31616e">More...</a><br /></td></tr>
-<tr class="separator:ga6082e2ee9a0bbf1e0845cccbac31616e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2c7904136340ea88161f2e1a49615529"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga2c7904136340ea88161f2e1a49615529">mal_timer_get_resolution</a>(timer,  resolution)&#160;&#160;&#160;mal_hspec_timer_get_resolution(timer, resolution)</td></tr>
-<tr class="memdesc:ga2c7904136340ea88161f2e1a49615529"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of timer. The resolution is number of bits for the count register.  <a href="#ga2c7904136340ea88161f2e1a49615529">More...</a><br /></td></tr>
-<tr class="separator:ga2c7904136340ea88161f2e1a49615529"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7986843d214d27257c9fd47d068e199d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga7986843d214d27257c9fd47d068e199d">mal_timer_get_count_frequency</a>(timer,  frequency)&#160;&#160;&#160;mal_hspec_timer_get_count_frequency(timer, frequency)</td></tr>
-<tr class="memdesc:ga7986843d214d27257c9fd47d068e199d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the actual counting frequency of a timer.  <a href="#ga7986843d214d27257c9fd47d068e199d">More...</a><br /></td></tr>
-<tr class="separator:ga7986843d214d27257c9fd47d068e199d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac6cda66da5474ae028e8d69795a363b5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gac6cda66da5474ae028e8d69795a363b5">MAL_TIMER_SUB_COUNTS</a>(count2,  count1,  mask)&#160;&#160;&#160;(((count2) + ((-count1) &amp; mask)) &amp; mask)</td></tr>
 <tr class="memdesc:gac6cda66da5474ae028e8d69795a363b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to help subtract 2 timer values regardless of the resolution. The result will be count2 - count1 respecting the two's complement wrap around. This means that for an 8 bit resolution timer, 1 - 255 = 2.  <a href="#gac6cda66da5474ae028e8d69795a363b5">More...</a><br /></td></tr>
 <tr class="separator:gac6cda66da5474ae028e8d69795a363b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga686cbbc03378e288f185e3f5ccc5fcc5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga686cbbc03378e288f185e3f5ccc5fcc5">mal_timer_get_count</a>(timer,  count)&#160;&#160;&#160;mal_hspec_timer_get_count(timer, count)</td></tr>
-<tr class="memdesc:ga686cbbc03378e288f185e3f5ccc5fcc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the count register of a timer.  <a href="#ga686cbbc03378e288f185e3f5ccc5fcc5">More...</a><br /></td></tr>
-<tr class="separator:ga686cbbc03378e288f185e3f5ccc5fcc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gad7cef1ffa25d69f52c1139c6ec759ff7"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gad7cef1ffa25d69f52c1139c6ec759ff7">mal_hspec_timer_callback_t</a>) (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer)</td></tr>
-<tr class="memdesc:gad7cef1ffa25d69f52c1139c6ec759ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer typdef for timer in task mode.  <a href="#gad7cef1ffa25d69f52c1139c6ec759ff7">More...</a><br /></td></tr>
-<tr class="separator:gad7cef1ffa25d69f52c1139c6ec759ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0d5ea073feabcfba716c3484ac66995f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga0d5ea073feabcfba716c3484ac66995f">mal_hspec_timer_input_capture_callback_t</a>) (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, uint64_t count)</td></tr>
-<tr class="memdesc:ga0d5ea073feabcfba716c3484ac66995f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer typdef for timer in input capture mode.  <a href="#ga0d5ea073feabcfba716c3484ac66995f">More...</a><br /></td></tr>
-<tr class="separator:ga0d5ea073feabcfba716c3484ac66995f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b8e6eba44b1136aa5e30e495e1c9dd9"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga6b8e6eba44b1136aa5e30e495e1c9dd9">mal_timer_callback_t</a>) (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td></tr>
+<tr class="memdesc:ga6b8e6eba44b1136aa5e30e495e1c9dd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer typdef for timer in task mode.  <a href="#ga6b8e6eba44b1136aa5e30e495e1c9dd9">More...</a><br /></td></tr>
+<tr class="separator:ga6b8e6eba44b1136aa5e30e495e1c9dd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0734b2efa1e3eed190ecb817b2c90bd9"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga0734b2efa1e3eed190ecb817b2c90bd9">mal_timer_input_capture_callback_t</a>) (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, uint64_t count)</td></tr>
+<tr class="memdesc:ga0734b2efa1e3eed190ecb817b2c90bd9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function pointer typdef for timer in input capture mode.  <a href="#ga0734b2efa1e3eed190ecb817b2c90bd9">More...</a><br /></td></tr>
+<tr class="separator:ga0734b2efa1e3eed190ecb817b2c90bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga538abf7b841ddbe122b7303cd88fb74f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> { <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa417a4be845f0427a827243d69e27326f">MAL_HSPEC_TIMER_1</a> = 0, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa83cbc01683678de960b986cc7f815f89">MAL_HSPEC_TIMER_2</a> = 1, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa92ae618a3f4a0911b763d18696e23500">MAL_HSPEC_TIMER_3</a> = 2, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa905bed191706d93d995062ee745ec17">MAL_HSPEC_TIMER_4</a> = 3, 
+<tr class="memitem:ga2565d8348f60a20d071182f2bc0d596b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> { <br />
+&#160;&#160;<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba5994b7d9c9546f37c84020cb2f6cc7b4">MAL_TIMER_1</a> = 0, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba06e4ed8399014b4be6b893666ec8f150">MAL_TIMER_2</a> = 1, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596bacc68eeecb234005b241d9fc6a1d49dfe">MAL_TIMER_3</a> = 2, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba3557be3fd9a5f7da5e21959db5a31c92">MAL_TIMER_4</a> = 3, 
 <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fafafed6cc2c0e8837516c6275c5b33de5">MAL_HSPEC_TIMER_5</a> = 4, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa144dfbfe04a46d7d17ca971240e154bf">MAL_HSPEC_TIMER_6</a> = 5, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa3990e396d9af6f5b3f3dfdab39a700f7">MAL_HSPEC_TIMER_7</a> = 6, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fae22a8c4c252494a1da36869998e66793">MAL_HSPEC_TIMER_8</a> = 7, 
+&#160;&#160;<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba27280e4215699f5c3346c0c1de5160bc">MAL_TIMER_5</a> = 4, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596bab5f915d4f552960f2a9cdb4f8e752785">MAL_TIMER_6</a> = 5, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba2e863639e0262ec1e5fea23e1b8833c7">MAL_TIMER_7</a> = 6, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba5919edb763999d5c3f1f8e0324beb861">MAL_TIMER_8</a> = 7, 
 <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faf24a6fc36e1c0cfb6764a9b3154dbd06">MAL_HSPEC_TIMER_9</a> = 8, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fab5554019e2bfd4b290827c2f63319af3">MAL_HSPEC_TIMER_10</a> = 9, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa399baa923f4a2ed5ec30a651f30cac2b">MAL_HSPEC_TIMER_11</a> = 10, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa4c33cd861ab1b35b337cfdd3682d42ec">MAL_HSPEC_TIMER_12</a> = 11, 
+&#160;&#160;<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba8e4fbf0973ba3e1b603f075851776bfd">MAL_TIMER_9</a> = 8, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba59948dd562a7d6053753a06cfa1191fd">MAL_TIMER_10</a> = 9, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba060acfc998bcd9f11a278d3b9202fbf0">MAL_TIMER_11</a> = 10, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba649d59e72e1e5ca2c0848dd4c513eaef">MAL_TIMER_12</a> = 11, 
 <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fadcc08a342fa3c48fa3d365c5ad0d8af2">MAL_HSPEC_TIMER_13</a> = 12, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fa7a23998259047fa038313181cc6070f5">MAL_HSPEC_TIMER_14</a> = 13, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa218a6686e473ef0fbca0673ef3331ec">MAL_HSPEC_TIMER_15</a> = 14, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa30e5af0ea0dc1922c77eb3774718fc4">MAL_HSPEC_TIMER_16</a> = 15, 
+&#160;&#160;<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba521f083066ea8ad225b1550266faafd4">MAL_TIMER_13</a> = 12, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba6f5a739687526e724c0f9a6129a404c2">MAL_TIMER_14</a> = 13, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba87318940213fc7fb58e82d1fe38760c7">MAL_TIMER_15</a> = 14, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba823776ddeef836e20cb691683f56529b">MAL_TIMER_16</a> = 15, 
 <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faaa6c640c9d6624f1995fb20aae20244a">MAL_HSPEC_TIMER_17</a> = 16, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74fab1838d7c4b182aa03700c6549ec29d03">MAL_HSPEC_TIMER_SIZE</a> = 17, 
-<a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5">MAL_HSPEC_TIMER_ANY</a>
-<br />
- }</td></tr>
-<tr class="separator:ga538abf7b841ddbe122b7303cd88fb74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga21f44e8662b4bf6114468ccaaaeacd44"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga21f44e8662b4bf6114468ccaaaeacd44">mal_hspec_timer_mode_e</a> { <br />
-&#160;&#160;<a class="el" href="group___timer.html#gga21f44e8662b4bf6114468ccaaaeacd44a1cf40c7eec9b46fac7b7f14c2f71127c">MAL_HSPEC_TIMER_MODE_TICK</a>, 
-<a class="el" href="group___timer.html#gga21f44e8662b4bf6114468ccaaaeacd44ac0bbb65d92d4f5caf784af8a11c9e7c5">MAL_HSPEC_TIMER_MODE_TASK</a>, 
-<a class="el" href="group___timer.html#gga21f44e8662b4bf6114468ccaaaeacd44afc6943b4bb88d2e68d4b83f9ce9e0c96">MAL_HSPEC_TIMER_MODE_PWM</a>, 
-<a class="el" href="group___timer.html#gga21f44e8662b4bf6114468ccaaaeacd44a2518f8c81265185669c94e783525e3d0">MAL_HSPEC_TIMER_MODE_COUNT</a>, 
-<br />
-&#160;&#160;<a class="el" href="group___timer.html#gga21f44e8662b4bf6114468ccaaaeacd44a4ebaa982a87b972bc20f26dfcf26d88b">MAL_HSPEC_TIMER_MODE_INPUT_CAPTURE</a>
+&#160;&#160;<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596bac606a0c010044057af478d81998f903b">MAL_TIMER_17</a> = 16, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba9587c2d844df4090c3eeef5c717a957e">MAL_TIMER_SIZE</a> = 17, 
+<a class="el" href="group___timer.html#gga2565d8348f60a20d071182f2bc0d596ba911df5db692febaa2b06c4ea1ce721df">MAL_TIMER_ANY</a>
 <br />
  }</td></tr>
-<tr class="separator:ga21f44e8662b4bf6114468ccaaaeacd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac2f6ce8b94cfdf74a57933438459f562"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gac2f6ce8b94cfdf74a57933438459f562">mal_hspec_timer_input_e</a> { <a class="el" href="group___timer.html#ggac2f6ce8b94cfdf74a57933438459f562a05316943259f577480e53e7f01145796">MAL_HSPEC_TIMER_INPUT_RISING</a>, 
-<a class="el" href="group___timer.html#ggac2f6ce8b94cfdf74a57933438459f562aac9dadce2f4566849bf4490807464262">MAL_HSPEC_TIMER_INPUT_FALLING</a>, 
-<a class="el" href="group___timer.html#ggac2f6ce8b94cfdf74a57933438459f562a12c78d56d8085561fe2d4b6afdf22537">MAL_HSPEC_TIMER_INPUT_BOTH</a>
+<tr class="separator:ga2565d8348f60a20d071182f2bc0d596b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5324b2c6557cdd81dce3ed5173394eb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gaf5324b2c6557cdd81dce3ed5173394eb">mal_timer_input_e</a> { <a class="el" href="group___timer.html#ggaf5324b2c6557cdd81dce3ed5173394ebaaae4218931c18bc5ec9a4415a0e3c05f">MAL_TIMER_INPUT_RISING</a>, 
+<a class="el" href="group___timer.html#ggaf5324b2c6557cdd81dce3ed5173394ebae3df89e178ca762a1dabc6de435102f4">MAL_TIMER_INPUT_FALLING</a>, 
+<a class="el" href="group___timer.html#ggaf5324b2c6557cdd81dce3ed5173394ebab3625ef073aa8241341a5ac738c0133b">MAL_TIMER_INPUT_BOTH</a>
  }</td></tr>
-<tr class="separator:gac2f6ce8b94cfdf74a57933438459f562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gaf5324b2c6557cdd81dce3ed5173394eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8d4fc7b6c296cfe3ad6264ebfbce3d51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga8d4fc7b6c296cfe3ad6264ebfbce3d51">mal_timer_init_tick</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> delta, <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *handle)</td></tr>
-<tr class="memdesc:ga8d4fc7b6c296cfe3ad6264ebfbce3d51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer as a simple tick counter. Use <a class="el" href="group___timer.html#ga348e11e04cc47e845fe8d632f1fc3c5e" title="Return the tick of a timer when initialized in tick mode. ">mal_timer_get_tick</a> to read ticks.  <a href="#ga8d4fc7b6c296cfe3ad6264ebfbce3d51">More...</a><br /></td></tr>
-<tr class="separator:ga8d4fc7b6c296cfe3ad6264ebfbce3d51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0e88bc9b5549c8267ce876e98f3601c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga0e88bc9b5549c8267ce876e98f3601c5">mal_timer_direct_init_tick</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> delta, const void *direct_init, <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *handle)</td></tr>
-<tr class="memdesc:ga0e88bc9b5549c8267ce876e98f3601c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the timer. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final.  <a href="#ga0e88bc9b5549c8267ce876e98f3601c5">More...</a><br /></td></tr>
-<tr class="separator:ga0e88bc9b5549c8267ce876e98f3601c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga97568db048353e200b91c2d45166790d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga97568db048353e200b91c2d45166790d">mal_timer_init_count</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency, <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *handle)</td></tr>
-<tr class="separator:ga97568db048353e200b91c2d45166790d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac52ec64073f8f5864843fc95f3b77946"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gac52ec64073f8f5864843fc95f3b77946">mal_timer_init_task</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> delta, <a class="el" href="group___timer.html#gad7cef1ffa25d69f52c1139c6ec759ff7">mal_hspec_timer_callback_t</a> callback, <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *handle)</td></tr>
-<tr class="memdesc:gac52ec64073f8f5864843fc95f3b77946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer that periodically calls a function (task).  <a href="#gac52ec64073f8f5864843fc95f3b77946">More...</a><br /></td></tr>
-<tr class="separator:gac52ec64073f8f5864843fc95f3b77946"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga348e11e04cc47e845fe8d632f1fc3c5e"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga348e11e04cc47e845fe8d632f1fc3c5e">mal_timer_get_tick</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> handle)</td></tr>
-<tr class="memdesc:ga348e11e04cc47e845fe8d632f1fc3c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tick of a timer when initialized in tick mode.  <a href="#ga348e11e04cc47e845fe8d632f1fc3c5e">More...</a><br /></td></tr>
-<tr class="separator:ga348e11e04cc47e845fe8d632f1fc3c5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3bf0057d83979b9d314db59316f5cd0c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga3bf0057d83979b9d314db59316f5cd0c">mal_timer_free</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer)</td></tr>
-<tr class="memdesc:ga3bf0057d83979b9d314db59316f5cd0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a used timer.  <a href="#ga3bf0057d83979b9d314db59316f5cd0c">More...</a><br /></td></tr>
-<tr class="separator:ga3bf0057d83979b9d314db59316f5cd0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga657ad3b403b68efccf5be89d492df2a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga657ad3b403b68efccf5be89d492df2a5">mal_timer_init_pwm</a> (<a class="el" href="structmal__hspec__timer__pwm__init__s.html">mal_hspec_timer_pwm_init_s</a> *init)</td></tr>
-<tr class="memdesc:ga657ad3b403b68efccf5be89d492df2a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a timer and the IO as a PWM generator.  <a href="#ga657ad3b403b68efccf5be89d492df2a5">More...</a><br /></td></tr>
-<tr class="separator:ga657ad3b403b68efccf5be89d492df2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8b03afadf0f90e8299733d250b0b3e9f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga8b03afadf0f90e8299733d250b0b3e9f">mal_timer_get_state</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, <a class="el" href="structmal__timer__state__s.html">mal_timer_state_s</a> *state)</td></tr>
-<tr class="memdesc:ga8b03afadf0f90e8299733d250b0b3e9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the state of the timer.  <a href="#ga8b03afadf0f90e8299733d250b0b3e9f">More...</a><br /></td></tr>
-<tr class="separator:ga8b03afadf0f90e8299733d250b0b3e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a4e831b5a2c96001e3be7b47c14ee32"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga7a4e831b5a2c96001e3be7b47c14ee32">mal_timer_get_count_mask</a> (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, uint64_t *mask)</td></tr>
-<tr class="memdesc:ga7a4e831b5a2c96001e3be7b47c14ee32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will return the mask to use to filter the count register values.  <a href="#ga7a4e831b5a2c96001e3be7b47c14ee32">More...</a><br /></td></tr>
-<tr class="separator:ga7a4e831b5a2c96001e3be7b47c14ee32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga72ceae5b13f72d5931d31d56a1754e4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga72ceae5b13f72d5931d31d56a1754e4d">mal_timer_init_input_capture</a> (<a class="el" href="structmal__hspec__timer__intput__capture__init__s.html">mal_hspec_timer_intput_capture_init_s</a> *init)</td></tr>
-<tr class="memdesc:ga72ceae5b13f72d5931d31d56a1754e4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer as input capture timer.  <a href="#ga72ceae5b13f72d5931d31d56a1754e4d">More...</a><br /></td></tr>
-<tr class="separator:ga72ceae5b13f72d5931d31d56a1754e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga836e55014c7f7a26d788d293b85f5ce5"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga836e55014c7f7a26d788d293b85f5ce5">mal_timer_disable_interrupt</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td></tr>
+<tr class="memdesc:ga836e55014c7f7a26d788d293b85f5ce5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for a timer.  <a href="#ga836e55014c7f7a26d788d293b85f5ce5">More...</a><br /></td></tr>
+<tr class="separator:ga836e55014c7f7a26d788d293b85f5ce5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3482a560629440573266bc45c116e53c"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga3482a560629440573266bc45c116e53c">mal_timer_enable_interrupt</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, bool active)</td></tr>
+<tr class="memdesc:ga3482a560629440573266bc45c116e53c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for a timer.  <a href="#ga3482a560629440573266bc45c116e53c">More...</a><br /></td></tr>
+<tr class="separator:ga3482a560629440573266bc45c116e53c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4bb0e9644091b88df10e053688be3e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gab4bb0e9644091b88df10e053688be3e0">mal_timer_set_pwm_duty_cycle</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio, <a class="el" href="group___t_y_p_e_s.html#ga21e940be7ee4b0ee18c6ff056c870a55">mal_ratio_t</a> duty_cycle)</td></tr>
+<tr class="memdesc:gab4bb0e9644091b88df10e053688be3e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the duty cycle of an initialized PWM IO.  <a href="#gab4bb0e9644091b88df10e053688be3e0">More...</a><br /></td></tr>
+<tr class="separator:gab4bb0e9644091b88df10e053688be3e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8ade8c59101991692dedce3c16b9e94e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga8ade8c59101991692dedce3c16b9e94e">mal_timer_get_resolution</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, uint8_t *resolution)</td></tr>
+<tr class="memdesc:ga8ade8c59101991692dedce3c16b9e94e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of timer. The resolution is number of bits for the count register.  <a href="#ga8ade8c59101991692dedce3c16b9e94e">More...</a><br /></td></tr>
+<tr class="separator:ga8ade8c59101991692dedce3c16b9e94e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae936cd813f80dcf994dbfb05434d2f6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gae936cd813f80dcf994dbfb05434d2f6c">mal_timer_get_count_frequency</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> *frequency)</td></tr>
+<tr class="memdesc:gae936cd813f80dcf994dbfb05434d2f6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the actual counting frequency of a timer.  <a href="#gae936cd813f80dcf994dbfb05434d2f6c">More...</a><br /></td></tr>
+<tr class="separator:gae936cd813f80dcf994dbfb05434d2f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae18321150b9099b8c1f3aa3d7349f8a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gae18321150b9099b8c1f3aa3d7349f8a5">mal_timer_get_count</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, uint64_t *count)</td></tr>
+<tr class="memdesc:gae18321150b9099b8c1f3aa3d7349f8a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the count register of a timer.  <a href="#gae18321150b9099b8c1f3aa3d7349f8a5">More...</a><br /></td></tr>
+<tr class="separator:gae18321150b9099b8c1f3aa3d7349f8a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaede5c8cac85b3d6719a7311963d3a483"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gaede5c8cac85b3d6719a7311963d3a483">mal_timer_is_valid</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td></tr>
+<tr class="memdesc:gaede5c8cac85b3d6719a7311963d3a483"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a timer is available for this MCU.  <a href="#gaede5c8cac85b3d6719a7311963d3a483">More...</a><br /></td></tr>
+<tr class="separator:gaede5c8cac85b3d6719a7311963d3a483"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaec91b9607eb8d83d5d4a306f95e81c1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gaec91b9607eb8d83d5d4a306f95e81c1c">mal_timer_get_valid_timers</a> (const <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> **timers, uint8_t *size)</td></tr>
+<tr class="memdesc:gaec91b9607eb8d83d5d4a306f95e81c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a list of valid timers for this MCU.  <a href="#gaec91b9607eb8d83d5d4a306f95e81c1c">More...</a><br /></td></tr>
+<tr class="separator:gaec91b9607eb8d83d5d4a306f95e81c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga71d0c9a1a860f4ce36faa491b38419a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga71d0c9a1a860f4ce36faa491b38419a3">mal_timer_init</a> (<a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga71d0c9a1a860f4ce36faa491b38419a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer. Note that this method does support the any timer.  <a href="#ga71d0c9a1a860f4ce36faa491b38419a3">More...</a><br /></td></tr>
+<tr class="separator:ga71d0c9a1a860f4ce36faa491b38419a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga27ad41cafb14c0cce261451c2752a991"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga27ad41cafb14c0cce261451c2752a991">mal_timer_direct_init</a> (<a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *init, const void *direct_init)</td></tr>
+<tr class="memdesc:ga27ad41cafb14c0cce261451c2752a991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize directly a timer. Note that this method does support the any timer. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final.  <a href="#ga27ad41cafb14c0cce261451c2752a991">More...</a><br /></td></tr>
+<tr class="separator:ga27ad41cafb14c0cce261451c2752a991"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae587df8ed469aa128aa2417fd382cbb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gae587df8ed469aa128aa2417fd382cbb7">mal_timer_init_tick</a> (<a class="el" href="structmal__timer__init__tick__s.html">mal_timer_init_tick_s</a> *init, <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *handle)</td></tr>
+<tr class="memdesc:gae587df8ed469aa128aa2417fd382cbb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer as a simple tick counter. Use <a class="el" href="group___timer.html#gab93fb1472f5591b95d2b56e6ec5d9740" title="Return the tick of a timer when initialized in tick mode. ">mal_timer_get_tick</a> to read ticks.  <a href="#gae587df8ed469aa128aa2417fd382cbb7">More...</a><br /></td></tr>
+<tr class="separator:gae587df8ed469aa128aa2417fd382cbb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab96a469483c21d3cad114ad288612c57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gab96a469483c21d3cad114ad288612c57">mal_timer_direct_init_tick</a> (<a class="el" href="structmal__timer__init__tick__s.html">mal_timer_init_tick_s</a> *init, const void *direct_init, <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *handle)</td></tr>
+<tr class="memdesc:gab96a469483c21d3cad114ad288612c57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to initialize directly the timer. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final.  <a href="#gab96a469483c21d3cad114ad288612c57">More...</a><br /></td></tr>
+<tr class="separator:gab96a469483c21d3cad114ad288612c57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad8261a45a1115871e7983752a0dd4521"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gad8261a45a1115871e7983752a0dd4521">mal_timer_init_count</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency, <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *handle)</td></tr>
+<tr class="separator:gad8261a45a1115871e7983752a0dd4521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad80c1cef26d4a682c6374a0a6966314c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gad80c1cef26d4a682c6374a0a6966314c">mal_timer_init_count_unmanaged</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, <a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> frequency)</td></tr>
+<tr class="memdesc:gad80c1cef26d4a682c6374a0a6966314c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to mal_timer_free, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly.  <a href="#gad80c1cef26d4a682c6374a0a6966314c">More...</a><br /></td></tr>
+<tr class="separator:gad80c1cef26d4a682c6374a0a6966314c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab51cf94af5b890d14346c259071c6be1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gab51cf94af5b890d14346c259071c6be1">mal_timer_init_task</a> (<a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *init, <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *handle)</td></tr>
+<tr class="memdesc:gab51cf94af5b890d14346c259071c6be1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer that periodically calls a function (task). Similar to mal_timer_init, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly.  <a href="#gab51cf94af5b890d14346c259071c6be1">More...</a><br /></td></tr>
+<tr class="separator:gab51cf94af5b890d14346c259071c6be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab93fb1472f5591b95d2b56e6ec5d9740"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gab93fb1472f5591b95d2b56e6ec5d9740">mal_timer_get_tick</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> handle)</td></tr>
+<tr class="memdesc:gab93fb1472f5591b95d2b56e6ec5d9740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the tick of a timer when initialized in tick mode.  <a href="#gab93fb1472f5591b95d2b56e6ec5d9740">More...</a><br /></td></tr>
+<tr class="separator:gab93fb1472f5591b95d2b56e6ec5d9740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabebe870934f28baf57ae1b47adfe479f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gabebe870934f28baf57ae1b47adfe479f">mal_timer_free</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td></tr>
+<tr class="memdesc:gabebe870934f28baf57ae1b47adfe479f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a used timer.  <a href="#gabebe870934f28baf57ae1b47adfe479f">More...</a><br /></td></tr>
+<tr class="separator:gabebe870934f28baf57ae1b47adfe479f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fc77997f8f18311fe1012f5ca25f56b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga4fc77997f8f18311fe1012f5ca25f56b">mal_timer_free_unmanaged</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td></tr>
+<tr class="memdesc:ga4fc77997f8f18311fe1012f5ca25f56b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to mal_timer_free, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly.  <a href="#ga4fc77997f8f18311fe1012f5ca25f56b">More...</a><br /></td></tr>
+<tr class="separator:ga4fc77997f8f18311fe1012f5ca25f56b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae1b4cc719abc43344edcd8cfe6b48281"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gae1b4cc719abc43344edcd8cfe6b48281">mal_timer_init_pwm</a> (<a class="el" href="structmal__timer__pwm__init__s.html">mal_timer_pwm_init_s</a> *init)</td></tr>
+<tr class="memdesc:gae1b4cc719abc43344edcd8cfe6b48281"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes a timer and the IO as a PWM generator.  <a href="#gae1b4cc719abc43344edcd8cfe6b48281">More...</a><br /></td></tr>
+<tr class="separator:gae1b4cc719abc43344edcd8cfe6b48281"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga196f3a9c0571d5c0066be3e1c5b18cf0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga196f3a9c0571d5c0066be3e1c5b18cf0">mal_timer_init_pwm_unmanaged</a> (<a class="el" href="structmal__timer__pwm__init__s.html">mal_timer_pwm_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga196f3a9c0571d5c0066be3e1c5b18cf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to mal_timer_init_pwm, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly.  <a href="#ga196f3a9c0571d5c0066be3e1c5b18cf0">More...</a><br /></td></tr>
+<tr class="separator:ga196f3a9c0571d5c0066be3e1c5b18cf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeffca441c4db2398dea1b21f76fad45b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gaeffca441c4db2398dea1b21f76fad45b">mal_timer_get_state</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, <a class="el" href="structmal__timer__state__s.html">mal_timer_state_s</a> *state)</td></tr>
+<tr class="memdesc:gaeffca441c4db2398dea1b21f76fad45b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the state of the timer.  <a href="#gaeffca441c4db2398dea1b21f76fad45b">More...</a><br /></td></tr>
+<tr class="separator:gaeffca441c4db2398dea1b21f76fad45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6ac9e8c8ceffdba3a2045583020209aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga6ac9e8c8ceffdba3a2045583020209aa">mal_timer_get_count_mask</a> (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, uint64_t *mask)</td></tr>
+<tr class="memdesc:ga6ac9e8c8ceffdba3a2045583020209aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will return the mask to use to filter the count register values.  <a href="#ga6ac9e8c8ceffdba3a2045583020209aa">More...</a><br /></td></tr>
+<tr class="separator:ga6ac9e8c8ceffdba3a2045583020209aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade8129a6d57960bfb12166439e0ac05d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#gade8129a6d57960bfb12166439e0ac05d">mal_timer_init_input_capture</a> (<a class="el" href="structmal__timer__intput__capture__init__s.html">mal_timer_intput_capture_init_s</a> *init)</td></tr>
+<tr class="memdesc:gade8129a6d57960bfb12166439e0ac05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a timer as input capture timer.  <a href="#gade8129a6d57960bfb12166439e0ac05d">More...</a><br /></td></tr>
+<tr class="separator:gade8129a6d57960bfb12166439e0ac05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga61fe380fe7dc04d1c2cd48c0f4e026f2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___timer.html#ga61fe380fe7dc04d1c2cd48c0f4e026f2">mal_timer_init_input_capture_unmanaged</a> (<a class="el" href="structmal__timer__intput__capture__init__s.html">mal_timer_intput_capture_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga61fe380fe7dc04d1c2cd48c0f4e026f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Similar to mal_timer_init_input_capture, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly.  <a href="#ga61fe380fe7dc04d1c2cd48c0f4e026f2">More...</a><br /></td></tr>
+<tr class="separator:ga61fe380fe7dc04d1c2cd48c0f4e026f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to access and configure the timers of the MCU. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga9b9d540b22f1e2cadec5a0276b8c84de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9b9d540b22f1e2cadec5a0276b8c84de">&#9670;&nbsp;</a></span>mal_timer_disable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_disable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_disable_timer_interrupt(timer)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable interrupts for a timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer to disable the interrupt. Should be of type <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
-
-</div>
-</div>
-<a id="gad1fec1e21a9ce6101e8fcce2dbbc930c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad1fec1e21a9ce6101e8fcce2dbbc930c">&#9670;&nbsp;</a></span>mal_timer_enable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_enable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">active&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_enable_timer_interrupt(timer, active)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable interrupts for a timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer to enable the interrupt. Should be of type <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>. </td></tr>
-    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
-
-</div>
-</div>
-<a id="ga686cbbc03378e288f185e3f5ccc5fcc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga686cbbc03378e288f185e3f5ccc5fcc5">&#9670;&nbsp;</a></span>mal_timer_get_count</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_get_count</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">count&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_timer_get_count(timer, count)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the count register of a timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer to get the count from. </td></tr>
-    <tr><td class="paramname">count</td><td>A pointer to a uint64_t. It will contain the count. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga7986843d214d27257c9fd47d068e199d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7986843d214d27257c9fd47d068e199d">&#9670;&nbsp;</a></span>mal_timer_get_count_frequency</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_get_count_frequency</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">frequency&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_timer_get_count_frequency(timer, frequency)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the actual counting frequency of a timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer to get the frequency from. </td></tr>
-    <tr><td class="paramname">frequency</td><td>A pointer to a mal_hertz_t that will contain the counting frequency. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga2c7904136340ea88161f2e1a49615529"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2c7904136340ea88161f2e1a49615529">&#9670;&nbsp;</a></span>mal_timer_get_resolution</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_get_resolution</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">resolution&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_timer_get_resolution(timer, resolution)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get the resolution of timer. The resolution is number of bits for the count register. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer to get the resolution from. </td></tr>
-    <tr><td class="paramname">resolution</td><td>A pointer to a uint8_t. It will contain the number of bits the count register uses. Usually 8, 16, 32 or 64 bits. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga6082e2ee9a0bbf1e0845cccbac31616e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga6082e2ee9a0bbf1e0845cccbac31616e">&#9670;&nbsp;</a></span>mal_timer_set_pwm_duty_cycle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_timer_set_pwm_duty_cycle</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timer, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">duty_cycle&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_timer_set_pwm_duty_cycle(timer, gpio, duty_cycle)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Set the duty cycle of an initialized PWM IO. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>The timer of the PWM IO. </td></tr>
-    <tr><td class="paramname">gpio</td><td>The GPIO the PWM is on. </td></tr>
-    <tr><td class="paramname">duty_cyle</td><td>A mal_ratio_t value representing the duty cycle on/off ratio. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
 <a id="gac6cda66da5474ae028e8d69795a363b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gac6cda66da5474ae028e8d69795a363b5">&#9670;&nbsp;</a></span>MAL_TIMER_SUB_COUNTS</h2>
 
@@ -478,7 +272,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">count2</td><td>The count 2 value. Should be the most recent count. </td></tr>
     <tr><td class="paramname">count1</td><td>The count 1 value. Should be the oldest count. </td></tr>
-    <tr><td class="paramname">mask</td><td>The value obtained by <a class="el" href="group___timer.html#ga7a4e831b5a2c96001e3be7b47c14ee32" title="Will return the mask to use to filter the count register values. ">mal_timer_get_count_mask</a>. </td></tr>
+    <tr><td class="paramname">mask</td><td>The value obtained by <a class="el" href="group___timer.html#ga6ac9e8c8ceffdba3a2045583020209aa" title="Will return the mask to use to filter the count register values. ">mal_timer_get_count_mask</a>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -487,14 +281,14 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="gad7cef1ffa25d69f52c1139c6ec759ff7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad7cef1ffa25d69f52c1139c6ec759ff7">&#9670;&nbsp;</a></span>mal_hspec_timer_callback_t</h2>
+<a id="ga6b8e6eba44b1136aa5e30e495e1c9dd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6b8e6eba44b1136aa5e30e495e1c9dd9">&#9670;&nbsp;</a></span>mal_timer_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_timer_callback_t) (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_timer_callback_t) (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -510,14 +304,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga0d5ea073feabcfba716c3484ac66995f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0d5ea073feabcfba716c3484ac66995f">&#9670;&nbsp;</a></span>mal_hspec_timer_input_capture_callback_t</h2>
+<a id="ga0734b2efa1e3eed190ecb817b2c90bd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0734b2efa1e3eed190ecb817b2c90bd9">&#9670;&nbsp;</a></span>mal_timer_input_capture_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_timer_input_capture_callback_t) (<a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> timer, uint64_t count)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_timer_input_capture_callback_t) (<a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> timer, uint64_t count)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -535,114 +329,125 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ga538abf7b841ddbe122b7303cd88fb74f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga538abf7b841ddbe122b7303cd88fb74f">&#9670;&nbsp;</a></span>mal_hspec_timer_e</h2>
+<a id="ga2565d8348f60a20d071182f2bc0d596b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2565d8348f60a20d071182f2bc0d596b">&#9670;&nbsp;</a></span>mal_timer_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a></td>
+          <td class="memname">enum <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible timers to use. Note that not all timers are supported on all platforms. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa417a4be845f0427a827243d69e27326f"></a>MAL_HSPEC_TIMER_1&#160;</td><td class="fielddoc"><p>Timer 1. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba5994b7d9c9546f37c84020cb2f6cc7b4"></a>MAL_TIMER_1&#160;</td><td class="fielddoc"><p>Timer 1. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa83cbc01683678de960b986cc7f815f89"></a>MAL_HSPEC_TIMER_2&#160;</td><td class="fielddoc"><p>Timer 2. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba06e4ed8399014b4be6b893666ec8f150"></a>MAL_TIMER_2&#160;</td><td class="fielddoc"><p>Timer 2. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa92ae618a3f4a0911b763d18696e23500"></a>MAL_HSPEC_TIMER_3&#160;</td><td class="fielddoc"><p>Timer 3. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596bacc68eeecb234005b241d9fc6a1d49dfe"></a>MAL_TIMER_3&#160;</td><td class="fielddoc"><p>Timer 3. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faa905bed191706d93d995062ee745ec17"></a>MAL_HSPEC_TIMER_4&#160;</td><td class="fielddoc"><p>Timer 4. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba3557be3fd9a5f7da5e21959db5a31c92"></a>MAL_TIMER_4&#160;</td><td class="fielddoc"><p>Timer 4. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fafafed6cc2c0e8837516c6275c5b33de5"></a>MAL_HSPEC_TIMER_5&#160;</td><td class="fielddoc"><p>Timer 5. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba27280e4215699f5c3346c0c1de5160bc"></a>MAL_TIMER_5&#160;</td><td class="fielddoc"><p>Timer 5. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa144dfbfe04a46d7d17ca971240e154bf"></a>MAL_HSPEC_TIMER_6&#160;</td><td class="fielddoc"><p>Timer 6. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596bab5f915d4f552960f2a9cdb4f8e752785"></a>MAL_TIMER_6&#160;</td><td class="fielddoc"><p>Timer 6. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa3990e396d9af6f5b3f3dfdab39a700f7"></a>MAL_HSPEC_TIMER_7&#160;</td><td class="fielddoc"><p>Timer 7. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba2e863639e0262ec1e5fea23e1b8833c7"></a>MAL_TIMER_7&#160;</td><td class="fielddoc"><p>Timer 7. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fae22a8c4c252494a1da36869998e66793"></a>MAL_HSPEC_TIMER_8&#160;</td><td class="fielddoc"><p>Timer 8. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba5919edb763999d5c3f1f8e0324beb861"></a>MAL_TIMER_8&#160;</td><td class="fielddoc"><p>Timer 8. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faf24a6fc36e1c0cfb6764a9b3154dbd06"></a>MAL_HSPEC_TIMER_9&#160;</td><td class="fielddoc"><p>Timer 9. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba8e4fbf0973ba3e1b603f075851776bfd"></a>MAL_TIMER_9&#160;</td><td class="fielddoc"><p>Timer 9. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fab5554019e2bfd4b290827c2f63319af3"></a>MAL_HSPEC_TIMER_10&#160;</td><td class="fielddoc"><p>Timer 10. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba59948dd562a7d6053753a06cfa1191fd"></a>MAL_TIMER_10&#160;</td><td class="fielddoc"><p>Timer 10. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa399baa923f4a2ed5ec30a651f30cac2b"></a>MAL_HSPEC_TIMER_11&#160;</td><td class="fielddoc"><p>Timer 11. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba060acfc998bcd9f11a278d3b9202fbf0"></a>MAL_TIMER_11&#160;</td><td class="fielddoc"><p>Timer 11. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa4c33cd861ab1b35b337cfdd3682d42ec"></a>MAL_HSPEC_TIMER_12&#160;</td><td class="fielddoc"><p>Timer 12. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba649d59e72e1e5ca2c0848dd4c513eaef"></a>MAL_TIMER_12&#160;</td><td class="fielddoc"><p>Timer 12. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fadcc08a342fa3c48fa3d365c5ad0d8af2"></a>MAL_HSPEC_TIMER_13&#160;</td><td class="fielddoc"><p>Timer 13. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba521f083066ea8ad225b1550266faafd4"></a>MAL_TIMER_13&#160;</td><td class="fielddoc"><p>Timer 13. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fa7a23998259047fa038313181cc6070f5"></a>MAL_HSPEC_TIMER_14&#160;</td><td class="fielddoc"><p>Timer 14. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba6f5a739687526e724c0f9a6129a404c2"></a>MAL_TIMER_14&#160;</td><td class="fielddoc"><p>Timer 14. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faa218a6686e473ef0fbca0673ef3331ec"></a>MAL_HSPEC_TIMER_15&#160;</td><td class="fielddoc"><p>Timer 15. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba87318940213fc7fb58e82d1fe38760c7"></a>MAL_TIMER_15&#160;</td><td class="fielddoc"><p>Timer 15. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faa30e5af0ea0dc1922c77eb3774718fc4"></a>MAL_HSPEC_TIMER_16&#160;</td><td class="fielddoc"><p>Timer 16. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba823776ddeef836e20cb691683f56529b"></a>MAL_TIMER_16&#160;</td><td class="fielddoc"><p>Timer 16. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faaa6c640c9d6624f1995fb20aae20244a"></a>MAL_HSPEC_TIMER_17&#160;</td><td class="fielddoc"><p>Timer 17. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596bac606a0c010044057af478d81998f903b"></a>MAL_TIMER_17&#160;</td><td class="fielddoc"><p>Timer 17. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74fab1838d7c4b182aa03700c6549ec29d03"></a>MAL_HSPEC_TIMER_SIZE&#160;</td><td class="fielddoc"><p>Do not use. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba9587c2d844df4090c3eeef5c717a957e"></a>MAL_TIMER_SIZE&#160;</td><td class="fielddoc"><p>Do not use. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5"></a>MAL_HSPEC_TIMER_ANY&#160;</td><td class="fielddoc"><p>Use to pick first available timer for initialization. </p>
+<tr><td class="fieldname"><a id="gga2565d8348f60a20d071182f2bc0d596ba911df5db692febaa2b06c4ea1ce721df"></a>MAL_TIMER_ANY&#160;</td><td class="fielddoc"><p>Use to pick first available timer for initialization. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="gac2f6ce8b94cfdf74a57933438459f562"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac2f6ce8b94cfdf74a57933438459f562">&#9670;&nbsp;</a></span>mal_hspec_timer_input_e</h2>
+<a id="gaf5324b2c6557cdd81dce3ed5173394eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf5324b2c6557cdd81dce3ed5173394eb">&#9670;&nbsp;</a></span>mal_timer_input_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___timer.html#gac2f6ce8b94cfdf74a57933438459f562">mal_hspec_timer_input_e</a></td>
+          <td class="memname">enum <a class="el" href="group___timer.html#gaf5324b2c6557cdd81dce3ed5173394eb">mal_timer_input_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible timer input triggers. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggac2f6ce8b94cfdf74a57933438459f562a05316943259f577480e53e7f01145796"></a>MAL_HSPEC_TIMER_INPUT_RISING&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_RISING. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf5324b2c6557cdd81dce3ed5173394ebaaae4218931c18bc5ec9a4415a0e3c05f"></a>MAL_TIMER_INPUT_RISING&#160;</td><td class="fielddoc"><p>Rising event. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac2f6ce8b94cfdf74a57933438459f562aac9dadce2f4566849bf4490807464262"></a>MAL_HSPEC_TIMER_INPUT_FALLING&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_FALLING. </p>
+<tr><td class="fieldname"><a id="ggaf5324b2c6557cdd81dce3ed5173394ebae3df89e178ca762a1dabc6de435102f4"></a>MAL_TIMER_INPUT_FALLING&#160;</td><td class="fielddoc"><p>Falling event. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac2f6ce8b94cfdf74a57933438459f562a12c78d56d8085561fe2d4b6afdf22537"></a>MAL_HSPEC_TIMER_INPUT_BOTH&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_BOTH. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga21f44e8662b4bf6114468ccaaaeacd44"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga21f44e8662b4bf6114468ccaaaeacd44">&#9670;&nbsp;</a></span>mal_hspec_timer_mode_e</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group___timer.html#ga21f44e8662b4bf6114468ccaaaeacd44">mal_hspec_timer_mode_e</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Possible timer modes. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga21f44e8662b4bf6114468ccaaaeacd44a1cf40c7eec9b46fac7b7f14c2f71127c"></a>MAL_HSPEC_TIMER_MODE_TICK&#160;</td><td class="fielddoc"><p>MAL_HSPEC_TIMER_MODE_TICK. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga21f44e8662b4bf6114468ccaaaeacd44ac0bbb65d92d4f5caf784af8a11c9e7c5"></a>MAL_HSPEC_TIMER_MODE_TASK&#160;</td><td class="fielddoc"><p>MAL_HSPEC_TIMER_MODE_TASK. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga21f44e8662b4bf6114468ccaaaeacd44afc6943b4bb88d2e68d4b83f9ce9e0c96"></a>MAL_HSPEC_TIMER_MODE_PWM&#160;</td><td class="fielddoc"><p>MAL_HSPEC_TIMER_MODE_PWM. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga21f44e8662b4bf6114468ccaaaeacd44a2518f8c81265185669c94e783525e3d0"></a>MAL_HSPEC_TIMER_MODE_COUNT&#160;</td><td class="fielddoc"><p>MAL_HSPEC_TIMER_MODE_COUNT. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga21f44e8662b4bf6114468ccaaaeacd44a4ebaa982a87b972bc20f26dfcf26d88b"></a>MAL_HSPEC_TIMER_MODE_INPUT_CAPTURE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_TIMER_MODE_COUNT. </p>
+<tr><td class="fieldname"><a id="ggaf5324b2c6557cdd81dce3ed5173394ebab3625ef073aa8241341a5ac738c0133b"></a>MAL_TIMER_INPUT_BOTH&#160;</td><td class="fielddoc"><p>Rising and falling event. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga0e88bc9b5549c8267ce876e98f3601c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0e88bc9b5549c8267ce876e98f3601c5">&#9670;&nbsp;</a></span>mal_timer_direct_init_tick()</h2>
+<a id="ga27ad41cafb14c0cce261451c2752a991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga27ad41cafb14c0cce261451c2752a991">&#9670;&nbsp;</a></span>mal_timer_direct_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_direct_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>direct_init</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize directly a timer. Note that this method does support the any timer. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">init</td><td>Timer initialization parameters. </td></tr>
+    <tr><td class="paramname">direct_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gab96a469483c21d3cad114ad288612c57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab96a469483c21d3cad114ad288612c57">&#9670;&nbsp;</a></span>mal_timer_direct_init_tick()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -650,20 +455,8 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_direct_init_tick </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
-          <td class="paramname"><em>timer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>frequency</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>delta</em>, </td>
+          <td class="paramtype"><a class="el" href="structmal__timer__init__tick__s.html">mal_timer_init_tick_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -674,7 +467,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *&#160;</td>
           <td class="paramname"><em>handle</em>&#160;</td>
         </tr>
         <tr>
@@ -688,11 +481,9 @@ Functions</h2></td></tr>
 <p>Function to initialize directly the timer. Using this function will reduce code size at the cost of flexibility and safety. Usually use this in a code closer to final. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timer</td><td>The desired timer to initialize. It is not recommended to use timer ANY when using this function. </td></tr>
-    <tr><td class="paramname">frequency</td><td>The frequency to count at. </td></tr>
-    <tr><td class="paramname">delta</td><td>The allowed delta of frequency. This means the actual frequency of the timer can be frequency +/- delta. </td></tr>
+    <tr><td class="paramname">init</td><td>Tick timer initialize parameters. </td></tr>
     <tr><td class="paramname">direct_init</td><td>A pointer to direct initialization parameter. See the hardware specific implementation to know what type this should be. </td></tr>
-    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using <a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5" title="Use to pick first available timer for initialization. ">MAL_HSPEC_TIMER_ANY</a>. </td></tr>
+    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using #MAL_HSPEC_TIMER_ANY. </td></tr>
   </table>
   </dd>
 </dl>
@@ -700,8 +491,73 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga3bf0057d83979b9d314db59316f5cd0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3bf0057d83979b9d314db59316f5cd0c">&#9670;&nbsp;</a></span>mal_timer_free()</h2>
+<a id="ga836e55014c7f7a26d788d293b85f5ce5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga836e55014c7f7a26d788d293b85f5ce5">&#9670;&nbsp;</a></span>mal_timer_disable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE bool mal_timer_disable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable interrupts for a timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to disable the interrupt. Should be of type ::mal_hspec_timer_e. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
+
+</div>
+</div>
+<a id="ga3482a560629440573266bc45c116e53c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3482a560629440573266bc45c116e53c">&#9670;&nbsp;</a></span>mal_timer_enable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE void mal_timer_enable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>active</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable interrupts for a timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to enable the interrupt. Should be of type ::mal_hspec_timer_e. </td></tr>
+    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
+
+</div>
+</div>
+<a id="gabebe870934f28baf57ae1b47adfe479f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabebe870934f28baf57ae1b47adfe479f">&#9670;&nbsp;</a></span>mal_timer_free()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -709,7 +565,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_free </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
           <td class="paramname"><em>timer</em></td><td>)</td>
           <td></td>
         </tr>
@@ -727,8 +583,111 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga7a4e831b5a2c96001e3be7b47c14ee32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7a4e831b5a2c96001e3be7b47c14ee32">&#9670;&nbsp;</a></span>mal_timer_get_count_mask()</h2>
+<a id="ga4fc77997f8f18311fe1012f5ca25f56b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4fc77997f8f18311fe1012f5ca25f56b">&#9670;&nbsp;</a></span>mal_timer_free_unmanaged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_free_unmanaged </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Similar to mal_timer_free, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="gae18321150b9099b8c1f3aa3d7349f8a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae18321150b9099b8c1f3aa3d7349f8a5">&#9670;&nbsp;</a></span>mal_timer_get_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_count </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>count</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the count register of a timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to get the count from. </td></tr>
+    <tr><td class="paramname">count</td><td>A pointer to a uint64_t. It will contain the count. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gae936cd813f80dcf994dbfb05434d2f6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae936cd813f80dcf994dbfb05434d2f6c">&#9670;&nbsp;</a></span>mal_timer_get_count_frequency()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_count_frequency </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a> *&#160;</td>
+          <td class="paramname"><em>frequency</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the actual counting frequency of a timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to get the frequency from. </td></tr>
+    <tr><td class="paramname">frequency</td><td>A pointer to a mal_hertz_t that will contain the counting frequency. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga6ac9e8c8ceffdba3a2045583020209aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6ac9e8c8ceffdba3a2045583020209aa">&#9670;&nbsp;</a></span>mal_timer_get_count_mask()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -736,7 +695,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_count_mask </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
           <td class="paramname"><em>timer</em>, </td>
         </tr>
         <tr>
@@ -765,8 +724,46 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga8b03afadf0f90e8299733d250b0b3e9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8b03afadf0f90e8299733d250b0b3e9f">&#9670;&nbsp;</a></span>mal_timer_get_state()</h2>
+<a id="ga8ade8c59101991692dedce3c16b9e94e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8ade8c59101991692dedce3c16b9e94e">&#9670;&nbsp;</a></span>mal_timer_get_resolution()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_resolution </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>resolution</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the resolution of timer. The resolution is number of bits for the count register. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to get the resolution from. </td></tr>
+    <tr><td class="paramname">resolution</td><td>A pointer to a uint8_t. It will contain the number of bits the count register uses. Usually 8, 16, 32 or 64 bits. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaeffca441c4db2398dea1b21f76fad45b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaeffca441c4db2398dea1b21f76fad45b">&#9670;&nbsp;</a></span>mal_timer_get_state()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -774,7 +771,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_state </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
           <td class="paramname"><em>timer</em>, </td>
         </tr>
         <tr>
@@ -803,8 +800,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga348e11e04cc47e845fe8d632f1fc3c5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga348e11e04cc47e845fe8d632f1fc3c5e">&#9670;&nbsp;</a></span>mal_timer_get_tick()</h2>
+<a id="gab93fb1472f5591b95d2b56e6ec5d9740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab93fb1472f5591b95d2b56e6ec5d9740">&#9670;&nbsp;</a></span>mal_timer_get_tick()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -812,7 +809,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">uint64_t mal_timer_get_tick </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
           <td class="paramname"><em>handle</em></td><td>)</td>
           <td></td>
         </tr>
@@ -830,8 +827,73 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga97568db048353e200b91c2d45166790d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga97568db048353e200b91c2d45166790d">&#9670;&nbsp;</a></span>mal_timer_init_count()</h2>
+<a id="gaec91b9607eb8d83d5d4a306f95e81c1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaec91b9607eb8d83d5d4a306f95e81c1c">&#9670;&nbsp;</a></span>mal_timer_get_valid_timers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_get_valid_timers </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> **&#160;</td>
+          <td class="paramname"><em>timers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get a list of valid timers for this MCU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timers</td><td>The returned list. </td></tr>
+    <tr><td class="paramname">size</td><td>The size of the returned list. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> if available. </dd></dl>
+
+</div>
+</div>
+<a id="ga71d0c9a1a860f4ce36faa491b38419a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga71d0c9a1a860f4ce36faa491b38419a3">&#9670;&nbsp;</a></span>mal_timer_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a timer. Note that this method does support the any timer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">init</td><td>Timer initialization parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gad8261a45a1115871e7983752a0dd4521"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad8261a45a1115871e7983752a0dd4521">&#9670;&nbsp;</a></span>mal_timer_init_count()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -839,7 +901,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_count </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
           <td class="paramname"><em>timer</em>, </td>
         </tr>
         <tr>
@@ -851,7 +913,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *&#160;</td>
           <td class="paramname"><em>handle</em>&#160;</td>
         </tr>
         <tr>
@@ -865,7 +927,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">timer</td><td>The desired timer to initialize. </td></tr>
     <tr><td class="paramname">frequency</td><td>The frequency to count at. </td></tr>
-    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using <a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5" title="Use to pick first available timer for initialization. ">MAL_HSPEC_TIMER_ANY</a>. </td></tr>
+    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using #MAL_HSPEC_TIMER_ANY. </td></tr>
   </table>
   </dd>
 </dl>
@@ -873,8 +935,47 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga72ceae5b13f72d5931d31d56a1754e4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga72ceae5b13f72d5931d31d56a1754e4d">&#9670;&nbsp;</a></span>mal_timer_init_input_capture()</h2>
+<a id="gad80c1cef26d4a682c6374a0a6966314c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad80c1cef26d4a682c6374a0a6966314c">&#9670;&nbsp;</a></span>mal_timer_init_count_unmanaged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_count_unmanaged </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
+          <td class="paramname"><em>frequency</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Similar to mal_timer_free, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The desired timer to initialize. </td></tr>
+    <tr><td class="paramname">frequency</td><td>The frequency to count at. </td></tr>
+    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using #MAL_HSPEC_TIMER_ANY. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gade8129a6d57960bfb12166439e0ac05d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade8129a6d57960bfb12166439e0ac05d">&#9670;&nbsp;</a></span>mal_timer_init_input_capture()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -882,7 +983,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_input_capture </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__timer__intput__capture__init__s.html">mal_hspec_timer_intput_capture_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__intput__capture__init__s.html">mal_timer_intput_capture_init_s</a> *&#160;</td>
           <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
         </tr>
@@ -900,8 +1001,35 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga657ad3b403b68efccf5be89d492df2a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga657ad3b403b68efccf5be89d492df2a5">&#9670;&nbsp;</a></span>mal_timer_init_pwm()</h2>
+<a id="ga61fe380fe7dc04d1c2cd48c0f4e026f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga61fe380fe7dc04d1c2cd48c0f4e026f2">&#9670;&nbsp;</a></span>mal_timer_init_input_capture_unmanaged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_input_capture_unmanaged </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__intput__capture__init__s.html">mal_timer_intput_capture_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Similar to mal_timer_init_input_capture, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>initialization parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gae1b4cc719abc43344edcd8cfe6b48281"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae1b4cc719abc43344edcd8cfe6b48281">&#9670;&nbsp;</a></span>mal_timer_init_pwm()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -909,7 +1037,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_pwm </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__timer__pwm__init__s.html">mal_hspec_timer_pwm_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__pwm__init__s.html">mal_timer_pwm_init_s</a> *&#160;</td>
           <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
         </tr>
@@ -927,58 +1055,26 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gac52ec64073f8f5864843fc95f3b77946"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac52ec64073f8f5864843fc95f3b77946">&#9670;&nbsp;</a></span>mal_timer_init_task()</h2>
+<a id="ga196f3a9c0571d5c0066be3e1c5b18cf0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga196f3a9c0571d5c0066be3e1c5b18cf0">&#9670;&nbsp;</a></span>mal_timer_init_pwm_unmanaged()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_task </td>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_pwm_unmanaged </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
-          <td class="paramname"><em>timer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="structmal__timer__pwm__init__s.html">mal_timer_pwm_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>frequency</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>delta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___timer.html#gad7cef1ffa25d69f52c1139c6ec759ff7">mal_hspec_timer_callback_t</a>&#160;</td>
-          <td class="paramname"><em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *&#160;</td>
-          <td class="paramname"><em>handle</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize a timer that periodically calls a function (task). </p>
+<p>Similar to mal_timer_init_pwm, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timer</td><td>The desired timer to initialize. </td></tr>
-    <tr><td class="paramname">frequency</td><td>The frequency to count at. </td></tr>
-    <tr><td class="paramname">delta</td><td>delta The allowed delta of frequency. This means the actual frequency of the timer can be frequency +/- delta. </td></tr>
-    <tr><td class="paramname">callback</td><td>The callback to execute at every count. </td></tr>
-    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using <a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5" title="Use to pick first available timer for initialization. ">MAL_HSPEC_TIMER_ANY</a>. </td></tr>
+    <tr><td class="paramname">init</td><td>The initialize structure of the pwm. </td></tr>
   </table>
   </dd>
 </dl>
@@ -986,34 +1082,22 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ga8d4fc7b6c296cfe3ad6264ebfbce3d51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8d4fc7b6c296cfe3ad6264ebfbce3d51">&#9670;&nbsp;</a></span>mal_timer_init_tick()</h2>
+<a id="gab51cf94af5b890d14346c259071c6be1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab51cf94af5b890d14346c259071c6be1">&#9670;&nbsp;</a></span>mal_timer_init_task()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_tick </td>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_task </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a>&#160;</td>
-          <td class="paramname"><em>timer</em>, </td>
+          <td class="paramtype"><a class="el" href="structmal__timer__init__s.html">mal_timer_init_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>frequency</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga49a0d32891e1c83039400e68a7ffb3dc">mal_hertz_t</a>&#160;</td>
-          <td class="paramname"><em>delta</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="group___timer.html#ga538abf7b841ddbe122b7303cd88fb74f">mal_hspec_timer_e</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *&#160;</td>
           <td class="paramname"><em>handle</em>&#160;</td>
         </tr>
         <tr>
@@ -1024,13 +1108,121 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize a timer as a simple tick counter. Use <a class="el" href="group___timer.html#ga348e11e04cc47e845fe8d632f1fc3c5e" title="Return the tick of a timer when initialized in tick mode. ">mal_timer_get_tick</a> to read ticks. </p>
+<p>Initialize a timer that periodically calls a function (task). Similar to mal_timer_init, but will be unmanaged. This means this timer will not be flagged as busy and the use of timer ANY will not work properly. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timer</td><td>The desired timer to initialize. </td></tr>
-    <tr><td class="paramname">frequency</td><td>The frequency to count at. </td></tr>
-    <tr><td class="paramname">delta</td><td>The allowed delta of frequency. This means the actual frequency of the timer can be frequency +/- delta. </td></tr>
-    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using <a class="el" href="group___timer.html#gga538abf7b841ddbe122b7303cd88fb74faa9292ea9d7d900d6e41a194849fb6ad5" title="Use to pick first available timer for initialization. ">MAL_HSPEC_TIMER_ANY</a>. </td></tr>
+    <tr><td class="paramname">init</td><td>Task timer initialize parameters. </td></tr>
+    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using #MAL_HSPEC_TIMER_ANY. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gae587df8ed469aa128aa2417fd382cbb7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae587df8ed469aa128aa2417fd382cbb7">&#9670;&nbsp;</a></span>mal_timer_init_tick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_init_tick </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structmal__timer__init__tick__s.html">mal_timer_init_tick_s</a> *&#160;</td>
+          <td class="paramname"><em>init</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize a timer as a simple tick counter. Use <a class="el" href="group___timer.html#gab93fb1472f5591b95d2b56e6ec5d9740" title="Return the tick of a timer when initialized in tick mode. ">mal_timer_get_tick</a> to read ticks. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">init</td><td>Tick timer initialize parameters. </td></tr>
+    <tr><td class="paramname">handle</td><td>This handle will return the used timer. Useful when using #MAL_HSPEC_TIMER_ANY. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="gaede5c8cac85b3d6719a7311963d3a483"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaede5c8cac85b3d6719a7311963d3a483">&#9670;&nbsp;</a></span>mal_timer_is_valid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_is_valid </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if a timer is available for this MCU. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> if available. </dd></dl>
+
+</div>
+</div>
+<a id="gab4bb0e9644091b88df10e053688be3e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab4bb0e9644091b88df10e053688be3e0">&#9670;&nbsp;</a></span>mal_timer_set_pwm_duty_cycle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_timer_set_pwm_duty_cycle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___timer.html#ga2565d8348f60a20d071182f2bc0d596b">mal_timer_e</a>&#160;</td>
+          <td class="paramname"><em>timer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#ga21e940be7ee4b0ee18c6ff056c870a55">mal_ratio_t</a>&#160;</td>
+          <td class="paramname"><em>duty_cycle</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the duty cycle of an initialized PWM IO. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>The timer of the PWM IO. </td></tr>
+    <tr><td class="paramname">gpio</td><td>The GPIO the PWM is on. </td></tr>
+    <tr><td class="paramname">duty_cyle</td><td>A mal_ratio_t value representing the duty cycle on/off ratio. </td></tr>
   </table>
   </dd>
 </dl>

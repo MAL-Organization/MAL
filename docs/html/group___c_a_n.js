@@ -1,62 +1,62 @@
 var group___c_a_n =
 [
+    [ "mal_can_msg_s", "structmal__can__msg__s.html", [
+      [ "data", "structmal__can__msg__s.html#a05d93bf865b94987873bb889735f8945", null ],
+      [ "id", "structmal__can__msg__s.html#abaabdc509cdaba7df9f56c6c76f3ae19", null ],
+      [ "id_type", "structmal__can__msg__s.html#af0d0754e83172ec954688c7641c17433", null ],
+      [ "size", "structmal__can__msg__s.html#ae5dc6ffcd9b7605c7787791e40cc6bb0", null ]
+    ] ],
+    [ "mal_can_init_s", "structmal__can__init__s.html", [
+      [ "bitrate", "structmal__can__init__s.html#ae5bc1b48849203496d6b7a84147ccd88", null ],
+      [ "interface", "structmal__can__init__s.html#aab3a9a640ec907bcd41c6637df522e15", null ],
+      [ "rx_callback", "structmal__can__init__s.html#aae6451abf2177296d89669a375a8aa58", null ],
+      [ "rx_gpio", "structmal__can__init__s.html#a0abb6582c878b2e2cc534c67c2b7b79d", null ],
+      [ "tx_callback", "structmal__can__init__s.html#a9cb8b092968580346c8443f5f36255a2", null ],
+      [ "tx_gpio", "structmal__can__init__s.html#a6e94d5c0e889aa1dc28202e68880861f", null ]
+    ] ],
+    [ "mal_can_filter_s", "structmal__can__filter__s.html", [
+      [ "id", "structmal__can__filter__s.html#abaabdc509cdaba7df9f56c6c76f3ae19", null ],
+      [ "id_type", "structmal__can__filter__s.html#af0d0754e83172ec954688c7641c17433", null ],
+      [ "mask", "structmal__can__filter__s.html#ad3bee21df6875eeccd25d3c577e0600a", null ]
+    ] ],
     [ "mal_can_buffer_handle_s", "structmal__can__buffer__handle__s.html", [
-      [ "interface", "structmal__can__buffer__handle__s.html#a015bb4826e337382a87a27f16fc58ab3", null ],
+      [ "interface", "structmal__can__buffer__handle__s.html#aab3a9a640ec907bcd41c6637df522e15", null ],
       [ "rx_buffer", "structmal__can__buffer__handle__s.html#a421b02b0849f03c30a1e7cf079bcd196", null ],
       [ "tx_buffer", "structmal__can__buffer__handle__s.html#a66e9cc8cfa604037cc6fc80115647df0", null ]
     ] ],
     [ "mal_can_buffer_init_s", "structmal__can__buffer__init__s.html", [
       [ "bitrate", "structmal__can__buffer__init__s.html#ae5bc1b48849203496d6b7a84147ccd88", null ],
-      [ "interface", "structmal__can__buffer__init__s.html#a015bb4826e337382a87a27f16fc58ab3", null ],
+      [ "interface", "structmal__can__buffer__init__s.html#aab3a9a640ec907bcd41c6637df522e15", null ],
       [ "rx_buffer", "structmal__can__buffer__init__s.html#a17e1b00923db938e63bac57d0a983a06", null ],
       [ "rx_buffer_size", "structmal__can__buffer__init__s.html#a79ffe330a445e08e2978f56e7d8b978d", null ],
-      [ "rx_gpio", "structmal__can__buffer__init__s.html#a1cef83fc7f75cb766087618fd28a9768", null ],
+      [ "rx_gpio", "structmal__can__buffer__init__s.html#a0abb6582c878b2e2cc534c67c2b7b79d", null ],
       [ "tx_buffer", "structmal__can__buffer__init__s.html#a875b3fbe80637e53938a5b106f3a03b4", null ],
       [ "tx_buffer_size", "structmal__can__buffer__init__s.html#a580827cc36dae99d05ae0f1c2d9601c2", null ],
-      [ "tx_gpio", "structmal__can__buffer__init__s.html#ac59c07fcb655549c9c9020570d93af39", null ]
+      [ "tx_gpio", "structmal__can__buffer__init__s.html#a6e94d5c0e889aa1dc28202e68880861f", null ]
     ] ],
-    [ "mal_hspec_can_msg_s", "structmal__hspec__can__msg__s.html", [
-      [ "data", "structmal__hspec__can__msg__s.html#a3945250633985dc9ab824d1abadb5ebf", null ],
-      [ "id", "structmal__hspec__can__msg__s.html#abaabdc509cdaba7df9f56c6c76f3ae19", null ],
-      [ "id_type", "structmal__hspec__can__msg__s.html#a7f0fd3e9effde5695b7f9dba68daf1e9", null ],
-      [ "size", "structmal__hspec__can__msg__s.html#ae5dc6ffcd9b7605c7787791e40cc6bb0", null ]
-    ] ],
-    [ "mal_hspec_can_init_s", "structmal__hspec__can__init__s.html", [
-      [ "bitrate", "structmal__hspec__can__init__s.html#ae5bc1b48849203496d6b7a84147ccd88", null ],
-      [ "interface", "structmal__hspec__can__init__s.html#a015bb4826e337382a87a27f16fc58ab3", null ],
-      [ "rx_callback", "structmal__hspec__can__init__s.html#ab63597b3d358c5514116e54662e687b3", null ],
-      [ "rx_gpio", "structmal__hspec__can__init__s.html#a1cef83fc7f75cb766087618fd28a9768", null ],
-      [ "tx_callback", "structmal__hspec__can__init__s.html#a6c0895208ab9051978e6697fcc6992a2", null ],
-      [ "tx_gpio", "structmal__hspec__can__init__s.html#ac59c07fcb655549c9c9020570d93af39", null ]
-    ] ],
-    [ "mal_hspec_can_filter_s", "structmal__hspec__can__filter__s.html", [
-      [ "id", "structmal__hspec__can__filter__s.html#abaabdc509cdaba7df9f56c6c76f3ae19", null ],
-      [ "id_type", "structmal__hspec__can__filter__s.html#a7f0fd3e9effde5695b7f9dba68daf1e9", null ],
-      [ "mask", "structmal__hspec__can__filter__s.html#ad3bee21df6875eeccd25d3c577e0600a", null ]
-    ] ],
-    [ "mal_can_add_filter", "group___c_a_n.html#ga7925e449f763f080eaa2bd5386b60642", null ],
     [ "mal_can_buffer_deinit", "group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f", null ],
-    [ "mal_can_deinit", "group___c_a_n.html#gacf59c6f7bf770497d1f75d6c01987329", null ],
-    [ "mal_can_direct_init", "group___c_a_n.html#ga5e57ed6cf81b0578b10a948594065ab7", null ],
-    [ "mal_can_disable_interrupt", "group___c_a_n.html#ga17af18047fd91854c71bd7b9780ef75c", null ],
-    [ "mal_can_enable_interrupt", "group___c_a_n.html#ga1022b363683648010f38d9640554925f", null ],
-    [ "mal_can_remove_filter", "group___c_a_n.html#ga875f8a2555e69b90de1bdfa4e19369f2", null ],
-    [ "mal_can_transmit", "group___c_a_n.html#ga10a6be84a7371e9bf3feec814b73cf21", null ],
-    [ "MAL_HSPEC_CAN_MAX_DATA_SIZE", "group___c_a_n.html#gade5525920e4f7923cacefe66b9c3b84f", null ],
-    [ "mal_hspec_can_rx_callback_t", "group___c_a_n.html#ga79a8fdbbedc5b360da51e7a72dae782a", null ],
-    [ "mal_hspec_can_tx_callback_t", "group___c_a_n.html#ga92d0dd17bb4f5a92bc3edd5f965c6df2", null ],
-    [ "mal_hspec_can_e", "group___c_a_n.html#gaa83fb7297485becd086a5db90b0c3eb9", [
-      [ "MAL_HSPEC_CAN_1", "group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9a2c1b86a22d764bb95221b5d9c14023dd", null ],
-      [ "MAL_HSPEC_CAN_2", "group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9adb8c98ae5124ee4f34cdd93e8348449a", null ],
-      [ "MAL_HSPEC_CAN_SIZE", "group___c_a_n.html#ggaa83fb7297485becd086a5db90b0c3eb9a8604dd5f27d76decba88b932efbdde40", null ]
+    [ "MAL_CAN_MAX_DATA_SIZE", "group___c_a_n.html#gad99f30d785a13a0c04b2a6f76bf15424", null ],
+    [ "mal_can_rx_callback_t", "group___c_a_n.html#gac1e19ed5ecb39fad069a983694cc566d", null ],
+    [ "mal_can_tx_callback_t", "group___c_a_n.html#ga5c8ecbedeeaa092f331dd3ba914f8ecf", null ],
+    [ "mal_can_e", "group___c_a_n.html#gaf70e1efb9c12261c76417995f1536e48", [
+      [ "MAL_CAN_1", "group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a96eab96efb6739bca47f48f816949236", null ],
+      [ "MAL_CAN_2", "group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a0bb84927591a08cb92df6c7884975580", null ],
+      [ "MAL_CAN_SIZE", "group___c_a_n.html#ggaf70e1efb9c12261c76417995f1536e48a382f495888b72b3c337e8e471ebccdaa", null ]
     ] ],
-    [ "mal_hspec_can_id_type_e", "group___c_a_n.html#ga5dc47f7b7687d275e3bf223082971976", [
-      [ "MAL_HSPEC_CAN_ID_STANDARD", "group___c_a_n.html#gga5dc47f7b7687d275e3bf223082971976a3f6b140769c2d137991c297366c00404", null ],
-      [ "MAL_HSPEC_CAN_ID_EXTENDED", "group___c_a_n.html#gga5dc47f7b7687d275e3bf223082971976a6204cbaa4ff7e89427bc41b04864d96d", null ]
+    [ "mal_can_id_type_e", "group___c_a_n.html#ga63e6c324299805c9d80ad5c537874ee4", [
+      [ "MAL_CAN_ID_STANDARD", "group___c_a_n.html#gga63e6c324299805c9d80ad5c537874ee4aa8d391e8e0f333c631a625471cb0e4bc", null ],
+      [ "MAL_CAN_ID_EXTENDED", "group___c_a_n.html#gga63e6c324299805c9d80ad5c537874ee4a600349b2c07d8070bc630c9cdaec7b7c", null ]
     ] ],
+    [ "mal_can_add_filter", "group___c_a_n.html#ga2d371018524fb778fd13b6f76dee4338", null ],
     [ "mal_can_buffer_direct_init", "group___c_a_n.html#ga4ad777ec3f97d9da65d7b4128ee1b734", null ],
     [ "mal_can_buffer_init", "group___c_a_n.html#gafdafc1d92854c7fa960263989764f019", null ],
-    [ "mal_can_buffer_read", "group___c_a_n.html#ga0edde750013e94ed0170d7be7fd968a7", null ],
-    [ "mal_can_buffer_write", "group___c_a_n.html#ga1040c764dcbfcf9a644cb6fb5b7c2f40", null ],
-    [ "mal_can_init", "group___c_a_n.html#gad4fc9db34816e290759d5f1c48bf5ae8", null ]
+    [ "mal_can_buffer_read", "group___c_a_n.html#ga4b3253f89b40c7ba3dd7975374ffab15", null ],
+    [ "mal_can_buffer_write", "group___c_a_n.html#ga25eff0e35a438cbe6418b040e2213a7b", null ],
+    [ "mal_can_deinit", "group___c_a_n.html#ga5d70eaec0e95d9ea2323a5d378645750", null ],
+    [ "mal_can_direct_init", "group___c_a_n.html#ga78508300a084daefeeafa3b252082cc9", null ],
+    [ "mal_can_disable_interrupt", "group___c_a_n.html#ga14affb350a28f754be979343d14283bf", null ],
+    [ "mal_can_enable_interrupt", "group___c_a_n.html#gaffd6d9deb00ecba824296fc0f80a1b66", null ],
+    [ "mal_can_init", "group___c_a_n.html#gabacbaf2d93b403a66d5bd089fe230760", null ],
+    [ "mal_can_remove_filter", "group___c_a_n.html#gafffce2842e120dba998bc93c6b31d37a", null ],
+    [ "mal_can_transmit", "group___c_a_n.html#ga1c279ae2707adcdab08bfdbdd9dedf7f", null ]
 ];

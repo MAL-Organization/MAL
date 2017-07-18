@@ -1,37 +1,37 @@
 var group___a_d_c =
 [
-    [ "mal_hspec_adc_init_s", "structmal__hspec__adc__init__s.html", [
-      [ "adc", "structmal__hspec__adc__init__s.html#a1795e378b06cc517d9ee6f1c8272de1b", null ],
-      [ "bit_resolution", "structmal__hspec__adc__init__s.html#ab028429405131f71983cd49d94547baf", null ],
-      [ "gpio", "structmal__hspec__adc__init__s.html#abd4c773a6091f151aa4cd2127a3bbecf", null ]
+    [ "mal_adc_init_s", "structmal__adc__init__s.html", [
+      [ "adc", "structmal__adc__init__s.html#aafcfcd07b0214160c088bf95ffc9786c", null ],
+      [ "bit_resolution", "structmal__adc__init__s.html#ab028429405131f71983cd49d94547baf", null ],
+      [ "gpio", "structmal__adc__init__s.html#a6f6845e612fef4b9dc132c684b4ee991", null ]
     ] ],
-    [ "mal_adc_async_read", "group___a_d_c.html#ga108d327883aa669d185e63ca98dc481a", null ],
-    [ "mal_adc_disable_interrupt", "group___a_d_c.html#gad5ea2f229c3f249a945e0aaf46c1434c", null ],
-    [ "mal_adc_enable_interrupt", "group___a_d_c.html#ga5a9974af742445115627bb21a2f84970", null ],
-    [ "mal_adc_maximum_resolution", "group___a_d_c.html#gae433ad84ea12e4336a526d76bfe38d55", null ],
-    [ "mal_adc_read_bits", "group___a_d_c.html#gadb194afbb37ffff545685add00034602", null ],
-    [ "mal_adc_resolution", "group___a_d_c.html#ga5aa4bcf5aaa71ccbd8da54945caff8db", null ],
-    [ "mal_hspec_adc_read_callback_t", "group___a_d_c.html#gaa8f20574ee8694f1f9ec1fc3dfab92b2", null ],
-    [ "mal_hspec_adc_e", "group___a_d_c.html#ga443623ebdbe632d5060a648306fd0f31", [
-      [ "MAL_HSPEC_ADC_0", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a43b32cae0aff3f3308690b09b59e5bd9", null ],
-      [ "MAL_HSPEC_ADC_1", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ae8736c3149aa2c2241c1dba8389c05b1", null ],
-      [ "MAL_HSPEC_ADC_2", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ad6b814090ca1916166a6622bb05247a5", null ],
-      [ "MAL_HSPEC_ADC_3", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ae71e657504bdf4b91bef8264eae9ce79", null ],
-      [ "MAL_HSPEC_ADC_4", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ad0307c570b644fed8bc395c656330b0c", null ],
-      [ "MAL_HSPEC_ADC_5", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a07239ab200727c97d9d3c1c79d614a00", null ],
-      [ "MAL_HSPEC_ADC_6", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ad153f08e889cc2aa556dc6cd21c9a68f", null ],
-      [ "MAL_HSPEC_ADC_7", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31aa2d40d87c090012ce0d9679eaaf4d451", null ],
-      [ "MAL_HSPEC_ADC_8", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a3f3d86856109408e7b23da0ea67d9cdb", null ],
-      [ "MAL_HSPEC_ADC_9", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31adbe3f338baea1b28829dc5aa368f00fd", null ],
-      [ "MAL_HSPEC_ADC_10", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a2dcd4ca95283de39dbadc127e53f209a", null ],
-      [ "MAL_HSPEC_ADC_11", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ae480f54fd3a59eb0cdeaa1e3138fde90", null ],
-      [ "MAL_HSPEC_ADC_12", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ae120640206a792da8b36333e32f0e6e0", null ],
-      [ "MAL_HSPEC_ADC_13", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31ae97f4646948284eb900a9e0fefed8333", null ],
-      [ "MAL_HSPEC_ADC_14", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31aae14d75eca1f3411122c2da4093218aa", null ],
-      [ "MAL_HSPEC_ADC_15", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a4306a466d611c627d6187f97d2738cc5", null ],
-      [ "MAL_HSPEC_ADC_SIZE", "group___a_d_c.html#gga443623ebdbe632d5060a648306fd0f31a4ee99d13d5e3d90b1016733a931805ab", null ]
+    [ "mal_adc_read_callback_t", "group___a_d_c.html#ga9ac8082b723f645016084e0cf040cd27", null ],
+    [ "mal_adc_e", "group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85", [
+      [ "MAL_ADC_0", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a76b7798f988f283a61b4853ef5808464", null ],
+      [ "MAL_ADC_1", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ac909d2cc286022cc677fc257f7f7fac9", null ],
+      [ "MAL_ADC_2", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a7ebf93029f854b3ce7b0008ba9470e2f", null ],
+      [ "MAL_ADC_3", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85acc846e87728b70a43eb95356d9afccfb", null ],
+      [ "MAL_ADC_4", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a17bea59af098315cb3f596c2846c608c", null ],
+      [ "MAL_ADC_5", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a19f5a54028128593b62a5d27a82eb49a", null ],
+      [ "MAL_ADC_6", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85abc8453c877c8ceb9dde01067c8e16655", null ],
+      [ "MAL_ADC_7", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a9094e8cf02b092a2800c44d608f9ea53", null ],
+      [ "MAL_ADC_8", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a57f7f3e2533d2227636e4468c1af6e66", null ],
+      [ "MAL_ADC_9", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a4a0a7e3b7e4d9f9af8c16b84484d6295", null ],
+      [ "MAL_ADC_10", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ae206c8506aded53faeeb1000d5dcf171", null ],
+      [ "MAL_ADC_11", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a980a0387c86f2a0b3f3582da66db48da", null ],
+      [ "MAL_ADC_12", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85adb6501f120144cca08dd184150c366f4", null ],
+      [ "MAL_ADC_13", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a7408d03b5e22972643c541521f92eacb", null ],
+      [ "MAL_ADC_14", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ab1399a2c7692c1ab58e764ae5ecc179f", null ],
+      [ "MAL_ADC_15", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a26a0e34b0ac3375e98d24c34a7abc049", null ],
+      [ "MAL_ADC_SIZE", "group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a3fff6958fb52e6ea91837afc396a175b", null ]
     ] ],
-    [ "mal_adc_bits_to_volts", "group___a_d_c.html#ga154ce18a5c8d500f1783f944e4ce12ef", null ],
-    [ "mal_adc_init", "group___a_d_c.html#gaab8fece57744a2e45a44d7035380fc8e", null ],
-    [ "mal_adc_read_volts", "group___a_d_c.html#gae828e7aa1c1a5407d5bf5b10f58809ca", null ]
+    [ "mal_adc_async_read", "group___a_d_c.html#ga1ca7a40e53c2acf21ad03af60d8637e0", null ],
+    [ "mal_adc_bits_to_volts", "group___a_d_c.html#ga32d87069a42a8db071522d98eec0d48d", null ],
+    [ "mal_adc_disable_interrupt", "group___a_d_c.html#ga7314e37a2af68f8f4f22c2a5f69c08d8", null ],
+    [ "mal_adc_enable_interrupt", "group___a_d_c.html#gae3df8267c71977fc3b0e6a75f5737080", null ],
+    [ "mal_adc_init", "group___a_d_c.html#ga1d9a63dd99002b295f6b1effe53d98ac", null ],
+    [ "mal_adc_maximum_resolution", "group___a_d_c.html#ga58b63318e85b5411b565b4b40470ecf4", null ],
+    [ "mal_adc_read_bits", "group___a_d_c.html#ga10ba60d9aedf81656fbd9eb27039dcb1", null ],
+    [ "mal_adc_read_volts", "group___a_d_c.html#ga4bab060794d16c8b4b6bd8004420425c", null ],
+    [ "mal_adc_resolution", "group___a_d_c.html#ga082ff43da56c671e9adabcd4022dd9e2", null ]
 ];
