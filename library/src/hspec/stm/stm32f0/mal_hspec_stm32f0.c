@@ -104,7 +104,8 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 	uint64_t src_clk_freq;
 	mal_system_clk_src_e clk_src = clk->src;
 	// This MCU does support floats natively, so frequency is in millihertz
-	uint32_t target_frequency = clk->frequency / 1000;
+	uint32_t requested_frequency = clk->frequency / 1000;
+	uint32_t target_frequency = requested_frequency;
 	// Choose clk source
 	switch (clk->src) {
 	case MAL_SYSTEM_CLK_SRC_AUTO:
@@ -138,7 +139,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 	// Set flash prefetch buffer before changing clock
 	FLASH_PrefetchBufferCmd(ENABLE);
 	// Check if clock can be used without PLL
-	if (clk->frequency == src_clk_freq) {
+	if (target_frequency == src_clk_freq) {
 		// Set flash latency before switching
 		if (src_clk_freq > 24000000) {
 			FLASH_SetLatency(FLASH_Latency_1);
@@ -151,7 +152,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 		}
 	} else {
 		// Cap target frequency
-		if (clk->frequency > MAL_HSPEC_STM32F0_MAX_FREQUENCY) {
+		if (target_frequency > MAL_HSPEC_STM32F0_MAX_FREQUENCY) {
 			target_frequency = MAL_HSPEC_STM32F0_MAX_FREQUENCY;
 		}
 		// Select PLL input clock
@@ -217,7 +218,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 
 	if (clk->src != MAL_SYSTEM_CLK_SRC_AUTO && clk->src != clk_src) {
 		return MAL_ERROR_CLOCK_ERROR;
-	} else if (SystemCoreClock != clk->frequency) {
+	} else if (SystemCoreClock != requested_frequency) {
 		return MAL_ERROR_CLOCK_ERROR;
 	}
 	return MAL_ERROR_OK;

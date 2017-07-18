@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "hspec/mal_hspec_cmn.h"
+
+#include "clock/mal_clock.h"
 
 const mal_system_clk_s mal_target_system_clock = {
 		.frequency = MAL_TARGET_SYSTEM_CLOCK,

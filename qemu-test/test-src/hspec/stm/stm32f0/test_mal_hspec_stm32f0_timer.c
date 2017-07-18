@@ -27,6 +27,7 @@
 #include "uCUnit-v1.0.h"
 #include "stm32f0/stm32f0xx_gpio.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h"
+#include "timer/test_mal_timer.h"
 
 static const mal_hspec_stm32f0_timer_direct_init_s direct_init_1khz = {
 	.prescaler = 0,

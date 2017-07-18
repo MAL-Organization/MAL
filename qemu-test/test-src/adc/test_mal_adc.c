@@ -29,7 +29,6 @@
 #include "adc/mal_adc.h"
 #include "uCUnit-v1.0.h"
 #include "utils/char_buffer.h"
-#include "hspec/test_mal_hspec.h"
 
 /**
  * Test the ADC initializer.
@@ -38,7 +37,7 @@ static void test_mal_adc_init(void) {
 	uint8_t adc_index;
 	uint8_t io_index;
 	mal_error_e result;
-	const mal_hspec_gpio_s *ios;
+	const mal_gpio_s *ios;
 	uint8_t ios_size;
 
 	UCUNIT_TestcaseBegin("test_mal_adc_init");
@@ -62,7 +61,7 @@ static void test_mal_adc_init(void) {
 					ios[io_index].port,
 					ios[io_index].pin);
 			UCUNIT_WriteString(char_buffer);
-			mal_hspec_adc_init_s adc_init;
+			mal_adc_init_s adc_init;
 			adc_init.adc = adc_index;
 			adc_init.bit_resolution = resolution;
 			adc_init.gpio = &ios[io_index];

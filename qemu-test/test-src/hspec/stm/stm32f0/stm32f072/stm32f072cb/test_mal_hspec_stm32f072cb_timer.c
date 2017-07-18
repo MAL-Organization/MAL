@@ -291,7 +291,7 @@ mal_error_e test_mal_timer_get_valid_pwm_ios(mal_timer_e timer, const mal_gpio_s
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f072cb_get_valid_input_capture_ios(mal_timer_e timer, const mal_gpio_s **ios, uint8_t *size) {
+mal_error_e mal_hspec_get_valid_input_capture_ios(mal_timer_e timer, const mal_gpio_s **ios, uint8_t *size) {
     switch (timer) {
         case MAL_TIMER_1:
             *ios = valid_timer1_input_capture_gpios;
