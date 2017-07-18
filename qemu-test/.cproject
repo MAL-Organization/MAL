@@ -153,9 +153,9 @@
 									<listOptionValue builtIn="false" value="STM32F072"/>
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
 									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
-									<listOptionValue builtIn="false" value="HSE_VALUE=16000000"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=16000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
-									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_SYSTEM_CLK_SRC_INTERNAL"/>
 									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
 								</option>
@@ -180,7 +180,7 @@
 									<listOptionValue builtIn="false" value="STM32F072"/>
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
 									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
-									<listOptionValue builtIn="false" value="HSE_VALUE=16000000"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=16000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_SYSTEM_CLK_SRC_INTERNAL"/>

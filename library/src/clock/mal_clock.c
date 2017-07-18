@@ -46,7 +46,7 @@ mal_error_e mal_clock_initialise_system_clock(void) {
     return mal_clock_set_system_clock(&mal_target_system_clock);
 }
 
-extern uint64_t mal_external_clk_freq;
+extern mal_hertz_t mal_external_clk_freq;
 mal_hertz_t mal_clock_get_external_clock_frequency(void) {
     return mal_external_clk_freq;
 }

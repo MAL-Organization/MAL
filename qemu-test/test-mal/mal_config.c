@@ -24,6 +24,6 @@ const mal_system_clk_s mal_target_system_clock = {
 		.src = MAL_TARGET_SYSTEM_CLOCK_SRC
 };
 
-uint64_t mal_external_clk_freq = MAL_EXTERNAL_CLOCK_FREQUENCY;
+mal_hertz_t mal_external_clk_freq = MAL_EXTERNAL_CLOCK_FREQUENCY;
 
 float mal_external_vdda = 3.3f;
