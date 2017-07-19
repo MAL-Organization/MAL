@@ -30,7 +30,7 @@
 
 static uint64_t local_uuid = 0;
 
-mal_error_e mal_hspec_mingw_uuid_read(uint64_t *uuid) {
+mal_error_e mal_uuid_read(uint64_t *uuid) {
 	if (!local_uuid) {
 		srand(time(NULL));
 		local_uuid = (uint64_t)rand();

@@ -27,6 +27,7 @@
 #include "std/mal_stdint.h"
 #include "gpio/mal_gpio.h"
 #include "std/mal_defs.h"
+#include "std/mal_bool.h"
 
 /**
  * @defgroup CAN

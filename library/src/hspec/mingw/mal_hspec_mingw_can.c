@@ -47,6 +47,10 @@ mal_error_e mal_can_init(mal_can_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
+mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init) {
+    return mal_can_init(init);
+}
+
 mal_error_e mal_can_transmit(mal_can_e interface, mal_can_msg_s *msg) {
 	mal_error_e result;
 	// Write to buffer
@@ -84,4 +88,16 @@ mal_error_e mal_can_remove_filter(mal_can_e interface, mal_can_filter_s *filter)
 
 mal_error_e mal_hspec_mingw_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg) {
 	return can_interfaces[interface].init.rx_callback(interface, msg);
+}
+
+void mal_can_deinit(mal_can_e interface) {
+    // Nothing to do
+}
+
+MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_e interface) {
+    return false;
+}
+
+MAL_DEFS_INLINE void mal_can_enable_interrupt(mal_can_e interface, bool active) {
+    // Nothing to do
 }
