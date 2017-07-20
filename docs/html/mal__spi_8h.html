@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/spi/mal_spi.h File Reference</title>
+<title>MAL: src/spi/mal_spi.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,9 @@ $(document).ready(function(){initNavTree('mal__spi_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">mal_spi.h File Reference</div>  </div>
@@ -92,27 +94,90 @@ $(document).ready(function(){initNavTree('mal__spi_8h.html','');});
 <p>Functions to access and configure the SPI interfaces of the MCU.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="mal__error_8h_source.html">std/mal_error.h</a>&quot;</code><br />
-<code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__stdint_8h_source.html">std/mal_stdint.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__gpio_8h_source.html">gpio/mal_gpio.h</a>&quot;</code><br />
+<code>#include &quot;std/mal_defs.h&quot;</code><br />
 </div>
 <p><a href="mal__spi_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga74cfe852b822658c8ae5549b7efb4caa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga74cfe852b822658c8ae5549b7efb4caa">mal_spi_start_transaction</a>(interface,  msg)&#160;&#160;&#160;mal_hspec_spi_start_transaction(interface, msg)</td></tr>
-<tr class="memdesc:ga74cfe852b822658c8ae5549b7efb4caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an SPI transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result.  <a href="group___s_p_i.html#ga74cfe852b822658c8ae5549b7efb4caa">More...</a><br /></td></tr>
-<tr class="separator:ga74cfe852b822658c8ae5549b7efb4caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga22cdf980bf9598afa4cdb8f0931c77c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga22cdf980bf9598afa4cdb8f0931c77c9">mal_spi_disable_interrupt</a>(interface)&#160;&#160;&#160;mal_hspec_spi_disable_interrupt(interface)</td></tr>
-<tr class="memdesc:ga22cdf980bf9598afa4cdb8f0931c77c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable an SPI interrupt.  <a href="group___s_p_i.html#ga22cdf980bf9598afa4cdb8f0931c77c9">More...</a><br /></td></tr>
-<tr class="separator:ga22cdf980bf9598afa4cdb8f0931c77c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf7b5ddda7308b221a391539dbb032a35"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gaf7b5ddda7308b221a391539dbb032a35">mal_spi_enable_interrupt</a>(interface,  active)&#160;&#160;&#160;mal_hspec_spi_enable_interrupt(interface, active)</td></tr>
-<tr class="memdesc:gaf7b5ddda7308b221a391539dbb032a35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable an SPI interrupt.  <a href="group___s_p_i.html#gaf7b5ddda7308b221a391539dbb032a35">More...</a><br /></td></tr>
-<tr class="separator:gaf7b5ddda7308b221a391539dbb032a35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__spi__master__init__s.html">mal_spi_master_init_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_m_a_l___s_p_i___m_s_g.html">MAL_SPI_MSG</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga795a0a6e1a520b7f100edcfcbb3ef9d2"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga795a0a6e1a520b7f100edcfcbb3ef9d2">mal_spi_master_transaction_complete_t</a>) (<a class="el" href="group___s_p_i.html#gabfec806c566c7587fcc60ee22c60f159">mal_spi_msg_s</a> *msg, <a class="el" href="group___s_p_i.html#gabfec806c566c7587fcc60ee22c60f159">mal_spi_msg_s</a> **next_msg)</td></tr>
+<tr class="separator:ga795a0a6e1a520b7f100edcfcbb3ef9d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabfec806c566c7587fcc60ee22c60f159"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct_m_a_l___s_p_i___m_s_g.html">MAL_SPI_MSG</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gabfec806c566c7587fcc60ee22c60f159">mal_spi_msg_s</a></td></tr>
+<tr class="separator:gabfec806c566c7587fcc60ee22c60f159"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gaa75662e5850574a0ec5a4be1c431f10f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gaa75662e5850574a0ec5a4be1c431f10f">mal_spi_e</a> { <a class="el" href="group___s_p_i.html#ggaa75662e5850574a0ec5a4be1c431f10fa0bc8ade2c2d47447f95c3c6bd7065bc7">MAL_SPI_1</a> = 0, 
+<a class="el" href="group___s_p_i.html#ggaa75662e5850574a0ec5a4be1c431f10fade78840bc7a71582aadd84245990504f">MAL_SPI_2</a> = 1, 
+<a class="el" href="group___s_p_i.html#ggaa75662e5850574a0ec5a4be1c431f10fad666028982171ffbeff05cc61cd9fd4f">MAL_SPI_SIZE</a> = 2
+ }</td></tr>
+<tr class="separator:gaa75662e5850574a0ec5a4be1c431f10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7ebb7d38926f8db5a12a0479e8ac1885"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga7ebb7d38926f8db5a12a0479e8ac1885">mal_spi_select_mode_e</a> { <a class="el" href="group___s_p_i.html#gga7ebb7d38926f8db5a12a0479e8ac1885af9d3b6a3b49b5242c0fa9630c35daa90">MAL_SPI_SELECT_MODE_HARDWARE</a>, 
+<a class="el" href="group___s_p_i.html#gga7ebb7d38926f8db5a12a0479e8ac1885aabc2aa76ad0f747b94b590421020c728">MAL_SPI_SELECT_MODE_SOFTWARE</a>, 
+<a class="el" href="group___s_p_i.html#gga7ebb7d38926f8db5a12a0479e8ac1885a207e244287350e267d70cfb5d3784c57">MAL_SPI_SELECT_MODE_USER</a>, 
+<a class="el" href="group___s_p_i.html#gga7ebb7d38926f8db5a12a0479e8ac1885aaf4328f2be33c8a648b5d03fa419c29a">MAL_SPI_SELECT_MODE_NONE</a>
+ }</td></tr>
+<tr class="separator:ga7ebb7d38926f8db5a12a0479e8ac1885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabf4771990b274b8c5352b9b9d5d9ad09"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gabf4771990b274b8c5352b9b9d5d9ad09">mal_spi_data_size_e</a> { <br />
+&#160;&#160;<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09adba502ed02a1013c3cd88faff30d1988">MAL_SPI_DATA_4_BITS</a> = 4, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a673bf340deec506e014aa6bb198ec67d">MAL_SPI_DATA_5_BITS</a> = 5, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a0f326cba54e640a21d8e51da8a26c59d">MAL_SPI_DATA_6_BITS</a> = 6, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a5048614dde6b012e8e61c8a722e3a380">MAL_SPI_DATA_7_BITS</a> = 7, 
+<br />
+&#160;&#160;<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09aaba3fec9a5e962fd39f87b475e156253">MAL_SPI_DATA_8_BITS</a> = 8, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a344fb097a5eb2728502b47c78a764fa2">MAL_SPI_DATA_9_BITS</a> = 9, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a684b80cbe3ae3f3dc27aae7d854e98ec">MAL_SPI_DATA_10_BITS</a> = 10, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09ae5ed785470f17f2efa767d1c06f4ac9d">MAL_SPI_DATA_11_BITS</a> = 11, 
+<br />
+&#160;&#160;<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09adcd1f52b844f95d901d78f17aa9c77f6">MAL_SPI_DATA_12_BITS</a> = 12, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a7ec0bb0b842e9e7e7b7e16622203ba75">MAL_SPI_DATA_13_BITS</a> = 13, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09a28e3a0ce0444c8d291c01eaf3287bfd7">MAL_SPI_DATA_14_BITS</a> = 14, 
+<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09aa9aae44b922273122dd1ab8fd139c8d8">MAL_SPI_DATA_15_BITS</a> = 15, 
+<br />
+&#160;&#160;<a class="el" href="group___s_p_i.html#ggabf4771990b274b8c5352b9b9d5d9ad09aeef9e4d5b7b131f27a248e8cb8e4be7d">MAL_SPI_DATA_16_BITS</a> = 16
+<br />
+ }</td></tr>
+<tr class="separator:gabf4771990b274b8c5352b9b9d5d9ad09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3de70e60a833cbbfde6c48fe01c60894"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga3de70e60a833cbbfde6c48fe01c60894">mal_spi_clk_idle_state_e</a> { <a class="el" href="group___s_p_i.html#gga3de70e60a833cbbfde6c48fe01c60894a4810616ec9f1f09d73344092c39123dd">MAL_SPI_CLK_IDLE_STATE_LOW</a>, 
+<a class="el" href="group___s_p_i.html#gga3de70e60a833cbbfde6c48fe01c60894aa989af686bd49291cc2f70ebabbdc2bc">MAL_SPI_CLK_IDLE_STATE_HIGH</a>
+ }</td></tr>
+<tr class="separator:ga3de70e60a833cbbfde6c48fe01c60894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa9d58664b756760ad9cdf10e338aa79"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gafa9d58664b756760ad9cdf10e338aa79">mal_spi_data_latch_edge_e</a> { <a class="el" href="group___s_p_i.html#ggafa9d58664b756760ad9cdf10e338aa79a1f314dca9aec23936c7d68ddf5c7655e">MAL_SPI_DATA_LATCH_EDGE_RISING</a>, 
+<a class="el" href="group___s_p_i.html#ggafa9d58664b756760ad9cdf10e338aa79adea56d9cbfbd95cb198085a33d37c78b">MAL_SPI_DATA_LATCH_EDGE_FALLING</a>
+ }</td></tr>
+<tr class="separator:gafa9d58664b756760ad9cdf10e338aa79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0dce2cc870436290ab9edbc2c9388c8f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga0dce2cc870436290ab9edbc2c9388c8f">mal_spi_select_polarity_e</a> { <a class="el" href="group___s_p_i.html#gga0dce2cc870436290ab9edbc2c9388c8fa34ecf913c3855b1fdafc404b5d680db2">MAL_SPI_SELECT_POLARITY_LOW</a>, 
+<a class="el" href="group___s_p_i.html#gga0dce2cc870436290ab9edbc2c9388c8faa7d4dd4a073704971e7df525627e845c">MAL_SPI_SELECT_POLARITY_HIGH</a>
+ }</td></tr>
+<tr class="separator:ga0dce2cc870436290ab9edbc2c9388c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67b4fe712f9687b550a9efbd0e043507"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga67b4fe712f9687b550a9efbd0e043507">mal_spi_bit_order_e</a> { <a class="el" href="group___s_p_i.html#gga67b4fe712f9687b550a9efbd0e043507af7347575483a96bacff090e543d33d93">MAL_SPI_BIT_ORDER_MSB</a>, 
+<a class="el" href="group___s_p_i.html#gga67b4fe712f9687b550a9efbd0e043507afae5ee96b4bc46e77b5242a484b3ca1a">MAL_SPI_BIT_ORDER_LSB</a>
+ }</td></tr>
+<tr class="separator:ga67b4fe712f9687b550a9efbd0e043507"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gac1f6513028f1a31df58a931ecee91614"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#gac1f6513028f1a31df58a931ecee91614">mal_spi_init_master</a> (<a class="el" href="structmal__hspec__spi__master__init__s.html">mal_hspec_spi_master_init_s</a> *init)</td></tr>
-<tr class="memdesc:gac1f6513028f1a31df58a931ecee91614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an SPI interface as a master interface.  <a href="group___s_p_i.html#gac1f6513028f1a31df58a931ecee91614">More...</a><br /></td></tr>
-<tr class="separator:gac1f6513028f1a31df58a931ecee91614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3ee2ee63cb3cdf6f07e708caa1655107"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga3ee2ee63cb3cdf6f07e708caa1655107">mal_spi_start_transaction</a> (<a class="el" href="group___s_p_i.html#gaa75662e5850574a0ec5a4be1c431f10f">mal_spi_e</a> interface, <a class="el" href="group___s_p_i.html#gabfec806c566c7587fcc60ee22c60f159">mal_spi_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga3ee2ee63cb3cdf6f07e708caa1655107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an SPI transfer as a master. Note that this is not a blocking call. Use the callback of the message to receive the result.  <a href="group___s_p_i.html#ga3ee2ee63cb3cdf6f07e708caa1655107">More...</a><br /></td></tr>
+<tr class="separator:ga3ee2ee63cb3cdf6f07e708caa1655107"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga004ef77e89050720942cf5c690714b44"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga004ef77e89050720942cf5c690714b44">mal_spi_disable_interrupt</a> (<a class="el" href="group___s_p_i.html#gaa75662e5850574a0ec5a4be1c431f10f">mal_spi_e</a> interface)</td></tr>
+<tr class="memdesc:ga004ef77e89050720942cf5c690714b44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable an SPI interrupt.  <a href="group___s_p_i.html#ga004ef77e89050720942cf5c690714b44">More...</a><br /></td></tr>
+<tr class="separator:ga004ef77e89050720942cf5c690714b44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00e2aab210e3d5146c6a9fcdd359bf61"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga00e2aab210e3d5146c6a9fcdd359bf61">mal_spi_enable_interrupt</a> (<a class="el" href="group___s_p_i.html#gaa75662e5850574a0ec5a4be1c431f10f">mal_spi_e</a> interface, bool active)</td></tr>
+<tr class="memdesc:ga00e2aab210e3d5146c6a9fcdd359bf61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable an SPI interrupt.  <a href="group___s_p_i.html#ga00e2aab210e3d5146c6a9fcdd359bf61">More...</a><br /></td></tr>
+<tr class="separator:ga00e2aab210e3d5146c6a9fcdd359bf61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga59e30ffb6f3f14e638b6672f2246fcb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_p_i.html#ga59e30ffb6f3f14e638b6672f2246fcb1">mal_spi_init_master</a> (<a class="el" href="structmal__spi__master__init__s.html">mal_spi_master_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga59e30ffb6f3f14e638b6672f2246fcb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an SPI interface as a master interface.  <a href="group___s_p_i.html#ga59e30ffb6f3f14e638b6672f2246fcb1">More...</a><br /></td></tr>
+<tr class="separator:ga59e30ffb6f3f14e638b6672f2246fcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to access and configure the SPI interfaces of the MCU. </p>

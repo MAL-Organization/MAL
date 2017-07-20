@@ -23,8 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072_flash.h"
+#include "flash/mal_flash.h"
 
-uint32_t mal_hspec_stm32f072_flash_get_page_size(uint32_t page) {
+uint32_t mal_flash_get_page_size(uint32_t page) {
 	return 0x800; // 2KB, 2048 bytes.
 }

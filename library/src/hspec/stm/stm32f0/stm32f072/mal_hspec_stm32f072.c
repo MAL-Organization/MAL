@@ -23,9 +23,9 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0.h"
 
-bool mal_hspec_stm32f072_is_pll_div_available(mal_hspec_system_clk_src_e source) {
+bool mal_hspec_stm32f0_is_pll_div_available(mal_system_clk_src_e source) {
 	return true;
 }
 

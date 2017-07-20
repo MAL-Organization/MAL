@@ -1,14 +1,17 @@
 var group___clock =
 [
-    [ "mal_hspec_system_clk_s", "structmal__hspec__system__clk__s.html", [
-      [ "frequency", "structmal__hspec__system__clk__s.html#a60853c0fe5192cdabaf62a639edc936d", null ],
-      [ "src", "structmal__hspec__system__clk__s.html#a9de574951d94569fc56abce84ac0b8d4", null ]
+    [ "mal_system_clk_s", "structmal__system__clk__s.html", [
+      [ "frequency", "structmal__system__clk__s.html#a9e03eb54db7fb4f28eecc7e502a8cd0f", null ],
+      [ "src", "structmal__system__clk__s.html#afe3fefba0c98e251e10a933e743f8f5c", null ]
     ] ],
-    [ "mal_clock_get_timer_input_clk", "group___clock.html#ga1410c6fc747e70f3eb5e6fe185b5a514", null ],
-    [ "mal_hspec_system_clk_src_e", "group___clock.html#ga1847a3212fbb3c4ae64be01864066006", [
-      [ "MAL_HSPEC_SYSTEM_CLK_SRC_INTERNAL", "group___clock.html#gga1847a3212fbb3c4ae64be01864066006a81e7a6623d44ec68d98d1f258124ff5d", null ],
-      [ "MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL", "group___clock.html#gga1847a3212fbb3c4ae64be01864066006a62f6a0816615ae7228c2ef03b443d686", null ],
-      [ "MAL_HSPEC_SYSTEM_CLK_SRC_AUTO", "group___clock.html#gga1847a3212fbb3c4ae64be01864066006ad81a5bed787984a9695ae6e3b3d54af5", null ]
+    [ "mal_system_clk_src_e", "group___clock.html#gae7cb6d447d415e88908b94e575fc36f6", [
+      [ "MAL_SYSTEM_CLK_SRC_INTERNAL", "group___clock.html#ggae7cb6d447d415e88908b94e575fc36f6a8dae16034ad3db7e8c001ca3cfd45c5b", null ],
+      [ "MAL_SYSTEM_CLK_SRC_EXTERNAL", "group___clock.html#ggae7cb6d447d415e88908b94e575fc36f6ab74f8675e631c1696b9d62ebe5103a2c", null ],
+      [ "MAL_SYSTEM_CLK_SRC_AUTO", "group___clock.html#ggae7cb6d447d415e88908b94e575fc36f6ab5f0999ef09eb7b055669c260be27397", null ]
     ] ],
-    [ "mal_clock_get_system_clock", "group___clock.html#ga12ee6f4dd2b6807210c6b1540b498f53", null ]
+    [ "mal_clock_get_external_clock_frequency", "group___clock.html#ga532c37c5192e13ca092b3826552006ab", null ],
+    [ "mal_clock_get_system_clock", "group___clock.html#gad7c662b598f5982770dfb3bf2f5ac800", null ],
+    [ "mal_clock_initialise_system_clock", "group___clock.html#gaff51269648e12f5e12609b082a7ee592", null ],
+    [ "mal_clock_set_system_clock", "group___clock.html#gaccadd54ee180701afde4e381af5e5ed6", null ],
+    [ "mal_clock_set_system_clock_unmanaged", "group___clock.html#ga92647404ef73e8f8f53485e8fc745250", null ]
 ];

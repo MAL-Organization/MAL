@@ -23,70 +23,22 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f072_timer.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 
-static const mal_hspec_timer_e valid_timers[] = {
-	MAL_HSPEC_TIMER_1,
-	MAL_HSPEC_TIMER_2,
-	MAL_HSPEC_TIMER_3,
-	MAL_HSPEC_TIMER_6,
-	MAL_HSPEC_TIMER_7,
-	MAL_HSPEC_TIMER_14,
-	MAL_HSPEC_TIMER_15,
-	MAL_HSPEC_TIMER_16,
-	MAL_HSPEC_TIMER_17
+static const mal_timer_e valid_timers[] = {
+	MAL_TIMER_1,
+	MAL_TIMER_2,
+	MAL_TIMER_3,
+	MAL_TIMER_6,
+	MAL_TIMER_7,
+	MAL_TIMER_14,
+	MAL_TIMER_15,
+	MAL_TIMER_16,
+	MAL_TIMER_17
 };
 
-mal_error_e mal_hspec_stm32f072_get_valid_timers(const mal_hspec_timer_e **timers, uint8_t *size) {
+mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size) {
 	*timers = valid_timers;
-	*size = sizeof(valid_timers) / sizeof(mal_hspec_timer_e);
+	*size = sizeof(valid_timers) / sizeof(mal_timer_e);
 	return MAL_ERROR_OK;
-}
-
-IRQn_Type mal_hspec_stm32f072_get_timer_update_irq(mal_hspec_timer_e timer) {
-	switch (timer) {
-	case MAL_HSPEC_TIMER_1:
-		return TIM1_BRK_UP_TRG_COM_IRQn;
-	case MAL_HSPEC_TIMER_2:
-		return TIM2_IRQn;
-	case MAL_HSPEC_TIMER_3:
-		return TIM3_IRQn;
-	case MAL_HSPEC_TIMER_6:
-		return TIM6_DAC_IRQn;
-	case MAL_HSPEC_TIMER_7:
-		return TIM7_IRQn;
-	case MAL_HSPEC_TIMER_14:
-		return TIM14_IRQn;
-	case MAL_HSPEC_TIMER_15:
-		return TIM15_IRQn;
-	case MAL_HSPEC_TIMER_16:
-		return TIM16_IRQn;
-	case MAL_HSPEC_TIMER_17:
-	default:
-		return TIM17_IRQn;
-	}
-}
-
-IRQn_Type mal_hspec_stm32f072_get_timer_compare_irq(mal_hspec_timer_e timer) {
-	switch (timer) {
-	case MAL_HSPEC_TIMER_1:
-		return TIM1_CC_IRQn;
-	case MAL_HSPEC_TIMER_2:
-		return TIM2_IRQn;
-	case MAL_HSPEC_TIMER_3:
-		return TIM3_IRQn;
-	case MAL_HSPEC_TIMER_6:
-		return TIM6_DAC_IRQn;
-	case MAL_HSPEC_TIMER_7:
-		return TIM7_IRQn;
-	case MAL_HSPEC_TIMER_14:
-		return TIM14_IRQn;
-	case MAL_HSPEC_TIMER_15:
-		return TIM15_IRQn;
-	case MAL_HSPEC_TIMER_16:
-		return TIM16_IRQn;
-	case MAL_HSPEC_TIMER_17:
-	default:
-		return TIM17_IRQn;
-	}
 }

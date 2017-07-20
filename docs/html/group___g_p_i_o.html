@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -83,7 +83,6 @@ $(document).ready(function(){initNavTree('group___g_p_i_o.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -97,281 +96,93 @@ $(document).ready(function(){initNavTree('group___g_p_i_o.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__gpio__s.html">mal_gpio_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__gpio__init__s.html">mal_hspec_gpio_init_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__gpio__init__s.html">mal_gpio_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__hspec__gpio__event__init__s.html">mal_hspec_gpio_event_init_s</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__gpio__event__init__s.html">mal_gpio_event_init_s</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gabe5cfae137a141ea13f8a5a8a2680bfb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gabe5cfae137a141ea13f8a5a8a2680bfb">mal_gpio_set</a>(gpio,  value)&#160;&#160;&#160;mal_hspec_set_gpio(gpio, value)</td></tr>
-<tr class="memdesc:gabe5cfae137a141ea13f8a5a8a2680bfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will set a gpio to the given value.  <a href="#gabe5cfae137a141ea13f8a5a8a2680bfb">More...</a><br /></td></tr>
-<tr class="separator:gabe5cfae137a141ea13f8a5a8a2680bfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga90cd1b7ed21651876d0214de2f94fc8d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga90cd1b7ed21651876d0214de2f94fc8d">mal_gpio_get</a>(gpio)&#160;&#160;&#160;mal_hspec_get_gpio(gpio)</td></tr>
-<tr class="memdesc:ga90cd1b7ed21651876d0214de2f94fc8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a GPIO.  <a href="#ga90cd1b7ed21651876d0214de2f94fc8d">More...</a><br /></td></tr>
-<tr class="separator:ga90cd1b7ed21651876d0214de2f94fc8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga523ffd09e1acbfdfeb1b6ca577f56dbd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga523ffd09e1acbfdfeb1b6ca577f56dbd">mal_gpio_toggle</a>(gpio)&#160;&#160;&#160;mal_hspec_toggle_gpio(gpio)</td></tr>
-<tr class="memdesc:ga523ffd09e1acbfdfeb1b6ca577f56dbd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles and IO. If the IO is high, it will go low and vice-versa.  <a href="#ga523ffd09e1acbfdfeb1b6ca577f56dbd">More...</a><br /></td></tr>
-<tr class="separator:ga523ffd09e1acbfdfeb1b6ca577f56dbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa15a89e87a35673517fe6a014733bd86"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gaa15a89e87a35673517fe6a014733bd86">mal_gpio_event_remove</a>(gpio)&#160;&#160;&#160;mal_hspec_gpio_event_remove(gpio)</td></tr>
-<tr class="memdesc:gaa15a89e87a35673517fe6a014733bd86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a GPIO event.  <a href="#gaa15a89e87a35673517fe6a014733bd86">More...</a><br /></td></tr>
-<tr class="separator:gaa15a89e87a35673517fe6a014733bd86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga56445a537e83856eaf260fe070b994f0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga56445a537e83856eaf260fe070b994f0">mal_gpio_event_disable_interrupt</a>(gpio)&#160;&#160;&#160;mal_hspec_gpio_event_disable_interrupt(gpio)</td></tr>
-<tr class="memdesc:ga56445a537e83856eaf260fe070b994f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupt for a GPIO event.  <a href="#ga56445a537e83856eaf260fe070b994f0">More...</a><br /></td></tr>
-<tr class="separator:ga56445a537e83856eaf260fe070b994f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga77f83595330ee869054681e4d54493cd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga77f83595330ee869054681e4d54493cd">mal_gpio_event_enable_interrupt</a>(gpio,  active)&#160;&#160;&#160;mal_hspec_gpio_event_enable_interrupt(gpio, active)</td></tr>
-<tr class="memdesc:ga77f83595330ee869054681e4d54493cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupt for a GPIO event.  <a href="#ga77f83595330ee869054681e4d54493cd">More...</a><br /></td></tr>
-<tr class="separator:ga77f83595330ee869054681e4d54493cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga0920e3662bf1366308c235e9ed8a7429"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga0920e3662bf1366308c235e9ed8a7429">mal_hspec_gpio_event_callback_t</a>) (<a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a> *gpio)</td></tr>
-<tr class="memdesc:ga0920e3662bf1366308c235e9ed8a7429"><td class="mdescLeft">&#160;</td><td class="mdescRight">GPIO event callback.  <a href="#ga0920e3662bf1366308c235e9ed8a7429">More...</a><br /></td></tr>
-<tr class="separator:ga0920e3662bf1366308c235e9ed8a7429"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7762d75f871b390394dfcf43d4ec3884"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga7762d75f871b390394dfcf43d4ec3884">mal_gpio_event_callback_t</a>) (<a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:ga7762d75f871b390394dfcf43d4ec3884"><td class="mdescLeft">&#160;</td><td class="mdescRight">GPIO event callback.  <a href="#ga7762d75f871b390394dfcf43d4ec3884">More...</a><br /></td></tr>
+<tr class="separator:ga7762d75f871b390394dfcf43d4ec3884"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gaac28072ff14a12ffc6651abe3a987231"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gaac28072ff14a12ffc6651abe3a987231">mal_hspec_gpio_port_e</a> { <br />
-&#160;&#160;<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231add8bdf81d7e0951afc368a97167c1f1c">MAL_HSPEC_GPIO_PORT_A</a> = 0, 
-<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231ae00ea96124c40b0d3dc5bec65778dbba">MAL_HSPEC_GPIO_PORT_B</a> = 1, 
-<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231a02d7a63f8530c7121232b4558020d3ea">MAL_HSPEC_GPIO_PORT_C</a> = 2, 
-<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231a3bfd22cfe0cea28a3627b067c7ef0616">MAL_HSPEC_GPIO_PORT_D</a> = 3, 
+<tr class="memitem:gac1d86f1a187c64094053b333b813522a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gac1d86f1a187c64094053b333b813522a">mal_gpio_port_e</a> { <br />
+&#160;&#160;<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aa11177d868d7657c23f42826f41ac32e8">MAL_GPIO_PORT_A</a> = 0, 
+<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aa378df2144b1c9e47a25cfd698cd0bdf7">MAL_GPIO_PORT_B</a> = 1, 
+<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aa866e56d0337e9a535034c01de40a88b6">MAL_GPIO_PORT_C</a> = 2, 
+<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aad111b27c814efc555b6389082c21d4df">MAL_GPIO_PORT_D</a> = 3, 
 <br />
-&#160;&#160;<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231a5ad25896d537889225e4cfa61747e6de">MAL_HSPEC_GPIO_PORT_E</a> = 4, 
-<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231a3f2530ab538c2ddbb02e344890fd782f">MAL_HSPEC_GPIO_PORT_F</a> = 5, 
-<a class="el" href="group___g_p_i_o.html#ggaac28072ff14a12ffc6651abe3a987231a644b2329c0591f8d1a624d9f34c89b6a">MAL_HSPEC_GPIO_PORT_SIZE</a> = 6
+&#160;&#160;<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aad5fd82f0aeffecf67d5a11c617031051">MAL_GPIO_PORT_E</a> = 4, 
+<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aa5377bb8118f13cac7e6e3c7788cc80a1">MAL_GPIO_PORT_F</a> = 5, 
+<a class="el" href="group___g_p_i_o.html#ggac1d86f1a187c64094053b333b813522aa622ef93cdb369f431e92e4e9cbfab172">MAL_GPIO_PORT_SIZE</a> = 6
 <br />
  }</td></tr>
-<tr class="separator:gaac28072ff14a12ffc6651abe3a987231"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac833c5831d15b77aada970acc39a4cdc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gac833c5831d15b77aada970acc39a4cdc">mal_hspec_gpio_dir_e</a> { <a class="el" href="group___g_p_i_o.html#ggac833c5831d15b77aada970acc39a4cdcafc44fd0c857e0101153b2591594b5f32">MAL_HSPEC_GPIO_DIR_IN</a>, 
-<a class="el" href="group___g_p_i_o.html#ggac833c5831d15b77aada970acc39a4cdca6336a9b9c0c5e20c494c93d9516f5a75">MAL_HSPEC_GPIO_DIR_OUT</a>
+<tr class="separator:gac1d86f1a187c64094053b333b813522a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga560503594bc8d39b925b1c933fcc4c14"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga560503594bc8d39b925b1c933fcc4c14">mal_gpio_dir_e</a> { <a class="el" href="group___g_p_i_o.html#gga560503594bc8d39b925b1c933fcc4c14a4103bc2c33f80683b4e2613a163e374e">MAL_GPIO_DIR_IN</a>, 
+<a class="el" href="group___g_p_i_o.html#gga560503594bc8d39b925b1c933fcc4c14a4d0957735ff6aa52cb257d013078b039">MAL_GPIO_DIR_OUT</a>
  }</td></tr>
-<tr class="separator:gac833c5831d15b77aada970acc39a4cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1eb7c04efb6646efce841fcc47a52160"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga1eb7c04efb6646efce841fcc47a52160">mal_hspec_gpio_out_e</a> { <a class="el" href="group___g_p_i_o.html#gga1eb7c04efb6646efce841fcc47a52160abed99eaf2a0491d37ffd7afcd77578a9">MAL_HSPEC_GPIO_OUT_PP</a>, 
-<a class="el" href="group___g_p_i_o.html#gga1eb7c04efb6646efce841fcc47a52160a285fd9feb0e770d73a9975e73849e55e">MAL_HSPEC_GPIO_OUT_OD</a>
+<tr class="separator:ga560503594bc8d39b925b1c933fcc4c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga54a65495806a4b6a2478c2068c55f42c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga54a65495806a4b6a2478c2068c55f42c">mal_gpio_out_e</a> { <a class="el" href="group___g_p_i_o.html#gga54a65495806a4b6a2478c2068c55f42ca9977c594c2004ce49116084c76cf8387">MAL_GPIO_OUT_PP</a>, 
+<a class="el" href="group___g_p_i_o.html#gga54a65495806a4b6a2478c2068c55f42caeb6ee768c094ab5bd9f9063664379a82">MAL_GPIO_OUT_OD</a>
  }</td></tr>
-<tr class="separator:ga1eb7c04efb6646efce841fcc47a52160"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4201dc492b07bf3e06bc34ea31dc94ad"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga4201dc492b07bf3e06bc34ea31dc94ad">mal_hspec_gpio_pupd_e</a> { <a class="el" href="group___g_p_i_o.html#gga4201dc492b07bf3e06bc34ea31dc94ada6275b274c2d58f162ebdc30340be195d">MAL_HSPEC_GPIO_PUPD_NONE</a>, 
-<a class="el" href="group___g_p_i_o.html#gga4201dc492b07bf3e06bc34ea31dc94ada2a19300303694210bc6c9c04a4b47d24">MAL_HSPEC_GPIO_PUPD_PU</a>, 
-<a class="el" href="group___g_p_i_o.html#gga4201dc492b07bf3e06bc34ea31dc94ada3a6c9c88211fcb9ecb755ee42ebf346b">MAL_HSPEC_GPIO_PUPD_PD</a>
+<tr class="separator:ga54a65495806a4b6a2478c2068c55f42c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f83b88d66fac06984527aef2eb1da9a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga2f83b88d66fac06984527aef2eb1da9a">mal_gpio_pupd_e</a> { <a class="el" href="group___g_p_i_o.html#gga2f83b88d66fac06984527aef2eb1da9aa679b04a22e7b51d4d6a97e024e01081b">MAL_GPIO_PUPD_NONE</a>, 
+<a class="el" href="group___g_p_i_o.html#gga2f83b88d66fac06984527aef2eb1da9aaed9303537e4ce8a020e0a63131230252">MAL_GPIO_PUPD_PU</a>, 
+<a class="el" href="group___g_p_i_o.html#gga2f83b88d66fac06984527aef2eb1da9aac0820680f5710ae2531691f188012850">MAL_GPIO_PUPD_PD</a>
  }</td></tr>
-<tr class="separator:ga4201dc492b07bf3e06bc34ea31dc94ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1bec975f3297551fb1be08de1aeee609"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga1bec975f3297551fb1be08de1aeee609">mal_hspec_gpio_event_e</a> { <a class="el" href="group___g_p_i_o.html#gga1bec975f3297551fb1be08de1aeee609ab642c5fd804e784e6e70160ec4fa2c94">MAL_HSPEC_GPIO_EVENT_RISING</a>, 
-<a class="el" href="group___g_p_i_o.html#gga1bec975f3297551fb1be08de1aeee609a216e7f090ea21dfea81aee1fd5c56a35">MAL_HSPEC_GPIO_EVENT_FALLING</a>, 
-<a class="el" href="group___g_p_i_o.html#gga1bec975f3297551fb1be08de1aeee609a19a6863ae04a8398e82ffeef0cd31f1a">MAL_HSPEC_GPIO_EVENT_BOTH</a>
+<tr class="separator:ga2f83b88d66fac06984527aef2eb1da9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4c5ac4191e7642d8700154205426d47c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga4c5ac4191e7642d8700154205426d47c">mal_gpio_event_e</a> { <a class="el" href="group___g_p_i_o.html#gga4c5ac4191e7642d8700154205426d47ca8fb21559a513c36d1eb1a87ccc7e5522">MAL_GPIO_EVENT_RISING</a>, 
+<a class="el" href="group___g_p_i_o.html#gga4c5ac4191e7642d8700154205426d47ca613fcb7ccb5d53ab533c90c39116b886">MAL_GPIO_EVENT_FALLING</a>, 
+<a class="el" href="group___g_p_i_o.html#gga4c5ac4191e7642d8700154205426d47ca1cba999c05f78195e14c58b514dcf931">MAL_GPIO_EVENT_BOTH</a>
  }</td></tr>
-<tr class="separator:ga1bec975f3297551fb1be08de1aeee609"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ga4c5ac4191e7642d8700154205426d47c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gab2ae2b805e33fce9c7ab70624703a0d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gab2ae2b805e33fce9c7ab70624703a0d4">mal_gpio_init</a> (<a class="el" href="structmal__hspec__gpio__init__s.html">mal_hspec_gpio_init_s</a> *gpio_init)</td></tr>
-<tr class="memdesc:gab2ae2b805e33fce9c7ab70624703a0d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a GPIO.  <a href="#gab2ae2b805e33fce9c7ab70624703a0d4">More...</a><br /></td></tr>
-<tr class="separator:gab2ae2b805e33fce9c7ab70624703a0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaff17e91da587074b532f90a7e697204d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gaff17e91da587074b532f90a7e697204d">mal_gpio_event_init</a> (<a class="el" href="structmal__hspec__gpio__init__s.html">mal_hspec_gpio_init_s</a> *gpio_init, <a class="el" href="structmal__hspec__gpio__event__init__s.html">mal_hspec_gpio_event_init_s</a> *event_init)</td></tr>
-<tr class="memdesc:gaff17e91da587074b532f90a7e697204d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a GPIO event. An event will allow you to execute code when a GPIO changes state.  <a href="#gaff17e91da587074b532f90a7e697204d">More...</a><br /></td></tr>
-<tr class="separator:gaff17e91da587074b532f90a7e697204d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0720d9597734e9fe1053f29a457cc911"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga0720d9597734e9fe1053f29a457cc911">mal_gpio_deinit</a> (const <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a> *gpio)</td></tr>
-<tr class="memdesc:ga0720d9597734e9fe1053f29a457cc911"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the GPIO to a safe state.  <a href="#ga0720d9597734e9fe1053f29a457cc911">More...</a><br /></td></tr>
-<tr class="separator:ga0720d9597734e9fe1053f29a457cc911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b08ccc8d20e5badc17bd9d6c335f655"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga0b08ccc8d20e5badc17bd9d6c335f655">mal_gpio_set</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio, bool value)</td></tr>
+<tr class="memdesc:ga0b08ccc8d20e5badc17bd9d6c335f655"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will set a gpio to the given value.  <a href="#ga0b08ccc8d20e5badc17bd9d6c335f655">More...</a><br /></td></tr>
+<tr class="separator:ga0b08ccc8d20e5badc17bd9d6c335f655"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b6cd7545f0ea95572d37a76c8ca850e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga0b6cd7545f0ea95572d37a76c8ca850e">mal_gpio_get</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:ga0b6cd7545f0ea95572d37a76c8ca850e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a GPIO.  <a href="#ga0b6cd7545f0ea95572d37a76c8ca850e">More...</a><br /></td></tr>
+<tr class="separator:ga0b6cd7545f0ea95572d37a76c8ca850e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58b9b1e9787551589ecf7e0551642a4b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga58b9b1e9787551589ecf7e0551642a4b">mal_gpio_toggle</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:ga58b9b1e9787551589ecf7e0551642a4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggles and IO. If the IO is high, it will go low and vice-versa.  <a href="#ga58b9b1e9787551589ecf7e0551642a4b">More...</a><br /></td></tr>
+<tr class="separator:ga58b9b1e9787551589ecf7e0551642a4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabaa2f389ffa56e744a8108a7c4b2dba5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gabaa2f389ffa56e744a8108a7c4b2dba5">mal_gpio_event_remove</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:gabaa2f389ffa56e744a8108a7c4b2dba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a GPIO event.  <a href="#gabaa2f389ffa56e744a8108a7c4b2dba5">More...</a><br /></td></tr>
+<tr class="separator:gabaa2f389ffa56e744a8108a7c4b2dba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga469cf0106c4d51a45ae01cafd96c4d9e"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga469cf0106c4d51a45ae01cafd96c4d9e">mal_gpio_event_disable_interrupt</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:ga469cf0106c4d51a45ae01cafd96c4d9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupt for a GPIO event.  <a href="#ga469cf0106c4d51a45ae01cafd96c4d9e">More...</a><br /></td></tr>
+<tr class="separator:ga469cf0106c4d51a45ae01cafd96c4d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79d2c0bccd1cdd4164f8d8cf64ef8297"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga79d2c0bccd1cdd4164f8d8cf64ef8297">mal_gpio_event_enable_interrupt</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio, bool active)</td></tr>
+<tr class="memdesc:ga79d2c0bccd1cdd4164f8d8cf64ef8297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupt for a GPIO event.  <a href="#ga79d2c0bccd1cdd4164f8d8cf64ef8297">More...</a><br /></td></tr>
+<tr class="separator:ga79d2c0bccd1cdd4164f8d8cf64ef8297"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0942cd9b3606a643b940f599fbd1d524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#ga0942cd9b3606a643b940f599fbd1d524">mal_gpio_init</a> (<a class="el" href="structmal__gpio__init__s.html">mal_gpio_init_s</a> *gpio_init)</td></tr>
+<tr class="memdesc:ga0942cd9b3606a643b940f599fbd1d524"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a GPIO.  <a href="#ga0942cd9b3606a643b940f599fbd1d524">More...</a><br /></td></tr>
+<tr class="separator:ga0942cd9b3606a643b940f599fbd1d524"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab5c425827c273ae48ef00beaf24e7417"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gab5c425827c273ae48ef00beaf24e7417">mal_gpio_event_init</a> (<a class="el" href="structmal__gpio__init__s.html">mal_gpio_init_s</a> *gpio_init, <a class="el" href="structmal__gpio__event__init__s.html">mal_gpio_event_init_s</a> *event_init)</td></tr>
+<tr class="memdesc:gab5c425827c273ae48ef00beaf24e7417"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a GPIO event. An event will allow you to execute code when a GPIO changes state.  <a href="#gab5c425827c273ae48ef00beaf24e7417">More...</a><br /></td></tr>
+<tr class="separator:gab5c425827c273ae48ef00beaf24e7417"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa921bd1cbb4ac0903714fe26a48815b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_i_o.html#gaa921bd1cbb4ac0903714fe26a48815b1">mal_gpio_deinit</a> (const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td></tr>
+<tr class="memdesc:gaa921bd1cbb4ac0903714fe26a48815b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the GPIO to a safe state.  <a href="#gaa921bd1cbb4ac0903714fe26a48815b1">More...</a><br /></td></tr>
+<tr class="separator:gaa921bd1cbb4ac0903714fe26a48815b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to access and configure the GPIOs of the MCU. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga56445a537e83856eaf260fe070b994f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga56445a537e83856eaf260fe070b994f0">&#9670;&nbsp;</a></span>mal_gpio_event_disable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_event_disable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_gpio_event_disable_interrupt(gpio)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Disable interrupt for a GPIO event. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
-
-</div>
-</div>
-<a id="ga77f83595330ee869054681e4d54493cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga77f83595330ee869054681e4d54493cd">&#9670;&nbsp;</a></span>mal_gpio_event_enable_interrupt</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_event_enable_interrupt</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">active&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_gpio_event_enable_interrupt(gpio, active)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Enable interrupt for a GPIO event. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
-
-</div>
-</div>
-<a id="gaa15a89e87a35673517fe6a014733bd86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa15a89e87a35673517fe6a014733bd86">&#9670;&nbsp;</a></span>mal_gpio_event_remove</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_event_remove</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_gpio_event_remove(gpio)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Removes a GPIO event. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga90cd1b7ed21651876d0214de2f94fc8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga90cd1b7ed21651876d0214de2f94fc8d">&#9670;&nbsp;</a></span>mal_gpio_get</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_get</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_get_gpio(gpio)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns the value of a GPIO. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Boolean value. Returns true if IO is high, false if low. </dd></dl>
-
-</div>
-</div>
-<a id="gabe5cfae137a141ea13f8a5a8a2680bfb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabe5cfae137a141ea13f8a5a8a2680bfb">&#9670;&nbsp;</a></span>mal_gpio_set</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_set</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">value&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_set_gpio(gpio, value)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Will set a gpio to the given value. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-    <tr><td class="paramname">value</td><td>Boolean value. Set true to set the IO high, false for low. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
-<a id="ga523ffd09e1acbfdfeb1b6ca577f56dbd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga523ffd09e1acbfdfeb1b6ca577f56dbd">&#9670;&nbsp;</a></span>mal_gpio_toggle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define mal_gpio_toggle</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">gpio</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_toggle_gpio(gpio)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Toggles and IO. If the IO is high, it will go low and vice-versa. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">gpio</td><td>A pointer of type <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a>. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
-
-</div>
-</div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga0920e3662bf1366308c235e9ed8a7429"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0920e3662bf1366308c235e9ed8a7429">&#9670;&nbsp;</a></span>mal_hspec_gpio_event_callback_t</h2>
+<a id="ga7762d75f871b390394dfcf43d4ec3884"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7762d75f871b390394dfcf43d4ec3884">&#9670;&nbsp;</a></span>mal_gpio_event_callback_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_hspec_gpio_event_callback_t) (<a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a> *gpio)</td>
+          <td class="memname">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(* mal_gpio_event_callback_t) (<a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *gpio)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -382,128 +193,128 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="gac833c5831d15b77aada970acc39a4cdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac833c5831d15b77aada970acc39a4cdc">&#9670;&nbsp;</a></span>mal_hspec_gpio_dir_e</h2>
+<a id="ga560503594bc8d39b925b1c933fcc4c14"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga560503594bc8d39b925b1c933fcc4c14">&#9670;&nbsp;</a></span>mal_gpio_dir_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#gac833c5831d15b77aada970acc39a4cdc">mal_hspec_gpio_dir_e</a></td>
+          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga560503594bc8d39b925b1c933fcc4c14">mal_gpio_dir_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible GPIO directions. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggac833c5831d15b77aada970acc39a4cdcafc44fd0c857e0101153b2591594b5f32"></a>MAL_HSPEC_GPIO_DIR_IN&#160;</td><td class="fielddoc"><p>MAL_GPIO_DIR_IN. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga560503594bc8d39b925b1c933fcc4c14a4103bc2c33f80683b4e2613a163e374e"></a>MAL_GPIO_DIR_IN&#160;</td><td class="fielddoc"><p>MAL_GPIO_DIR_IN. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac833c5831d15b77aada970acc39a4cdca6336a9b9c0c5e20c494c93d9516f5a75"></a>MAL_HSPEC_GPIO_DIR_OUT&#160;</td><td class="fielddoc"><p>MAL_GPIO_DIR_OUT. </p>
+<tr><td class="fieldname"><a id="gga560503594bc8d39b925b1c933fcc4c14a4d0957735ff6aa52cb257d013078b039"></a>MAL_GPIO_DIR_OUT&#160;</td><td class="fielddoc"><p>MAL_GPIO_DIR_OUT. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga1bec975f3297551fb1be08de1aeee609"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1bec975f3297551fb1be08de1aeee609">&#9670;&nbsp;</a></span>mal_hspec_gpio_event_e</h2>
+<a id="ga4c5ac4191e7642d8700154205426d47c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4c5ac4191e7642d8700154205426d47c">&#9670;&nbsp;</a></span>mal_gpio_event_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga1bec975f3297551fb1be08de1aeee609">mal_hspec_gpio_event_e</a></td>
+          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga4c5ac4191e7642d8700154205426d47c">mal_gpio_event_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible GPIO event triggers. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1bec975f3297551fb1be08de1aeee609ab642c5fd804e784e6e70160ec4fa2c94"></a>MAL_HSPEC_GPIO_EVENT_RISING&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_RISING. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga4c5ac4191e7642d8700154205426d47ca8fb21559a513c36d1eb1a87ccc7e5522"></a>MAL_GPIO_EVENT_RISING&#160;</td><td class="fielddoc"><p>MAL_GPIO_EVENT_RISING. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga1bec975f3297551fb1be08de1aeee609a216e7f090ea21dfea81aee1fd5c56a35"></a>MAL_HSPEC_GPIO_EVENT_FALLING&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_FALLING. </p>
+<tr><td class="fieldname"><a id="gga4c5ac4191e7642d8700154205426d47ca613fcb7ccb5d53ab533c90c39116b886"></a>MAL_GPIO_EVENT_FALLING&#160;</td><td class="fielddoc"><p>MAL_GPIO_EVENT_FALLING. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga1bec975f3297551fb1be08de1aeee609a19a6863ae04a8398e82ffeef0cd31f1a"></a>MAL_HSPEC_GPIO_EVENT_BOTH&#160;</td><td class="fielddoc"><p>MAL_HSPEC_GPIO_EVENT_BOTH. </p>
+<tr><td class="fieldname"><a id="gga4c5ac4191e7642d8700154205426d47ca1cba999c05f78195e14c58b514dcf931"></a>MAL_GPIO_EVENT_BOTH&#160;</td><td class="fielddoc"><p>MAL_GPIO_EVENT_BOTH. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga1eb7c04efb6646efce841fcc47a52160"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1eb7c04efb6646efce841fcc47a52160">&#9670;&nbsp;</a></span>mal_hspec_gpio_out_e</h2>
+<a id="ga54a65495806a4b6a2478c2068c55f42c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga54a65495806a4b6a2478c2068c55f42c">&#9670;&nbsp;</a></span>mal_gpio_out_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga1eb7c04efb6646efce841fcc47a52160">mal_hspec_gpio_out_e</a></td>
+          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga54a65495806a4b6a2478c2068c55f42c">mal_gpio_out_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible GPIO types. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1eb7c04efb6646efce841fcc47a52160abed99eaf2a0491d37ffd7afcd77578a9"></a>MAL_HSPEC_GPIO_OUT_PP&#160;</td><td class="fielddoc"><p>Push-Pull. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga54a65495806a4b6a2478c2068c55f42ca9977c594c2004ce49116084c76cf8387"></a>MAL_GPIO_OUT_PP&#160;</td><td class="fielddoc"><p>Push-Pull. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga1eb7c04efb6646efce841fcc47a52160a285fd9feb0e770d73a9975e73849e55e"></a>MAL_HSPEC_GPIO_OUT_OD&#160;</td><td class="fielddoc"><p>Open Drain. </p>
+<tr><td class="fieldname"><a id="gga54a65495806a4b6a2478c2068c55f42caeb6ee768c094ab5bd9f9063664379a82"></a>MAL_GPIO_OUT_OD&#160;</td><td class="fielddoc"><p>Open Drain. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="gaac28072ff14a12ffc6651abe3a987231"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaac28072ff14a12ffc6651abe3a987231">&#9670;&nbsp;</a></span>mal_hspec_gpio_port_e</h2>
+<a id="gac1d86f1a187c64094053b333b813522a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac1d86f1a187c64094053b333b813522a">&#9670;&nbsp;</a></span>mal_gpio_port_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#gaac28072ff14a12ffc6651abe3a987231">mal_hspec_gpio_port_e</a></td>
+          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#gac1d86f1a187c64094053b333b813522a">mal_gpio_port_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible GPIO ports. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231add8bdf81d7e0951afc368a97167c1f1c"></a>MAL_HSPEC_GPIO_PORT_A&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_A. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aa11177d868d7657c23f42826f41ac32e8"></a>MAL_GPIO_PORT_A&#160;</td><td class="fielddoc"><p>MAL_PORT_A. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231ae00ea96124c40b0d3dc5bec65778dbba"></a>MAL_HSPEC_GPIO_PORT_B&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_B. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aa378df2144b1c9e47a25cfd698cd0bdf7"></a>MAL_GPIO_PORT_B&#160;</td><td class="fielddoc"><p>MAL_PORT_B. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231a02d7a63f8530c7121232b4558020d3ea"></a>MAL_HSPEC_GPIO_PORT_C&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_C. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aa866e56d0337e9a535034c01de40a88b6"></a>MAL_GPIO_PORT_C&#160;</td><td class="fielddoc"><p>MAL_PORT_C. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231a3bfd22cfe0cea28a3627b067c7ef0616"></a>MAL_HSPEC_GPIO_PORT_D&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_D. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aad111b27c814efc555b6389082c21d4df"></a>MAL_GPIO_PORT_D&#160;</td><td class="fielddoc"><p>MAL_PORT_D. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231a5ad25896d537889225e4cfa61747e6de"></a>MAL_HSPEC_GPIO_PORT_E&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_E. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aad5fd82f0aeffecf67d5a11c617031051"></a>MAL_GPIO_PORT_E&#160;</td><td class="fielddoc"><p>MAL_PORT_E. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231a3f2530ab538c2ddbb02e344890fd782f"></a>MAL_HSPEC_GPIO_PORT_F&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_F. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aa5377bb8118f13cac7e6e3c7788cc80a1"></a>MAL_GPIO_PORT_F&#160;</td><td class="fielddoc"><p>MAL_PORT_F. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggaac28072ff14a12ffc6651abe3a987231a644b2329c0591f8d1a624d9f34c89b6a"></a>MAL_HSPEC_GPIO_PORT_SIZE&#160;</td><td class="fielddoc"><p>MAL_HSPEC_PORT_SIZE. </p>
+<tr><td class="fieldname"><a id="ggac1d86f1a187c64094053b333b813522aa622ef93cdb369f431e92e4e9cbfab172"></a>MAL_GPIO_PORT_SIZE&#160;</td><td class="fielddoc"><p>MAL_PORT_SIZE. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga4201dc492b07bf3e06bc34ea31dc94ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4201dc492b07bf3e06bc34ea31dc94ad">&#9670;&nbsp;</a></span>mal_hspec_gpio_pupd_e</h2>
+<a id="ga2f83b88d66fac06984527aef2eb1da9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2f83b88d66fac06984527aef2eb1da9a">&#9670;&nbsp;</a></span>mal_gpio_pupd_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga4201dc492b07bf3e06bc34ea31dc94ad">mal_hspec_gpio_pupd_e</a></td>
+          <td class="memname">enum <a class="el" href="group___g_p_i_o.html#ga2f83b88d66fac06984527aef2eb1da9a">mal_gpio_pupd_e</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Possible pull-up and pull-down values. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga4201dc492b07bf3e06bc34ea31dc94ada6275b274c2d58f162ebdc30340be195d"></a>MAL_HSPEC_GPIO_PUPD_NONE&#160;</td><td class="fielddoc"><p>No pull-up or pull-down. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga2f83b88d66fac06984527aef2eb1da9aa679b04a22e7b51d4d6a97e024e01081b"></a>MAL_GPIO_PUPD_NONE&#160;</td><td class="fielddoc"><p>No pull-up or pull-down. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4201dc492b07bf3e06bc34ea31dc94ada2a19300303694210bc6c9c04a4b47d24"></a>MAL_HSPEC_GPIO_PUPD_PU&#160;</td><td class="fielddoc"><p>Pull-up. </p>
+<tr><td class="fieldname"><a id="gga2f83b88d66fac06984527aef2eb1da9aaed9303537e4ce8a020e0a63131230252"></a>MAL_GPIO_PUPD_PU&#160;</td><td class="fielddoc"><p>Pull-up. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4201dc492b07bf3e06bc34ea31dc94ada3a6c9c88211fcb9ecb755ee42ebf346b"></a>MAL_HSPEC_GPIO_PUPD_PD&#160;</td><td class="fielddoc"><p>Pull-down. </p>
+<tr><td class="fieldname"><a id="gga2f83b88d66fac06984527aef2eb1da9aac0820680f5710ae2531691f188012850"></a>MAL_GPIO_PUPD_PD&#160;</td><td class="fielddoc"><p>Pull-down. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga0720d9597734e9fe1053f29a457cc911"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0720d9597734e9fe1053f29a457cc911">&#9670;&nbsp;</a></span>mal_gpio_deinit()</h2>
+<a id="gaa921bd1cbb4ac0903714fe26a48815b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa921bd1cbb4ac0903714fe26a48815b1">&#9670;&nbsp;</a></span>mal_gpio_deinit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -511,7 +322,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_deinit </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structmal__hspec__gpio__s.html">mal_hspec_gpio_s</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
           <td class="paramname"><em>gpio</em></td><td>)</td>
           <td></td>
         </tr>
@@ -529,8 +340,73 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gaff17e91da587074b532f90a7e697204d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaff17e91da587074b532f90a7e697204d">&#9670;&nbsp;</a></span>mal_gpio_event_init()</h2>
+<a id="ga469cf0106c4d51a45ae01cafd96c4d9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga469cf0106c4d51a45ae01cafd96c4d9e">&#9670;&nbsp;</a></span>mal_gpio_event_disable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Disable interrupt for a GPIO event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns true if interrupt was active before disabling it. </dd></dl>
+
+</div>
+</div>
+<a id="ga79d2c0bccd1cdd4164f8d8cf64ef8297"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga79d2c0bccd1cdd4164f8d8cf64ef8297">&#9670;&nbsp;</a></span>mal_gpio_event_enable_interrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">MAL_DEFS_INLINE void mal_gpio_event_enable_interrupt </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>active</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable interrupt for a GPIO event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
+    <tr><td class="paramname">active</td><td>A boolean that indicates if the interrupt should be activated. Use the returned state of the disable function. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Nothing. This macro is meant to be standalone on a line. Do not equate or use as a condition. </dd></dl>
+
+</div>
+</div>
+<a id="gab5c425827c273ae48ef00beaf24e7417"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab5c425827c273ae48ef00beaf24e7417">&#9670;&nbsp;</a></span>mal_gpio_event_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -538,13 +414,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_event_init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__gpio__init__s.html">mal_hspec_gpio_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__gpio__init__s.html">mal_gpio_init_s</a> *&#160;</td>
           <td class="paramname"><em>gpio_init</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__gpio__event__init__s.html">mal_hspec_gpio_event_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__gpio__event__init__s.html">mal_gpio_event_init_s</a> *&#160;</td>
           <td class="paramname"><em>event_init</em>&#160;</td>
         </tr>
         <tr>
@@ -567,8 +443,62 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gab2ae2b805e33fce9c7ab70624703a0d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab2ae2b805e33fce9c7ab70624703a0d4">&#9670;&nbsp;</a></span>mal_gpio_init()</h2>
+<a id="gabaa2f389ffa56e744a8108a7c4b2dba5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabaa2f389ffa56e744a8108a7c4b2dba5">&#9670;&nbsp;</a></span>mal_gpio_event_remove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_event_remove </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes a GPIO event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga0b6cd7545f0ea95572d37a76c8ca850e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b6cd7545f0ea95572d37a76c8ca850e">&#9670;&nbsp;</a></span>mal_gpio_get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mal_gpio_get </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the value of a GPIO. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Boolean value. Returns true if IO is high, false if low. </dd></dl>
+
+</div>
+</div>
+<a id="ga0942cd9b3606a643b940f599fbd1d524"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0942cd9b3606a643b940f599fbd1d524">&#9670;&nbsp;</a></span>mal_gpio_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -576,7 +506,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_init </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structmal__hspec__gpio__init__s.html">mal_hspec_gpio_init_s</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structmal__gpio__init__s.html">mal_gpio_init_s</a> *&#160;</td>
           <td class="paramname"><em>gpio_init</em></td><td>)</td>
           <td></td>
         </tr>
@@ -587,6 +517,71 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">gpio_init</td><td>Initialize parameters. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga0b08ccc8d20e5badc17bd9d6c335f655"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0b08ccc8d20e5badc17bd9d6c335f655">&#9670;&nbsp;</a></span>mal_gpio_set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_set </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Will set a gpio to the given value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
+    <tr><td class="paramname">value</td><td>Boolean value. Set true to set the IO high, false for low. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="group___standard.html#ggaec69af0d2547463451f43d457df61195aa61db8daafd2dee979b2310616f1bb26" title="MAL_ERROR_OK. ">MAL_ERROR_OK</a> on success. </dd></dl>
+
+</div>
+</div>
+<a id="ga58b9b1e9787551589ecf7e0551642a4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga58b9b1e9787551589ecf7e0551642a4b">&#9670;&nbsp;</a></span>mal_gpio_toggle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_gpio_toggle </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structmal__gpio__s.html">mal_gpio_s</a> *&#160;</td>
+          <td class="paramname"><em>gpio</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Toggles and IO. If the IO is high, it will go low and vice-versa. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpio</td><td>A pointer of type ::mal_hspec_gpio_s. </td></tr>
   </table>
   </dd>
 </dl>

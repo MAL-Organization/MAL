@@ -28,6 +28,7 @@
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
+#include "flash/mal_flash.h"
 
 typedef struct {
 	uint32_t size;
@@ -38,38 +39,8 @@ typedef struct {
 	uint32_t page_count;
 } mal_hspec_mingw_flash_info_s;
 
-uint32_t mal_hspec_mingw_flash_get_page_count(void);
-
 void mal_hspec_mingw_flash_set_flash(mal_hspec_mingw_flash_info_s *info);
 
-uint32_t mal_hspec_mingw_flash_get_page_size(uint32_t page);
-
-mal_error_e mal_hspec_mingw_flash_erase_page(uint32_t page);
-
 mal_error_e mal_hspec_mingw_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count);
-
-mal_error_e mal_hspec_mingw_flash_write_uint16_values(uint64_t start_address, uint16_t *values, uint32_t count);
-
-mal_error_e mal_hspec_mingw_flash_write_uint32_values(uint64_t start_address, uint32_t *values, uint32_t count);
-
-uint32_t mal_hspec_mingw_flash_get_page_from_address(uint64_t address);
-
-uint64_t mal_hspec_mingw_flash_get_page_start_address(uint32_t page);
-
-uint8_t mal_hspec_mingw_flash_read_uint8(uint64_t address);
-
-int8_t mal_hspec_mingw_flash_read_int8(uint64_t address);
-
-uint16_t mal_hspec_mingw_flash_read_uint16(uint64_t address);
-
-int16_t	mal_hspec_mingw_flash_read_int16(uint64_t address);
-
-uint32_t mal_hspec_mingw_flash_read_uint32(uint64_t address);
-
-int32_t	mal_hspec_mingw_flash_read_int32(uint64_t address);
-
-uint64_t mal_hspec_mingw_flash_read_uint64(uint64_t address);
-
-int64_t	mal_hspec_mingw_flash_read_int64(uint64_t address);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_ */

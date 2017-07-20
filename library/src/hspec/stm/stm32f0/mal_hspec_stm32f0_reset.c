@@ -23,24 +23,24 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_reset.h"
+#include "reset/mal_reset.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "cm0/core_cm0.h"
 
-mal_hspec_reset_source_e mal_hspec_stm32f0_reset_handle_reset_source(void) {
-	mal_hspec_reset_source_e source = MAL_HSPEC_RESET_SOURCE_UNKNOWN;
+mal_reset_source_e mal_reset_get_source_unmanaged(void) {
+	mal_reset_source_e source = MAL_RESET_SOURCE_UNKNOWN;
 	// Get current source based on RCC flags
 	if (RCC_GetFlagStatus(RCC_FLAG_SFTRST) == ENABLE) {
-		source = MAL_HSPEC_RESET_SOURCE_SOFTWARE;
+		source = MAL_RESET_SOURCE_SOFTWARE;
 	} else if ((RCC_GetFlagStatus(RCC_FLAG_WWDGRST) == ENABLE) ||
 			   (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) == ENABLE)) {
-		source = MAL_HSPEC_RESET_SOURCE_WATCHDOG;
+		source = MAL_RESET_SOURCE_WATCHDOG;
 	} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST) == ENABLE) {
-		source = MAL_HSPEC_RESET_SOURCE_POWER;
+		source = MAL_RESET_SOURCE_POWER;
 	} else if (RCC_GetFlagStatus(RCC_FLAG_LPWRRST) == ENABLE) {
-		source = MAL_HSPEC_RESET_SOURCE_SLEEP;
+		source = MAL_RESET_SOURCE_SLEEP;
 	} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST) == ENABLE) {
-		source = MAL_HSPEC_RESET_SOURCE_RESET_PIN;
+		source = MAL_RESET_SOURCE_RESET_PIN;
 	}
 	// Reset source
 	RCC_ClearFlag();
@@ -48,6 +48,6 @@ mal_hspec_reset_source_e mal_hspec_stm32f0_reset_handle_reset_source(void) {
 	return source;
 }
 
-void mal_hspec_stm32f0_reset_mcu(void) {
+void mal_reset_mcu(void) {
 	NVIC_SystemReset();
 }

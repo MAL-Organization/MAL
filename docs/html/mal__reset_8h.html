@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/reset/mal_reset.h File Reference</title>
+<title>MAL: src/reset/mal_reset.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,7 @@ $(document).ready(function(){initNavTree('mal__reset_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">mal_reset.h File Reference</div>  </div>
@@ -91,19 +91,33 @@ $(document).ready(function(){initNavTree('mal__reset_8h.html','');});
 
 <p>Functions to handle the reset of the MCU from user code.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
-</div>
+
 <p><a href="mal__reset_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gad82c4a9d2112b766fe5436a9bb068b5c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gad82c4a9d2112b766fe5436a9bb068b5c">mal_reset_mcu</a>()&#160;&#160;&#160;mal_hspec_reset_mcu()</td></tr>
-<tr class="separator:gad82c4a9d2112b766fe5436a9bb068b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gab791db01c176d1a36c008639ba01ad5e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a> { <br />
+&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eab082ad47c94a8e07e3481b450852cd33">MAL_RESET_SOURCE_RESET_PIN</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eae200c576e1fb5530bf21f736cdb3322f">MAL_RESET_SOURCE_SOFTWARE</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea0723307a285a4479f2186d7d17c8c5ea">MAL_RESET_SOURCE_POWER</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea185044766a5e54246f51c258a0635123">MAL_RESET_SOURCE_SLEEP</a>, 
+<br />
+&#160;&#160;<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5ea8bd5bfed8e7293a82fb81265a37577e1">MAL_RESET_SOURCE_WATCHDOG</a>, 
+<a class="el" href="group___r_e_s_e_t.html#ggab791db01c176d1a36c008639ba01ad5eac33a2d95ed81954547feb7ff2a809dec">MAL_RESET_SOURCE_UNKNOWN</a>
+<br />
+ }</td></tr>
+<tr class="separator:gab791db01c176d1a36c008639ba01ad5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8c905646a37d0402c56ee99019d54e15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gaedfb986bc688f5735bfa366865a2cff2">mal_hspec_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#ga8c905646a37d0402c56ee99019d54e15">mal_reset_get_source</a> (void)</td></tr>
-<tr class="separator:ga8c905646a37d0402c56ee99019d54e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad58a5038b99104175b81cc63a89bc19f"><td class="memItemLeft" align="right" valign="top">
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gad58a5038b99104175b81cc63a89bc19f">mal_reset_mcu</a> (void)</td></tr>
+<tr class="memdesc:gad58a5038b99104175b81cc63a89bc19f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calling this will reset the MCU. <br /></td></tr>
+<tr class="separator:gad58a5038b99104175b81cc63a89bc19f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae20f28600b2716df3839f3050c1bc067"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#gae20f28600b2716df3839f3050c1bc067">mal_reset_get_source</a> (void)</td></tr>
+<tr class="separator:gae20f28600b2716df3839f3050c1bc067"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga466f7d7ea001285898fc83999f2e1d9d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_s_e_t.html#gab791db01c176d1a36c008639ba01ad5e">mal_reset_source_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_e_s_e_t.html#ga466f7d7ea001285898fc83999f2e1d9d">mal_reset_get_source_unmanaged</a> (void)</td></tr>
+<tr class="separator:ga466f7d7ea001285898fc83999f2e1d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to handle the reset of the MCU from user code. </p>

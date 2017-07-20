@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/adc/mal_adc.h File Reference</title>
+<title>MAL: src/adc/mal_adc.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,9 @@ $(document).ready(function(){initNavTree('mal__adc_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">mal_adc.h File Reference</div>  </div>
@@ -91,42 +93,83 @@ $(document).ready(function(){initNavTree('mal__adc_8h.html','');});
 
 <p>Functions to access and configure the ADCs of the MCU.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="mal__gpio_8h_source.html">gpio/mal_gpio.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__stdint_8h_source.html">std/mal_stdint.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__error_8h_source.html">std/mal_error.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__bool_8h_source.html">std/mal_bool.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__types_8h_source.html">std/mal_types.h</a>&quot;</code><br />
+<code>#include &quot;std/mal_defs.h&quot;</code><br />
 </div>
 <p><a href="mal__adc_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gadb194afbb37ffff545685add00034602"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gadb194afbb37ffff545685add00034602">mal_adc_read_bits</a>(adc,  value)&#160;&#160;&#160;mal_hspec_adc_read(adc, value)</td></tr>
-<tr class="memdesc:gadb194afbb37ffff545685add00034602"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an ADC.  <a href="group___a_d_c.html#gadb194afbb37ffff545685add00034602">More...</a><br /></td></tr>
-<tr class="separator:gadb194afbb37ffff545685add00034602"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5aa4bcf5aaa71ccbd8da54945caff8db"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga5aa4bcf5aaa71ccbd8da54945caff8db">mal_adc_resolution</a>(adc,  resolution)&#160;&#160;&#160;mal_hspec_adc_resolution(adc, resolution)</td></tr>
-<tr class="memdesc:ga5aa4bcf5aaa71ccbd8da54945caff8db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of the ADC.  <a href="group___a_d_c.html#ga5aa4bcf5aaa71ccbd8da54945caff8db">More...</a><br /></td></tr>
-<tr class="separator:ga5aa4bcf5aaa71ccbd8da54945caff8db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga108d327883aa669d185e63ca98dc481a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga108d327883aa669d185e63ca98dc481a">mal_adc_async_read</a>(adc,  callback)&#160;&#160;&#160;mal_hspec_adc_async_read(adc, callback)</td></tr>
-<tr class="memdesc:ga108d327883aa669d185e63ca98dc481a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an async read. A callback will be executed once the read is complete.  <a href="group___a_d_c.html#ga108d327883aa669d185e63ca98dc481a">More...</a><br /></td></tr>
-<tr class="separator:ga108d327883aa669d185e63ca98dc481a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad5ea2f229c3f249a945e0aaf46c1434c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gad5ea2f229c3f249a945e0aaf46c1434c">mal_adc_disable_interrupt</a>(adc)&#160;&#160;&#160;mal_hspec_disable_adc_interrupt(adc)</td></tr>
-<tr class="memdesc:gad5ea2f229c3f249a945e0aaf46c1434c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for an ADC.  <a href="group___a_d_c.html#gad5ea2f229c3f249a945e0aaf46c1434c">More...</a><br /></td></tr>
-<tr class="separator:gad5ea2f229c3f249a945e0aaf46c1434c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5a9974af742445115627bb21a2f84970"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga5a9974af742445115627bb21a2f84970">mal_adc_enable_interrupt</a>(adc,  active)&#160;&#160;&#160;mal_hspec_enable_adc_interrupt(adc, active)</td></tr>
-<tr class="memdesc:ga5a9974af742445115627bb21a2f84970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for an ADC.  <a href="group___a_d_c.html#ga5a9974af742445115627bb21a2f84970">More...</a><br /></td></tr>
-<tr class="separator:ga5a9974af742445115627bb21a2f84970"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae433ad84ea12e4336a526d76bfe38d55"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gae433ad84ea12e4336a526d76bfe38d55">mal_adc_maximum_resolution</a>(adc,  resolution)&#160;&#160;&#160;mal_hspec_adc_maximum_resolution(adc, resolution)</td></tr>
-<tr class="memdesc:gae433ad84ea12e4336a526d76bfe38d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum resolution of the ADC.  <a href="group___a_d_c.html#gae433ad84ea12e4336a526d76bfe38d55">More...</a><br /></td></tr>
-<tr class="separator:gae433ad84ea12e4336a526d76bfe38d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__adc__init__s.html">mal_adc_init_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga9ac8082b723f645016084e0cf040cd27"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga9ac8082b723f645016084e0cf040cd27">mal_adc_read_callback_t</a>) (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, uint64_t value)</td></tr>
+<tr class="memdesc:ga9ac8082b723f645016084e0cf040cd27"><td class="mdescLeft">&#160;</td><td class="mdescRight">This callback will be executed when an ADC read is complete.  <a href="group___a_d_c.html#ga9ac8082b723f645016084e0cf040cd27">More...</a><br /></td></tr>
+<tr class="separator:ga9ac8082b723f645016084e0cf040cd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gab78a220599c861bfab02a7c82e4abb85"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> { <br />
+&#160;&#160;<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a76b7798f988f283a61b4853ef5808464">MAL_ADC_0</a> = 0, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ac909d2cc286022cc677fc257f7f7fac9">MAL_ADC_1</a> = 1, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a7ebf93029f854b3ce7b0008ba9470e2f">MAL_ADC_2</a> = 2, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85acc846e87728b70a43eb95356d9afccfb">MAL_ADC_3</a> = 3, 
+<br />
+&#160;&#160;<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a17bea59af098315cb3f596c2846c608c">MAL_ADC_4</a> = 4, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a19f5a54028128593b62a5d27a82eb49a">MAL_ADC_5</a> = 5, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85abc8453c877c8ceb9dde01067c8e16655">MAL_ADC_6</a> = 6, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a9094e8cf02b092a2800c44d608f9ea53">MAL_ADC_7</a> = 7, 
+<br />
+&#160;&#160;<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a57f7f3e2533d2227636e4468c1af6e66">MAL_ADC_8</a> = 8, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a4a0a7e3b7e4d9f9af8c16b84484d6295">MAL_ADC_9</a> = 9, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ae206c8506aded53faeeb1000d5dcf171">MAL_ADC_10</a> = 10, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a980a0387c86f2a0b3f3582da66db48da">MAL_ADC_11</a> = 11, 
+<br />
+&#160;&#160;<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85adb6501f120144cca08dd184150c366f4">MAL_ADC_12</a> = 12, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a7408d03b5e22972643c541521f92eacb">MAL_ADC_13</a> = 13, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85ab1399a2c7692c1ab58e764ae5ecc179f">MAL_ADC_14</a> = 14, 
+<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a26a0e34b0ac3375e98d24c34a7abc049">MAL_ADC_15</a> = 15, 
+<br />
+&#160;&#160;<a class="el" href="group___a_d_c.html#ggab78a220599c861bfab02a7c82e4abb85a3fff6958fb52e6ea91837afc396a175b">MAL_ADC_SIZE</a> = 16
+<br />
+ }</td></tr>
+<tr class="separator:gab78a220599c861bfab02a7c82e4abb85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaab8fece57744a2e45a44d7035380fc8e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gaab8fece57744a2e45a44d7035380fc8e">mal_adc_init</a> (<a class="el" href="structmal__hspec__adc__init__s.html">mal_hspec_adc_init_s</a> *init)</td></tr>
-<tr class="memdesc:gaab8fece57744a2e45a44d7035380fc8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an ADC.  <a href="group___a_d_c.html#gaab8fece57744a2e45a44d7035380fc8e">More...</a><br /></td></tr>
-<tr class="separator:gaab8fece57744a2e45a44d7035380fc8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae828e7aa1c1a5407d5bf5b10f58809ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gae828e7aa1c1a5407d5bf5b10f58809ca">mal_adc_read_volts</a> (<a class="el" href="group___a_d_c.html#ga443623ebdbe632d5060a648306fd0f31">mal_hspec_adc_e</a> adc, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *value)</td></tr>
-<tr class="memdesc:gae828e7aa1c1a5407d5bf5b10f58809ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an ADC values, but as volts instead of LSBs.  <a href="group___a_d_c.html#gae828e7aa1c1a5407d5bf5b10f58809ca">More...</a><br /></td></tr>
-<tr class="separator:gae828e7aa1c1a5407d5bf5b10f58809ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga154ce18a5c8d500f1783f944e4ce12ef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga154ce18a5c8d500f1783f944e4ce12ef">mal_adc_bits_to_volts</a> (<a class="el" href="group___a_d_c.html#ga443623ebdbe632d5060a648306fd0f31">mal_hspec_adc_e</a> adc, uint64_t bit_value, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *value)</td></tr>
-<tr class="memdesc:ga154ce18a5c8d500f1783f944e4ce12ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a bit value of an ADC to volts.  <a href="group___a_d_c.html#ga154ce18a5c8d500f1783f944e4ce12ef">More...</a><br /></td></tr>
-<tr class="separator:ga154ce18a5c8d500f1783f944e4ce12ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10ba60d9aedf81656fbd9eb27039dcb1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga10ba60d9aedf81656fbd9eb27039dcb1">mal_adc_read_bits</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, uint64_t *value)</td></tr>
+<tr class="memdesc:ga10ba60d9aedf81656fbd9eb27039dcb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an ADC.  <a href="group___a_d_c.html#ga10ba60d9aedf81656fbd9eb27039dcb1">More...</a><br /></td></tr>
+<tr class="separator:ga10ba60d9aedf81656fbd9eb27039dcb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga082ff43da56c671e9adabcd4022dd9e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga082ff43da56c671e9adabcd4022dd9e2">mal_adc_resolution</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, uint8_t *resolution)</td></tr>
+<tr class="memdesc:ga082ff43da56c671e9adabcd4022dd9e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of the ADC.  <a href="group___a_d_c.html#ga082ff43da56c671e9adabcd4022dd9e2">More...</a><br /></td></tr>
+<tr class="separator:ga082ff43da56c671e9adabcd4022dd9e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ca7a40e53c2acf21ad03af60d8637e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga1ca7a40e53c2acf21ad03af60d8637e0">mal_adc_async_read</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, <a class="el" href="group___a_d_c.html#ga9ac8082b723f645016084e0cf040cd27">mal_adc_read_callback_t</a> callback)</td></tr>
+<tr class="memdesc:ga1ca7a40e53c2acf21ad03af60d8637e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start an async read. A callback will be executed once the read is complete.  <a href="group___a_d_c.html#ga1ca7a40e53c2acf21ad03af60d8637e0">More...</a><br /></td></tr>
+<tr class="separator:ga1ca7a40e53c2acf21ad03af60d8637e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7314e37a2af68f8f4f22c2a5f69c08d8"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga7314e37a2af68f8f4f22c2a5f69c08d8">mal_adc_disable_interrupt</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc)</td></tr>
+<tr class="memdesc:ga7314e37a2af68f8f4f22c2a5f69c08d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable interrupts for an ADC.  <a href="group___a_d_c.html#ga7314e37a2af68f8f4f22c2a5f69c08d8">More...</a><br /></td></tr>
+<tr class="separator:ga7314e37a2af68f8f4f22c2a5f69c08d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae3df8267c71977fc3b0e6a75f5737080"><td class="memItemLeft" align="right" valign="top">MAL_DEFS_INLINE void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#gae3df8267c71977fc3b0e6a75f5737080">mal_adc_enable_interrupt</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, bool active)</td></tr>
+<tr class="memdesc:gae3df8267c71977fc3b0e6a75f5737080"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable interrupts for an ADC.  <a href="group___a_d_c.html#gae3df8267c71977fc3b0e6a75f5737080">More...</a><br /></td></tr>
+<tr class="separator:gae3df8267c71977fc3b0e6a75f5737080"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga58b63318e85b5411b565b4b40470ecf4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga58b63318e85b5411b565b4b40470ecf4">mal_adc_maximum_resolution</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, uint8_t *resolution)</td></tr>
+<tr class="memdesc:ga58b63318e85b5411b565b4b40470ecf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the maximum resolution of the ADC.  <a href="group___a_d_c.html#ga58b63318e85b5411b565b4b40470ecf4">More...</a><br /></td></tr>
+<tr class="separator:ga58b63318e85b5411b565b4b40470ecf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1d9a63dd99002b295f6b1effe53d98ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga1d9a63dd99002b295f6b1effe53d98ac">mal_adc_init</a> (<a class="el" href="structmal__adc__init__s.html">mal_adc_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga1d9a63dd99002b295f6b1effe53d98ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an ADC.  <a href="group___a_d_c.html#ga1d9a63dd99002b295f6b1effe53d98ac">More...</a><br /></td></tr>
+<tr class="separator:ga1d9a63dd99002b295f6b1effe53d98ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4bab060794d16c8b4b6bd8004420425c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga4bab060794d16c8b4b6bd8004420425c">mal_adc_read_volts</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *value)</td></tr>
+<tr class="memdesc:ga4bab060794d16c8b4b6bd8004420425c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an ADC values, but as volts instead of LSBs.  <a href="group___a_d_c.html#ga4bab060794d16c8b4b6bd8004420425c">More...</a><br /></td></tr>
+<tr class="separator:ga4bab060794d16c8b4b6bd8004420425c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga32d87069a42a8db071522d98eec0d48d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c.html#ga32d87069a42a8db071522d98eec0d48d">mal_adc_bits_to_volts</a> (<a class="el" href="group___a_d_c.html#gab78a220599c861bfab02a7c82e4abb85">mal_adc_e</a> adc, uint64_t bit_value, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *value)</td></tr>
+<tr class="memdesc:ga32d87069a42a8db071522d98eec0d48d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a bit value of an ADC to volts.  <a href="group___a_d_c.html#ga32d87069a42a8db071522d98eec0d48d">More...</a><br /></td></tr>
+<tr class="separator:ga32d87069a42a8db071522d98eec0d48d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to access and configure the ADCs of the MCU. </p>

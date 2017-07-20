@@ -23,14 +23,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_power.h"
+#include "power/mal_power.h"
 
 extern mal_volts_t mal_hspec_power_rail_vdda_value;
 
-mal_error_e mal_hspec_stm32f0_power_get_rail_voltage(mal_hspec_power_rail_e rail,
-													 mal_volts_t *value) {
+mal_error_e mal_power_get_rail_voltage(mal_power_rail_e rail, mal_volts_t *value) {
 	switch (rail) {
-		case MAL_HSPEC_POWER_RAIL_VDDA:
+		case MAL_POWER_RAIL_VDDA:
 			*value = mal_hspec_power_rail_vdda_value;
 			return MAL_ERROR_OK;
 		default:

@@ -46,7 +46,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1564273565" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.2135023736" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" value="true" valueType="boolean" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.859984719" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1122474879" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1122474879" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.51873232" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.364611277" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.959001311" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -90,7 +90,7 @@
 					<sourceEntries>
 						<entry excluding="cortexm|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -141,7 +141,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1239937550" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.104427218" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" value="true" valueType="boolean" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.823569917" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Release" id="ilg.gnuarmeclipse.managedbuild.cross.builder.477140270" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Release" id="ilg.gnuarmeclipse.managedbuild.cross.builder.477140270" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1984566889" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.392381531" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.884430150" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -181,7 +181,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/stm/stm32f0/stm32f072/stm32f072cb|src/hspec/stm/stm32f0/stm32f072/stm32f072rb|src/hspec/mingw|src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
+						<entry excluding="src/hspec/stm/stm32f0/stm32f072/stm32f051r8|src/hspec/stm/stm32f0/stm32f072/stm32f030rc|src/hspec/stm/stm32f0/stm32f072/stm32f072cb|src/hspec/stm/stm32f0/stm32f072/stm32f072rb|src/hspec/mingw|src/hspec/stm/stm32f0/stm32f072cb|src/hspec/stm/stm32f0/stm32f072rb|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/stm/stm32f0/stm32f030r8|cortexm|stm" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
 					</sourceEntries>
 				</configuration>
@@ -233,7 +233,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash.1692880405" name="Create flash image" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createflash" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.1487040685" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize" value="true" valueType="boolean" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.230706952" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1887508068" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1887508068" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1992015460" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.181158737" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.74906089" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -290,7 +290,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -344,7 +344,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding.548562957" name="Assume freestanding environment (-ffreestanding)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants.1396377594" name="Disable loop invariant move (-fno-move-loop-invariants)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants" value="true" valueType="boolean" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.1138216559" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1796686092" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.1796686092" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.412840504" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.663923996" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.1978326220" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -401,7 +401,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -455,7 +455,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding.2006221441" name="Assume freestanding environment (-ffreestanding)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.freestanding" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants.1017401911" name="Disable loop invariant move (-fno-move-loop-invariants)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants" value="true" valueType="boolean" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.1663197250" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.226396827" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Debug" id="ilg.gnuarmeclipse.managedbuild.cross.builder.226396827" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1993537792" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.1032460757" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.801888632" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -512,7 +512,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
@@ -567,7 +567,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants.1141107130" name="Disable loop invariant move (-fno-move-loop-invariants)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nomoveloopinvariants" value="true" valueType="boolean" />
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.target.other.1421092228" name="Other target flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.target.other" value="-mfloat-abi=soft" valueType="string" />
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.674320316" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" />
-							<builder buildPath="${workspace_loc:/mal}/Debug" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="ilg.gnuarmeclipse.managedbuild.cross.builder.727509808" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
+							<builder buildPath="${workspace_loc:/mal}/Debug" errorParsers="org.eclipse.cdt.core.GmakeErrorParser;org.eclipse.cdt.core.CWDLocator" id="ilg.gnuarmeclipse.managedbuild.cross.builder.727509808" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="ilg.gnuarmeclipse.managedbuild.cross.builder" />
 							<tool command="${cross_prefix}${cross_c}${cross_suffix}" commandLinePattern="${COMMAND} ${cross_toolchain_flags} ${FLAGS} -c ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" errorParsers="org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GCCErrorParser" id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.427362311" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor.2022580381" name="Use preprocessor" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.usepreprocessor" value="true" valueType="boolean" />
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths.257437629" name="Include paths (-I)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.assembler.include.paths" valueType="includePath">
@@ -597,6 +597,7 @@
 									<listOptionValue builtIn="false" value="STM32F072" />
 									<listOptionValue builtIn="false" value="MAL_STM32F072CB" />
 								</option>
+								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other.927774737" name="Other compiler flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.c.compiler.other" useByScannerDiscovery="true" value="" valueType="string" />
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1928999364" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input" />
 							</tool>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler.887898565" name="Cross ARM C++ Compiler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.cpp.compiler" />
@@ -624,12 +625,13 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="" />
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis" />
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm" />
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
+						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072rb|hspec/mingw|hspec/stm/stm32f0/stm32f072rb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src" />
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm" />
 					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings" />
+			<storageModule moduleId="ilg.gnuarmeclipse.managedbuild.packs" />
 		</cconfiguration>
 		<cconfiguration id="ilg.gnuarmeclipse.managedbuild.cross.config.lib.debug.449971769.705168883.1274693075.379864748.1398075054.1687870221">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="ilg.gnuarmeclipse.managedbuild.cross.config.lib.debug.449971769.705168883.1274693075.379864748.1398075054.1687870221" moduleId="org.eclipse.cdt.core.settings" name="MINGW">
@@ -651,7 +653,7 @@
 					<folderInfo id="ilg.gnuarmeclipse.managedbuild.cross.config.lib.debug.449971769.705168883.1274693075.379864748.1398075054.1687870221." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.base.2146143936" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.base">
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.PE" id="cdt.managedbuild.target.gnu.platform.mingw.base.2024748140" name="Debug Platform" osList="win32" superClass="cdt.managedbuild.target.gnu.platform.mingw.base" />
-							<builder buildPath="${workspace_loc:/mal}/MINGW" id="cdt.managedbuild.tool.gnu.builder.mingw.base.979460532" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base" />
+							<builder buildPath="${workspace_loc:/mal}/MINGW" id="cdt.managedbuild.tool.gnu.builder.mingw.base.979460532" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base" />
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.base.1877844483" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.base">
 								<option id="gnu.both.asm.option.include.paths.1593573450" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/mal/stm}&quot;" />

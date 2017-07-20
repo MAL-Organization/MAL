@@ -26,7 +26,8 @@
 #ifndef UUID_MAL_UUID_H_
 #define UUID_MAL_UUID_H_
 
-#include "hspec/mal_hspec.h"
+#include "std/mal_error.h"
+#include "std/mal_stdint.h"
 
 /**
  * @brief Fetch the uuid of the device. This should be unique ID for the device
@@ -35,6 +36,6 @@
  * to this location.
  * @return Returns MAL_ERROR_OK on success.
  */
-#define mal_uuid_read(uuid) mal_hspec_uuid_read(uuid)
+mal_error_e mal_uuid_read(uint64_t *uuid);
 
 #endif /* UUID_MAL_UUID_H_ */

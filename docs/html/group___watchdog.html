@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,7 @@ $(document).ready(function(){initNavTree('group___watchdog.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Watchdog</div>  </div>
 </div><!--header-->
@@ -91,29 +91,30 @@ $(document).ready(function(){initNavTree('group___watchdog.html','');});
 <p>Functions to use the MCU's watchdog.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga204563c36c914caacd302ad1b0a88dba"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___watchdog.html#ga204563c36c914caacd302ad1b0a88dba">mal_watchdog_init</a>(timeout_ms)&#160;&#160;&#160;mal_hspec_watchdog_init(timeout_ms)</td></tr>
-<tr class="memdesc:ga204563c36c914caacd302ad1b0a88dba"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will initialize and start the watchdog.  <a href="#ga204563c36c914caacd302ad1b0a88dba">More...</a><br /></td></tr>
-<tr class="separator:ga204563c36c914caacd302ad1b0a88dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa3b5d70f629a20b500744747db731d34"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___watchdog.html#gaa3b5d70f629a20b500744747db731d34">mal_watchdog_feed</a>()&#160;&#160;&#160;mal_hspec_watchdog_feed()</td></tr>
-<tr class="memdesc:gaa3b5d70f629a20b500744747db731d34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this function to reset the watchdog timeout.  <a href="#gaa3b5d70f629a20b500744747db731d34">More...</a><br /></td></tr>
-<tr class="separator:gaa3b5d70f629a20b500744747db731d34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga21b32566e70c678aced3afb4d340e98c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___watchdog.html#ga21b32566e70c678aced3afb4d340e98c">mal_watchdog_init</a> (uint32_t timeout_ms)</td></tr>
+<tr class="memdesc:ga21b32566e70c678aced3afb4d340e98c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will initialize and start the watchdog.  <a href="#ga21b32566e70c678aced3afb4d340e98c">More...</a><br /></td></tr>
+<tr class="separator:ga21b32566e70c678aced3afb4d340e98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8ea6bd49f56fe71d13ad11d853e08e95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___watchdog.html#ga8ea6bd49f56fe71d13ad11d853e08e95">mal_watchdog_feed</a> (void)</td></tr>
+<tr class="memdesc:ga8ea6bd49f56fe71d13ad11d853e08e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call this function to reset the watchdog timeout.  <a href="#ga8ea6bd49f56fe71d13ad11d853e08e95">More...</a><br /></td></tr>
+<tr class="separator:ga8ea6bd49f56fe71d13ad11d853e08e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to use the MCU's watchdog. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gaa3b5d70f629a20b500744747db731d34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaa3b5d70f629a20b500744747db731d34">&#9670;&nbsp;</a></span>mal_watchdog_feed</h2>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga8ea6bd49f56fe71d13ad11d853e08e95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8ea6bd49f56fe71d13ad11d853e08e95">&#9670;&nbsp;</a></span>mal_watchdog_feed()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define mal_watchdog_feed</td>
+          <td class="memname">void mal_watchdog_feed </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_watchdog_feed()</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -123,18 +124,18 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga204563c36c914caacd302ad1b0a88dba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga204563c36c914caacd302ad1b0a88dba">&#9670;&nbsp;</a></span>mal_watchdog_init</h2>
+<a id="ga21b32566e70c678aced3afb4d340e98c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga21b32566e70c678aced3afb4d340e98c">&#9670;&nbsp;</a></span>mal_watchdog_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define mal_watchdog_init</td>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_watchdog_init </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">timeout_ms</td><td>)</td>
-          <td>&#160;&#160;&#160;mal_hspec_watchdog_init(timeout_ms)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>timeout_ms</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">

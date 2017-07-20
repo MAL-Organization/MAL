@@ -25,7 +25,7 @@
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
-#include "hspec/mal_hspec.h"
+#include "std/mal_defs.h"
 
 /**
  * @defgroup Flash
@@ -37,49 +37,49 @@
  * @brief Read an unsigned 8 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_uint8(address) mal_hspec_flash_read_uint8(address)
+MAL_DEFS_INLINE uint8_t mal_flash_read_uint8(unsigned int address);
 
 /**
  * @brief Read a signed 8 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_int8(address) mal_hspec_flash_read_int8(address)
+MAL_DEFS_INLINE int8_t mal_flash_read_int8(unsigned int address);
 
 /**
  * @brief Read an unsigned 16 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_uint16(address) mal_hspec_flash_read_uint16(address)
+MAL_DEFS_INLINE uint16_t mal_flash_read_uint16(unsigned int address);
 
 /**
  * @brief Read a signed 16 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_int16(address) mal_hspec_flash_read_int16(address)
+MAL_DEFS_INLINE int16_t mal_flash_read_int16(unsigned int address);
 
 /**
  * @brief Read an unsigned 32 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_uint32(address) mal_hspec_flash_read_uint32(address)
+MAL_DEFS_INLINE uint32_t mal_flash_read_uint32(unsigned int address);
 
 /**
  * @brief Read a signed 32 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_int32(address) mal_hspec_flash_read_int32(address)
+MAL_DEFS_INLINE int32_t mal_flash_read_int32(unsigned int address);
 
 /**
  * @brief Read an unsigned 64 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_uint64(address) mal_hspec_flash_read_uint64(address)
+MAL_DEFS_INLINE uint64_t mal_flash_read_uint64(unsigned int address);
 
 /**
  * @brief Read a signed 64 bit integer from memory.
  * @param address The memory address to read from.
  */
-#define mal_flash_read_int64(address) mal_hspec_flash_read_int64(address)
+MAL_DEFS_INLINE uint8_t mal_flash_read_int64(unsigned int address);
 
 /**
  * @brief This function will write an array of uint16 values to flash from the
@@ -90,7 +90,7 @@
  * @param count The count of values in the values array.
  * @return Returns #MAL_ERROR_OK on success.
  */
-#define mal_flash_write_uint16_values(start_address, values, count) mal_hspec_flash_write_uint16_values(start_address, values, count)
+mal_error_e mal_flash_write_uint16_values(unsigned int start_address, uint16_t *values, uint32_t count);
 
 /**
  * @brief This function will write an array of uint32 values to flash from the
@@ -101,13 +101,13 @@
  * @param count The count of values in the values array.
  * @return Returns #MAL_ERROR_OK on success.
  */
-#define mal_flash_write_uint32_values(start_address, values, count) mal_hspec_flash_write_uint32_values(start_address, values, count)
+mal_error_e mal_flash_write_uint32_values(unsigned int start_address, uint32_t *values, uint32_t count);
 
 /**
  * @brief This function return the flash page count of the MCU.
  * @return Returns the count in a uint32_t variable.
  */
-#define mal_flash_get_page_count() mal_hspec_flash_get_page_count()
+uint32_t mal_flash_get_page_count(void);
 
 /**
  * @brief This function will return the start address of a flash page.
@@ -115,14 +115,14 @@
  * running MCU.
  * @return Returns a uint64_t with the address.
  */
-#define mal_flash_get_page_start_address(page) mal_hspec_flash_get_page_start_address(page)
+unsigned int mal_flash_get_page_start_address(uint32_t page);
 
 /**
  * @brief This function will return the page which contains the given address.
  * @param address A uint64_t address.
  * @return Returns the page as a uint32_t.
  */
-#define mal_flash_get_page_from_address(address) mal_hspec_flash_get_page_from_address(address)
+uint32_t mal_flash_get_page_from_address(unsigned int address);
 
 /**
  * @brief This function will return the size of a flash page.
@@ -130,15 +130,29 @@
  * running MCU.
  * @return Returns a uint32_t with the size in bytes.
  */
-#define mal_flash_get_page_size(page) mal_hspec_flash_get_page_size(page)
+uint32_t mal_flash_get_page_size(uint32_t page);
 
 /**
- * This function will erase flash page.
+ * This function will erase a flash page.
  * @param page The page number. Take care to give a valid page number for the
  * running MCU.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_flash_erase_page(uint32_t page);
+
+/**
+ * This function will erase a flash page. It will check if it is a valid page before erasing.
+ * @param page The page number.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_flash_safe_erase_page(uint32_t page);
+
+/**
+ * @brief Check if a page is valid for the current MCU.
+ * @param page The page number.
+ * @return Returns #MAL_ERROR_OK if valid.
+ */
+mal_error_e mal_flash_is_page_valid(uint32_t page);
 
 /**
  * @}

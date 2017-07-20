@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,8 +82,8 @@ $(document).ready(function(){initNavTree('group___p_o_w_e_r.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">POWER</div>  </div>
 </div><!--header-->
@@ -92,44 +92,65 @@ $(document).ready(function(){initNavTree('group___p_o_w_e_r.html','');});
 <p>Functions to access power functions of the MCU.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:gab4767cdd0f121aa29a678f0659fb59aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_o_w_e_r.html#gab4767cdd0f121aa29a678f0659fb59aa">mal_power_get_rail_voltage</a>(rail,  value)&#160;&#160;&#160;mal_hspec_power_get_rail_voltage(rail, value)</td></tr>
-<tr class="memdesc:gab4767cdd0f121aa29a678f0659fb59aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the voltage of a rail of the MCU.  <a href="#gab4767cdd0f121aa29a678f0659fb59aa">More...</a><br /></td></tr>
-<tr class="separator:gab4767cdd0f121aa29a678f0659fb59aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gabd562f4f3f0747310c483c77f6b04b95"><td class="memItemLeft" align="right" valign="top"><a id="gabd562f4f3f0747310c483c77f6b04b95"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>mal_hspec_power_rail_e</b> { <b>MAL_HSPEC_POWER_RAIL_VDDA</b> = 0, 
-<b>MAL_HSPEC_POWER_RAIL_SIZE</b> = 1
+<tr class="memitem:ga05954795541a408fb1097bab7e8a8590"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_o_w_e_r.html#ga05954795541a408fb1097bab7e8a8590">mal_power_rail_e</a> { <a class="el" href="group___p_o_w_e_r.html#gga05954795541a408fb1097bab7e8a8590a18dea5084169c58b21ca0d8982e6fa8b">MAL_POWER_RAIL_VDDA</a> = 0, 
+<a class="el" href="group___p_o_w_e_r.html#gga05954795541a408fb1097bab7e8a8590aae85df41c47201c860e0716bf25ab427">MAL_POWER_RAIL_SIZE</a> = 1
  }</td></tr>
-<tr class="separator:gabd562f4f3f0747310c483c77f6b04b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ga05954795541a408fb1097bab7e8a8590"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ga42af6c80e020014054b4c0283950f0c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_o_w_e_r.html#ga42af6c80e020014054b4c0283950f0c1">mal_power_get_rail_voltage</a> (<a class="el" href="group___p_o_w_e_r.html#ga05954795541a408fb1097bab7e8a8590">mal_power_rail_e</a> rail, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *value)</td></tr>
+<tr class="memdesc:ga42af6c80e020014054b4c0283950f0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the voltage of a rail of the MCU.  <a href="#ga42af6c80e020014054b4c0283950f0c1">More...</a><br /></td></tr>
+<tr class="separator:ga42af6c80e020014054b4c0283950f0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Functions to access power functions of the MCU. </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gab4767cdd0f121aa29a678f0659fb59aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab4767cdd0f121aa29a678f0659fb59aa">&#9670;&nbsp;</a></span>mal_power_get_rail_voltage</h2>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga05954795541a408fb1097bab7e8a8590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga05954795541a408fb1097bab7e8a8590">&#9670;&nbsp;</a></span>mal_power_rail_e</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define mal_power_get_rail_voltage</td>
+          <td class="memname">enum <a class="el" href="group___p_o_w_e_r.html#ga05954795541a408fb1097bab7e8a8590">mal_power_rail_e</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga05954795541a408fb1097bab7e8a8590a18dea5084169c58b21ca0d8982e6fa8b"></a>MAL_POWER_RAIL_VDDA&#160;</td><td class="fielddoc"><p>Analog power rail. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga05954795541a408fb1097bab7e8a8590aae85df41c47201c860e0716bf25ab427"></a>MAL_POWER_RAIL_SIZE&#160;</td><td class="fielddoc"><p>Number of power rail. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ga42af6c80e020014054b4c0283950f0c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga42af6c80e020014054b4c0283950f0c1">&#9670;&nbsp;</a></span>mal_power_get_rail_voltage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a> mal_power_get_rail_voltage </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">rail, </td>
+          <td class="paramtype"><a class="el" href="group___p_o_w_e_r.html#ga05954795541a408fb1097bab7e8a8590">mal_power_rail_e</a>&#160;</td>
+          <td class="paramname"><em>rail</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">value&#160;</td>
+          <td class="paramtype"><a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;mal_hspec_power_get_rail_voltage(rail, value)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">

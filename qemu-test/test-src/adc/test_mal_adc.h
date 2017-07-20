@@ -26,6 +26,13 @@
 #ifndef ADC_TEST_MAL_ADC_H_
 #define ADC_TEST_MAL_ADC_H_
 
+#include "std/mal_error.h"
+#include "adc/mal_adc.h"
+#include "gpio/mal_gpio.h"
+#include "std/mal_stdint.h"
+
+mal_error_e mal_hspec_get_valid_adc_ios(mal_adc_e adc, const mal_gpio_s **ios, uint8_t *size);
+
 void test_mal_adc(void);
 
 #endif /* ADC_TEST_MAL_ADC_H_ */

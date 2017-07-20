@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/dac/mal_dac.h File Reference</title>
+<title>MAL: src/dac/mal_dac.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -82,7 +82,8 @@ $(document).ready(function(){initNavTree('mal__dac_8h.html','');});
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">mal_dac.h File Reference</div>  </div>
@@ -91,30 +92,43 @@ $(document).ready(function(){initNavTree('mal__dac_8h.html','');});
 
 <p>Functions to access and configure the DACs of the MCU.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="mal__gpio_8h_source.html">gpio/mal_gpio.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__stdint_8h_source.html">std/mal_stdint.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mal__types_8h_source.html">std/mal_types.h</a>&quot;</code><br />
 </div>
 <p><a href="mal__dac_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga5fb31c27770014f451388b74d7baafb6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga5fb31c27770014f451388b74d7baafb6">mal_dac_write_bits</a>(dac,  value)&#160;&#160;&#160;mal_hspec_dac_write(dac, value)</td></tr>
-<tr class="memdesc:ga5fb31c27770014f451388b74d7baafb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to a DAC.  <a href="group___d_a_c.html#ga5fb31c27770014f451388b74d7baafb6">More...</a><br /></td></tr>
-<tr class="separator:ga5fb31c27770014f451388b74d7baafb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga40b3e075ee0a786d0236378ce8f187ea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga40b3e075ee0a786d0236378ce8f187ea">mal_dac_resolution</a>(dac,  resolution)&#160;&#160;&#160;mal_hspec_dac_resolution(dac, resolution)</td></tr>
-<tr class="memdesc:ga40b3e075ee0a786d0236378ce8f187ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of the DAC.  <a href="group___d_a_c.html#ga40b3e075ee0a786d0236378ce8f187ea">More...</a><br /></td></tr>
-<tr class="separator:ga40b3e075ee0a786d0236378ce8f187ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structmal__dac__init__s.html">mal_dac_init_s</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gaa71042522a8a3499774251d2888d125a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#gaa71042522a8a3499774251d2888d125a">mal_dac_e</a> { <a class="el" href="group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa83f5b22616ae8c45ccbdc7751986c294">MAL_DAC_0</a> = 0, 
+<a class="el" href="group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa567eab75d61f45e6bc513915d6406c43">MAL_DAC_1</a> = 1, 
+<a class="el" href="group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aaa83cc82b7825621ec15955e807bbf84b">MAL_DAC_2</a> = 2, 
+<a class="el" href="group___d_a_c.html#ggaa71042522a8a3499774251d2888d125aa3542b20802cf26f77d214eb683491cb7">MAL_DAC_SIZE</a> = 3
+ }</td></tr>
+<tr class="separator:gaa71042522a8a3499774251d2888d125a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3411c027874ff9a133fe4d59eb422e97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga3411c027874ff9a133fe4d59eb422e97">mal_dac_init</a> (<a class="el" href="structmal__hspec__dac__init__s.html">mal_hspec_dac_init_s</a> *init)</td></tr>
-<tr class="memdesc:ga3411c027874ff9a133fe4d59eb422e97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a DAC.  <a href="group___d_a_c.html#ga3411c027874ff9a133fe4d59eb422e97">More...</a><br /></td></tr>
-<tr class="separator:ga3411c027874ff9a133fe4d59eb422e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga64b47d6efd161a442e4b20037b637912"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga64b47d6efd161a442e4b20037b637912">mal_dac_write_volts</a> (<a class="el" href="group___d_a_c.html#ga7a36d5fd0e2a787cf85e8464c9a673fb">mal_hspec_dac_e</a> dac, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> value)</td></tr>
-<tr class="memdesc:ga64b47d6efd161a442e4b20037b637912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to a DAC, but as volts instead of LSBs.  <a href="group___d_a_c.html#ga64b47d6efd161a442e4b20037b637912">More...</a><br /></td></tr>
-<tr class="separator:ga64b47d6efd161a442e4b20037b637912"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga778ef852694d7128070cb016ec4bd6c4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga778ef852694d7128070cb016ec4bd6c4">mal_dac_volts_to_bits</a> (<a class="el" href="group___d_a_c.html#ga7a36d5fd0e2a787cf85e8464c9a673fb">mal_hspec_dac_e</a> dac, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> value, uint64_t *bit_value)</td></tr>
-<tr class="memdesc:ga778ef852694d7128070cb016ec4bd6c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a bit value of a DAC to volts.  <a href="group___d_a_c.html#ga778ef852694d7128070cb016ec4bd6c4">More...</a><br /></td></tr>
-<tr class="separator:ga778ef852694d7128070cb016ec4bd6c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9e40938979d15736a1529469cc4bcdd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga9e40938979d15736a1529469cc4bcdd3">mal_dac_write_bits</a> (<a class="el" href="group___d_a_c.html#gaa71042522a8a3499774251d2888d125a">mal_dac_e</a> dac, uint64_t value)</td></tr>
+<tr class="memdesc:ga9e40938979d15736a1529469cc4bcdd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to a DAC.  <a href="group___d_a_c.html#ga9e40938979d15736a1529469cc4bcdd3">More...</a><br /></td></tr>
+<tr class="separator:ga9e40938979d15736a1529469cc4bcdd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa55ec9bca3fdd01e7b33886c51582d99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#gaa55ec9bca3fdd01e7b33886c51582d99">mal_dac_resolution</a> (<a class="el" href="group___d_a_c.html#gaa71042522a8a3499774251d2888d125a">mal_dac_e</a> dac, uint8_t *resolution)</td></tr>
+<tr class="memdesc:gaa55ec9bca3fdd01e7b33886c51582d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the resolution of the DAC.  <a href="group___d_a_c.html#gaa55ec9bca3fdd01e7b33886c51582d99">More...</a><br /></td></tr>
+<tr class="separator:gaa55ec9bca3fdd01e7b33886c51582d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ca6676144e8b51a73414bd5793c31d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga0ca6676144e8b51a73414bd5793c31d6">mal_dac_init</a> (<a class="el" href="structmal__dac__init__s.html">mal_dac_init_s</a> *init)</td></tr>
+<tr class="memdesc:ga0ca6676144e8b51a73414bd5793c31d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a DAC.  <a href="group___d_a_c.html#ga0ca6676144e8b51a73414bd5793c31d6">More...</a><br /></td></tr>
+<tr class="separator:ga0ca6676144e8b51a73414bd5793c31d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaefcc02e714e6993456fecd69aa3910c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#gaefcc02e714e6993456fecd69aa3910c9">mal_dac_write_volts</a> (<a class="el" href="group___d_a_c.html#gaa71042522a8a3499774251d2888d125a">mal_dac_e</a> dac, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> value)</td></tr>
+<tr class="memdesc:gaefcc02e714e6993456fecd69aa3910c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to a DAC, but as volts instead of LSBs.  <a href="group___d_a_c.html#gaefcc02e714e6993456fecd69aa3910c9">More...</a><br /></td></tr>
+<tr class="separator:gaefcc02e714e6993456fecd69aa3910c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga15a48cc615aa4648820319fab12e09ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_a_c.html#ga15a48cc615aa4648820319fab12e09ed">mal_dac_volts_to_bits</a> (<a class="el" href="group___d_a_c.html#gaa71042522a8a3499774251d2888d125a">mal_dac_e</a> dac, <a class="el" href="group___t_y_p_e_s.html#gad2dfd8fc7a7e98420a4aec810d6c352f">mal_volts_t</a> value, uint64_t *bit_value)</td></tr>
+<tr class="memdesc:ga15a48cc615aa4648820319fab12e09ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a bit value of a DAC to volts.  <a href="group___d_a_c.html#ga15a48cc615aa4648820319fab12e09ed">More...</a><br /></td></tr>
+<tr class="separator:ga15a48cc615aa4648820319fab12e09ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to access and configure the DACs of the MCU. </p>

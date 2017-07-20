@@ -23,31 +23,33 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_spi.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
-#include "gpio/mal_gpio.h"
 #include "stm32f0/stm32f0xx_spi.h"
 #include "std/mal_stdlib.h"
 #include "std/mal_bool.h"
+#include "spi/mal_spi.h"
+#include "cm0/core_cm0.h"
 
 #define DATA_SIZE_MASK	0xF00
 
 typedef struct {
-	mal_hspec_spi_e interface;
+	mal_spi_e interface;
 	SPI_TypeDef *spi_typedef;
 	// Runtime settings
-	const mal_hspec_gpio_s *select;
-	mal_hspec_spi_select_mode_e select_mode;
-	mal_hspec_spi_select_polarity_e select_polarity;
+	const mal_gpio_s *select;
+	mal_spi_select_mode_e select_mode;
+	mal_spi_select_polarity_e select_polarity;
 	// Runtime variables
 	volatile bool is_active;
-	mal_hspec_spi_msg_s *active_msg;
+	mal_spi_msg_s *active_msg;
 	uint8_t out_data_ptr;
 	uint8_t in_data_ptr;
 } stm_spi_interface_s;
 
-static mal_error_e get_local_interface(mal_hspec_spi_e interface,
+IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_spi_e interface);
+
+static mal_error_e get_local_interface(mal_spi_e interface,
 									   stm_spi_interface_s **local_interface);
 
 static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
@@ -60,7 +62,7 @@ static void send_data(stm_spi_interface_s *local_interface);
 stm_spi_interface_s spi1_interface;
 stm_spi_interface_s spi2_interface;
 
-mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init) {
+mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	mal_error_e result;
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->mosi->port), ENABLE);
@@ -70,7 +72,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 		RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->select->port), ENABLE);
 	}
 	// Enable SPI clock
-	if (MAL_HSPEC_SPI_1 == init->interface) {
+	if (MAL_SPI_1 == init->interface) {
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
 	} else {
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
@@ -80,7 +82,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	mal_hspec_stm32f0_af_e miso_af;
 	mal_hspec_stm32f0_af_e clk_af;
 	mal_hspec_stm32f0_af_e select_af;
-	if (MAL_HSPEC_SPI_1 == init->interface) {
+	if (MAL_SPI_1 == init->interface) {
 		mosi_af = MAL_HSPEC_STM32F0_AF_SPI1_MOSI;
 		miso_af = MAL_HSPEC_STM32F0_AF_SPI1_MISO;
 		clk_af = MAL_HSPEC_STM32F0_AF_SPI1_SCK;
@@ -112,27 +114,27 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	}
 	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), init->clk->pin, function);
 	// Select, only if the select mode is hardware
-	if (MAL_HSPEC_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
+	if (MAL_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
 		result = mal_hspec_stm32f0_get_pin_af(init->clk, clk_af, &function);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
 		GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), init->clk->pin, function);
 	// Select mode is software, initialize IO as output
-	} else if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == init->select_mode) {
+	} else if (MAL_SPI_SELECT_MODE_SOFTWARE == init->select_mode) {
 		// Initialize GPIO
-		mal_hspec_gpio_init_s gpio_init;
-		gpio_init.direction = MAL_HSPEC_GPIO_DIR_OUT;
+		mal_gpio_init_s gpio_init;
+		gpio_init.direction = MAL_GPIO_DIR_OUT;
 		gpio_init.gpio = *init->select;
-		gpio_init.output_config = MAL_HSPEC_GPIO_OUT_PP;
-		gpio_init.pupd = MAL_HSPEC_GPIO_PUPD_NONE;
+		gpio_init.output_config = MAL_GPIO_OUT_PP;
+		gpio_init.pupd = MAL_GPIO_PUPD_NONE;
 		gpio_init.speed = UINT64_MAX;
 		result = mal_gpio_init(&gpio_init);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
 		// Set unselected
-		if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
+		if (MAL_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
 			result = mal_gpio_set(init->select, false);
 		} else {
 			result = mal_gpio_set(init->select, true);
@@ -157,13 +159,13 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->clk->pin);
 	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), &gpio_init);
 	// Select, only if select mode is hardware
-	if (MAL_HSPEC_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
+	if (MAL_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
 		gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->miso->pin);
 		GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->miso->port), &gpio_init);
 	}
-	// Get I2C typedef
+	// Get SPI typedef
 	SPI_TypeDef *spi_typedef;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
+	if (MAL_SPI_1 == init->interface) {
 		spi_typedef = SPI1;
 	} else {
 		spi_typedef = SPI2;
@@ -177,39 +179,39 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	// Set as master
 	spi_init.SPI_Mode = SPI_Mode_Master;
 	// Set word size
-	if (init->data_size < MAL_HSPEC_SPI_DATA_4_BITS || init->data_size > MAL_HSPEC_SPI_DATA_16_BITS) {
+	if (init->data_size < MAL_SPI_DATA_4_BITS || init->data_size > MAL_SPI_DATA_16_BITS) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	spi_init.SPI_DataSize = (uint16_t)(init->data_size - 1) << 8;
 	// Set clock idle polarity
-	if (MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state) {
+	if (MAL_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state) {
 		spi_init.SPI_CPOL = SPI_CPOL_Low;
 	} else {
 		spi_init.SPI_CPOL = SPI_CPOL_High;
 	}
 	// Set on which edge data should be valid
-	if (MAL_HSPEC_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state &&
-		MAL_HSPEC_SPI_DATA_LATCH_EDGE_RISING == init->latch_edge) {
+	if (MAL_SPI_CLK_IDLE_STATE_LOW == init->clk_idle_state &&
+		MAL_SPI_DATA_LATCH_EDGE_RISING == init->latch_edge) {
 		spi_init.SPI_CPHA = SPI_CPHA_1Edge;
-	} else if (MAL_HSPEC_SPI_CLK_IDLE_STATE_HIGH == init->clk_idle_state &&
-			   MAL_HSPEC_SPI_DATA_LATCH_EDGE_FALLING == init->latch_edge) {
+	} else if (MAL_SPI_CLK_IDLE_STATE_HIGH == init->clk_idle_state &&
+			   MAL_SPI_DATA_LATCH_EDGE_FALLING == init->latch_edge) {
 		spi_init.SPI_CPHA = SPI_CPHA_1Edge;
 	} else {
 		spi_init.SPI_CPHA = SPI_CPHA_2Edge;
 	}
 	// Set select (NSS) control mode
 	switch (init->select_mode) {
-		case MAL_HSPEC_SPI_SELECT_MODE_HARDWARE:
+		case MAL_SPI_SELECT_MODE_HARDWARE:
 			// This MCU only supports low polarity in hardware mode
-			if (MAL_HSPEC_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
+			if (MAL_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
 				return MAL_ERROR_HARDWARE_INVALID;
 			}
 			spi_init.SPI_NSS = SPI_NSS_Hard;
 			SPI_NSSPulseModeCmd(spi_typedef, ENABLE);
 			break;
-		case MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE:
-		case MAL_HSPEC_SPI_SELECT_MODE_USER:
-		case MAL_HSPEC_SPI_SELECT_MODE_NONE:
+		case MAL_SPI_SELECT_MODE_SOFTWARE:
+		case MAL_SPI_SELECT_MODE_USER:
+		case MAL_SPI_SELECT_MODE_NONE:
 		default:
 			spi_init.SPI_NSS = SPI_NSS_Soft;
 			break;
@@ -242,7 +244,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	// The prescaler bits start at bit 3
 	spi_init.SPI_BaudRatePrescaler = prescaler << 3;
 	// Set bit order
-	if (MAL_HSPEC_SPI_BIT_ORDER_MSB == init->bit_order) {
+	if (MAL_SPI_BIT_ORDER_MSB == init->bit_order) {
 		spi_init.SPI_FirstBit = SPI_FirstBit_MSB;
 	} else {
 		spi_init.SPI_FirstBit = SPI_FirstBit_LSB;
@@ -254,7 +256,7 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	// If words are more than a byte then we only want to know when 2 bytes are
 	// in fifo. This hardware does not support words greater then 16 bits so
 	// there is no need to look for higher thresholds.
-	if (init->data_size > MAL_HSPEC_SPI_DATA_8_BITS) {
+	if (init->data_size > MAL_SPI_DATA_8_BITS) {
 		fifo_threshold = SPI_RxFIFOThreshold_HF;
 	}
 	SPI_RxFIFOThresholdConfig(spi_typedef, fifo_threshold);
@@ -281,12 +283,12 @@ mal_error_e mal_hspec_stm32f0_spi_master_init(mal_hspec_spi_master_init_s *init)
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interface_s **local_interface) {
+static mal_error_e get_local_interface(mal_spi_e interface, stm_spi_interface_s **local_interface) {
 	switch (interface) {
-		case MAL_HSPEC_SPI_1:
+		case MAL_SPI_1:
 			*local_interface = &spi1_interface;
 			return MAL_ERROR_OK;
-		case MAL_HSPEC_SPI_2:
+		case MAL_SPI_2:
 			*local_interface = &spi2_interface;
 			return MAL_ERROR_OK;
 		default:
@@ -294,8 +296,7 @@ static mal_error_e get_local_interface(mal_hspec_spi_e interface, stm_spi_interf
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface,
-										   	   	    mal_hspec_spi_msg_s *msg) {
+mal_error_e mal_spi_start_transaction(mal_spi_e interface, mal_spi_msg_s *msg) {
 	mal_error_e result = MAL_ERROR_OK;
 	// Get local interface
 	stm_spi_interface_s *local_interface;
@@ -304,7 +305,7 @@ mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface,
 		return result;
 	}
 	// Deactivate interrupt
-	bool active = mal_hspec_stm32f0_spi_disable_interrupt(interface);
+	bool active = mal_spi_disable_interrupt(interface);
 	// Check if interface is available
 	if (!local_interface->is_active) {
 		// Set active message
@@ -327,22 +328,22 @@ mal_error_e mal_hspec_stm32f0_spi_start_transaction(mal_hspec_spi_e interface,
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Restore interrupt
-	mal_hspec_stm32f0_spi_enable_interrupt(interface, active);
+	mal_spi_enable_interrupt(interface, active);
 
 	return result;
 }
 
-IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_hspec_spi_e interface) {
+IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_spi_e interface) {
 	switch (interface) {
-		case MAL_HSPEC_SPI_1:
+		case MAL_SPI_1:
 			return SPI1_IRQn;
-		case MAL_HSPEC_SPI_2:
+		case MAL_SPI_2:
 		default:
 			return SPI2_IRQn;
 	}
 }
 
-bool mal_hspec_stm32f0_spi_disable_interrupt(mal_hspec_spi_e interface) {
+MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface) {
 	IRQn_Type irq = mal_hspec_stm32f0_spi_get_irq(interface);
 	bool active = NVIC_GetActive(irq);
 	NVIC_DisableIRQ(irq);
@@ -351,18 +352,24 @@ bool mal_hspec_stm32f0_spi_disable_interrupt(mal_hspec_spi_e interface) {
 	return active;
 }
 
+MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active) {
+    if (active) {
+        NVIC_EnableIRQ(mal_hspec_stm32f0_spi_get_irq(interface));
+    }
+}
+
 static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
 								 bool selected) {
 	// Extract correct select IO and polarity
-	const mal_hspec_gpio_s *select_io = NULL;
-	mal_hspec_spi_select_polarity_e polarity;
+	const mal_gpio_s *select_io = NULL;
+	mal_spi_select_polarity_e polarity;
 	// Check if the active message specifies an IO
 	if (NULL != local_interface->active_msg &&
 		NULL != local_interface->active_msg->select) {
 		select_io = local_interface->active_msg->select;
 		polarity = local_interface->active_msg->select_polarity;
 	} else {
-		if (MAL_HSPEC_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode &&
+		if (MAL_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode &&
 			NULL != local_interface->select) {
 			select_io = local_interface->select;
 			polarity = local_interface->select_polarity;
@@ -375,7 +382,7 @@ static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
 	}
 	// Determine state IO based on select state and polarity
 	bool state = selected;
-	if (MAL_HSPEC_SPI_SELECT_POLARITY_LOW == polarity) {
+	if (MAL_SPI_SELECT_POLARITY_LOW == polarity) {
 		state = !state;
 	}
 	// Set IO
@@ -417,7 +424,7 @@ static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
 			set_select_io(local_interface, false);
 			// Message transaction is complete
 			// Execute callback
-			mal_hspec_spi_msg_s *next_message = NULL;
+			mal_spi_msg_s *next_message = NULL;
 			if (NULL != local_interface->active_msg->callback) {
 				local_interface->active_msg->callback(
 												local_interface->active_msg,

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/can/mal_can_buffer.h File Reference</title>
+<title>MAL: src/can/mal_can_buffer.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('mal__can__buffer_8h.html','');});
 
 <p>Functions to queue CAN messages for a CAN interface. This is useful when multiple modules will use the same CAN interface.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;hspec/mal_hspec.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="mal__can_8h_source.html">can/mal_can.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mal__circular__buffer_8h_source.html">utils/mal_circular_buffer.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mal__stdint_8h_source.html">std/mal_stdint.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mal__error_8h_source.html">std/mal_error.h</a>&quot;</code><br />
@@ -108,7 +108,7 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f">mal_can_buffer_deinit</a>(handle)&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#gacf59c6f7bf770497d1f75d6c01987329">mal_can_deinit</a>((handle)-&gt;interface)</td></tr>
+<tr class="memitem:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f">mal_can_buffer_deinit</a>(handle)&#160;&#160;&#160;<a class="el" href="group___c_a_n.html#ga5d70eaec0e95d9ea2323a5d378645750">mal_can_deinit</a>((handle)-&gt;interface)</td></tr>
 <tr class="memdesc:gae7660e5eb6e564edf51dace3a7667d9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function will uninitialize a CAN buffer.  <a href="group___c_a_n.html#gae7660e5eb6e564edf51dace3a7667d9f">More...</a><br /></td></tr>
 <tr class="separator:gae7660e5eb6e564edf51dace3a7667d9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -120,12 +120,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga4ad777ec3f97d9da65d7b4128ee1b734">mal_can_buffer_direct_init</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__buffer__init__s.html">mal_can_buffer_init_s</a> *init, const void *direct_init)</td></tr>
 <tr class="memdesc:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a CAN buffer and a CAN interface using direct initialization.  <a href="group___c_a_n.html#ga4ad777ec3f97d9da65d7b4128ee1b734">More...</a><br /></td></tr>
 <tr class="separator:ga4ad777ec3f97d9da65d7b4128ee1b734"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga1040c764dcbfcf9a644cb6fb5b7c2f40">mal_can_buffer_write</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to a buffer.  <a href="group___c_a_n.html#ga1040c764dcbfcf9a644cb6fb5b7c2f40">More...</a><br /></td></tr>
-<tr class="separator:ga1040c764dcbfcf9a644cb6fb5b7c2f40"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0edde750013e94ed0170d7be7fd968a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga0edde750013e94ed0170d7be7fd968a7">mal_can_buffer_read</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__can__msg__s.html">mal_hspec_can_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga0edde750013e94ed0170d7be7fd968a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a message from a buffer.  <a href="group___c_a_n.html#ga0edde750013e94ed0170d7be7fd968a7">More...</a><br /></td></tr>
-<tr class="separator:ga0edde750013e94ed0170d7be7fd968a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25eff0e35a438cbe6418b040e2213a7b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga25eff0e35a438cbe6418b040e2213a7b">mal_can_buffer_write</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga25eff0e35a438cbe6418b040e2213a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to a buffer.  <a href="group___c_a_n.html#ga25eff0e35a438cbe6418b040e2213a7b">More...</a><br /></td></tr>
+<tr class="separator:ga25eff0e35a438cbe6418b040e2213a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___c_a_n.html#ga4b3253f89b40c7ba3dd7975374ffab15">mal_can_buffer_read</a> (<a class="el" href="structmal__can__buffer__handle__s.html">mal_can_buffer_handle_s</a> *handle, <a class="el" href="structmal__can__msg__s.html">mal_can_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a message from a buffer.  <a href="group___c_a_n.html#ga4b3253f89b40c7ba3dd7975374ffab15">More...</a><br /></td></tr>
+<tr class="separator:ga4b3253f89b40c7ba3dd7975374ffab15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to queue CAN messages for a CAN interface. This is useful when multiple modules will use the same CAN interface. </p>

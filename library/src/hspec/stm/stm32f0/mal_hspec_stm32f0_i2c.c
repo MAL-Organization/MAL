@@ -25,6 +25,10 @@
 
 #include "mal_hspec_stm32f0_i2c.h"
 #include "std/mal_stdlib.h"
+#include "i2c/mal_i2c.h"
+#include "stm32f0/stm32f0xx_i2c.h"
+#include "mal_hspec_stm32f0_cmn.h"
+#include "cm0/core_cm0.h"
 
 #define I2C_MIN_AF_DELAY		0.00000005f
 
@@ -38,18 +42,18 @@ typedef enum {
 } i2c_states_e;
 
 typedef struct {
-	mal_hspec_i2c_e interface;
-	mal_hspec_i2c_msg_s *msg;
+	mal_i2c_e interface;
+	mal_i2c_msg_s *msg;
 	volatile bool is_active;
 	volatile i2c_states_e state;
 	volatile uint8_t data_ptr;
-	volatile mal_hspec_i2c_cmd_e cmd;
+	volatile mal_i2c_cmd_e cmd;
 	I2C_TypeDef *stm_handle;
 } i2c_handle_s;
 
-static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s *init, uint64_t *i2c_clock);
+static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_i2c_init_s *init, uint64_t *i2c_clock);
 
-static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s *init, uint32_t timing);
+static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_i2c_init_s *init, uint32_t timing);
 
 static void i2c_start_transfer(i2c_handle_s *i2c_handle);
 
@@ -61,25 +65,27 @@ static void i2c_common_errors(i2c_handle_s *handle);
 
 static void i2c_common(i2c_handle_s *handle);
 
+IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_i2c_e interface);
+
 static i2c_handle_s i2c_handle_1 = {
-	.interface = MAL_HSPEC_I2C_1,
+	.interface = MAL_I2C_1,
 	.is_active = false,
 	.stm_handle = I2C1
 };
 
 static i2c_handle_s i2c_handle_2 = {
-		.interface = MAL_HSPEC_I2C_2,
+		.interface = MAL_I2C_2,
 	.is_active = false,
 	.stm_handle = I2C2
 };
 
-static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s *init, uint64_t *i2c_clock) {
+static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_i2c_init_s *init, uint64_t *i2c_clock) {
 	// Set I2C clock source
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
 	// See STM32F0 user manual for I2C clock requirements.
 	uint64_t min_clk = 8 * init->bitrate;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
+	if (MAL_I2C_1 == init->interface) {
 		if (SystemCoreClock > min_clk) {
 			RCC_I2CCLKConfig(RCC_I2C1CLK_SYSCLK);
 			if (NULL != i2c_clock) {
@@ -93,7 +99,7 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s 
 		} else {
 			return MAL_ERROR_CLOCK_ERROR;
 		}
-	} else if (MAL_HSPEC_I2C_2 == init->interface) {
+	} else if (MAL_I2C_2 == init->interface) {
 		if (NULL != i2c_clock) {
 			*i2c_clock = clocks.PCLK_Frequency;
 		}
@@ -109,12 +115,12 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_clock_init(mal_hspec_i2c_init_s 
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s *init, uint32_t timing) {
+static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_i2c_init_s *init, uint32_t timing) {
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->scl_gpio->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->sda_gpio->port), ENABLE);
 	// Enable I2C clock
-	if (MAL_HSPEC_I2C_1 == init->interface) {
+	if (MAL_I2C_1 == init->interface) {
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1, ENABLE);
 	} else {
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C2, ENABLE);
@@ -122,7 +128,7 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s
 	// Select correct I2C pin functions
 	mal_hspec_stm32f0_af_e scl_af;
 	mal_hspec_stm32f0_af_e sda_af;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
+	if (MAL_I2C_1 == init->interface) {
 		scl_af = MAL_HSPEC_STM32F0_AF_I2C1_SCL;
 		sda_af = MAL_HSPEC_STM32F0_AF_I2C1_SDA;
 	} else {
@@ -156,7 +162,7 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s
 	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->sda_gpio->port), &gpio_init);
 	// Get I2C typedef
 	I2C_TypeDef *i2c_typedef;
-	if (MAL_HSPEC_I2C_1 == init->interface) {
+	if (MAL_I2C_1 == init->interface) {
 		i2c_typedef = I2C1;
 	} else {
 		i2c_typedef = I2C2;
@@ -181,7 +187,7 @@ static mal_error_e mal_hspec_stm32f0_i2c_master_common_init(mal_hspec_i2c_init_s
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
+mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	uint64_t i2c_clock;
 	mal_error_e result;
 	// Initialize I2C clock
@@ -260,7 +266,7 @@ mal_error_e mal_hspec_stm32f0_i2c_master_init(mal_hspec_i2c_init_s *init) {
 	return mal_hspec_stm32f0_i2c_master_common_init(init, timing);
 }
 
-mal_error_e mal_hspec_stm32f0_i2c_master_direct_init(mal_hspec_i2c_init_s *init, const void *direct_init) {
+mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init) {
 	mal_error_e result;
 	// Read direct init
 	mal_hspec_stm32f0_i2c_direct_init_s *stm_direct_init;
@@ -274,12 +280,12 @@ mal_error_e mal_hspec_stm32f0_i2c_master_direct_init(mal_hspec_i2c_init_s *init,
 	return mal_hspec_stm32f0_i2c_master_common_init(init, stm_direct_init->timing);
 }
 
-mal_error_e mal_hspec_stm32f0_i2c_transfer(mal_hspec_i2c_e interface, mal_hspec_i2c_msg_s *msg) {
+mal_error_e mal_i2c_transfer(mal_i2c_e interface, mal_i2c_msg_s *msg) {
 	i2c_handle_s *i2c_handle;
 	// Fetch I2C handle
-	if (MAL_HSPEC_I2C_1 == interface) {
+	if (MAL_I2C_1 == interface) {
 		i2c_handle = &i2c_handle_1;
-	} else if (MAL_HSPEC_I2C_2 == interface) {
+	} else if (MAL_I2C_2 == interface) {
 		i2c_handle = &i2c_handle_2;
 	} else {
 		return MAL_ERROR_HARDWARE_INVALID;
@@ -304,14 +310,14 @@ void i2c_start_transfer(i2c_handle_s *i2c_handle) {
 	i2c_handle->data_ptr = 0;
 	// Start transfer
 	uint32_t transfer_type = I2C_Generate_Start_Read;
-	if (MAL_HSPEC_I2C_WRITE == i2c_handle->cmd) {
+	if (MAL_I2C_WRITE == i2c_handle->cmd) {
 		transfer_type = I2C_Generate_Start_Write;
 	}
 	I2C_TransferHandling(i2c_handle->stm_handle, i2c_handle->msg->packet.address << 1, i2c_handle->msg->packet.packet_size, I2C_SoftEnd_Mode, transfer_type);
 }
 
 void I2C1_IRQHandler(void) {
-	if (MAL_HSPEC_I2C_WRITE == i2c_handle_1.cmd) {
+	if (MAL_I2C_WRITE == i2c_handle_1.cmd) {
 		i2c_interrupt_transmit_handler(&i2c_handle_1);
 	} else {
 		i2c_interrupt_receive_handler(&i2c_handle_1);
@@ -319,7 +325,7 @@ void I2C1_IRQHandler(void) {
 }
 
 void I2C2_IRQHandler(void) {
-	if (MAL_HSPEC_I2C_WRITE == i2c_handle_2.cmd) {
+	if (MAL_I2C_WRITE == i2c_handle_2.cmd) {
 		i2c_interrupt_transmit_handler(&i2c_handle_2);
 	} else {
 		i2c_interrupt_receive_handler(&i2c_handle_2);
@@ -334,21 +340,21 @@ void i2c_interrupt_transmit_handler(i2c_handle_s *handle) {
 		// Clear interrupt
 		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_NACKF);
 		if (handle->state == I2C_STATE_TRANSMITTING) {
-			mal_hspec_i2c_result_e result;
+			mal_i2c_result_e result;
 			// Check if write is complete
 			if (handle->data_ptr >= handle->msg->packet.packet_size) {
 				// Change state
-				result = MAL_HSPEC_I2C_NACK_COMPLETE;
+				result = MAL_I2C_NACK_COMPLETE;
 			} else {
 				// Transfer is incomplete
-				result = MAL_HSPEC_I2C_NACK_INCOMPLETE;
+				result = MAL_I2C_NACK_INCOMPLETE;
 			}
 			handle->msg->callback(handle->interface, &handle->msg->packet, result, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		} else {
 			// Unknown sate for nack
-			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_HSPEC_I2C_NACK_INCOMPLETE, &handle->msg);
+			handle->msg->callback(handle->interface, &handle->msg->packet, MAL_I2C_NACK_INCOMPLETE, &handle->msg);
 			// Next state
 			handle->state = I2C_STATE_WAIT_STOP;
 		}
@@ -457,9 +463,9 @@ void i2c_common(i2c_handle_s *handle) {
 		// Clear interrupt
 		I2C_ClearITPendingBit(handle->stm_handle, I2C_IT_STOPF);
 		// Notify
-		mal_hspec_i2c_result_e i2c_result = MAL_HSPEC_I2C_SUCCESS;
+		mal_i2c_result_e i2c_result = MAL_I2C_SUCCESS;
 		if (I2C_STATE_WAIT_STOP != handle->state) {
-			i2c_result = MAL_HSPEC_I2C_BUS_ERROR;
+			i2c_result = MAL_I2C_BUS_ERROR;
 		}
 		handle->msg->callback(handle->interface, &handle->msg->packet, i2c_result, &handle->msg);
 		// Check if a new message can be started
@@ -471,19 +477,25 @@ void i2c_common(i2c_handle_s *handle) {
 	}
 }
 
-IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_hspec_i2c_e interface) {
-	if (MAL_HSPEC_I2C_1 == interface) {
+IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_i2c_e interface) {
+	if (MAL_I2C_1 == interface) {
 		return I2C1_IRQn;
 	} else {
 		return I2C2_IRQn;
 	}
 }
 
-bool mal_hspec_stm32f0_i2c_disable_interrupt(mal_hspec_i2c_e interface) {
+MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_e interface) {
 	IRQn_Type irq = mal_hspec_stm32f0_i2c_get_irq(interface);
 	bool active = NVIC_GetActive(irq);
 	NVIC_DisableIRQ(irq);
 	__DSB();
 	__ISB();
 	return active;
+}
+
+MAL_DEFS_INLINE void mal_i2c_enable_interrupt(mal_i2c_e interface, bool active) {
+    if (active) {
+        NVIC_EnableIRQ(mal_hspec_stm32f0_i2c_get_irq(interface));
+    }
 }

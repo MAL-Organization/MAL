@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MAL: C:/Users/olivi/Documents/MAL/library/src/i2c/mal_i2c_buffer.h File Reference</title>
+<title>MAL: src/i2c/mal_i2c_buffer.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -29,7 +29,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">MAL
-   &#160;<span id="projectnumber">1.0.16-SNAPSHOT</span>
+   &#160;<span id="projectnumber">2.0.0-SNAPSHOT</span>
    </div>
    <div id="projectbrief">This library has for goal to abstract the MCU from your code allowing you to abstract the drivers.</div>
   </td>
@@ -113,9 +113,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gac705ea4178218cd16f19b45ebad0a7f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#gac705ea4178218cd16f19b45ebad0a7f0">mal_i2c_buffer_direct_init</a> (<a class="el" href="structmal__i2c__buffer__init__s.html">mal_i2c_buffer_init_s</a> *init, <a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, const void *direct_init)</td></tr>
 <tr class="memdesc:gac705ea4178218cd16f19b45ebad0a7f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize an I2C buffer and an I2C interface using direct initialization.  <a href="group___i2_c.html#gac705ea4178218cd16f19b45ebad0a7f0">More...</a><br /></td></tr>
 <tr class="separator:gac705ea4178218cd16f19b45ebad0a7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga094b5f730da24044674227a562971a5e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga094b5f730da24044674227a562971a5e">mal_i2c_buffer_write</a> (<a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, <a class="el" href="structmal__hspec__i2c__msg__s.html">mal_hspec_i2c_msg_s</a> *msg)</td></tr>
-<tr class="memdesc:ga094b5f730da24044674227a562971a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to the buffer.  <a href="group___i2_c.html#ga094b5f730da24044674227a562971a5e">More...</a><br /></td></tr>
-<tr class="separator:ga094b5f730da24044674227a562971a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___standard.html#gaec69af0d2547463451f43d457df61195">mal_error_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i2_c.html#ga0b1cd6668395d2b0588c0eb1160e1a3f">mal_i2c_buffer_write</a> (<a class="el" href="structmal__i2c__buffer__handle__s.html">mal_i2c_buffer_handle_s</a> *handle, <a class="el" href="structmal__i2c__msg__s.html">mal_i2c_msg_s</a> *msg)</td></tr>
+<tr class="memdesc:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message to the buffer.  <a href="group___i2_c.html#ga0b1cd6668395d2b0588c0eb1160e1a3f">More...</a><br /></td></tr>
+<tr class="separator:ga0b1cd6668395d2b0588c0eb1160e1a3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions to queue I2C messages for an I2C interface. This is useful when multiple modules will use the same I2C interface. </p>

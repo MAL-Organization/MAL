@@ -81,7 +81,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/stm/stm32f0/stm32f030r8|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/mingw|ucunit|test-stm|test-src|test-mal|test-cmsis|system" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/hspec/stm/stm32f0/stm32f072/stm32f030rc|src/hspec/stm/stm32f0/stm32f072/stm32f051r8|src/hspec/stm/stm32f0/stm32f072/stm32f072rb|src/hspec/stm/stm32f0/stm32f030r8|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/mingw|ucunit|test-stm|test-src|test-mal|test-cmsis|system" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test-cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test-mal"/>
@@ -152,11 +152,11 @@
 									<listOptionValue builtIn="false" value="MAL_STM32F072CB"/>
 									<listOptionValue builtIn="false" value="STM32F072"/>
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
-									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F)72CB&quot;'"/>
-									<listOptionValue builtIn="false" value="HSE_VALUE=16000000"/>
+									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=16000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
-									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
-									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000000ULL"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_SYSTEM_CLK_SRC_INTERNAL"/>
 									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.849568307" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
@@ -180,10 +180,10 @@
 									<listOptionValue builtIn="false" value="STM32F072"/>
 									<listOptionValue builtIn="false" value="USE_STDPERIPH_DRIVER"/>
 									<listOptionValue builtIn="false" value="MAL_TEST_RUN_NAME='&quot;STM32F072CB&quot;'"/>
-									<listOptionValue builtIn="false" value="HSE_VALUE=16000000"/>
+									<listOptionValue builtIn="false" value="HSE_VALUE=16000000000ULL"/>
 									<listOptionValue builtIn="false" value="MAL_EXTERNAL_CLOCK_FREQUENCY=HSE_VALUE"/>
-									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000"/>
-									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_HSPEC_SYSTEM_CLK_SRC_EXTERNAL"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK=48000000000ULL"/>
+									<listOptionValue builtIn="false" value="MAL_TARGET_SYSTEM_CLOCK_SRC=MAL_SYSTEM_CLK_SRC_INTERNAL"/>
 									<listOptionValue builtIn="false" value="MAL_SEMIHOSTING"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.724366192" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
@@ -224,7 +224,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/hspec/stm/stm32f0/stm32f030r8|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/mingw|ucunit|test-stm|test-src|test-mal|test-cmsis|system" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/hspec/stm/stm32f0/stm32f072/stm32f030rc|src/hspec/stm/stm32f0/stm32f072/stm32f051r8|src/hspec/stm/stm32f0/stm32f072/stm32f072rb|src/hspec/stm/stm32f0/stm32f030r8|src/hspec/stm/stm32f0/stm32f051r8|src/hspec/mingw|ucunit|test-stm|test-src|test-mal|test-cmsis|system" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="system"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test-cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="test-mal"/>
@@ -235,6 +235,7 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+			<storageModule moduleId="ilg.gnuarmeclipse.managedbuild.packs"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">

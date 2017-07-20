@@ -24,16 +24,22 @@
  */
 
 #include "mal_flash.h"
-#include "hspec/mal_hspec.h"
 
-mal_error_e mal_flash_erase_page(uint32_t page) {
+mal_error_e mal_flash_is_page_valid(uint32_t page) {
+    if (page >= mal_flash_get_page_count()) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_flash_safe_erase_page(uint32_t page) {
 	mal_error_e result;
 	// Make sure flash page is valid
-	result = mal_hspec_flash_is_page_valid(page);
+	result = mal_flash_is_page_valid(page);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Erase page
-	return mal_hspec_flash_erase_page(page);
+	return mal_flash_erase_page(page);
 }
 

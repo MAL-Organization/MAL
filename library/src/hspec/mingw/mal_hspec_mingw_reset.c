@@ -26,13 +26,13 @@
 #include "mal_hspec_mingw_reset.h"
 
 static bool reset_requested = false;
-static mal_hspec_reset_source_e reset_source;
+static mal_reset_source_e reset_source;
 
-mal_hspec_reset_source_e mal_hspec_mingw_reset_handle_reset_source(void) {
+mal_reset_source_e mal_reset_get_source_unmanaged(void) {
 	return reset_source;
 }
 
-void mal_hspec_mingw_reset_mcu(void) {
+void mal_reset_mcu(void) {
 	reset_requested = true;
 }
 
@@ -44,6 +44,6 @@ void mal_hspec_mingw_reset_clear_request(void) {
 	reset_requested = false;
 }
 
-void mal_hspec_mingw_reset_set_reset_source(mal_hspec_reset_source_e source) {
+void mal_hspec_mingw_reset_set_reset_source(mal_reset_source_e source) {
 	reset_source = source;
 }

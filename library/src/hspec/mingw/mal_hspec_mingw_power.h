@@ -26,11 +26,8 @@
 #ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
 #define HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
 
-#include "std/mal_error.h"
-#include "hspec/mal_hspec_cmn.h"
+#include "power/mal_power.h"
 
-mal_error_e mal_hspec_mingw_power_get_rail_voltage(mal_hspec_power_rail_e rail, mal_volts_t *value);
-
-void mal_hspec_mingw_power_set_rail_voltage(mal_hspec_power_rail_e rail, mal_volts_t value);
+void mal_hspec_mingw_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_ */

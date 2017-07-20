@@ -26,10 +26,8 @@
 #include <stdio.h>
 
 #include "uCUnit-v1.0.h"
-#include "timer/mal_timer.h"
-#include "hspec/test_mal_hspec.h"
-#include "hspec/mal_hspec.h"
 #include "utils/char_buffer.h"
+#include "timer/test_mal_timer.h"
 
 /**
  * Since not all implementations of init capture may be able to test the
@@ -37,9 +35,9 @@
  * tests test this part. But since the timer is initialized in the hardware
  * abstracted section, we must forward test info.
  */
-static volatile test_mal_hspec_timer_input_capture_t input_capture_info;
+static volatile test_mal_timer_input_capture_t input_capture_info;
 
-static mal_error_e input_capture_callback(mal_hspec_timer_e timer, uint64_t count) {
+static mal_error_e input_capture_callback(mal_timer_e timer, uint64_t count) {
 	input_capture_info.timer = timer;
 	input_capture_info.count = count;
 	return MAL_ERROR_OK;
@@ -52,13 +50,13 @@ static mal_error_e input_capture_callback(mal_hspec_timer_e timer, uint64_t coun
 static void test_mal_timer_init_tick_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_init_tick_1khz");
 
 	// Get timers to test
-	result = mal_hspec_get_valid_timers(&timers, &size);
+	result = mal_timer_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
 	// Prepare test frequency of 1kHz and delta of 0Hz
@@ -70,11 +68,12 @@ static void test_mal_timer_init_tick_1khz(void) {
 		for (i = 0; i < size; i++) {
 			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
 			UCUNIT_WriteString(char_buffer);
-			mal_hspec_timer_e test_handle;
-			result = mal_timer_init_tick(timers[i],
-										 test_frequency,
-										 test_delta,
-										 &test_handle);
+			mal_timer_e test_handle;
+			mal_timer_init_tick_s init;
+			init.timer = timers[i];
+			init.frequency = test_frequency;
+			init.delta = test_delta;
+			result = mal_timer_init_tick(&init, &test_handle);
 			// Check result
 			UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 			// Check timer handle
@@ -96,13 +95,13 @@ static void test_mal_timer_init_tick_1khz(void) {
 static void test_mal_timer_direct_init_tick_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_direct_init_tick_1khz");
 
 	// Get timers to test
-	result = mal_hspec_get_valid_timers(&timers, &size);
+	result = mal_timer_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
 	// Prepare test frequency of 1kHz and delta of 0Hz
@@ -118,12 +117,12 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 			const void *direct_init;
 			test_mal_hspec_timer_get_1khz_direct_init(timers[i], &direct_init);
 			// Initialize timer
-			mal_hspec_timer_e test_handle;
-			result = mal_timer_direct_init_tick(timers[i],
-												test_frequency,
-												test_delta,
-												direct_init,
-												&test_handle);
+			mal_timer_e test_handle;
+			mal_timer_init_tick_s init;
+			init.timer = timers[i];
+			init.frequency = test_frequency;
+			init.delta = test_delta;
+			result = mal_timer_direct_init_tick(&init, direct_init, &test_handle);
 			// Check result
 			UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 			// Check timer handle
@@ -158,13 +157,13 @@ static void test_mal_timer_direct_init_tick_1khz(void) {
 static void test_mal_timer_count_1khz(void) {
 	uint8_t i;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_count_1khz");
 
 	// Get timers to test
-	result = mal_hspec_get_valid_timers(&timers, &size);
+	result = mal_timer_get_valid_timers(&timers, &size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
 	// Prepare test frequency of 1kHz and delta of 0Hz
@@ -175,7 +174,7 @@ static void test_mal_timer_count_1khz(void) {
 		for (i = 0; i < size; i++) {
 			sprintf(char_buffer, "Testing timer %i\n", timers[i] + 1);
 			UCUNIT_WriteString(char_buffer);
-			mal_hspec_timer_e test_handle;
+			mal_timer_e test_handle;
 			result = mal_timer_init_count(timers[i],
 										  test_frequency,
 										  &test_handle);
@@ -223,15 +222,15 @@ static void test_mal_timer_pwm_1khz(void) {
 	uint8_t timer_index;
 	uint8_t io_index;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t timers_size;
-	const mal_hspec_gpio_s *ios;
+	const mal_gpio_s *ios;
 	uint8_t ios_size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_pwm_1khz");
 
 	// Get timers to test
-	result = mal_hspec_get_valid_timers(&timers, &timers_size);
+	result = mal_timer_get_valid_timers(&timers, &timers_size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
 	// Prepare test frequency of 1kHz and delta of 0Hz
@@ -243,7 +242,7 @@ static void test_mal_timer_pwm_1khz(void) {
 	if (MAL_ERROR_OK == result) {
 		for (timer_index = 0; timer_index < timers_size; timer_index++) {
 			// Fetch IOs
-			result = mal_hspec_get_valid_pwm_ios(timers[timer_index], &ios, &ios_size);
+			result = test_mal_timer_get_valid_pwm_ios(timers[timer_index], &ios, &ios_size);
 			if (MAL_ERROR_OK != result) {
 				continue;
 			}
@@ -255,7 +254,7 @@ static void test_mal_timer_pwm_1khz(void) {
 						ios[io_index].port,
 						ios[io_index].pin);
 				UCUNIT_WriteString(char_buffer);
-				mal_hspec_timer_pwm_init_s pwm_init;
+				mal_timer_pwm_init_s pwm_init;
 				pwm_init.frequency = test_frequency;
 				pwm_init.delta = test_delta;
 				pwm_init.timer = timers[timer_index];
@@ -291,15 +290,15 @@ static void test_mal_timer_input_capture_1khz(void) {
 	uint8_t timer_index;
 	uint8_t io_index;
 	mal_error_e result;
-	const mal_hspec_timer_e *timers;
+	const mal_timer_e *timers;
 	uint8_t timers_size;
-	const mal_hspec_gpio_s *ios;
+	const mal_gpio_s *ios;
 	uint8_t ios_size;
 
 	UCUNIT_TestcaseBegin("test_mal_timer_input_capture_1khz");
 
 	// Get timers to test
-	result = mal_hspec_get_valid_timers(&timers, &timers_size);
+	result = mal_timer_get_valid_timers(&timers, &timers_size);
 	UCUNIT_CheckIsEqual(MAL_ERROR_OK, result);
 
 	// Prepare test frequency of 1kHz and delta of 0Hz
@@ -321,12 +320,12 @@ static void test_mal_timer_input_capture_1khz(void) {
 						ios[io_index].port,
 						ios[io_index].pin);
 				UCUNIT_WriteString(char_buffer);
-				mal_hspec_timer_intput_capture_init_s ic_init;
+				mal_timer_intput_capture_init_s ic_init;
 				ic_init.timer = timers[timer_index];
 				ic_init.input_io = &ios[io_index];
 				ic_init.frequency = test_frequency;
 				ic_init.input_divider = 1;
-				ic_init.input_event = MAL_HSPEC_TIMER_INPUT_BOTH;
+				ic_init.input_event = MAL_TIMER_INPUT_BOTH;
 				ic_init.callback = &input_capture_callback;
 				result = mal_timer_init_input_capture(&ic_init);
 				// Check result

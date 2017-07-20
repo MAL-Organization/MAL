@@ -23,8 +23,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_clock.h"
+#include "clock/mal_clock.h"
 
-mal_error_e mal_hspec_mingw_set_system_clk(const mal_hspec_system_clk_s *clk) {
+mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 	return MAL_ERROR_OK;
 }

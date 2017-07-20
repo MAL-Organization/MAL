@@ -23,7 +23,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_adc.h"
+#include "adc/mal_adc.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
 #include "stm32f0/stm32f0xx_gpio.h"
@@ -32,11 +32,11 @@
 #include "std/mal_stdlib.h"
 
 static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resolution);
-static void start_adc_conversion(mal_hspec_adc_e adc);
+static void start_adc_conversion(mal_adc_e adc);
 
-static mal_hspec_adc_read_callback_t adc_callbacks[MAL_HSPEC_ADC_SIZE];
+static mal_adc_read_callback_t adc_callbacks[MAL_ADC_SIZE];
 
-mal_error_e mal_hspec_stm32f0_adc_init(mal_hspec_adc_init_s *init) {
+mal_error_e mal_adc_init(mal_adc_init_s *init) {
 	static bool initialised = false;
 	ADC_InitTypeDef adc_init;
 	mal_error_e result;
@@ -108,9 +108,12 @@ static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resoluti
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value) {
+mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value) {
 	// Disable interrupt
-	NVIC_DisableIRQ(ADC1_COMP_IRQn);
+    // 12 equates to ADC_IRQ. However, the name of the constant changes based
+    // on the MCU because it is multiplex with other interrupts in some of them. It
+    // is simpler to use the constant directly.
+	NVIC_DisableIRQ(12);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, DISABLE);
 	// Start conversion
 	start_adc_conversion(adc);
@@ -122,7 +125,7 @@ mal_error_e mal_hspec_stm32f0_adc_read(mal_hspec_adc_e adc, uint64_t *value) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_adc_async_read(mal_hspec_adc_e adc, mal_hspec_adc_read_callback_t callback) {
+mal_error_e mal_adc_async_read(mal_adc_e adc, mal_adc_read_callback_t callback) {
 	NVIC_InitTypeDef nvic_init;
 	// Save callback
 	adc_callbacks[adc] = callback;
@@ -138,7 +141,7 @@ mal_error_e mal_hspec_stm32f0_adc_async_read(mal_hspec_adc_e adc, mal_hspec_adc_
 	return MAL_ERROR_OK;
 }
 
-static void start_adc_conversion(mal_hspec_adc_e adc) {
+static void start_adc_conversion(mal_adc_e adc) {
 	// Clear ADC configuration
 	ADC1->CHSELR = 0;
 	// Configure channel
@@ -149,7 +152,7 @@ static void start_adc_conversion(mal_hspec_adc_e adc) {
 	ADC_StartOfConversion(ADC1);
 }
 
-mal_error_e mal_hspec_stm32f0_adc_resolution(mal_hspec_adc_e adc, uint8_t *resolution) {
+mal_error_e mal_adc_resolution(mal_adc_e adc, uint8_t *resolution) {
 	switch (ADC1->CFGR1 & ADC_CFGR1_RES) {
 	case ADC_Resolution_12b:
 		*resolution = 12;
@@ -171,68 +174,68 @@ mal_error_e mal_hspec_stm32f0_adc_resolution(mal_hspec_adc_e adc, uint8_t *resol
 void ADC1_COMP_IRQHandler(void) {
 	ADC_ClearITPendingBit(ADC1, ADC_IT_EOC);
 	// Get ADC
-	mal_hspec_adc_e adc;
+	mal_adc_e adc;
 	switch (ADC1->CHSELR) {
 		case 0x1:
-			adc = MAL_HSPEC_ADC_0;
+			adc = MAL_ADC_0;
 			break;
 		case 0x2:
-			adc = MAL_HSPEC_ADC_1;
+			adc = MAL_ADC_1;
 			break;
 		case 0x4:
-			adc = MAL_HSPEC_ADC_2;
+			adc = MAL_ADC_2;
 			break;
 		case 0x8:
-			adc = MAL_HSPEC_ADC_3;
+			adc = MAL_ADC_3;
 			break;
 		case 0x10:
-			adc = MAL_HSPEC_ADC_4;
+			adc = MAL_ADC_4;
 			break;
 		case 0x20:
-			adc = MAL_HSPEC_ADC_5;
+			adc = MAL_ADC_5;
 			break;
 		case 0x40:
-			adc = MAL_HSPEC_ADC_6;
+			adc = MAL_ADC_6;
 			break;
 		case 0x80:
-			adc = MAL_HSPEC_ADC_7;
+			adc = MAL_ADC_7;
 			break;
 		case 0x100:
-			adc = MAL_HSPEC_ADC_8;
+			adc = MAL_ADC_8;
 			break;
 		case 0x200:
-			adc = MAL_HSPEC_ADC_9;
+			adc = MAL_ADC_9;
 			break;
 		case 0x400:
-			adc = MAL_HSPEC_ADC_10;
+			adc = MAL_ADC_10;
 			break;
 		case 0x800:
-			adc = MAL_HSPEC_ADC_11;
+			adc = MAL_ADC_11;
 			break;
 		case 0x1000:
-			adc = MAL_HSPEC_ADC_12;
+			adc = MAL_ADC_12;
 			break;
 		case 0x2000:
-			adc = MAL_HSPEC_ADC_13;
+			adc = MAL_ADC_13;
 			break;
 		case 0x4000:
-			adc = MAL_HSPEC_ADC_14;
+			adc = MAL_ADC_14;
 			break;
 		case 0x8000:
-			adc = MAL_HSPEC_ADC_15;
+			adc = MAL_ADC_15;
 			break;
 		default:
 			return;
 	}
 	// Execute callback
-	mal_hspec_adc_read_callback_t cb = adc_callbacks[adc];
+	mal_adc_read_callback_t cb = adc_callbacks[adc];
 	adc_callbacks[adc] = NULL;
 	if (cb != NULL) {
 		cb(adc, ADC_GetConversionValue(ADC1));
 	}
 }
 
-bool mal_hspec_stm32f0_disable_adc_interrupt(mal_hspec_adc_e adc) {
+MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc) {
 	// 12 equates to ADC_IRQ. However, the name of the constant changes based
 	// on the MCU because it is multiplex with other interrupts in some of them. It
 	// is simpler to use the constant directly.
@@ -245,24 +248,30 @@ bool mal_hspec_stm32f0_disable_adc_interrupt(mal_hspec_adc_e adc) {
 	return active;
 }
 
-mal_error_e mal_hspec_stm32f0_adc_maximum_resolution(mal_hspec_adc_e adc, uint8_t *resolution) {
+MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active) {
+	if (active) {
+		NVIC_EnableIRQ(12);
+	}
+}
+
+mal_error_e mal_adc_maximum_resolution(mal_adc_e adc, uint8_t *resolution) {
 	switch (adc) {
-		case MAL_HSPEC_ADC_0:
-		case MAL_HSPEC_ADC_1:
-		case MAL_HSPEC_ADC_2:
-		case MAL_HSPEC_ADC_3:
-		case MAL_HSPEC_ADC_4:
-		case MAL_HSPEC_ADC_5:
-		case MAL_HSPEC_ADC_6:
-		case MAL_HSPEC_ADC_7:
-		case MAL_HSPEC_ADC_8:
-		case MAL_HSPEC_ADC_9:
-		case MAL_HSPEC_ADC_10:
-		case MAL_HSPEC_ADC_11:
-		case MAL_HSPEC_ADC_12:
-		case MAL_HSPEC_ADC_13:
-		case MAL_HSPEC_ADC_14:
-		case MAL_HSPEC_ADC_15:
+		case MAL_ADC_0:
+		case MAL_ADC_1:
+		case MAL_ADC_2:
+		case MAL_ADC_3:
+		case MAL_ADC_4:
+		case MAL_ADC_5:
+		case MAL_ADC_6:
+		case MAL_ADC_7:
+		case MAL_ADC_8:
+		case MAL_ADC_9:
+		case MAL_ADC_10:
+		case MAL_ADC_11:
+		case MAL_ADC_12:
+		case MAL_ADC_13:
+		case MAL_ADC_14:
+		case MAL_ADC_15:
 			*resolution = 12;
 			return MAL_ERROR_OK;
 		default:

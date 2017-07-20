@@ -22,6 +22,8 @@
 #ifndef STD_MAL_TYPES_H_
 #define STD_MAL_TYPES_H_
 
+#include "std/mal_stdint.h"
+
 /**
  * @defgroup TYPES
  * @brief @copybrief mal_types.h

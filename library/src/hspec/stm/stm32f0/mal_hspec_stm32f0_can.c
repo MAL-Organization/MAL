@@ -26,6 +26,9 @@
 #include "mal_hspec_stm32f0_can.h"
 #include "std/mal_stdlib.h"
 #include "std/mal_math.h"
+#include "can/mal_can.h"
+#include "mal_hspec_stm32f0_cmn.h"
+#include "cm0/core_cm0.h"
 
 #define CAN_FILTER_BANKS_SIZE	14
 #define CAN_FILTER_STD_SIZE		2
@@ -48,27 +51,27 @@ typedef union {
 typedef struct {
 	can_filter_u filter;
 	uint8_t filter_count;
-	mal_hspec_can_id_type_e type;
+	mal_can_id_type_e type;
 	bool is_active;
 	uint8_t fifo;
 } can_filter_bank_s;
 
-static mal_error_e mal_hspec_stm32f0_can_init_common(mal_hspec_can_init_s *init);
+static mal_error_e mal_hspec_stm32f0_can_init_common(mal_can_init_s *init);
 
 static void can_read_fifo(uint8_t fifo);
 
-static void can_transmit_msg(mal_hspec_can_msg_s *msg);
+static void can_transmit_msg(mal_can_msg_s *msg);
 
 static uint32_t can_extended_fr_format(uint32_t id);
 
 static uint16_t can_standard_fr_format(uint16_t id);
 
-static mal_hspec_can_tx_callback_t can_tx_callback = NULL;
-static mal_hspec_can_rx_callback_t can_rx_callback = NULL;
+static mal_can_tx_callback_t can_tx_callback = NULL;
+static mal_can_rx_callback_t can_rx_callback = NULL;
 static can_filter_bank_s can_filter_banks[CAN_FILTER_BANKS_SIZE];
 static volatile bool interface_active = false;
 
-static mal_error_e mal_hspec_stm32f0_can_init_common(mal_hspec_can_init_s *init) {
+static mal_error_e mal_hspec_stm32f0_can_init_common(mal_can_init_s *init) {
 	// Enable GPIO clocks
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->tx_gpio->port), ENABLE);
 	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->rx_gpio->port), ENABLE);
@@ -105,7 +108,7 @@ static mal_error_e mal_hspec_stm32f0_can_init_common(mal_hspec_can_init_s *init)
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
+mal_error_e mal_can_init(mal_can_init_s *init) {
 	mal_error_e result;
 	// Initialize common part of CAN
 	result = mal_hspec_stm32f0_can_init_common(init);
@@ -198,7 +201,7 @@ mal_error_e mal_hspec_stm32f0_can_init(mal_hspec_can_init_s *init) {
 	CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
 }
 
-mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const void *direct_init) {
+mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init) {
 	mal_error_e result;
 	// Read direct init
 	mal_hspec_stm32f0_can_direct_init_s *stm_direct_init;
@@ -235,9 +238,9 @@ mal_error_e mal_hspec_stm32f0_can_direct_init(mal_hspec_can_init_s *init, const 
 	return MAL_ERROR_OK;
 }
 
-void mal_hspec_stm32f0_can_deinit(mal_hspec_can_e interface) {
+void mal_can_deinit(mal_can_e interface) {
 	// Disable interrupt
-	mal_hspec_stm32f0_disable_can_interrupt(interface);
+	mal_can_disable_interrupt(interface);
 	// Uninitialize interface
 	CAN_DeInit(CAN);
 }
@@ -246,8 +249,8 @@ void CEC_CAN_IRQHandler(void) {
 	// Check if transmit is empty
 	if (CAN_GetITStatus(CAN, CAN_IT_TME) == SET) {
 		if (can_tx_callback != NULL) {
-			mal_hspec_can_msg_s msg;
-			if (MAL_ERROR_OK == can_tx_callback(MAL_HSPEC_CAN_1, &msg)) {
+			mal_can_msg_s msg;
+			if (MAL_ERROR_OK == can_tx_callback(MAL_CAN_1, &msg)) {
 				can_transmit_msg(&msg);
 			} else {
 				CAN_ITConfig(CAN, CAN_IT_TME, DISABLE);
@@ -272,28 +275,28 @@ static void can_read_fifo(uint8_t fifo) {
 	CanRxMsg can_msg;
 	CAN_Receive(CAN, fifo, &can_msg);
 	// Transfer msg
-	mal_hspec_can_msg_s msg;
+	mal_can_msg_s msg;
 	if (CAN_Id_Standard == can_msg.IDE) {
 		msg.id = can_msg.StdId;
-		msg.id_type = MAL_HSPEC_CAN_ID_STANDARD;
+		msg.id_type = MAL_CAN_ID_STANDARD;
 	} else {
 		msg.id = can_msg.ExtId;
-		msg.id_type = MAL_HSPEC_CAN_ID_EXTENDED;
+		msg.id_type = MAL_CAN_ID_EXTENDED;
 	}
 	for (msg.size = 0; msg.size < can_msg.DLC; msg.size++) {
 		msg.data[msg.size] = can_msg.Data[msg.size];
 	}
 	msg.size = can_msg.DLC;
-	can_rx_callback(MAL_HSPEC_CAN_1, &msg);
+	can_rx_callback(MAL_CAN_1, &msg);
 }
 
-mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_can_msg_s *msg) {
-	if (MAL_HSPEC_CAN_1 != interface) {
+mal_error_e mal_can_transmit(mal_can_e interface, mal_can_msg_s *msg) {
+	if (MAL_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	mal_error_e result = MAL_ERROR_OK;;
 	// Disable interrupts to get true status of TX queue
-	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_can_disable_interrupt(interface);
 	// Check if queue is empty
 	if (!interface_active) {
 		interface_active = true;
@@ -303,14 +306,14 @@ mal_error_e mal_hspec_stm32f0_can_transmit(mal_hspec_can_e interface, mal_hspec_
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(interface, active);
+	mal_can_enable_interrupt(interface, active);
 
 	return result;
 }
 
-static void can_transmit_msg(mal_hspec_can_msg_s *msg) {
+static void can_transmit_msg(mal_can_msg_s *msg) {
 	CanTxMsg can_msg;
-	if (MAL_HSPEC_CAN_ID_STANDARD == msg->id_type) {
+	if (MAL_CAN_ID_STANDARD == msg->id_type) {
 		can_msg.StdId = msg->id;
 		can_msg.IDE = CAN_Id_Standard;
 	} else {
@@ -325,14 +328,14 @@ static void can_transmit_msg(mal_hspec_can_msg_s *msg) {
 	CAN_Transmit(CAN, &can_msg);
 }
 
-mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+mal_error_e mal_can_add_filter(mal_can_e interface, mal_can_filter_s *filter) {
 	static uint16_t fifo = CAN_Filter_FIFO0;
-	if (MAL_HSPEC_CAN_1 != interface) {
+	if (MAL_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	mal_error_e result = MAL_ERROR_OK;
 	// Disable interrupts
-	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_can_disable_interrupt(interface);
 	// Find a free filter
 	uint8_t filter_index;
 	bool found = false;
@@ -344,7 +347,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		}
 		// If the ID is standard, it is possible to resuse that filter if it
 		// has an available slot
-		if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type && MAL_HSPEC_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
+		if (MAL_CAN_ID_STANDARD == filter->id_type && MAL_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
 			if (can_filter_banks[filter_index].filter_count < CAN_FILTER_STD_SIZE) {
 				found = true;
 				break;
@@ -355,9 +358,9 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		result =  MAL_ERROR_HARDWARE_UNAVAILABLE;
 	} else {
 		// Initialise filter array
-		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+		if (MAL_CAN_ID_EXTENDED == filter->id_type) {
 			can_filter_banks[filter_index].is_active = true;
-			can_filter_banks[filter_index].type = MAL_HSPEC_CAN_ID_EXTENDED;
+			can_filter_banks[filter_index].type = MAL_CAN_ID_EXTENDED;
 			can_filter_banks[filter_index].filter.ext.id = can_extended_fr_format(filter->id);
 			can_filter_banks[filter_index].filter.ext.mask = can_extended_fr_format(filter->mask);
 		} else {
@@ -388,7 +391,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		filter_init.CAN_FilterMaskIdLow = can_filter_banks[filter_index].filter.std.mask[0];
 		filter_init.CAN_FilterMode = CAN_FilterMode_IdMask;
 		filter_init.CAN_FilterNumber = filter_index;
-		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+		if (MAL_CAN_ID_EXTENDED == filter->id_type) {
 			filter_init.CAN_FilterScale = CAN_FilterScale_32bit;
 		} else {
 			filter_init.CAN_FilterScale = CAN_FilterScale_16bit;
@@ -402,7 +405,7 @@ mal_error_e mal_hspec_stm32f0_can_add_filter(mal_hspec_can_e interface, mal_hspe
 		}
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1, active);
+	mal_can_enable_interrupt(MAL_CAN_1, active);
 
 	return result;
 }
@@ -435,14 +438,14 @@ static uint16_t can_standard_fr_format(uint16_t id) {
 	return result;
 }
 
-mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_hspec_can_filter_s *filter) {
+mal_error_e mal_can_remove_filter(mal_can_e interface, mal_can_filter_s *filter) {
 	static uint16_t fifo = CAN_Filter_FIFO0;
-	if (MAL_HSPEC_CAN_1 != interface) {
+	if (MAL_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	mal_error_e result = MAL_ERROR_OK;;
 	// Format id and mask
-	if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type) {
+	if (MAL_CAN_ID_STANDARD == filter->id_type) {
 		filter->id = can_standard_fr_format(filter->id);
 		filter->mask = can_standard_fr_format(filter->mask);
 	} else {
@@ -450,7 +453,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		filter->mask = can_extended_fr_format(filter->mask);
 	}
 	// Disable interrupts
-	bool active = mal_hspec_stm32f0_disable_can_interrupt(interface);
+	bool active = mal_can_disable_interrupt(interface);
 	// Find filter index
 	uint8_t filter_index;
 	uint8_t std_filter_index;
@@ -461,7 +464,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 			continue;
 		}
 
-		if (MAL_HSPEC_CAN_ID_STANDARD == filter->id_type && MAL_HSPEC_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
+		if (MAL_CAN_ID_STANDARD == filter->id_type && MAL_CAN_ID_STANDARD == can_filter_banks[filter_index].type) {
 			int32_t i;
 			for (i = can_filter_banks[filter_index].filter_count - 1; i >=0; i--) {
 				if (can_filter_banks[filter_index].filter.std.id[i] == filter->id && can_filter_banks[filter_index].filter.std.mask[i] == filter->mask) {
@@ -470,7 +473,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 					break;
 				}
 			}
-		} else if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type && MAL_HSPEC_CAN_ID_EXTENDED == can_filter_banks[filter_index].type) {
+		} else if (MAL_CAN_ID_EXTENDED == filter->id_type && MAL_CAN_ID_EXTENDED == can_filter_banks[filter_index].type) {
 			if (can_filter_banks[filter_index].filter.ext.id == filter->id && can_filter_banks[filter_index].filter.ext.mask == filter->mask) {
 				found = true;
 			}
@@ -481,7 +484,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 	}
 	if (found) {
 		// Free filter array, especially for standard type
-		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+		if (MAL_CAN_ID_EXTENDED == filter->id_type) {
 			can_filter_banks[filter_index].is_active = false;
 		} else {
 			if (can_filter_banks[filter_index].filter_count <= 1) {
@@ -511,7 +514,7 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		filter_init.CAN_FilterMaskIdLow = can_filter_banks[filter_index].filter.std.mask[0];
 		filter_init.CAN_FilterMode = CAN_FilterMode_IdMask;
 		filter_init.CAN_FilterNumber = filter_index;
-		if (MAL_HSPEC_CAN_ID_EXTENDED == filter->id_type) {
+		if (MAL_CAN_ID_EXTENDED == filter->id_type) {
 			filter_init.CAN_FilterScale = CAN_FilterScale_32bit;
 		} else {
 			filter_init.CAN_FilterScale = CAN_FilterScale_16bit;
@@ -519,12 +522,12 @@ mal_error_e mal_hspec_stm32f0_can_remove_filter(mal_hspec_can_e interface, mal_h
 		CAN_FilterInit(&filter_init);
 	}
 
-	mal_hspec_stm32f0_enable_can_interrupt(MAL_HSPEC_CAN_1, active);
+	mal_can_enable_interrupt(MAL_CAN_1, active);
 
 	return result;
 }
 
-bool mal_hspec_stm32f0_disable_can_interrupt(mal_hspec_can_e interface) {
+MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_e interface) {
 	// 30 equates to CAN_IRQ. However, the name of the constant changes based
 	// on the MCU because it is not available on all of them. It is simpler to
 	// use the constant directly.
@@ -534,4 +537,10 @@ bool mal_hspec_stm32f0_disable_can_interrupt(mal_hspec_can_e interface) {
 	__DSB();
 	__ISB();
 	return active;
+}
+
+MAL_DEFS_INLINE void mal_can_enable_interrupt(mal_can_e interface, bool active) {
+    if (active) {
+        NVIC_EnableIRQ(30);
+    }
 }

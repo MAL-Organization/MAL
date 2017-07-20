@@ -23,21 +23,21 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "test_mal_hspec_stm32f0_timer.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h"
 #include "uCUnit-v1.0.h"
 #include "stm32f0/stm32f0xx_gpio.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h"
+#include "timer/test_mal_timer.h"
 
 static const mal_hspec_stm32f0_timer_direct_init_s direct_init_1khz = {
 	.prescaler = 0,
 	.period = 48000
 };
 
-void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_timer_init_tick_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -48,18 +48,18 @@ void test_mal_hspec_stm32f0_timer_init_tick_1khz(mal_hspec_timer_e timer) {
 	UCUNIT_CheckIsEqual(1000, tick_freq);
 }
 
-void test_mal_hspec_stm32f0_timer_get_1khz_direct_init(mal_hspec_timer_e timer, const void **direct_init) {
+void test_mal_hspec_timer_get_1khz_direct_init(mal_timer_e timer, const void **direct_init) {
 	*direct_init = &direct_init_1khz;
 }
 
-void test_mal_hspec_stm32f0_timer_direct_init_tick_1khz(mal_hspec_timer_e timer) {
-	test_mal_hspec_stm32f0_timer_init_tick_1khz(timer);
+void test_mal_hspec_timer_direct_init_tick_1khz(mal_timer_e timer) {
+	test_mal_hspec_timer_init_tick_1khz(timer);
 }
 
-void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer) {
+void test_mal_hspec_timer_init_count_1khz(mal_timer_e timer) {
 	mal_error_e result;
 	// Get timer typedef
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
 	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
@@ -69,13 +69,13 @@ void test_mal_hspec_stm32f0_timer_init_count_1khz(mal_hspec_timer_e timer) {
 	UCUNIT_CheckIsEqual(1000, timer_count_freq);
 }
 
-void test_mal_hspec_stm32f0_timer_init_pwm_1khz(mal_hspec_timer_e timer) {
-	test_mal_hspec_stm32f0_timer_init_tick_1khz(timer);
+void test_mal_hspec_timer_init_pwm_1khz(mal_timer_e timer) {
+    test_mal_hspec_timer_init_tick_1khz(timer);
 }
 
-void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, const mal_hspec_gpio_s *io) {
+void test_mal_hspec_timer_pwm_50pc_dc_1khz(mal_timer_e timer, const mal_gpio_s *io) {
 	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_timer_typedef(timer);
+	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
 	// Get compare value
 	uint32_t compare_value = 0;
 	switch (mal_hspec_stm32f0_timer_get_channel(io, timer)) {
@@ -100,11 +100,11 @@ void test_mal_hspec_stm32f0_timer_pwm_50pc_dc_1khz(mal_hspec_timer_e timer, cons
 	UCUNIT_CheckIsAlmostEqual(MAL_TYPES_RATIO_NORMALIZER / 2, dc, 2);
 }
 
-void test_mal_hspec_stm32f0_timer_input_capture_1khz(mal_hspec_timer_e timer,
-													 const mal_hspec_gpio_s *io,
-													 volatile test_mal_hspec_timer_input_capture_t *input_capture_info) {
+void test_mal_hspec_timer_input_capture_1khz(mal_timer_e timer,
+											 const mal_gpio_s *io,
+											 volatile test_mal_timer_input_capture_t *input_capture_info) {
 	mal_error_e result;
-	test_mal_hspec_stm32f0_timer_init_count_1khz(timer);
+	test_mal_hspec_timer_init_count_1khz(timer);
 	// Force pull down on GPIO
 	GPIO_TypeDef *gpio = mal_hspec_stm32f0_get_gpio_typedef(io->port);
     gpio->PUPDR &= ~(GPIO_PUPDR_PUPDR0 << (io->pin * 2));

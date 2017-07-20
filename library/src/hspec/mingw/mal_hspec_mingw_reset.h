@@ -26,15 +26,11 @@
 #ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_
 #define HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_
 
-#include "hspec/mal_hspec.h"
 #include "std/mal_bool.h"
-
-mal_hspec_reset_source_e mal_hspec_mingw_reset_handle_reset_source(void);
-
-void mal_hspec_mingw_reset_mcu(void);
+#include "reset/mal_reset.h"
 
 bool mal_hspec_mingw_reset_get_request(void);
 
-void mal_hspec_mingw_reset_set_reset_source(mal_hspec_reset_source_e source);
+void mal_hspec_mingw_reset_set_reset_source(mal_reset_source_e source);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_ */

@@ -24,7 +24,7 @@
 #ifndef CAN_MAL_CAN_BUFFER_H_
 #define CAN_MAL_CAN_BUFFER_H_
 
-#include "hspec/mal_hspec.h"
+#include "can/mal_can.h"
 #include "utils/mal_circular_buffer.h"
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
@@ -38,7 +38,7 @@
  * A handle containing all the variables related to a buffer.
  */
 typedef struct {
-	mal_hspec_can_e interface; /**< The CAN interface of the buffer.*/
+	mal_can_e interface; /**< The CAN interface of the buffer.*/
 	volatile mal_circular_buffer_s tx_buffer; /**< The transmit buffer.*/
 	volatile mal_circular_buffer_s rx_buffer; /**< The receive buffer.*/
 } mal_can_buffer_handle_s;
@@ -47,9 +47,9 @@ typedef struct {
  * Initialization parameters of the CAN buffer.
  */
 typedef struct {
-	mal_hspec_can_e interface; /**< The CAN interface to initialize and use.*/
-	const mal_hspec_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	const mal_hspec_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	mal_can_e interface; /**< The CAN interface to initialize and use.*/
+	const mal_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
+	const mal_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	uint8_t *rx_buffer; /**< This should be an array of bytes in multiple of size of ::mal_hspec_can_msg_s.*/
 	uint64_t rx_buffer_size; /**< The size of the rx buffer in bytes.*/
@@ -88,7 +88,7 @@ mal_error_e mal_can_buffer_direct_init(mal_can_buffer_handle_s *handle, mal_can_
  * @param msg The message to write.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_can_buffer_write(mal_can_buffer_handle_s *handle, mal_hspec_can_msg_s *msg);
+mal_error_e mal_can_buffer_write(mal_can_buffer_handle_s *handle, mal_can_msg_s *msg);
 
 /**
  * @brief Read a message from a buffer.
@@ -97,7 +97,7 @@ mal_error_e mal_can_buffer_write(mal_can_buffer_handle_s *handle, mal_hspec_can_
  * @return Returns #MAL_ERROR_OK on success. If the buffer is empty, the
  * function will return #MAL_ERROR_EMPTY.
  */
-mal_error_e mal_can_buffer_read(mal_can_buffer_handle_s *handle, mal_hspec_can_msg_s *msg);
+mal_error_e mal_can_buffer_read(mal_can_buffer_handle_s *handle, mal_can_msg_s *msg);
 
 /**
  * @}

@@ -5,9 +5,9 @@
  *      Author: Olivier
  */
 
-#include "hspec/mal_hspec_cmn.h"
+#include "clock/mal_clock.h"
 
-const mal_hspec_system_clk_s mal_target_system_clock = {
+const mal_system_clk_s mal_target_system_clock = {
 		.frequency = MAL_TARGET_SYSTEM_CLOCK,
 		.src = MAL_TARGET_SYSTEM_CLOCK_SRC
 };
