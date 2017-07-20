@@ -57,6 +57,10 @@ mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
+mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init) {
+    return mal_i2c_init_master(init);
+}
+
 mal_error_e mal_i2c_transfer(mal_i2c_e interface, mal_i2c_msg_s *msg) {
 	// Write to buffer
 	return mal_circular_buffer_write(&i2c_interfaces[interface].tx_circular_buffer, msg);

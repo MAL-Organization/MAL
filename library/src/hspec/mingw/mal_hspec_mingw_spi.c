@@ -73,3 +73,11 @@ mal_error_e mal_hspec_mingw_spi_end_transaction(mal_spi_e interface) {
 
 	return MAL_ERROR_OK;
 }
+
+MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface) {
+    return false;
+}
+
+MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active) {
+    // Nothing to do
+}
