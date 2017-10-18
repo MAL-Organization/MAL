@@ -39,7 +39,9 @@
 typedef enum {
     MAL_SERIAL_PORT_1 = 0,  //!< Port 1
     MAL_SERIAL_PORT_2 = 1,  //!< Port 2
-    MAL_SERIAL_PORT_SIZE = 2//!< Number of possible ports
+    MAL_SERIAL_PORT_3 = 2,  //!< Port 3
+    MAL_SERIAL_PORT_4 = 3,  //!< Port 4
+    MAL_SERIAL_PORT_SIZE = 4//!< Number of possible ports
 } mal_serial_port_e;
 
 /**
@@ -63,8 +65,9 @@ typedef enum {
  * Possible parity values.
  */
 typedef enum {
-    MAL_SERIAL_PARITY,  //!< With parity
-    MAL_SERIAL_NO_PARITY//!< Without parity
+    MAL_SERIAL_PARITY_EVEN, //!< With parity
+    MAL_SERIAL_PARITY_ODD,  //!< With parity
+    MAL_SERIAL_PARITY_NONE  //!< Without parity
 } mal_serial_parity_e;
 
 /**
@@ -97,6 +100,8 @@ typedef struct {
     mal_serial_tx_callbacl_t tx_callback; /**< Transmit completed callback.*/
     mal_serial_rx_callbacl_t rx_callback; /**< Receive completed callback.*/
 } mal_hspec_serial_init_s;
+
+mal_error_e mal_serial_init(mal_hspec_serial_init_s *init);
 
 /**
  * @}
