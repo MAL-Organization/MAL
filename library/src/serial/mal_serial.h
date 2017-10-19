@@ -2,7 +2,7 @@
  * @file mal_serial.h
  * @author Olivier Allaire
  * @date May 30 2015
- * @copyright Copyright (c) 2015 Olivier Allaire
+ * @copyright Copyright (c) 2015-2017 Olivier Allaire
  * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ typedef enum {
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_tx_callbacl_t)(uint16_t *data);
+typedef mal_error_e (*mal_serial_tx_callback_t)(uint16_t *data);
 
 /**
  * @brief Callback on byte received.
@@ -84,7 +84,7 @@ typedef mal_error_e (*mal_serial_tx_callbacl_t)(uint16_t *data);
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_rx_callbacl_t)(uint16_t data);
+typedef mal_error_e (*mal_serial_rx_callback_t)(uint16_t data);
 
 /**
  * Parameters to initialize a serial port.
@@ -97,10 +97,15 @@ typedef struct {
     mal_serial_data_size_e data_size; /**< The word size.*/
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
     mal_serial_parity_e parity; /**< The parity setting.*/
-    mal_serial_tx_callbacl_t tx_callback; /**< Transmit completed callback.*/
-    mal_serial_rx_callbacl_t rx_callback; /**< Receive completed callback.*/
+    mal_serial_tx_callback_t tx_callback; /**< Transmit completed callback.*/
+    mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
 } mal_hspec_serial_init_s;
 
+/**
+ * @brief Initialize the given serial interface with the given parameters.
+ * @param init Initialization parameters.
+ * @return #MAL_ERROR_OK on success.
+ */
 mal_error_e mal_serial_init(mal_hspec_serial_init_s *init);
 
 /**

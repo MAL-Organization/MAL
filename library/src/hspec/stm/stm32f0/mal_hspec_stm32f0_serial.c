@@ -5,7 +5,7 @@
  *      Author: Olivier
  */
 /*
- * Copyright (c) 2015-2017 Olivier Allaire
+ * Copyright (c) 2017 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -27,6 +27,21 @@
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
 #include "stm32f0/stm32f0xx_usart.h"
+#include "std/mal_bool.h"
+
+typedef struct {
+    bool active;
+    USART_TypeDef *usart_typedef;
+    mal_serial_rx_callback_t rx_callback;
+    mal_serial_tx_callback_t tx_callback;
+} mal_hspec_stm32f0_serial_port_s;
+
+static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *port);
+
+static mal_hspec_stm32f0_serial_port_s port_usart1;
+static mal_hspec_stm32f0_serial_port_s port_usart2;
+static mal_hspec_stm32f0_serial_port_s port_usart3;
+static mal_hspec_stm32f0_serial_port_s port_usart4;
 
 mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
     // Enable GPIO clocks
@@ -155,6 +170,28 @@ mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
             break;
     }
     USART_Init(usart_typedef, &usart_init);
+    // Initialize port
+    mal_hspec_stm32f0_serial_port_s *serial_port;
+    switch (init->port) {
+        case MAL_SERIAL_PORT_1:
+            serial_port = &port_usart1;
+            break;
+        case MAL_SERIAL_PORT_2:
+            serial_port = &port_usart2;
+            break;
+        case MAL_SERIAL_PORT_3:
+            serial_port = &port_usart3;
+            break;
+        case MAL_SERIAL_PORT_4:
+            serial_port = &port_usart4;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    serial_port->usart_typedef = usart_typedef;
+    serial_port->tx_callback = init->tx_callback;
+    serial_port->rx_callback = init->rx_callback;
+    serial_port->active = false;
     // Enable interrupts
     switch (init->port) {
         case MAL_SERIAL_PORT_1:
@@ -168,14 +205,59 @@ mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
             // 30 equates to USART3_4_IRQn. However, the name of the constant
             // changes based on the MCU because it is not available on all of
             // them. It is simpler to use the constant directly. If the MCU
-            // does not support CAN, the code will not get here.
+            // does not support these ports, the code will not get here.
             NVIC_EnableIRQ(29);
             break;
         default:
-            break;
+            return MAL_ERROR_HARDWARE_INVALID;
     }
+    USART_ITConfig(usart_typedef, USART_IT_RXNE, ENABLE);
     // Enable interface
     USART_Cmd(usart_typedef, ENABLE);
 
     return MAL_ERROR_OK;
+}
+
+void USART1_IRQHandler(void) {
+    mal_hspec_stm32f0_serial_interrupt(&port_usart1);
+}
+
+void USART2_IRQHandler(void) {
+    mal_hspec_stm32f0_serial_interrupt(&port_usart2);
+}
+
+void USART3_4_IRQHandler(void) {
+    // Check USART3
+    if (USART_GetITStatus(USART3, USART_IT_TXE) == SET || USART_GetITStatus(USART3, USART_IT_RXNE)) {
+        mal_hspec_stm32f0_serial_interrupt(&port_usart3);
+    }
+    // Check USART3
+    if (USART_GetITStatus(USART4, USART_IT_TXE) == SET || USART_GetITStatus(USART4, USART_IT_RXNE)) {
+        mal_hspec_stm32f0_serial_interrupt(&port_usart4);
+    }
+}
+
+static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *port) {
+    uint16_t data;
+    mal_error_e result;
+    // Check if transmit completed
+    if (USART_GetITStatus(port->usart_typedef, USART_IT_TXE) == SET) {
+        // Execute callback
+        result = port->tx_callback(&data);
+        // Send next word if given
+        if (MAL_ERROR_OK == result) {
+            USART_SendData(port->usart_typedef, data);
+        } else {
+            // Disable tx interrupt
+            USART_ITConfig(port->usart_typedef, USART_IT_TXE, DISABLE);
+            port->active = false;
+        }
+    }
+    // Check if receive completed
+    if (USART_GetITStatus(port->usart_typedef, USART_IT_RXNE) == SET) {
+        // Read data
+        data = USART_ReceiveData(port->usart_typedef);
+        // Execute callback
+        port->rx_callback(data);
+    }
 }
