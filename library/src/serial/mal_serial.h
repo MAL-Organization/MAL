@@ -26,6 +26,7 @@
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
 #include "gpio/mal_gpio.h"
+#include "std/mal_defs.h"
 
 /**
  * @defgroup Serial
@@ -91,22 +92,47 @@ typedef mal_error_e (*mal_serial_rx_callback_t)(uint16_t data);
  */
 typedef struct {
     mal_serial_port_e port; /**< The port to initialize.*/
-    mal_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
-    mal_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
+    const mal_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
+    const mal_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
     uint64_t baudrate; /**< The baudrate.*/
     mal_serial_data_size_e data_size; /**< The word size.*/
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
     mal_serial_parity_e parity; /**< The parity setting.*/
     mal_serial_tx_callback_t tx_callback; /**< Transmit completed callback.*/
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
-} mal_hspec_serial_init_s;
+} mal_serial_init_s;
 
 /**
  * @brief Initialize the given serial interface with the given parameters.
  * @param init Initialization parameters.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_serial_init(mal_hspec_serial_init_s *init);
+mal_error_e mal_serial_init(mal_serial_init_s *init);
+
+/**
+ * @brief Send data on the given port. Note that this is not a blocking call.
+ * Use the callback to get the result.
+ * @param port The port to use.
+ * @param data The data to send.
+ * @return @MAL_ERROR_OK on success. If the port is busy, returns
+ * #MAL_ERROR_HARDWARE_UNAVAILABLE.
+ */
+mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data);
+
+/**
+ * @brief Disable a serial port interrupt.
+ * @param port The port to disable the interrupt from.
+ * @return Returns true if interrupt was active before disabling it.
+ */
+MAL_DEFS_INLINE bool mal_serial_disable_interrupt(mal_serial_port_e port);
+
+/**
+ * @brief Enable a serial port interrupt.
+ * @param port The port to enable the interrupt from.
+ * @param active A boolean that indicates if the interrupt should be activated.
+ * Use the returned state of the disable function.
+ */
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool active);
 
 /**
  * @}

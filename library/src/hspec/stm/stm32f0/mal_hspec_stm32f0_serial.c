@@ -37,13 +37,16 @@ typedef struct {
 } mal_hspec_stm32f0_serial_port_s;
 
 static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *port);
+static mal_error_e mal_hspec_stm32f0_serial_get_port(mal_serial_port_e port, mal_hspec_stm32f0_serial_port_s **local_port);
+static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port);
 
 static mal_hspec_stm32f0_serial_port_s port_usart1;
 static mal_hspec_stm32f0_serial_port_s port_usart2;
 static mal_hspec_stm32f0_serial_port_s port_usart3;
 static mal_hspec_stm32f0_serial_port_s port_usart4;
 
-mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
+mal_error_e mal_serial_init(mal_serial_init_s *init) {
+    mal_error_e result;
     // Enable GPIO clocks
     RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->tx_gpio->port), ENABLE);
     RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->rx_gpio->port), ENABLE);
@@ -65,7 +68,6 @@ mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
             return MAL_ERROR_HARDWARE_INVALID;
     }
     // Configure alternate function
-    mal_error_e result;
     uint8_t function;
     mal_hspec_stm32f0_af_e tx_af;
     mal_hspec_stm32f0_af_e rx_af;
@@ -172,45 +174,17 @@ mal_error_e mal_serial_init(mal_hspec_serial_init_s *init) {
     USART_Init(usart_typedef, &usart_init);
     // Initialize port
     mal_hspec_stm32f0_serial_port_s *serial_port;
-    switch (init->port) {
-        case MAL_SERIAL_PORT_1:
-            serial_port = &port_usart1;
-            break;
-        case MAL_SERIAL_PORT_2:
-            serial_port = &port_usart2;
-            break;
-        case MAL_SERIAL_PORT_3:
-            serial_port = &port_usart3;
-            break;
-        case MAL_SERIAL_PORT_4:
-            serial_port = &port_usart4;
-            break;
-        default:
-            return MAL_ERROR_HARDWARE_INVALID;
+    result = mal_hspec_stm32f0_serial_get_port(init->port, &serial_port);
+    if (MAL_ERROR_OK != result) {
+        return result;
     }
     serial_port->usart_typedef = usart_typedef;
     serial_port->tx_callback = init->tx_callback;
     serial_port->rx_callback = init->rx_callback;
     serial_port->active = false;
     // Enable interrupts
-    switch (init->port) {
-        case MAL_SERIAL_PORT_1:
-            NVIC_EnableIRQ(USART1_IRQn);
-            break;
-        case MAL_SERIAL_PORT_2:
-            NVIC_EnableIRQ(USART2_IRQn);
-            break;
-        case MAL_SERIAL_PORT_3:
-        case MAL_SERIAL_PORT_4:
-            // 30 equates to USART3_4_IRQn. However, the name of the constant
-            // changes based on the MCU because it is not available on all of
-            // them. It is simpler to use the constant directly. If the MCU
-            // does not support these ports, the code will not get here.
-            NVIC_EnableIRQ(29);
-            break;
-        default:
-            return MAL_ERROR_HARDWARE_INVALID;
-    }
+    IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(init->port);
+    NVIC_EnableIRQ(irq);
     USART_ITConfig(usart_typedef, USART_IT_RXNE, ENABLE);
     // Enable interface
     USART_Cmd(usart_typedef, ENABLE);
@@ -259,5 +233,78 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *
         data = USART_ReceiveData(port->usart_typedef);
         // Execute callback
         port->rx_callback(data);
+    }
+}
+
+mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data) {
+    mal_error_e result;
+    mal_hspec_stm32f0_serial_port_s *serial_port;
+    result = mal_hspec_stm32f0_serial_get_port(port, &serial_port);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Check if interface is active
+    if (serial_port->active) {
+        return MAL_ERROR_HARDWARE_UNAVAILABLE;
+    }
+    // Start transfer and enable interrupt
+    bool active = mal_serial_disable_interrupt(port);
+    USART_SendData(serial_port->usart_typedef, data);
+    USART_ITConfig(serial_port->usart_typedef, USART_IT_TXE, ENABLE);
+    mal_serial_enable_interrupt(port, active);
+
+    return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_hspec_stm32f0_serial_get_port(mal_serial_port_e port, mal_hspec_stm32f0_serial_port_s **local_port) {
+    switch (port) {
+        case MAL_SERIAL_PORT_1:
+            *local_port = &port_usart1;
+            break;
+        case MAL_SERIAL_PORT_2:
+            *local_port = &port_usart2;
+            break;
+        case MAL_SERIAL_PORT_3:
+            *local_port = &port_usart3;
+            break;
+        case MAL_SERIAL_PORT_4:
+            *local_port = &port_usart4;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    return MAL_ERROR_OK;
+}
+
+static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port) {
+    switch (port) {
+            case MAL_SERIAL_PORT_1:
+                return USART1_IRQn;
+            case MAL_SERIAL_PORT_2:
+                return USART2_IRQn;
+            case MAL_SERIAL_PORT_3:
+            case MAL_SERIAL_PORT_4:
+            default:
+                // 30 equates to USART3_4_IRQn. However, the name of the constant
+                // changes based on the MCU because it is not available on all of
+                // them. It is simpler to use the constant directly. If the MCU
+                // does not support these ports, the code will not get here.
+                return 29;
+        }
+}
+
+MAL_DEFS_INLINE bool mal_serial_disable_interrupt(mal_serial_port_e port) {
+    IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(port);
+    bool active = NVIC_GetActive(irq);
+    NVIC_DisableIRQ(irq);
+    __DSB();
+    __ISB();
+    return active;
+}
+
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool active) {
+    if (active) {
+        IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(port);
+        NVIC_EnableIRQ(irq);
     }
 }
