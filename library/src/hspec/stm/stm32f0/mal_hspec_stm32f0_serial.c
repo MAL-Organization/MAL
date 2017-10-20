@@ -30,6 +30,7 @@
 #include "std/mal_bool.h"
 
 typedef struct {
+    mal_serial_port_e port;
     bool active;
     USART_TypeDef *usart_typedef;
     mal_serial_rx_callback_t rx_callback;
@@ -178,6 +179,7 @@ mal_error_e mal_serial_init(mal_serial_init_s *init) {
     if (MAL_ERROR_OK != result) {
         return result;
     }
+    serial_port->port = init->port;
     serial_port->usart_typedef = usart_typedef;
     serial_port->tx_callback = init->tx_callback;
     serial_port->rx_callback = init->rx_callback;
@@ -217,7 +219,7 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *
     // Check if transmit completed
     if (USART_GetITStatus(port->usart_typedef, USART_IT_TXE) == SET) {
         // Execute callback
-        result = port->tx_callback(&data);
+        result = port->tx_callback(port->port, &data);
         // Send next word if given
         if (MAL_ERROR_OK == result) {
             USART_SendData(port->usart_typedef, data);
@@ -232,7 +234,7 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *
         // Read data
         data = USART_ReceiveData(port->usart_typedef);
         // Execute callback
-        port->rx_callback(data);
+        port->rx_callback(port->port, data);
     }
 }
 

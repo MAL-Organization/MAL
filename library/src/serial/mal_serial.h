@@ -77,7 +77,7 @@ typedef enum {
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_tx_callback_t)(uint16_t *data);
+typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_port_e port, uint16_t *data);
 
 /**
  * @brief Callback on byte received.
@@ -85,7 +85,7 @@ typedef mal_error_e (*mal_serial_tx_callback_t)(uint16_t *data);
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_rx_callback_t)(uint16_t data);
+typedef mal_error_e (*mal_serial_rx_callback_t)(mal_serial_port_e port, uint16_t data);
 
 /**
  * Parameters to initialize a serial port.
