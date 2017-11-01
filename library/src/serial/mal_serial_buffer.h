@@ -85,6 +85,24 @@ mal_error_e mal_serial_buffer_write(mal_serial_buffer_handle_s *handle, uint16_t
 mal_error_e mal_serial_buffer_read(mal_serial_buffer_handle_s *handle, uint16_t *data);
 
 /**
+ * @brief Returns the number of words in the receive buffer.
+ * @param handle The handle to read from.
+ * @return The number of words in the receive buffer.
+ */
+uint64_t mal_serial_buffer_get_rx_size(mal_serial_buffer_handle_s *handle);
+
+/**
+ * @brief This function will return the value at index in the buffer without
+ * popping the value.
+ * @param handle The handle of the buffer to read from.
+ * @param index The index to read at.
+ * @param data A pointer that will contain the data.
+ * @return Returns #MAL_ERROR_OK on success. If the buffer is empty, the
+ * function will return #MAL_ERROR_EMPTY.
+ */
+mal_error_e mal_serial_buffer_peek(mal_serial_buffer_handle_s *handle, uint64_t index, uint16_t *data);
+
+/**
  * @}
  */
 

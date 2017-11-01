@@ -92,3 +92,21 @@ static mal_error_e serial_tx_callback(mal_serial_port_e port, uint16_t *data) {
 static mal_error_e serial_rx_callback(mal_serial_port_e port, uint16_t data) {
     return mal_circular_buffer_write((mal_circular_buffer_s*)&handles[port]->rx_buffer, &data);
 }
+
+uint64_t mal_serial_buffer_get_rx_size(mal_serial_buffer_handle_s *handle) {
+    uint64_t result;
+    bool active = mal_serial_disable_interrupt(handle->port);
+    result = handle->rx_buffer.size;
+    mal_serial_enable_interrupt(handle->port, active);
+
+    return result;
+}
+
+mal_error_e mal_serial_buffer_peek(mal_serial_buffer_handle_s *handle, uint64_t index, uint16_t *data) {
+    mal_error_e result;
+    bool active = mal_serial_disable_interrupt(handle->port);
+    result = mal_circular_buffer_peek((mal_circular_buffer_s*)&handle->rx_buffer, index, data);
+    mal_serial_enable_interrupt(handle->port, active);
+
+    return result;
+}
