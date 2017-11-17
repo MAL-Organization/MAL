@@ -287,7 +287,7 @@ static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port) {
             case MAL_SERIAL_PORT_3:
             case MAL_SERIAL_PORT_4:
             default:
-                // 30 equates to USART3_4_IRQn. However, the name of the constant
+                // 29 equates to USART3_4_IRQn. However, the name of the constant
                 // changes based on the MCU because it is not available on all of
                 // them. It is simpler to use the constant directly. If the MCU
                 // does not support these ports, the code will not get here.
