@@ -1,11 +1,11 @@
 /*
- * mal_serial.c
+ * mal_hspec_mingw_serial.h
  *
- *  Created on: May 30, 2015
+ *  Created on: Nov 6, 2017
  *      Author: Olivier
  */
 /*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2017 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,4 +23,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_serial.h"
+#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
+#define HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
+
+#include "serial/mal_serial.h"
+
+mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_port_e port, uint16_t *data);
+
+mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_port_e port, uint16_t data);
+
+#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_ */
