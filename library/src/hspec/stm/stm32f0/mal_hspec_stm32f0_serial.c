@@ -32,6 +32,7 @@
 typedef struct {
     mal_serial_port_e port;
     bool active;
+    bool error;
     USART_TypeDef *usart_typedef;
     mal_serial_rx_callback_t rx_callback;
     mal_serial_tx_callback_t tx_callback;
@@ -184,6 +185,7 @@ mal_error_e mal_serial_init(mal_serial_init_s *init) {
     serial_port->tx_callback = init->tx_callback;
     serial_port->rx_callback = init->rx_callback;
     serial_port->active = false;
+    serial_port->error = false;
     // Enable interrupts
     IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(init->port);
     NVIC_EnableIRQ(irq);
@@ -204,11 +206,15 @@ void USART2_IRQHandler(void) {
 
 void USART3_4_IRQHandler(void) {
     // Check USART3
-    if (USART_GetITStatus(USART3, USART_IT_TXE) == SET || USART_GetITStatus(USART3, USART_IT_RXNE)) {
+    if (USART_GetITStatus(USART3, USART_IT_TXE) == SET ||
+        USART_GetITStatus(USART3, USART_IT_RXNE) == SET ||
+        USART_GetITStatus(USART3, USART_IT_ORE) == SET) {
         mal_hspec_stm32f0_serial_interrupt(&port_usart3);
     }
-    // Check USART3
-    if (USART_GetITStatus(USART4, USART_IT_TXE) == SET || USART_GetITStatus(USART4, USART_IT_RXNE)) {
+    // Check USART4
+    if (USART_GetITStatus(USART4, USART_IT_TXE) == SET ||
+        USART_GetITStatus(USART4, USART_IT_RXNE) == SET ||
+        USART_GetITStatus(USART4, USART_IT_ORE) == SET) {
         mal_hspec_stm32f0_serial_interrupt(&port_usart4);
     }
 }
@@ -235,6 +241,11 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *
         data = USART_ReceiveData(port->usart_typedef);
         // Execute callback
         port->rx_callback(port->port, data);
+    }
+    // Check for errors
+    if (USART_GetITStatus(port->usart_typedef, USART_IT_ORE) == SET) {
+        port->error = true;
+        USART_ClearITPendingBit(port->usart_typedef, USART_IT_ORE);
     }
 }
 
