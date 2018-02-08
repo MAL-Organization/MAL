@@ -5,7 +5,7 @@
  *      Author: olivi
  */
 /*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -251,4 +251,17 @@ static void can_transmit_msg(mal_can_msg_s *msg) {
                       DCAN_DAT_B_ACCESS | DCAN_ACCESS_CTL_BITS | DCAN_ACCESS_ARB_BITS,
                       CAN_TX_MSG_OBJ,
                       DCAN_IF1_REG);
+}
+
+MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_e interface) {
+    // Nothing to do since the "interrupts" on the PRU are synch.
+    return false;
+}
+
+MAL_DEFS_INLINE void mal_can_enable_interrupt(mal_can_e interface, bool active) {
+    // Nothing to do since the "interrupts" on the PRU are synch.
+}
+
+void mal_hspec_tiam335xpru_dcan_isr0(void) {
+
 }

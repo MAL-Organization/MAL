@@ -29,6 +29,7 @@
 							<tool id="com.ti.ccstudio.buildDefinitions.PRU_2.2.library.compilerDebug.1934764662" name="PRU Compiler" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.library.compilerDebug">
 								<option id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.DEFINE.828967275" name="Pre-define NAME (--define, -D)" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.DEFINE" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="am3358"/>
+									<listOptionValue builtIn="false" value="MAL_AM335XPRU"/>
 									<listOptionValue builtIn="false" value="am335x"/>
 									<listOptionValue builtIn="false" value="ccs"/>
 									<listOptionValue builtIn="false" value="pru0"/>

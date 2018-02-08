@@ -1,9 +1,13 @@
-/**
- * @file mal_types.h
- * @author Olivier Allaire
- * @date July 05 2017
- * @copyright Copyright (c) 2015 Olivier Allaire
- * @par This file is part of MAL.
+/*
+ * mal_hspec_tiam335xpru_int.c
+ *
+ *  Created on: Feb 8, 2018
+ *      Author: olivi
+ */
+/*
+ * Copyright (c) 2018 Olivier Allaire
+ *
+ * This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,35 +21,26 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
- * @brief Definitions of key elements for different platforms.
  */
 
-#ifndef STD_MAL_DEFS_H_
-#define STD_MAL_DEFS_H_
+#include "mal_hspec_tiam335xpru_int.h"
 
-/**
- * @defgroup DEFINITIONS
- * @brief @copybrief mal_defs.h
- * @{
- */
+#include "std/mal_stdint.h"
 
-#if defined(MAL_MINGW) || defined(MAL_AM335XPRU)
+#include "hw_types.h"
+#include "soc_AM335x.h"
 
-/**
- * Skip inlines for MINGW.
- */
-#define MAL_DEFS_INLINE
+#include "hw_dcan.h"
 
-#else
+void __attribute__((weak)) mal_hspec_tiam335xpru_dcan_isr0(void) {
 
-#define MAL_DEFS_INLINE     __attribute__ ((gnu_inline)) inline
+}
 
-#endif
+void mal_hspec_tiam335xpru_handle_interrupts(void) {
+    // Check DCAN1 interrupts
+    uint32_t int_reg = HWREG(SOC_DCAN_1_REGS + DCAN_INT);
+    if (int_reg & DCAN_INT_INT0ID) {
+        mal_hspec_tiam335xpru_dcan_isr0();
+    }
+}
 
-#define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
-
-/**
- * @}
- */
-
-#endif /* STD_MAL_DEFS_H_ */
