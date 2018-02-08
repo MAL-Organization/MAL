@@ -17,3 +17,5 @@ eclipse/
 library/build-scripts/.idea/
 qemu-test/.settings/language.settings.xml
 qemu-test/.settings/org.eclipse.cdt.codan.core.prefs
+envs/ti/am335x/pru/.settings/language.settings.xml
+envs/ti/am335x/pru/.settings/org.eclipse.cdt.codan.core.prefs
