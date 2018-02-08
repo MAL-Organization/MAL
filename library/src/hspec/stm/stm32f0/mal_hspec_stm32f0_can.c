@@ -294,7 +294,7 @@ mal_error_e mal_can_transmit(mal_can_e interface, mal_can_msg_s *msg) {
 	if (MAL_CAN_1 != interface) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
-	mal_error_e result = MAL_ERROR_OK;;
+	mal_error_e result = MAL_ERROR_OK;
 	// Disable interrupts to get true status of TX queue
 	bool active = mal_can_disable_interrupt(interface);
 	// Check if queue is empty
