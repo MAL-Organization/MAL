@@ -40,6 +40,8 @@
 
 static void can_transmit_msg(mal_can_msg_s *msg);
 
+static mal_can_tx_callback_t can_tx_callback = NULL;
+static mal_can_rx_callback_t can_rx_callback = NULL;
 static bool interface_active = false;
 
 mal_error_e mal_can_init(mal_can_init_s *init) {
@@ -69,6 +71,10 @@ mal_error_e mal_can_init(mal_can_init_s *init) {
     if (CANSetBitTiming(SOC_DCAN_1_REGS, DCAN_IN_CLK, init->bitrate)) {
         return MAL_ERROR_CLOCK_ERROR;
     }
+
+    // Save callbacks
+    can_rx_callback = init->rx_callback;
+    can_tx_callback = init->tx_callback;
 
     // Disable the write access to the DCAN configuration registers
     DCANConfigRegWriteAccessControl(SOC_DCAN_1_REGS, DCAN_CONF_REG_WR_ACCESS_DISABLE);
@@ -232,11 +238,15 @@ static void can_transmit_msg(mal_can_msg_s *msg) {
     DCANDataLengthCodeSet(SOC_DCAN_1_REGS, msg->size, DCAN_IF1_REG);
 
     // Write data to the DCAN data registers
-    uint8_t index;
-    unsigned int data[MAL_CAN_MAX_DATA_SIZE];
-    for (index = 0; index < msg->size; index++) {
-        data[index] = msg->data[index];
-    }
+    uint32_t data[2];
+    data[0] = msg->data[0];
+    data[0] |= ((uint32_t)msg->data[1]) << 8;
+    data[0] |= ((uint32_t)msg->data[2]) << 16;
+    data[0] |= ((uint32_t)msg->data[3]) << 24;
+    data[1] = msg->data[4];
+    data[1] |= ((uint32_t)msg->data[5]) << 8;
+    data[1] |= ((uint32_t)msg->data[6]) << 16;
+    data[1] |= ((uint32_t)msg->data[7]) << 24;
     DCANDataWrite(SOC_DCAN_1_REGS, data, DCAN_IF1_REG);
 
     // Enable the transmit interrupt for the message object
@@ -263,5 +273,63 @@ MAL_DEFS_INLINE void mal_can_enable_interrupt(mal_can_e interface, bool active) 
 }
 
 void mal_hspec_tiam335xpru_dcan_isr0(void) {
+    uint8_t index = DCANIntRegStatusGet(SOC_DCAN_1_REGS, DCAN_INT_LINE0_STAT);
+    if (!index) {
+        return;
+    }
+    // Check if this is a transmission
+    if (CAN_TX_MSG_OBJ == index) {
+        if (can_tx_callback != NULL) {
+            mal_can_msg_s msg;
+            if (MAL_ERROR_OK == can_tx_callback(MAL_CAN_1, &msg)) {
+                can_transmit_msg(&msg);
+            } else {
+                CANTxIntDisable(SOC_DCAN_1_REGS, CAN_TX_MSG_OBJ, DCAN_IF1_REG);
+                CANInValidateMsgObject(SOC_DCAN_1_REGS, CAN_TX_MSG_OBJ, DCAN_IF1_REG);
+                interface_active = false;
+            }
+        } else {
+            interface_active = false;
+        }
+    // This is an rx interrupt
+    } else {
+        // Read object
+        DCANCommandRegSet(SOC_DCAN_1_REGS,
+                          DCAN_DAT_A_ACCESS | DCAN_DAT_B_ACCESS | DCAN_TXRQST_ACCESS | DCAN_CLR_INTPND |
+                          DCAN_ACCESS_CTL_BITS | DCAN_ACCESS_ARB_BITS | DCAN_ACCESS_MSK_BITS | DCAN_MSG_READ,
+                          index,
+                          DCAN_IF2_REG);
+        // Wait until data is loaded
+        while(DCANIFBusyStatusGet(SOC_DCAN_1_REGS, DCAN_IF2_REG));
+        // Clear interrupt
+        CANClrIntPndStat(SOC_DCAN_1_REGS, index, DCAN_IF2_REG);
+        // Transfer msg
+        mal_can_msg_s msg;
+        // Get ID
+        uint32_t arb_reg = HWREG(SOC_DCAN_1_REGS + DCAN_IFARB(DCAN_IF2_REG));
+        uint32_t id = arb_reg & DCAN_IFARB_MSK;
+        if (arb_reg & DCAN_IFARB_XTD) {
+            msg.id = id;
+            msg.id_type = MAL_CAN_ID_EXTENDED;
+        } else {
+            msg.id = id >> DCAN_ID_MSK_11_BIT;
+            msg.id_type = MAL_CAN_ID_STANDARD;
+        }
+        // Get data
+        uint32_t data_a = HWREG(SOC_DCAN_1_REGS + DCAN_IFDATA(DCAN_IF2_REG));
+        uint32_t data_b = HWREG(SOC_DCAN_1_REGS + DCAN_IFDATB(DCAN_IF2_REG));
+        msg.data[0] = data_a & 0xFF;
+        msg.data[1] = (data_a >> 8) & 0xFF;
+        msg.data[2] = (data_a >> 16) & 0xFF;
+        msg.data[3] = (data_a >> 24) & 0xFF;
+        msg.data[4] = data_b & 0xFF;
+        msg.data[5] = (data_b >> 8) & 0xFF;
+        msg.data[6] = (data_b >> 16) & 0xFF;
+        msg.data[7] = (data_b >> 24) & 0xFF;
+        // Get DLC
+        uint32_t mctl_reg = HWREG(SOC_DCAN_1_REGS + DCAN_IFMCTL(DCAN_IF2_REG));
+        msg.size = mctl_reg & DCAN_IFMCTL_DATALENGTHCODE;
 
+        can_rx_callback(MAL_CAN_1, &msg);
+    }
 }

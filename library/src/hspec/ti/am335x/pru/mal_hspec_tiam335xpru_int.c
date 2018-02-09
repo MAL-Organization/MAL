@@ -27,10 +27,9 @@
 
 #include "std/mal_stdint.h"
 
-#include "hw_types.h"
 #include "soc_AM335x.h"
 
-#include "hw_dcan.h"
+#include "dcan.h"
 
 void __attribute__((weak)) mal_hspec_tiam335xpru_dcan_isr0(void) {
 
@@ -38,8 +37,7 @@ void __attribute__((weak)) mal_hspec_tiam335xpru_dcan_isr0(void) {
 
 void mal_hspec_tiam335xpru_handle_interrupts(void) {
     // Check DCAN1 interrupts
-    uint32_t int_reg = HWREG(SOC_DCAN_1_REGS + DCAN_INT);
-    if (int_reg & DCAN_INT_INT0ID) {
+    if (DCANIntRegStatusGet(SOC_DCAN_1_REGS, DCAN_INT_LINE0_STAT)) {
         mal_hspec_tiam335xpru_dcan_isr0();
     }
 }
