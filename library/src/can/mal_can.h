@@ -71,8 +71,8 @@ typedef struct {
  * @brief This function will be called when a CAN message is transmitted.
  * @param interface The interface the message was transmitted on.
  * @param next_msg The next message to send.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
+ * @return Return a status once you executed your callback. If #MAL_ERROR_OK is
+ * returned, next_msg will be transmitted. Otherwise, it will not.
  */
 typedef mal_error_e (*mal_can_tx_callback_t)(mal_can_e interface, mal_can_msg_s *next_msg);
 

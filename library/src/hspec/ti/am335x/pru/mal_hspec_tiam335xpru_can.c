@@ -68,7 +68,7 @@ mal_error_e mal_can_init(mal_can_init_s *init) {
     DCANConfigRegWriteAccessControl(SOC_DCAN_1_REGS, DCAN_CONF_REG_WR_ACCESS_ENABLE);
 
     // Configure the bit timing values for CAN communication
-    if (CANSetBitTiming(SOC_DCAN_1_REGS, DCAN_IN_CLK, init->bitrate)) {
+    if (NO_BIT_RATE_ERR != CANSetBitTiming(SOC_DCAN_1_REGS, DCAN_IN_CLK, init->bitrate)) {
         return MAL_ERROR_CLOCK_ERROR;
     }
 
@@ -94,6 +94,11 @@ mal_error_e mal_can_init(mal_can_init_s *init) {
     DCANNormalModeSet(SOC_DCAN_1_REGS);
 
     return MAL_ERROR_OK;
+}
+
+mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init) {
+    // FIXME
+    return mal_can_init(init);
 }
 
 void mal_can_deinit(mal_can_e interface) {

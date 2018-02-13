@@ -60,6 +60,9 @@
 									<listOptionValue builtIn="false" value="1557"/>
 									<listOptionValue builtIn="false" value="303"/>
 								</option>
+								<option id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_FOR_SPEED.1367656947" name="Speed vs. size trade-offs (--opt_for_speed, -mf)" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_FOR_SPEED" value="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_FOR_SPEED.1" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_LEVEL.1841583988" name="Optimization level (--opt_level, -O)" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_LEVEL" value="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.OPT_LEVEL.4" valueType="enumerated"/>
+								<option id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.SECTION_SIZES.735426191" name="Output section size summary information. (--section_sizes)" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.SECTION_SIZES" value="com.ti.ccstudio.buildDefinitions.PRU_2.2.compilerID.SECTION_SIZES.on" valueType="enumerated"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__C_SRCS.344063921" name="C Sources" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__C_SRCS"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__CPP_SRCS.598427247" name="C++ Sources" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__CPP_SRCS"/>
 								<inputType id="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__ASM_SRCS.1434554026" name="Assembly Sources" superClass="com.ti.ccstudio.buildDefinitions.PRU_2.2.compiler.inputType__ASM_SRCS"/>
