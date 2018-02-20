@@ -208,13 +208,13 @@ void USART3_4_IRQHandler(void) {
     // Check USART3
     if (USART_GetITStatus(USART3, USART_IT_TXE) == SET ||
         USART_GetITStatus(USART3, USART_IT_RXNE) == SET ||
-        USART_GetITStatus(USART3, USART_IT_ORE) == SET) {
+        (USART3->ISR & USART_ISR_ORE)) {
         mal_hspec_stm32f0_serial_interrupt(&port_usart3);
     }
     // Check USART4
     if (USART_GetITStatus(USART4, USART_IT_TXE) == SET ||
         USART_GetITStatus(USART4, USART_IT_RXNE) == SET ||
-        USART_GetITStatus(USART4, USART_IT_ORE) == SET) {
+        (USART4->ISR & USART_ISR_ORE)) {
         mal_hspec_stm32f0_serial_interrupt(&port_usart4);
     }
 }
@@ -243,7 +243,7 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *
         port->rx_callback(port->port, data);
     }
     // Check for errors
-    if (USART_GetITStatus(port->usart_typedef, USART_IT_ORE) == SET) {
+    if (port->usart_typedef->ISR & USART_ISR_ORE) {
         port->error = true;
         USART_ClearITPendingBit(port->usart_typedef, USART_IT_ORE);
     }
@@ -264,6 +264,7 @@ mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data) {
     bool active = mal_serial_disable_interrupt(port);
     USART_SendData(serial_port->usart_typedef, data);
     USART_ITConfig(serial_port->usart_typedef, USART_IT_TXE, ENABLE);
+    serial_port->active = true;
     mal_serial_enable_interrupt(port, active);
 
     return MAL_ERROR_OK;
