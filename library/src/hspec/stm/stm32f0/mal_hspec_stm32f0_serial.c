@@ -28,12 +28,22 @@
 #include "mal_hspec_stm32f0_cmn.h"
 #include "stm32f0/stm32f0xx_usart.h"
 #include "std/mal_bool.h"
+#include "stm32f0/stm32f0xx_dma.h"
+
+#define MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE    8
 
 typedef struct {
     mal_serial_port_e port;
     bool active;
     bool error;
     USART_TypeDef *usart_typedef;
+    uint16_t tx_buffer[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
+    uint16_t rx_buffer[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
+    DMA_Channel_TypeDef *tx_dma_channel;
+    DMA_Channel_TypeDef *rx_dma_channel;
+    uint32_t tx_dma_flag;
+    uint32_t rx_dma_flag;
+    bool dma_mode;
     mal_serial_rx_callback_t rx_callback;
     mal_serial_tx_callback_t tx_callback;
 } mal_hspec_stm32f0_serial_port_s;
@@ -41,6 +51,7 @@ typedef struct {
 static void mal_hspec_stm32f0_serial_interrupt(mal_hspec_stm32f0_serial_port_s *port);
 static mal_error_e mal_hspec_stm32f0_serial_get_port(mal_serial_port_e port, mal_hspec_stm32f0_serial_port_s **local_port);
 static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port);
+static void mal_hspec_stm32f0_serial_dma_callback(void *handle);
 
 static mal_hspec_stm32f0_serial_port_s port_usart1;
 static mal_hspec_stm32f0_serial_port_s port_usart2;
@@ -186,10 +197,66 @@ mal_error_e mal_serial_init(mal_serial_init_s *init) {
     serial_port->rx_callback = init->rx_callback;
     serial_port->active = false;
     serial_port->error = false;
-    // Enable interrupts
-    IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(init->port);
-    NVIC_EnableIRQ(irq);
-    USART_ITConfig(usart_typedef, USART_IT_RXNE, ENABLE);
+    // Try to reserve DMA channels
+    result = mal_hspec_stm32f0_dma_get_serial_channel(serial_port->port,
+                                                      &serial_port->tx_dma_channel,
+                                                      &serial_port->rx_dma_channel);
+    if (MAL_ERROR_OK != result) {
+        // Could not get proper DMA channels. Free reserved channels
+        mal_hspec_stm32f0_dma_free_channel(serial_port->tx_dma_channel);
+        mal_hspec_stm32f0_dma_free_channel(serial_port->rx_dma_channel);
+        // Set interrupt mode
+        serial_port->dma_mode = false;
+        // Enable interrupts
+        IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(serial_port->port);
+        NVIC_EnableIRQ(irq);
+        USART_ITConfig(serial_port->usart_typedef, USART_IT_RXNE, ENABLE);
+    } else {
+        // Initialize DMA. See https://stm32f4-discovery.net/2017/07/stm32-tutorial-efficiently-receive-uart-data-using-dma/.
+        // Remap DMA channels
+        mal_hspec_stm32f0_dma_remap_serial(serial_port->tx_dma_channel, serial_port->port);
+        mal_hspec_stm32f0_dma_remap_serial(serial_port->rx_dma_channel, serial_port->port);
+        // Common parameters for RX and TX
+        DMA_InitTypeDef dma_init;
+        DMA_StructInit(&dma_init);
+        dma_init.DMA_BufferSize = MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE;
+        dma_init.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+        dma_init.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+        dma_init.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+        dma_init.DMA_MemoryInc = DMA_MemoryInc_Enable;
+        dma_init.DMA_Mode = DMA_Mode_Normal;
+        dma_init.DMA_M2M = DMA_M2M_Disable;
+        // Configure TX channel
+        DMA_Channel_TypeDef *dma_channel = mal_hspec_stm32f0_dma_get_serial_tx_channel(serial_port->port);
+        dma_init.DMA_MemoryBaseAddr = (uint32_t)serial_port->tx_buffer;
+        dma_init.DMA_DIR = DMA_DIR_PeripheralDST;
+        dma_init.DMA_Priority = DMA_Priority_Low;
+        dma_init.DMA_PeripheralBaseAddr = (uint32_t)&usart_typedef->TDR;
+        DMA_Init(dma_channel, &dma_init);
+        // Configure RX channel
+        dma_channel = mal_hspec_stm32f0_dma_get_serial_rx_channel(serial_port->port);
+        dma_init.DMA_MemoryBaseAddr = (uint32_t)serial_port->rx_buffer;
+        dma_init.DMA_DIR = DMA_DIR_PeripheralSRC;
+        dma_init.DMA_Priority = DMA_Priority_Medium;
+        dma_init.DMA_PeripheralBaseAddr = (uint32_t)&usart_typedef->RDR;
+        DMA_Init(dma_channel, &dma_init);
+        // Set mode and dma flags
+        serial_port->dma_mode = true;
+        serial_port->tx_dma_flag = mal_hspec_stm32f0_dma_get_flag(serial_port->tx_dma_channel);
+        serial_port->rx_dma_flag = mal_hspec_stm32f0_dma_get_flag(serial_port->rx_dma_channel);
+        // Enable DMA RX interrupt
+        mal_hspec_stm32f0_dma_set_callback(serial_port->tx_dma_channel,
+                                           &mal_hspec_stm32f0_serial_dma_callback,
+                                           serial_port);
+        mal_hspec_stm32f0_dma_set_callback(serial_port->rx_dma_channel,
+                                           &mal_hspec_stm32f0_serial_dma_callback,
+                                           serial_port);
+        NVIC_EnableIRQ(mal_hspec_stm32f0_dma_get_irq(serial_port->rx_dma_channel));
+        USART_ITConfig(serial_port->usart_typedef, USART_IT_IDLE, ENABLE);
+        DMA_Cmd(serial_port->rx_dma_channel, ENABLE);
+        // Enable DMA for UART
+        USART_DMACmd(serial_port->usart_typedef, USART_DMAReq_Rx | USART_DMAReq_Tx, ENABLE);
+    }
     // Enable interface
     USART_Cmd(usart_typedef, ENABLE);
 
@@ -260,8 +327,9 @@ mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data) {
     if (serial_port->active) {
         return MAL_ERROR_HARDWARE_UNAVAILABLE;
     }
-    // Start transfer and enable interrupt
+    // Disable interrupts
     bool active = mal_serial_disable_interrupt(port);
+    // Start transfer and enable interrupt
     USART_SendData(serial_port->usart_typedef, data);
     USART_ITConfig(serial_port->usart_typedef, USART_IT_TXE, ENABLE);
     serial_port->active = true;
@@ -320,5 +388,15 @@ MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool ac
     if (active) {
         IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(port);
         NVIC_EnableIRQ(irq);
+    }
+}
+
+static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
+    mal_hspec_stm32f0_serial_port_s *serial_port = handle;
+    // Disable serial interrupts
+    bool active = mal_serial_disable_interrupt(serial_port->port);
+    // Check for RX transfer complete
+    if (SET == DMA_GetITStatus(serial_port->rx_dma_flag)) {
+
     }
 }
