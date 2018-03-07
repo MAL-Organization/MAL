@@ -512,7 +512,7 @@
 						<entry excluding="cortexm|cmsis|stm|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="cmsis"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="cortexm"/>
-						<entry excluding="hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+						<entry excluding="serial/mal_serial_buffer.c|hspec/stm/stm32f0/stm32f072/stm32f051r8|hspec/stm/stm32f0/stm32f072/stm32f030rc|hspec/stm/stm32f0/stm32f072/stm32f072cb|hspec/mingw|hspec/stm/stm32f0/stm32f072cb|hspec/stm/stm32f0/stm32f051r8|hspec/stm/stm32f0/stm32f030r8|hspec/stm/stm32f030r8" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
 						<entry excluding="stm32f0/vectors_stm32f0xx.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="stm"/>
 					</sourceEntries>
 				</configuration>

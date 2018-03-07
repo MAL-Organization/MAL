@@ -156,7 +156,7 @@ mal_error_e mal_hspec_stm32f0_dma_get_serial_channel(mal_serial_port_e port,
 void mal_hspec_stm32f0_dma_free_channel(DMA_Channel_TypeDef *channel) {
     uint8_t index;
     for (index = 0; index < HSPEC_STM32F0_DMA_CHANNEL_SIZE; index++) {
-        if (*channel == dma_channels[index].handle) {
+        if (channel == dma_channels[index].handle) {
             dma_channels[index].callback = NULL;
             dma_channels[index].callback_handle = NULL;
             dma_channels[index].used = false;

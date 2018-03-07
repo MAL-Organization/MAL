@@ -102,37 +102,47 @@ typedef struct {
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
 } mal_serial_init_s;
 
+typedef struct {
+    mal_serial_port_e port;
+    mal_serial_rx_callback_t rx_callback;
+    mal_serial_tx_callback_t tx_callback;
+    void *impl;
+} mal_serial_port_s;
+
+typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
+
 /**
  * @brief Initialize the given serial interface with the given parameters.
+ * @param handle The handle to use for serial functions.
  * @param init Initialization parameters.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_serial_init(mal_serial_init_s *init);
+mal_error_e mal_serial_init(mal_serial_port_s *handle, mal_serial_init_s *init);
 
 /**
  * @brief Send data on the given port. Note that this is not a blocking call.
  * Use the callback to get the result.
- * @param port The port to use.
+ * @param handle The port to use.
  * @param data The data to send.
  * @return @MAL_ERROR_OK on success. If the port is busy, returns
  * #MAL_ERROR_HARDWARE_UNAVAILABLE.
  */
-mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data);
+mal_error_e mal_serial_transfer(mal_serial_port_s *handle, uint16_t data);
 
 /**
  * @brief Disable a serial port interrupt.
- * @param port The port to disable the interrupt from.
+ * @param handle The port to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_serial_disable_interrupt(mal_serial_port_e port);
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_port_s *handle, mal_serial_interrupt_s *state);
 
 /**
  * @brief Enable a serial port interrupt.
- * @param port The port to enable the interrupt from.
+ * @param handle The port to enable the interrupt from.
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
  */
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool active);
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_s *handle, mal_serial_interrupt_s *state);
 
 /**
  * @}
