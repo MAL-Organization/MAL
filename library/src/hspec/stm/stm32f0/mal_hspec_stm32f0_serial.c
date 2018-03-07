@@ -30,34 +30,43 @@
 #include "std/mal_bool.h"
 #include "stm32f0/stm32f0xx_dma.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_dma.h"
+#include "hspec/stm/stm32f0/mal_hspec_stm32f0_nvic.h"
 
 #define MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE    8
 
 typedef struct MAL_SERIAL {
+    // Basic serial variables
     mal_serial_port_e port;
     mal_serial_rx_callback_t rx_callback;
     mal_serial_tx_callback_t tx_callback;
+    // Interrupts statuses
     bool active;
     bool error;
+    bool dma_mode;
+    IRQn_Type dma_tx_irq;
+    uint32_t nvic_mask;
+    // STM registers
     USART_TypeDef *usart_typedef;
+    // DMA variables
     uint16_t tx_buffer[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
-    uint16_t rx_buffer[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
+    uint16_t rx_buffer_1[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
+    uint16_t rx_buffer_2[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
+    volatile bool using_rx_buffer_1;
     DMA_Channel_TypeDef *tx_dma_channel;
     DMA_Channel_TypeDef *rx_dma_channel;
     uint32_t tx_dma_flag;
     uint32_t rx_dma_flag;
-    bool dma_mode;
 } mal_serial_s;
 
 typedef struct MAL_SERIAL_INTERRUPT {
-    bool dma_state;
-    bool serial_state;
+    uint32_t mask;
 } mal_serial_interrupt_s;
 
 static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *port);
 static mal_error_e mal_hspec_stm32f0_serial_save_handle(mal_serial_port_e port, mal_serial_s *handle);
 static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port);
 static void mal_hspec_stm32f0_serial_dma_callback(void *handle);
+static void mal_hspec_stm32f0_serial_handle_rx_dma(mal_serial_s *handle);
 
 static mal_serial_s *port_usart1;
 static mal_serial_s *port_usart2;
@@ -202,12 +211,14 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     handle->rx_callback = init->rx_callback;
     handle->active = false;
     handle->error = false;
+    handle->nvic_mask = 0;
     // Try to reserve DMA channels
     result = mal_hspec_stm32f0_dma_get_serial_channel(handle->port,
                                                       &handle->tx_dma_channel,
                                                       &handle->rx_dma_channel);
     // Prefectch IRQ since it is common to both
     IRQn_Type uart_irq = mal_hspec_stm32f0_serial_get_irq(handle->port);
+    handle->nvic_mask = mal_hspec_stm32f0_nvic_add_irq(uart_irq, handle->nvic_mask);
     if (MAL_ERROR_OK != result) {
         // Could not get proper DMA channels. Free reserved channels
         mal_hspec_stm32f0_dma_free_channel(handle->tx_dma_channel);
@@ -239,15 +250,21 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         dma_init.DMA_PeripheralBaseAddr = (uint32_t)&usart_typedef->TDR;
         DMA_Init(handle->tx_dma_channel, &dma_init);
         // Configure RX channel
-        dma_init.DMA_MemoryBaseAddr = (uint32_t)handle->rx_buffer;
+        handle->using_rx_buffer_1 = true;
+        dma_init.DMA_MemoryBaseAddr = (uint32_t)handle->rx_buffer_1;
         dma_init.DMA_DIR = DMA_DIR_PeripheralSRC;
-        dma_init.DMA_Priority = DMA_Priority_Medium;
+        dma_init.DMA_Priority = DMA_Priority_High;
         dma_init.DMA_PeripheralBaseAddr = (uint32_t)&usart_typedef->RDR;
         DMA_Init(handle->rx_dma_channel, &dma_init);
         // Set mode and dma flags
         handle->dma_mode = true;
         handle->tx_dma_flag = mal_hspec_stm32f0_dma_get_flag(handle->tx_dma_channel);
         handle->rx_dma_flag = mal_hspec_stm32f0_dma_get_flag(handle->rx_dma_channel);
+        // Fetch DMA Irqs
+        IRQn_Type rx_irq = mal_hspec_stm32f0_dma_get_irq(handle->rx_dma_channel);
+        handle->nvic_mask = mal_hspec_stm32f0_nvic_add_irq(rx_irq, handle->nvic_mask);
+        handle->dma_tx_irq = mal_hspec_stm32f0_dma_get_irq(handle->tx_dma_channel);
+        handle->nvic_mask = mal_hspec_stm32f0_nvic_add_irq(handle->dma_tx_irq, handle->nvic_mask);
         // Enable DMA RX interrupt
         mal_hspec_stm32f0_dma_set_callback(handle->tx_dma_channel,
                                            &mal_hspec_stm32f0_serial_dma_callback,
@@ -255,7 +272,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         mal_hspec_stm32f0_dma_set_callback(handle->rx_dma_channel,
                                            &mal_hspec_stm32f0_serial_dma_callback,
                                            handle);
-        NVIC_EnableIRQ(mal_hspec_stm32f0_dma_get_irq(handle->rx_dma_channel));
+        NVIC_EnableIRQ(rx_irq);
         NVIC_EnableIRQ(uart_irq);
         USART_ITConfig(handle->usart_typedef, USART_IT_IDLE, ENABLE);
         DMA_Cmd(handle->rx_dma_channel, ENABLE);
@@ -280,12 +297,14 @@ void USART3_4_IRQHandler(void) {
     // Check USART3
     if (USART_GetITStatus(USART3, USART_IT_TXE) == SET ||
         USART_GetITStatus(USART3, USART_IT_RXNE) == SET ||
+        USART_GetITStatus(USART3, USART_IT_IDLE) == SET ||
         (USART3->ISR & USART_ISR_ORE)) {
         mal_hspec_stm32f0_serial_interrupt(port_usart3);
     }
     // Check USART4
     if (USART_GetITStatus(USART4, USART_IT_TXE) == SET ||
         USART_GetITStatus(USART4, USART_IT_RXNE) == SET ||
+        USART_GetITStatus(USART4, USART_IT_IDLE) == SET ||
         (USART4->ISR & USART_ISR_ORE)) {
         mal_hspec_stm32f0_serial_interrupt(port_usart4);
     }
@@ -319,6 +338,17 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *handle) {
         handle->error = true;
         USART_ClearITPendingBit(handle->usart_typedef, USART_IT_ORE);
     }
+    // Check for idle
+    if (USART_GetITStatus(handle->usart_typedef, USART_IT_IDLE) == SET) {
+        USART_ClearITPendingBit(handle->usart_typedef, USART_IT_IDLE);
+        // Disable serial interrupts
+        mal_serial_interrupt_s state;
+        mal_serial_disable_interrupt(handle, &state);
+        // Check for RX transfer complete
+        mal_hspec_stm32f0_serial_handle_rx_dma(handle);
+        // Restore interrupts
+        mal_serial_enable_interrupt(handle, &state);
+    }
 }
 
 mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
@@ -329,9 +359,25 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
     // Disable interrupts
     mal_serial_interrupt_s state;
     mal_serial_disable_interrupt(handle, &state);
-    // Start transfer and enable interrupt
-    USART_SendData(handle->usart_typedef, data);
-    USART_ITConfig(handle->usart_typedef, USART_IT_TXE, ENABLE);
+    if (handle->dma_mode) {
+        // Fill data buffer
+        mal_error_e result;
+        uint8_t data_count = 0;
+        do {
+            handle->tx_buffer[data_count++] = data;
+            result = handle->tx_callback(handle, &data);
+        } while ((data_count < MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE) &&
+                 (MAL_ERROR_OK == result));
+        // Start new transfer
+        handle->tx_dma_channel->CNDTR = data_count;
+        DMA_Cmd(handle->tx_dma_channel, ENABLE);
+        // Enable interrupt
+        NVIC_EnableIRQ(handle->dma_tx_irq);
+    } else {
+        // Start transfer and enable interrupt
+        USART_SendData(handle->usart_typedef, data);
+        USART_ITConfig(handle->usart_typedef, USART_IT_TXE, ENABLE);
+    }
     handle->active = true;
     mal_serial_enable_interrupt(handle, &state);
 
@@ -376,18 +422,14 @@ static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port) {
 }
 
 MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
-    IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(handle->port);
-    state->serial_state = NVIC_GetActive(irq);
-    NVIC_DisableIRQ(irq);
+    state->mask = mal_hspec_stm32f0_nvic_get_activity(handle->nvic_mask);
+    mal_hspec_stm32f0_nvic_clear(handle->nvic_mask);
     __DSB();
     __ISB();
 }
 
 MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
-    if (state->serial_state) {
-        IRQn_Type irq = mal_hspec_stm32f0_serial_get_irq(handle->port);
-        NVIC_EnableIRQ(irq);
-    }
+    mal_hspec_stm32f0_nvic_set(state->mask);
 }
 
 static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
@@ -397,6 +439,62 @@ static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
     mal_serial_disable_interrupt(serial_handle, &state);
     // Check for RX transfer complete
     if (SET == DMA_GetITStatus(serial_handle->rx_dma_flag)) {
+        mal_hspec_stm32f0_serial_handle_rx_dma(serial_handle);
+    }
+    // Check for TX transfer complete
+    if (SET == DMA_GetITStatus(serial_handle->tx_dma_flag)) {
+        // Clear interrupt
+        DMA_ClearITPendingBit(serial_handle->tx_dma_flag);
+        // Disable channel to allow reconfiguration
+        DMA_Cmd(serial_handle->tx_dma_channel, DISABLE);
+        // Get new data to transfer
+        mal_error_e result;
+        uint16_t data;
+        uint8_t data_count = 0;
+        do {
+            result = serial_handle->tx_callback(handle, &data);
+            if (MAL_ERROR_OK == result) {
+                serial_handle->tx_buffer[data_count++] = data;
+            }
+        } while ((data_count < MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE) &&
+                 (MAL_ERROR_OK == result));
+        if (data_count) {
+            // Start new transfer
+            serial_handle->tx_dma_channel->CNDTR = data_count;
+            DMA_Cmd(serial_handle->tx_dma_channel, ENABLE);
+        } else {
+            // Set interface inactive
+            NVIC_DisableIRQ(serial_handle->dma_tx_irq);
+            state.mask = mal_hspec_stm32f0_nvic_remove_irq(serial_handle->dma_tx_irq, state.mask);
+            serial_handle->active = false;
+        }
+    }
+    // Restore interrupts
+    mal_serial_enable_interrupt(serial_handle, &state);
+}
 
+static void mal_hspec_stm32f0_serial_handle_rx_dma(mal_serial_s *handle) {
+    // Save transfered data
+    uint8_t data_count = MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE - handle->rx_dma_channel->CNDTR;
+    // Clear interrupt
+    DMA_ClearITPendingBit(handle->rx_dma_flag);
+    // Disable channel to allow reconfiguration
+    DMA_Cmd(handle->rx_dma_channel, DISABLE);
+    // Start new transfer
+    uint16_t *old_buffer;
+    if (handle->using_rx_buffer_1) {
+        handle->rx_dma_channel->CMAR = (uint32_t)handle->rx_buffer_2;
+        old_buffer = handle->rx_buffer_1;
+    } else {
+        handle->rx_dma_channel->CMAR = (uint32_t)handle->rx_buffer_1;
+        old_buffer = handle->rx_buffer_2;
+    }
+    handle->using_rx_buffer_1 = !handle->using_rx_buffer_1;
+    handle->rx_dma_channel->CNDTR = MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE;
+    DMA_Cmd(handle->rx_dma_channel, ENABLE);
+    // Notify reception
+    uint8_t index;
+    for (index = 0; index < data_count; index++) {
+        handle->rx_callback(handle, old_buffer[index]);
     }
 }

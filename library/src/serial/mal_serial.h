@@ -76,8 +76,8 @@ typedef struct MAL_SERIAL mal_serial_s;
 /**
  * @brief Callback on byte transmitted.
  * @param data The next data to transfer.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
+ * @return Return a status once you executed your callback. If the value is not
+ * #MAL_ERROR_OK, it is assumed that data must not be sent.
  */
 typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_s *handle, uint16_t *data);
 
