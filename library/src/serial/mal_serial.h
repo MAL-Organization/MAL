@@ -71,13 +71,15 @@ typedef enum {
     MAL_SERIAL_PARITY_NONE  //!< Without parity
 } mal_serial_parity_e;
 
+typedef struct MAL_SERIAL mal_serial_s;
+
 /**
  * @brief Callback on byte transmitted.
  * @param data The next data to transfer.
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_port_e port, uint16_t *data);
+typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_s *handle, uint16_t *data);
 
 /**
  * @brief Callback on byte received.
@@ -85,7 +87,7 @@ typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_port_e port, uint16_t
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_rx_callback_t)(mal_serial_port_e port, uint16_t data);
+typedef mal_error_e (*mal_serial_rx_callback_t)(mal_serial_s *handle, uint16_t data);
 
 /**
  * Parameters to initialize a serial port.
@@ -102,13 +104,6 @@ typedef struct {
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
 } mal_serial_init_s;
 
-typedef struct {
-    mal_serial_port_e port;
-    mal_serial_rx_callback_t rx_callback;
-    mal_serial_tx_callback_t tx_callback;
-    void *impl;
-} mal_serial_port_s;
-
 typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
 
 /**
@@ -117,7 +112,7 @@ typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
  * @param init Initialization parameters.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_serial_init(mal_serial_port_s *handle, mal_serial_init_s *init);
+mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init);
 
 /**
  * @brief Send data on the given port. Note that this is not a blocking call.
@@ -127,14 +122,14 @@ mal_error_e mal_serial_init(mal_serial_port_s *handle, mal_serial_init_s *init);
  * @return @MAL_ERROR_OK on success. If the port is busy, returns
  * #MAL_ERROR_HARDWARE_UNAVAILABLE.
  */
-mal_error_e mal_serial_transfer(mal_serial_port_s *handle, uint16_t data);
+mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data);
 
 /**
  * @brief Disable a serial port interrupt.
  * @param handle The port to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_port_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
 
 /**
  * @brief Enable a serial port interrupt.
@@ -142,7 +137,7 @@ MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_port_s *handle, mal
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
  */
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
 
 /**
  * @}
