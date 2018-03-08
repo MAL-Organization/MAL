@@ -48,4 +48,6 @@ void mal_hspec_stm32f0_dma_set_callback(DMA_Channel_TypeDef *channel,
 
 uint32_t mal_hspec_stm32f0_dma_get_flag(DMA_Channel_TypeDef *channel);
 
+void mal_hspec_stm32f0_dma_enable_clock(DMA_Channel_TypeDef *channel);
+
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_DMA_H_ */

@@ -26,6 +26,7 @@
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_dma.h"
 #include "std/mal_bool.h"
 #include "std/mal_stdlib.h"
+#include "stm32f0/stm32f0xx_rcc.h"
 
 #define HSPEC_STM32F0_DMA_CHANNEL_SIZE  7
 
@@ -166,11 +167,14 @@ void mal_hspec_stm32f0_dma_free_channel(DMA_Channel_TypeDef *channel) {
 }
 
 void mal_hspec_stm32f0_dma_remap_serial(DMA_Channel_TypeDef *dma_channel, mal_serial_port_e port) {
+    // Ensure clock is enabled
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+    // Remap
     switch ((uint32_t)dma_channel) {
         case DMA1_Channel2_BASE:
             if (MAL_SERIAL_PORT_1 == port) {
                 SYSCFG_DMAChannelRemapConfig(SYSCFG_DMARemap_USART1Tx, DISABLE);
-            } else if (MAL_SERIAL_PORT_1 == port) {
+            } else if (MAL_SERIAL_PORT_3 == port) {
                 SYSCFG_DMAChannelRemapConfig(SYSCFG_DMARemap_USART3, ENABLE);
             }
             break;
@@ -284,6 +288,10 @@ void mal_hspec_stm32f0_dma_set_callback(DMA_Channel_TypeDef *channel,
             dma_channels[6].callback_handle = handle;
             break;
     }
+}
+
+void mal_hspec_stm32f0_dma_enable_clock(DMA_Channel_TypeDef *channel) {
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
 }
 
 void DMA1_Channel1_IRQHandler(void) {

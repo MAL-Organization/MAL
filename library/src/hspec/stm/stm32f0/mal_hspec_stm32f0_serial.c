@@ -105,7 +105,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     gpio_init.GPIO_Mode = GPIO_Mode_AF;
     gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
     gpio_init.GPIO_OType = GPIO_OType_PP;
-    gpio_init.GPIO_PuPd = GPIO_PuPd_UP;
+    gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->tx_gpio->port), &gpio_init);
 
     gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->rx_gpio->pin);
@@ -199,6 +199,9 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         USART_ITConfig(handle->usart_typedef, USART_IT_RXNE, ENABLE);
     } else {
         // Initialize DMA. See https://stm32f4-discovery.net/2017/07/stm32-tutorial-efficiently-receive-uart-data-using-dma/.
+        // Enable DMA clocks
+        mal_hspec_stm32f0_dma_enable_clock(handle->tx_dma_channel);
+        mal_hspec_stm32f0_dma_enable_clock(handle->rx_dma_channel);
         // Remap DMA channels
         mal_hspec_stm32f0_dma_remap_serial(handle->tx_dma_channel, handle->port);
         mal_hspec_stm32f0_dma_remap_serial(handle->rx_dma_channel, handle->port);
@@ -241,7 +244,9 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         mal_hspec_stm32f0_dma_set_callback(handle->rx_dma_channel,
                                            &mal_hspec_stm32f0_serial_dma_callback,
                                            handle);
+        NVIC_EnableIRQ(handle->dma_tx_irq);
         NVIC_EnableIRQ(rx_irq);
+        DMA_ITConfig(handle->rx_dma_channel, DMA_IT_TC, ENABLE);
         NVIC_EnableIRQ(uart_irq);
         USART_ITConfig(handle->usart_typedef, USART_IT_IDLE, ENABLE);
         DMA_Cmd(handle->rx_dma_channel, ENABLE);
@@ -332,16 +337,19 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
         // Fill data buffer
         mal_error_e result;
         uint8_t data_count = 0;
+        handle->tx_buffer[data_count++] = data;
         do {
-            handle->tx_buffer[data_count++] = data;
             result = handle->tx_callback(handle, &data);
+            if (MAL_ERROR_OK == result) {
+                handle->tx_buffer[data_count++] = data;
+            }
         } while ((data_count < MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE) &&
                  (MAL_ERROR_OK == result));
         // Start new transfer
         handle->tx_dma_channel->CNDTR = data_count;
         DMA_Cmd(handle->tx_dma_channel, ENABLE);
         // Enable interrupt
-        NVIC_EnableIRQ(handle->dma_tx_irq);
+        DMA_ITConfig(handle->tx_dma_channel, DMA_IT_TC, ENABLE);
     } else {
         // Start transfer and enable interrupt
         USART_SendData(handle->usart_typedef, data);
@@ -434,7 +442,7 @@ static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
         } else {
             // Set interface inactive
             NVIC_DisableIRQ(serial_handle->dma_tx_irq);
-            state.mask = mal_hspec_stm32f0_nvic_remove_irq(serial_handle->dma_tx_irq, state.mask);
+            DMA_ITConfig(serial_handle->tx_dma_channel, DMA_IT_TC, DISABLE);
             serial_handle->active = false;
         }
     }
