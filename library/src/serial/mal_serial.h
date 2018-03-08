@@ -71,10 +71,15 @@ typedef enum {
     MAL_SERIAL_PARITY_NONE  //!< Without parity
 } mal_serial_parity_e;
 
+/**
+ * Serial handle that must be defined by hardware specific implementation. Used
+ * to access the serial functions.
+ */
 typedef struct MAL_SERIAL mal_serial_s;
 
 /**
  * @brief Callback on byte transmitted.
+ * @param handle The given handle during initialization.
  * @param data The next data to transfer.
  * @return Return a status once you executed your callback. If the value is not
  * #MAL_ERROR_OK, it is assumed that data must not be sent.
@@ -83,7 +88,8 @@ typedef mal_error_e (*mal_serial_tx_callback_t)(void *handle, uint16_t *data);
 
 /**
  * @brief Callback on byte received.
- * @param data The data received..
+ * @param handle The given handle during initialization.
+ * @param data The data received.
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
@@ -101,11 +107,15 @@ typedef struct {
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
     mal_serial_parity_e parity; /**< The parity setting.*/
     mal_serial_tx_callback_t tx_callback; /**< Transmit completed callback.*/
-    void *tx_callback_handle;
+    void *tx_callback_handle; /**< Will be given during the execution of tx_callback.*/
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
-    void *rx_callback_handle;
+    void *rx_callback_handle; /**< Will be given during the execution of rx_callback.*/
 } mal_serial_init_s;
 
+/**
+ * This structure is used to retain interrupt status between disable and
+ * enable. Must be defined by the hardware specific implementation.
+ */
 typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
 
 /**
