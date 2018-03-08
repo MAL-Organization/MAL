@@ -36,8 +36,10 @@
 typedef struct MAL_SERIAL {
     // Basic serial variables
     mal_serial_port_e port;
-    mal_serial_rx_callback_t rx_callback;
     mal_serial_tx_callback_t tx_callback;
+    void *tx_callback_handle;
+    mal_serial_rx_callback_t rx_callback;
+    void *rx_callback_handle;
     // Interrupts statuses
     bool active;
     bool error;

@@ -79,7 +79,7 @@ typedef struct MAL_SERIAL mal_serial_s;
  * @return Return a status once you executed your callback. If the value is not
  * #MAL_ERROR_OK, it is assumed that data must not be sent.
  */
-typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_s *handle, uint16_t *data);
+typedef mal_error_e (*mal_serial_tx_callback_t)(void *handle, uint16_t *data);
 
 /**
  * @brief Callback on byte received.
@@ -87,7 +87,7 @@ typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_s *handle, uint16_t *
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_rx_callback_t)(mal_serial_s *handle, uint16_t data);
+typedef mal_error_e (*mal_serial_rx_callback_t)(void *handle, uint16_t data);
 
 /**
  * Parameters to initialize a serial port.
@@ -101,7 +101,9 @@ typedef struct {
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
     mal_serial_parity_e parity; /**< The parity setting.*/
     mal_serial_tx_callback_t tx_callback; /**< Transmit completed callback.*/
+    void *tx_callback_handle;
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
+    void *rx_callback_handle;
 } mal_serial_init_s;
 
 typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;

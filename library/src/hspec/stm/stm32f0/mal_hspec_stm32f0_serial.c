@@ -177,7 +177,9 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     handle->port = init->port;
     handle->usart_typedef = usart_typedef;
     handle->tx_callback = init->tx_callback;
+    handle->tx_callback_handle = init->tx_callback_handle;
     handle->rx_callback = init->rx_callback;
+    handle->rx_callback_handle = init->rx_callback_handle;
     handle->active = false;
     handle->error = false;
     handle->nvic_mask = 0;
@@ -290,7 +292,7 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *handle) {
     // Check if transmit completed
     if (USART_GetITStatus(handle->usart_typedef, USART_IT_TXE) == SET) {
         // Execute callback
-        result = handle->tx_callback(handle, &data);
+        result = handle->tx_callback(handle->tx_callback_handle, &data);
         // Send next word if given
         if (MAL_ERROR_OK == result) {
             USART_SendData(handle->usart_typedef, data);
@@ -305,7 +307,7 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *handle) {
         // Read data
         data = USART_ReceiveData(handle->usart_typedef);
         // Execute callback
-        handle->rx_callback(handle, data);
+        handle->rx_callback(handle->rx_callback_handle, data);
     }
     // Check for errors
     if (handle->usart_typedef->ISR & USART_ISR_ORE) {
@@ -339,7 +341,7 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
         uint8_t data_count = 0;
         handle->tx_buffer[data_count++] = data;
         do {
-            result = handle->tx_callback(handle, &data);
+            result = handle->tx_callback(handle->tx_callback_handle, &data);
             if (MAL_ERROR_OK == result) {
                 handle->tx_buffer[data_count++] = data;
             }
@@ -429,7 +431,7 @@ static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
         uint16_t data;
         uint8_t data_count = 0;
         do {
-            result = serial_handle->tx_callback(handle, &data);
+            result = serial_handle->tx_callback(serial_handle->tx_callback_handle, &data);
             if (MAL_ERROR_OK == result) {
                 serial_handle->tx_buffer[data_count++] = data;
             }
@@ -472,6 +474,6 @@ static void mal_hspec_stm32f0_serial_handle_rx_dma(mal_serial_s *handle) {
     // Notify reception
     uint8_t index;
     for (index = 0; index < data_count; index++) {
-        handle->rx_callback(handle, old_buffer[index]);
+        handle->rx_callback(handle->rx_callback_handle, old_buffer[index]);
     }
 }
