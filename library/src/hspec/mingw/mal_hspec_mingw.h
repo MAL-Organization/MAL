@@ -1,7 +1,7 @@
 /*
- * mal_hspec.h
+ * mal_hspec_mingw.h
  *
- *  Created on: Mar 7, 2018
+ *  Created on: Mar 8, 2018
  *      Author: Olivier
  */
 /*
@@ -23,13 +23,9 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MAL_HSPEC_H_
-#define HSPEC_MAL_HSPEC_H_
+#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
 
-#if defined(MAL_STM)
-#include "hspec/stm/mal_hspec_stm.h"
-#elif defined(MAL_MINGW)
-#include "hspec/mingw/mal_hspec_mingw.h"
-#endif
+#include "hspec/mingw/mal_hspec_mingw_serial.h"
 
-#endif /* HSPEC_MAL_HSPEC_H_ */
+#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */

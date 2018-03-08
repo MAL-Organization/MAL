@@ -27,9 +27,23 @@
 #define HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
 
 #include "serial/mal_serial.h"
+#include "utils/mal_circular_buffer.h"
+#include "std/mal_stdint.h"
 
-mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_port_e port, uint16_t *data);
+#define MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE 100
 
-mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_port_e port, uint16_t data);
+typedef struct MAL_SERIAL {
+    mal_serial_init_s init;
+    mal_circular_buffer_s tx_circular_buffer;
+    uint16_t data_buffer[MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE];
+} mal_serial_s;
+
+typedef struct MAL_SERIAL_INTERRUPT {
+
+} mal_serial_interrupt_s;
+
+mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *data);
+
+mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_s *handle, uint16_t data);
 
 #endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_ */
