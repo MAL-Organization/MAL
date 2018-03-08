@@ -140,6 +140,12 @@ MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_seri
 MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
 
 /**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
+
+/**
  * @}
  */
 

@@ -30,6 +30,8 @@
 #include "clock/mal_clock.h"
 #include "std/mal_bool.h"
 
+#include "mal_hspec_stm32f0_serial.h"
+
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
 #define MAL_HSPEC_STM32F0_HSI_PLL_DIV	1

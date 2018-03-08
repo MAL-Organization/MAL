@@ -469,6 +469,7 @@
 									<listOptionValue builtIn="false" value="MAL_STM32F0"/>
 									<listOptionValue builtIn="false" value="MAL_STM32F072RB"/>
 									<listOptionValue builtIn="false" value="STM32F072"/>
+									<listOptionValue builtIn="false" value="MAL_STM"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.584641423" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -484,6 +485,7 @@
 									<listOptionValue builtIn="false" value="MAL_STM32F0"/>
 									<listOptionValue builtIn="false" value="MAL_STM32F072RB"/>
 									<listOptionValue builtIn="false" value="STM32F072"/>
+									<listOptionValue builtIn="false" value="MAL_STM"/>
 								</option>
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input.1707104672" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.c.compiler.input"/>
 							</tool>

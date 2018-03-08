@@ -23,44 +23,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "serial/mal_serial.h"
+#include "mal_hspec_stm32f0_serial.h"
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
 #include "stm32f0/stm32f0xx_usart.h"
-#include "std/mal_bool.h"
 #include "stm32f0/stm32f0xx_dma.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_dma.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_nvic.h"
-
-#define MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE    8
-
-typedef struct MAL_SERIAL {
-    // Basic serial variables
-    mal_serial_port_e port;
-    mal_serial_rx_callback_t rx_callback;
-    mal_serial_tx_callback_t tx_callback;
-    // Interrupts statuses
-    bool active;
-    bool error;
-    bool dma_mode;
-    IRQn_Type dma_tx_irq;
-    uint32_t nvic_mask;
-    // STM registers
-    USART_TypeDef *usart_typedef;
-    // DMA variables
-    uint16_t tx_buffer[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
-    uint16_t rx_buffer_1[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
-    uint16_t rx_buffer_2[MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE];
-    volatile bool using_rx_buffer_1;
-    DMA_Channel_TypeDef *tx_dma_channel;
-    DMA_Channel_TypeDef *rx_dma_channel;
-    uint32_t tx_dma_flag;
-    uint32_t rx_dma_flag;
-} mal_serial_s;
-
-typedef struct MAL_SERIAL_INTERRUPT {
-    uint32_t mask;
-} mal_serial_interrupt_s;
 
 static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *port);
 static mal_error_e mal_hspec_stm32f0_serial_save_handle(mal_serial_port_e port, mal_serial_s *handle);
