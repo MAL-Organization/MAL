@@ -67,3 +67,14 @@ void mal_pool_flush(mal_pool_s *pool) {
 		pool->objects[index].is_free = true;
 	}
 }
+
+mal_error_e mal_pool_get_next(mal_pool_s *pool, uint64_t *index, void **object) {
+    for (; *index < pool->size; (*index)++) {
+        if (!pool->objects[*index].is_free) {
+            // Index is incremented so the next call will start at the next index
+            *object = pool->objects[(*index)++].object;
+            return MAL_ERROR_OK;
+        }
+    }
+    return MAL_ERROR_NOT_FOUND;
+}

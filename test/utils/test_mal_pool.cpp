@@ -114,3 +114,78 @@ TEST_F (TestMalPool, Flush) {
 		ASSERT_TRUE(this->test_pool.objects[i].is_free) << "All objects should be free";
 	}
 }
+
+TEST_F (TestMalPool, GetNext) {
+	mal_error_e result;
+	uint64_t index;
+	uint32_t *test_object;
+	// Fill pool
+	for (index = 0; index < this->test_pool.size; index++) {
+		result = mal_pool_allocate(&this->test_pool, (void**)&test_object);
+		ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to allocate";
+		// Set value equal to index
+		*test_object = index;
+	}
+	// Free every other object
+	uint32_t free_count = 0;
+	for (index = 0; index < this->test_pool.size; index += 2) {
+		test_object = (uint32_t*)this->test_pool.objects[index].object;
+		mal_pool_free(&this->test_pool, test_object);
+		free_count++;
+	}
+	// Test get next function
+	uint32_t expected_test_count = this->test_pool.size - free_count;
+	uint32_t expected_value = 1;
+	uint32_t test_count = 0;
+	index = 0;
+	do {
+		// Make sure this loop hasn't been executed too many times
+		ASSERT_LE(test_count, expected_test_count) << "To many objects return by get next";
+		// Do get
+		result = mal_pool_get_next(&this->test_pool, &index, (void**)&test_object);
+		// Check if value if to be expected
+		if (MAL_ERROR_OK == result) {
+			test_count++;
+			ASSERT_EQ(*test_object, expected_value) << "Did not get expected object";
+			expected_value += 2;
+		}
+	} while (MAL_ERROR_OK == result);
+	// Ensure the method got the correct number of objects
+	ASSERT_EQ(test_count, expected_test_count) << "Return too few objects";
+}
+
+TEST_F (TestMalPool, ForEach) {
+	mal_error_e result;
+	uint64_t index;
+	uint32_t *test_object;
+	// Fill pool
+	for (index = 0; index < this->test_pool.size; index++) {
+		result = mal_pool_allocate(&this->test_pool, (void**)&test_object);
+		ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to allocate";
+		// Set value equal to index
+		*test_object = index;
+	}
+	// Free every other object
+	uint32_t free_count = 0;
+	for (index = 0; index < this->test_pool.size; index += 2) {
+		test_object = (uint32_t*)this->test_pool.objects[index].object;
+		mal_pool_free(&this->test_pool, test_object);
+		free_count++;
+	}
+	// Test for each
+	uint32_t expected_test_count = this->test_pool.size - free_count;
+	uint32_t expected_value = 1;
+	uint32_t test_count = 0;
+	MAL_POOL_FOR_EACH(&this->test_pool, index, test_object) {
+		// Make sure this loop hasn't been executed too many times
+		ASSERT_LE(test_count, expected_test_count) << "To many objects return by get next";
+		// Check if value if to be expected
+		if (MAL_ERROR_OK == result) {
+			test_count++;
+			ASSERT_EQ(*test_object, expected_value) << "Did not get expected object";
+			expected_value += 2;
+		}
+	}
+	// Ensure the method got the correct number of objects
+	ASSERT_EQ(test_count, expected_test_count) << "Return too few objects";
+}
