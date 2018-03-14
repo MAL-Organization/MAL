@@ -1,7 +1,7 @@
 /*
- * mal_hspec_mingw_serial.h
+ * mal_hspec_stm32f0_nvic.h
  *
- *  Created on: Nov 6, 2017
+ *  Created on: Mar 7, 2018
  *      Author: Olivier
  */
 /*
@@ -23,27 +23,20 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
+#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_NVIC_H_
+#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_NVIC_H_
 
-#include "serial/mal_serial.h"
-#include "utils/mal_circular_buffer.h"
 #include "std/mal_stdint.h"
+#include "stm32f0/stm32f0xx.h"
 
-#define MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE 100
+uint32_t mal_hspec_stm32f0_nvic_add_irq(IRQn_Type irq, uint32_t mask);
 
-typedef struct MAL_SERIAL {
-    mal_serial_init_s init;
-    mal_circular_buffer_s tx_circular_buffer;
-    uint16_t data_buffer[MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE];
-} mal_serial_s;
+uint32_t mal_hspec_stm32f0_nvic_remove_irq(IRQn_Type irq, uint32_t mask);
 
-typedef struct MAL_SERIAL_INTERRUPT {
+uint32_t mal_hspec_stm32f0_nvic_get_activity(uint32_t mask);
 
-} mal_serial_interrupt_s;
+void mal_hspec_stm32f0_nvic_set(uint32_t mask);
 
-mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *data);
+void mal_hspec_stm32f0_nvic_clear(uint32_t mask);
 
-mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_s *handle, uint16_t data);
-
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_ */
+#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_NVIC_H_ */

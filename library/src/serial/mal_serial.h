@@ -72,20 +72,28 @@ typedef enum {
 } mal_serial_parity_e;
 
 /**
- * @brief Callback on byte transmitted.
- * @param data The next data to transfer.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
+ * Serial handle that must be defined by hardware specific implementation. Used
+ * to access the serial functions.
  */
-typedef mal_error_e (*mal_serial_tx_callback_t)(mal_serial_port_e port, uint16_t *data);
+typedef struct MAL_SERIAL mal_serial_s;
+
+/**
+ * @brief Callback on byte transmitted.
+ * @param handle The given handle during initialization.
+ * @param data The next data to transfer.
+ * @return Return a status once you executed your callback. If the value is not
+ * #MAL_ERROR_OK, it is assumed that data must not be sent.
+ */
+typedef mal_error_e (*mal_serial_tx_callback_t)(void *handle, uint16_t *data);
 
 /**
  * @brief Callback on byte received.
- * @param data The data received..
+ * @param handle The given handle during initialization.
+ * @param data The data received.
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_serial_rx_callback_t)(mal_serial_port_e port, uint16_t data);
+typedef mal_error_e (*mal_serial_rx_callback_t)(void *handle, uint16_t data);
 
 /**
  * Parameters to initialize a serial port.
@@ -99,40 +107,55 @@ typedef struct {
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
     mal_serial_parity_e parity; /**< The parity setting.*/
     mal_serial_tx_callback_t tx_callback; /**< Transmit completed callback.*/
+    void *tx_callback_handle; /**< Will be given during the execution of tx_callback.*/
     mal_serial_rx_callback_t rx_callback; /**< Receive completed callback.*/
+    void *rx_callback_handle; /**< Will be given during the execution of rx_callback.*/
 } mal_serial_init_s;
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * enable. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
+
+/**
  * @brief Initialize the given serial interface with the given parameters.
+ * @param handle The handle to use for serial functions.
  * @param init Initialization parameters.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_serial_init(mal_serial_init_s *init);
+mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init);
 
 /**
  * @brief Send data on the given port. Note that this is not a blocking call.
  * Use the callback to get the result.
- * @param port The port to use.
+ * @param handle The port to use.
  * @param data The data to send.
  * @return @MAL_ERROR_OK on success. If the port is busy, returns
  * #MAL_ERROR_HARDWARE_UNAVAILABLE.
  */
-mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data);
+mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data);
 
 /**
  * @brief Disable a serial port interrupt.
- * @param port The port to disable the interrupt from.
+ * @param handle The port to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_serial_disable_interrupt(mal_serial_port_e port);
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
 
 /**
  * @brief Enable a serial port interrupt.
- * @param port The port to enable the interrupt from.
+ * @param handle The port to enable the interrupt from.
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
  */
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool active);
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

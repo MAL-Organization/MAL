@@ -24,64 +24,53 @@
  */
 
 #include "mal_hspec_mingw_serial.h"
-#include "utils/mal_circular_buffer.h"
 
-#define MINGW_SERIAL_DATA_BUFFER_SIZE   100
-
-typedef struct {
-    mal_serial_init_s init;
-    mal_circular_buffer_s tx_circular_buffer;
-    uint16_t data_buffer[MINGW_SERIAL_DATA_BUFFER_SIZE];
-} mingw_serial_interface_s;
-
-static mingw_serial_interface_s serial_interfaces[MAL_SERIAL_PORT_SIZE];
-
-mal_error_e mal_serial_init(mal_serial_init_s *init) {
+mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     // Save init
-    serial_interfaces[init->port].init = *init;
+    handle->init = *init;
     // Initialise circular buffer
-    mal_circular_buffer_init((void*)serial_interfaces[init->port].data_buffer,
+    mal_circular_buffer_init((void*)handle->data_buffer,
                              sizeof(uint16_t),
-                             sizeof(uint16_t) * MINGW_SERIAL_DATA_BUFFER_SIZE,
-                             &serial_interfaces[init->port].tx_circular_buffer);
+                             sizeof(uint16_t) * MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE,
+                             &handle->tx_circular_buffer);
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_serial_transfer(mal_serial_port_e port, uint16_t data) {
+mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
     mal_error_e result;
     // Write to buffer
-    result = mal_circular_buffer_write(&serial_interfaces[port].tx_circular_buffer, &data);
+    result = mal_circular_buffer_write(&handle->tx_circular_buffer, &data);
     if (MAL_ERROR_OK != result) {
         return MAL_ERROR_HARDWARE_UNAVAILABLE;
     }
     return result;
 }
 
-mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_port_e port, uint16_t *data) {
+mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *data) {
     mal_error_e result;
     // Remove message from buffer
-    result = mal_circular_buffer_read(&serial_interfaces[port].tx_circular_buffer, data);
+    result = mal_circular_buffer_read(&handle->tx_circular_buffer, data);
     if (MAL_ERROR_OK != result) {
         return result;
     }
     // Execute tx callback
     uint16_t next_data;
-    result = serial_interfaces[port].init.tx_callback(port, &next_data);
+    result = handle->init.tx_callback(handle->init.tx_callback_handle, &next_data);
     if (MAL_ERROR_OK == result) {
-        mal_serial_transfer(port, next_data);
+        mal_serial_transfer(handle, next_data);
     }
 
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_port_e port, uint16_t data) {
-    return serial_interfaces[port].init.rx_callback(port, data);
+mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_s *handle, uint16_t data) {
+    return handle->init.rx_callback(handle->init.rx_callback_handle, data);
 }
 
-MAL_DEFS_INLINE bool mal_serial_disable_interrupt(mal_serial_port_e port) {
-    return false;
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+    // Nothing to do
 }
 
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_port_e port, bool active) {
+MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
     // Nothing to do
 }

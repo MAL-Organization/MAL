@@ -53,7 +53,7 @@ typedef struct {
  * A structure that contains all the necessary variables for the serial buffer.
  */
 typedef struct {
-    mal_serial_port_e port; /**< The serial port.*/
+    mal_serial_s serial_handle; /**< The serial port.*/
     volatile mal_circular_buffer_s rx_buffer; /**< A circular buffer.*/
     volatile mal_circular_buffer_s tx_buffer; /**< A circular buffer.*/
 } mal_serial_buffer_handle_s;
