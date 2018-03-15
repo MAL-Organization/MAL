@@ -46,6 +46,8 @@ static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer);
 
 static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
 
+static uint16_t mal_hspec_stm32f0_timer_event_to_polarity(mal_timer_input_e event);
+
 static timer_callback_u timer_callbacks[MAL_TIMER_SIZE];
 
 mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init) {
@@ -241,6 +243,72 @@ mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
 		*clock += *clock;
 	}
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_external_count_unmanaged(mal_timer_e timer, mal_gpio_s *source, mal_timer_input_e event) {
+    mal_error_e result;
+    // Enable GPIO clock
+    RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(source->port), ENABLE);
+    // Configure alternate function
+    uint8_t function;
+    result = mal_hspec_stm32f0_get_timer_af(source, timer, &function);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(source->port), source->pin, function);
+    // Configure GPIO
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(source->pin);
+    gpio_init.GPIO_Mode = GPIO_Mode_AF;
+    gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
+    gpio_init.GPIO_OType = GPIO_OType_PP;
+    gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(source->port), &gpio_init);
+    // Initialize peripheral clock
+    result = mal_hspec_stm32f0_timer_init_timer_rcc(timer);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Get timer
+    TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
+    // Get timer channel
+    uint16_t timer_channel = mal_hspec_stm32f0_timer_get_channel(source, timer);
+    // Set timer clock source
+    uint16_t timer_clock_source;
+    if (TIM_Channel_1 == timer_channel) {
+        timer_clock_source = TIM_TIxExternalCLK1Source_TI1;
+    } else if (TIM_Channel_2 == timer_channel) {
+        timer_clock_source = TIM_TIxExternalCLK1Source_TI2;
+    } else {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    uint16_t polarity = mal_hspec_stm32f0_timer_event_to_polarity(event);
+    if (MAL_TIMER_INPUT_BOTH == polarity) {
+        // Detection of both edges is not supported for external clocks
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // No filters
+    uint16_t filter = 0;
+    TIM_TIxExternalClockConfig(tim, timer_clock_source, polarity, filter);
+    // Initialize time base timer
+    TIM_TimeBaseInitTypeDef params;
+    TIM_TimeBaseStructInit(&params);
+    params.TIM_CounterMode = TIM_CounterMode_Up;
+    params.TIM_Prescaler = 0;
+    // Set maximum value
+    uint8_t resolution;
+    result = mal_timer_get_resolution(timer, &resolution);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    uint32_t max_value = (((uint64_t)1) << ((uint64_t)resolution)) - (uint64_t)1;
+    params.TIM_Period = max_value;
+
+    TIM_TimeBaseInit(tim, &params);
+    // Enable timer
+    TIM_Cmd(tim, ENABLE);
+
+    return MAL_ERROR_OK;
 }
 
 
@@ -695,6 +763,18 @@ mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count) {
 	return MAL_ERROR_OK;
 }
 
+static uint16_t mal_hspec_stm32f0_timer_event_to_polarity(mal_timer_input_e event) {
+    switch (event) {
+        case MAL_TIMER_INPUT_FALLING:
+            return TIM_ICPolarity_Falling;
+        case MAL_TIMER_INPUT_RISING:
+            return TIM_ICPolarity_Rising;
+        case MAL_TIMER_INPUT_BOTH:
+        default:
+            return TIM_ICPolarity_BothEdge;
+    }
+}
+
 mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init) {
 	mal_error_e result;
 	// Get timer
@@ -746,19 +826,7 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 	input_capture_init.TIM_ICFilter = 0; // No filter
 	// Set channel
 	input_capture_init.TIM_Channel = timer_channel;
-	// Set requested polarity
-	switch (init->input_event) {
-		case MAL_TIMER_INPUT_FALLING:
-			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_Falling;
-			break;
-		case MAL_TIMER_INPUT_RISING:
-			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_Rising;
-			break;
-		case MAL_TIMER_INPUT_BOTH:
-		default:
-			input_capture_init.TIM_ICPolarity = TIM_ICPolarity_BothEdge;
-			break;
-	}
+	input_capture_init.TIM_ICPolarity = mal_hspec_stm32f0_timer_event_to_polarity(init->input_event);
 	// Set input prescaler
 	switch (init->input_divider) {
 		case 1:

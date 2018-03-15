@@ -140,6 +140,10 @@ typedef struct {
 	mal_hertz_t delta; //!< Frequency error tolerance.
 } mal_timer_init_tick_s;
 
+typedef struct {
+
+} mal_timer_init_count_s;
+
 /**
  * @brief Disable interrupts for a timer.
  * @param timer The timer to disable the interrupt. Should be of type
@@ -223,7 +227,8 @@ mal_error_e mal_timer_is_valid(mal_timer_e timer);
 mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
 
 /**
- * @brief Initialize a timer. Note that this method does support the any timer.
+ * @brief Initialize a timer in compare mode. If a callback is given, it will
+ * called on compare. To use the any timer, see mal_timer_init_task.
  * @param init Timer initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
@@ -287,6 +292,10 @@ mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_t
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency);
+
+mal_error_e mal_timer_init_external_count(mal_timer_e timer, mal_gpio_s *source, mal_timer_input_e event);
+
+mal_error_e mal_timer_init_external_count_unmanaged(mal_timer_e timer, mal_gpio_s *source, mal_timer_input_e event);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task). Similar

@@ -258,6 +258,25 @@ mal_error_e mal_timer_init_count(mal_timer_e timer,
 	return MAL_ERROR_OK;
 }
 
+mal_error_e mal_timer_init_external_count(mal_timer_e timer, mal_gpio_s *source, mal_timer_input_e event) {
+    mal_error_e result;
+    // Reserve timer
+    result = reserve_timer(timer, &timer);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Initialize timer
+    result = mal_timer_init_external_count_unmanaged(timer, source, event);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Save info
+    timer_states[timer].frequency = 0;
+    timer_states[timer].delta = 0;
+
+    return MAL_ERROR_OK;
+}
+
 mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask) {
 	mal_error_e result;
 	// Get timer resolution
