@@ -88,6 +88,10 @@ void mal_pool_free(mal_pool_s *pool, void *object);
  */
 void mal_pool_flush(mal_pool_s *pool);
 
+mal_error_e mal_pool_get_next(mal_pool_s *pool, uint64_t *index, void **object);
+
+#define MAL_POOL_FOR_EACH(pool, index, object) index=0;while(MAL_ERROR_OK == mal_pool_get_next(pool, &index, (void**)&object))
+
 /**
  * @}
  */
