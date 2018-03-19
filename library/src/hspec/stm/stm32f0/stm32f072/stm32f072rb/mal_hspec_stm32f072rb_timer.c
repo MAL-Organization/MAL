@@ -137,7 +137,7 @@ static const mal_hspec_stm32f0_af_e timer_channels_afs[MAL_GPIO_PORT_SIZE][MAL_H
 		}
 };
 
-void mal_hspec_stm32f072rb_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
+void mal_hspec_stm32f0_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]) {
 	*afs = &timer_channels_afs;
 }
 
