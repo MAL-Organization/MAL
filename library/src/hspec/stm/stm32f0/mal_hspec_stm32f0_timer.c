@@ -443,6 +443,7 @@ uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e
 	switch ((*timer_afs)[gpio->port][gpio->pin][timer]) {
 		case MAL_HSPEC_STM32F0_AF_TIM1_CH1:
 		case MAL_HSPEC_STM32F0_AF_TIM1_CH1N:
+		case MAL_HSPEC_STM32F0_AF_TIM2_CH1_ETR:
 		case MAL_HSPEC_STM32F0_AF_TIM3_CH1:
 		case MAL_HSPEC_STM32F0_AF_TIM14_CH1:
 		case MAL_HSPEC_STM32F0_AF_TIM15_CH1:
