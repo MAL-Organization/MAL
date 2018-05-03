@@ -83,4 +83,116 @@ SysTick_Handler(void) {
 	;
 }
 
+void __attribute__ ((section(".after_vectors"),weak))
+MemManage_Handler (void)
+{
+  while (1)
+    {
+    }
+}
+
+void __attribute__ ((section(".after_vectors"),weak,naked))
+BusFault_Handler (void)
+{
+  asm volatile(
+      " tst lr,#4       \n"
+      " ite eq          \n"
+      " mrseq r0,msp    \n"
+      " mrsne r0,psp    \n"
+      " mov r1,lr       \n"
+      " ldr r2,=BusFault_Handler_C \n"
+      " bx r2"
+
+      : /* Outputs */
+      : /* Inputs */
+      : /* Clobbers */
+  );
+}
+
+void __attribute__ ((section(".after_vectors"),weak,used))
+BusFault_Handler_C (ExceptionStackFrame* frame __attribute__((unused)),
+                    uint32_t lr __attribute__((unused)))
+{
+#if defined(TRACE)
+  uint32_t mmfar = SCB->MMFAR; // MemManage Fault Address
+  uint32_t bfar = SCB->BFAR; // Bus Fault Address
+  uint32_t cfsr = SCB->CFSR; // Configurable Fault Status Registers
+
+  trace_printf ("[BusFault]\n");
+  dumpExceptionStack (frame, cfsr, mmfar, bfar, lr);
+#endif // defined(TRACE)
+
+#if defined(DEBUG)
+  __DEBUG_BKPT();
+#endif
+  while (1)
+    {
+    }
+}
+
+void __attribute__ ((section(".after_vectors"),weak,naked))
+UsageFault_Handler (void)
+{
+  asm volatile(
+      " tst lr,#4       \n"
+      " ite eq          \n"
+      " mrseq r0,msp    \n"
+      " mrsne r0,psp    \n"
+      " mov r1,lr       \n"
+      " ldr r2,=UsageFault_Handler_C \n"
+      " bx r2"
+
+      : /* Outputs */
+      : /* Inputs */
+      : /* Clobbers */
+  );
+}
+
+void __attribute__ ((section(".after_vectors"),weak,used))
+UsageFault_Handler_C (ExceptionStackFrame* frame __attribute__((unused)),
+                      uint32_t lr __attribute__((unused)))
+{
+#if defined(TRACE)
+  uint32_t mmfar = SCB->MMFAR; // MemManage Fault Address
+  uint32_t bfar = SCB->BFAR; // Bus Fault Address
+  uint32_t cfsr = SCB->CFSR; // Configurable Fault Status Registers
+#endif
+
+#if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
+
+  if ((cfsr & (1UL << 16)) != 0) // UNDEFINSTR
+    {
+      // For testing purposes, instead of BKPT use 'setend be'.
+      if (isSemihosting (frame, AngelSWITestFaultOpCode))
+        {
+          return;
+        }
+    }
+
+#endif
+
+#if defined(TRACE)
+  trace_printf ("[UsageFault]\n");
+  dumpExceptionStack (frame, cfsr, mmfar, bfar, lr);
+#endif // defined(TRACE)
+
+#if defined(DEBUG)
+  __DEBUG_BKPT();
+#endif
+  while (1)
+    {
+    }
+}
+
+void __attribute__ ((section(".after_vectors"),weak))
+DebugMon_Handler (void)
+{
+#if defined(DEBUG)
+  __DEBUG_BKPT();
+#endif
+  while (1)
+    {
+    }
+}
+
 // ----------------------------------------------------------------------------

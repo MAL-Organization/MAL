@@ -34,7 +34,8 @@
 
 typedef enum {
     MAL_POWER_RAIL_VDDA = 0, //!< Analog power rail
-    MAL_POWER_RAIL_SIZE = 1  //!< Number of power rail
+    MAL_POWER_RAIL_VDD = 1, //!< Processor input power
+    MAL_POWER_RAIL_SIZE = 2  //!< Number of power rail
 } mal_power_rail_e;
 
 /**
