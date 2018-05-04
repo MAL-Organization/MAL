@@ -25,6 +25,7 @@
 
 #include "startup/mal_startup.h"
 #include "stm32f7/system_stm32f7xx.h"
+#include "clock/mal_clock.h"
 
 static void initialise_memory(void);
 

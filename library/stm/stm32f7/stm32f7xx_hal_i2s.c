@@ -136,6 +136,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "clock/mal_clock.h"
+#include "stm32f7xx_hal_i2s.h"
+#include "stm32f7xx_hal_rcc.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -1357,7 +1360,7 @@ static uint32_t I2S_GetClockFreq(I2S_HandleTypeDef *hi2s)
       else
       {
         /* In Case the PLL Source is HSE (External Clock) */
-        vcoinput = ((HSE_VALUE / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
+        vcoinput = ((mal_clock_get_external_clock_frequency() / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
       }
 
       /* PLLI2S_VCO Output = PLLI2S_VCO Input * PLLI2SN */

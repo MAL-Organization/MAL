@@ -60,6 +60,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_i2c.h"
+#include "stm32f7xx_hal_rcc.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{

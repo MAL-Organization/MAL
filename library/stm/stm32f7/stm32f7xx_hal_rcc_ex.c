@@ -38,7 +38,9 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f7xx_hal_rcc_ex.h"
 #include "stm32f7xx_hal.h"
+#include "clock/mal_clock.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -1425,7 +1427,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the PLL Source is HSE (External Clock) */
-          vcoinput = ((HSE_VALUE / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
+          vcoinput = ((mal_clock_get_external_clock_frequency() / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
         }   
         /* PLLSAI_VCO Output = PLLSAI_VCO Input * PLLSAIN */
         /* SAI_CLK(first level) = PLLSAI_VCO Output/PLLSAIQ */
@@ -1449,7 +1451,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the PLL Source is HSE (External Clock) */
-          vcoinput = ((HSE_VALUE / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
+          vcoinput = ((mal_clock_get_external_clock_frequency() / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
         }
         
         /* PLLI2S_VCO Output = PLLI2S_VCO Input * PLLI2SN */
@@ -1478,7 +1480,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the main PLL Source is HSE */
-          frequency = HSE_VALUE;
+          frequency = mal_clock_get_external_clock_frequency();
         }
         break;       
       }
@@ -1508,7 +1510,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the PLL Source is HSE (External Clock) */
-          vcoinput = ((HSE_VALUE / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
+          vcoinput = ((mal_clock_get_external_clock_frequency() / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
         }   
         /* PLLSAI_VCO Output = PLLSAI_VCO Input * PLLSAIN */
         /* SAI_CLK(first level) = PLLSAI_VCO Output/PLLSAIQ */
@@ -1532,7 +1534,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the PLL Source is HSE (External Clock) */
-          vcoinput = ((HSE_VALUE / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
+          vcoinput = ((mal_clock_get_external_clock_frequency() / (uint32_t)(RCC->PLLCFGR & RCC_PLLCFGR_PLLM)));
         }
         
         /* PLLI2S_VCO Output = PLLI2S_VCO Input * PLLI2SN */
@@ -1561,7 +1563,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         else
         {
           /* In Case the main PLL Source is HSE */
-          frequency = HSE_VALUE;
+          frequency = mal_clock_get_external_clock_frequency();
         }
         break;       
       }

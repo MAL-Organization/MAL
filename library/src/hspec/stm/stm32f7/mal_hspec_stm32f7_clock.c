@@ -158,7 +158,31 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         } else {
             osc_config.PLL.PLLSource = RCC_PLLSOURCE_HSI;
         }
+        osc_config.PLL.PLLM = m_divider;
+        osc_config.PLL.PLLN = n_multiplier;
+        osc_config.PLL.PLLP = p_divider;
+        osc_config.PLL.PLLQ = q_divider;
+        osc_config.PLL.PLLR = r_divider;
+        hal_result = HAL_RCC_OscConfig(&osc_config);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_CLOCK_ERROR;
+        }
+        // Configure clock
+        clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK;
+        clock_config.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+        flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(target_frequency);
+        hal_result = HAL_RCC_ClockConfig(&clock_config, flash_latency);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_CLOCK_ERROR;
+        }
     }
+    // Return proper result
+    if (clk->src != MAL_SYSTEM_CLK_SRC_AUTO && clk->src != clk_src) {
+        return MAL_ERROR_CLOCK_ERROR;
+    } else if (SystemCoreClock != (uint64_t)clk->frequency) {
+        return MAL_ERROR_CLOCK_ERROR;
+    }
+    return MAL_ERROR_OK;
 }
 
 static uint32_t mal_hspec_stm32f7_clock_get_flash_latency(uint64_t system_frequency) {

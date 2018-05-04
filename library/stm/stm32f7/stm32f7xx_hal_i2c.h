@@ -43,6 +43,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
+#include "stm32f7xx_hal_dma.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -211,7 +212,7 @@ typedef struct __I2C_HandleTypeDef
 
   __IO uint32_t              PreviousState;  /*!< I2C communication Previous state          */
 
-  HAL_StatusTypeDef(*XferISR)(struct __I2C_HandleTypeDef *hi2c, uint32_t ITFlags, uint32_t ITSources);  /*!< I2C transfer IRQ handler function pointer */
+  HAL_StatusTypeDef (*XferISR)(struct __I2C_HandleTypeDef *hi2c, uint32_t ITFlags, uint32_t ITSources);  /*!< I2C transfer IRQ handler function pointer */
 
   DMA_HandleTypeDef          *hdmatx;        /*!< I2C Tx DMA handle parameters              */
 

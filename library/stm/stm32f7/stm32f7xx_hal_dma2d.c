@@ -125,6 +125,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_dma2d.h"
+#include "stm32f7xx_hal_rcc_ex.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
