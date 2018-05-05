@@ -43,6 +43,7 @@
 #if defined (STM32F767xx) || defined (STM32F769xx) || defined (STM32F777xx) || defined (STM32F779xx)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal_def.h"
+#include "stm32f7xx_hal_dma.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{

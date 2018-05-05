@@ -84,6 +84,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
 #include "clock/mal_clock.h"
+#include "stm32f7xx_hal_rcc.h"
+#include "stm32f7xx_hal_flash.h"
+#include "stm32f7xx_hal_gpio.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{

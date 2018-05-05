@@ -153,6 +153,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_uart.h"
+#include "stm32f7xx_hal_uart_ex.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{

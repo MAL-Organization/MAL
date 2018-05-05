@@ -132,8 +132,10 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f7xx.h"
 #include "stm32f7xx_hal.h"
 #include "stm32f7xx_hal_irda.h"
+#include "stm32f7xx_hal_irda_ex.h"
 
 /** @addtogroup STM32F7xx_HAL_Driver
   * @{
@@ -468,7 +470,6 @@ HAL_StatusTypeDef HAL_IRDA_Transmit(IRDA_HandleTypeDef *hirda, uint8_t *pData, u
     while(hirda->TxXferCount > 0)
     {
       hirda->TxXferCount--;
-
       if(IRDA_WaitOnFlagUntilTimeout(hirda, IRDA_FLAG_TXE, RESET, tickstart, Timeout) != HAL_OK)
       {
         return HAL_TIMEOUT;
