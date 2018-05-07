@@ -39,7 +39,7 @@
 #include "stm32f7xx_ll_pwr.h"
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
-#else
+#elif !defined(assert_param)
 #define assert_param(expr) ((void)0U)
 #endif /* USE_FULL_ASSERT */
 

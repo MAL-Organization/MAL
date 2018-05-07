@@ -26,39 +26,63 @@
 #include "startup/mal_startup.h"
 #include "stm32f7/system_stm32f7xx.h"
 #include "clock/mal_clock.h"
+#include "stm32f7/stm32f7xx_hal.h"
 
 static void initialise_memory(void);
 
 // Code from newlib.
 // defined in linker script
-extern unsigned int _sidata;
-// Begin address for the .data section; defined in linker script
-extern unsigned int _sdata;
-// End address for the .data section; defined in linker script
-extern unsigned int _edata;
-
-// Begin address for the .bss section; defined in linker script
-extern unsigned int __bss_start__;
-// End address for the .bss section; defined in linker script
-extern unsigned int __bss_end__;
+extern unsigned int __data_regions_array_start;
+extern unsigned int __data_regions_array_end;
+extern unsigned int __bss_regions_array_start;
+extern unsigned int __bss_regions_array_end;
 
 void mal_startup_hardware(void) {
     SystemInit();
     initialise_memory();
     mal_clock_initialise_system_clock();
+    HAL_Init();
+}
+
+// This code is copied from newlib.
+inline void
+__attribute__((always_inline))
+__initialize_data (unsigned int* from, unsigned int* region_begin,
+           unsigned int* region_end)
+{
+  // Iterate and copy word by word.
+  // It is assumed that the pointers are word aligned.
+  unsigned int *p = region_begin;
+  while (p < region_end)
+    *p++ = *from++;
+}
+
+// This code is copied from newlib.
+inline void
+__attribute__((always_inline))
+__initialize_bss (unsigned int* region_begin, unsigned int* region_end)
+{
+  // Iterate and clear word by word.
+  // It is assumed that the pointers are word aligned.
+  unsigned int *p = region_begin;
+  while (p < region_end)
+    *p++ = 0;
 }
 
 // This code is copied from newlib.
 static void initialise_memory(void) {
-    // Copy the DATA segment from Flash to RAM (inlined).
-    unsigned int *data_start = &_sdata;
-    unsigned int *source_data = &_sidata;
-    while (data_start < &_edata) {
-        *(data_start++) = *(source_data++);
+    // Copy the data sections from flash to SRAM.
+    for (unsigned int* p = &__data_regions_array_start; p < &__data_regions_array_end;) {
+        unsigned int* from = (unsigned int *) (*p++);
+        unsigned int* region_begin = (unsigned int *) (*p++);
+        unsigned int* region_end = (unsigned int *) (*p++);
+
+        __initialize_data (from, region_begin, region_end);
     }
-    // Zero fill the BSS section (inlined).
-    data_start = &__bss_start__;
-    while (data_start < &__bss_end__) {
-        *(data_start++) = 0;
+    // Zero fill all bss segments
+    for (unsigned int *p = &__bss_regions_array_start; p < &__bss_regions_array_end;) {
+        unsigned int* region_begin = (unsigned int*) (*p++);
+        unsigned int* region_end = (unsigned int*) (*p++);
+        __initialize_bss (region_begin, region_end);
     }
 }

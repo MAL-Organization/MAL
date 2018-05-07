@@ -44,7 +44,9 @@ typedef enum {
 	MAL_GPIO_PORT_D = 3,  //!< MAL_PORT_D
 	MAL_GPIO_PORT_E = 4,  //!< MAL_PORT_E
 	MAL_GPIO_PORT_F = 5,  //!< MAL_PORT_F
-	MAL_GPIO_PORT_SIZE = 6//!< MAL_PORT_SIZE
+	MAL_GPIO_PORT_G = 6,  //!< MAL_PORT_F
+	MAL_GPIO_PORT_H = 7,  //!< MAL_PORT_F
+	MAL_GPIO_PORT_SIZE = 8//!< MAL_PORT_SIZE
 } mal_gpio_port_e;
 
 /**
