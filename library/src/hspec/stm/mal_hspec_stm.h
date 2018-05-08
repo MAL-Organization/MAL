@@ -28,6 +28,8 @@
 
 #if defined(MAL_STM32F0)
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0.h"
+#elif defined(MAL_STM32F7)
+#include "hspec/stm/stm32f7/mal_hspec_stm32f7.h"
 #endif
 
 #endif /* HSPEC_STM_MAL_HSPEC_STM_H_ */

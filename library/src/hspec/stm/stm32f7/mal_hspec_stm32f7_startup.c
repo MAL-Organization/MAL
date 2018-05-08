@@ -27,6 +27,7 @@
 #include "stm32f7/system_stm32f7xx.h"
 #include "clock/mal_clock.h"
 #include "stm32f7/stm32f7xx_hal.h"
+#include "stm32f7/stm32f7xx.h"
 
 static void initialise_memory(void);
 
@@ -42,6 +43,8 @@ void mal_startup_hardware(void) {
     initialise_memory();
     mal_clock_initialise_system_clock();
     HAL_Init();
+    SCB_EnableICache();
+    SCB_EnableDCache();
 }
 
 // This code is copied from newlib.

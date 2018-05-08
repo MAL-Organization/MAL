@@ -47,7 +47,6 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
     uint32_t flash_latency;
     mal_system_clk_src_e clk_src = clk->src;
     float src_clk_freq;
-//    float requested_frequency = clk->frequency;
     uint64_t target_frequency = clk->frequency;
     // Choose clk source
     switch (clk->src) {
@@ -84,8 +83,11 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
     }
     // Check if clock can be used without PLL
     if (clk->frequency == src_clk_freq) {
-        clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK;
+        clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
         clock_config.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
+        clock_config.AHBCLKDivider = RCC_SYSCLK_DIV1;
+        clock_config.APB1CLKDivider = RCC_HCLK_DIV1;
+        clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
         flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(clk->frequency);
         hal_result = HAL_RCC_ClockConfig(&clock_config, flash_latency);
         if (HAL_OK != hal_result) {
@@ -168,8 +170,20 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
             return MAL_ERROR_CLOCK_ERROR;
         }
         // Configure clock
-        clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK;
+        clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
         clock_config.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+        clock_config.AHBCLKDivider = RCC_SYSCLK_DIV1;
+        // Select proper divider for APB1 and APB2
+        if (target_frequency <= 54000000ULL) {
+            clock_config.APB1CLKDivider = RCC_HCLK_DIV1;
+            clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
+        } else if (target_frequency <= 108000000ULL) {
+            clock_config.APB1CLKDivider = RCC_HCLK_DIV2;
+            clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
+        } else {
+            clock_config.APB1CLKDivider = RCC_HCLK_DIV4;
+            clock_config.APB2CLKDivider = RCC_HCLK_DIV2;
+        }
         flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(target_frequency);
         hal_result = HAL_RCC_ClockConfig(&clock_config, flash_latency);
         if (HAL_OK != hal_result) {

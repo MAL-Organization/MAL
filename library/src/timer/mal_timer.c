@@ -24,17 +24,8 @@
  */
 
 #include "timer/mal_timer.h"
-#include "std/mal_math.h"
-
-#ifdef MAL_FLOAT
-#define mal_timer_abs fabs
-#else
-#define	mal_timer_abs abs_int64
-#endif
 
 void mal_timer_states_init(void);
-
-static mal_error_e reserve_timer(mal_timer_e timer, mal_timer_e *handle);
 
 static mal_error_e get_available_timer(mal_timer_e *timer);
 
@@ -57,8 +48,6 @@ static mal_error_e mal_timer_internal_direct_init(mal_timer_e timer,
 												  mal_timer_callback_t callback,
 												  const void *direct_init,
 												  mal_timer_e *handle);
-
-static mal_timer_state_s timer_states[MAL_TIMER_SIZE];
 
 mal_error_e mal_timer_init_tick(mal_timer_init_tick_s *init, mal_timer_e *handle) {
 	return mal_timer_internal_init(init->timer,
@@ -186,26 +175,6 @@ static mal_error_e mal_timer_internal_direct_init(mal_timer_e timer,
 	return result;
 }
 
-static mal_error_e reserve_timer(mal_timer_e timer, mal_timer_e *handle) {
-	mal_error_e result;
-	// Check if timer is specified
-	if (MAL_TIMER_ANY == timer) {
-		result = get_available_timer(&timer);
-		if (MAL_ERROR_OK != result) {
-			return result;
-		}
-	}
-	// Reserve timer
-	if (timer_states[timer].is_available) {
-		timer_states[timer].is_available = false;
-		*handle = timer;
-	} else {
-		return MAL_ERROR_HARDWARE_UNAVAILABLE;
-	}
-
-	return MAL_ERROR_OK;
-}
-
 static mal_error_e timer_tick_callback(mal_timer_e timer) {
 	timer_states[timer].tick_counter++;
 	return MAL_ERROR_OK;
@@ -255,23 +224,6 @@ mal_error_e mal_timer_init_count(mal_timer_e timer,
 	}
 	timer_states[*handle].delta = mal_timer_abs(frequency - count_frequency);
 
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask) {
-	mal_error_e result;
-	// Get timer resolution
-	uint8_t resolution;
-	result = mal_timer_get_resolution(timer, &resolution);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Compute mask
-	if (resolution >= 64) {
-		*mask = UINT64_MAX;
-	} else {
-		*mask = ((((uint64_t)1)<<((uint64_t)resolution)) - ((uint64_t)1));
-	}
 	return MAL_ERROR_OK;
 }
 
