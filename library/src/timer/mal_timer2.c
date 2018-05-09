@@ -25,13 +25,27 @@
 
 #include "timer/mal_timer2.h"
 
+static mal_error_e mal_timer_get_available_timer(mal_timer_e *timer);
+
 static mal_timer_state_s timer_states[MAL_TIMER_SIZE];
+
+static mal_error_e mal_timer_get_available_timer(mal_timer_e *timer) {
+  int i;
+  for (i = 0; i < MAL_TIMER_SIZE; i++) {
+      if (timer_states[i].is_available) {
+          *timer = i;
+          return MAL_ERROR_OK;
+      }
+  }
+
+  return MAL_ERROR_HARDWARE_UNAVAILABLE;
+}
 
 mal_error_e mal_timer_reserve(mal_timer_e timer, mal_timer_e *reserved_timer) {
     mal_error_e result;
     // Check if timer is specified
     if (MAL_TIMER_ANY == timer) {
-        result = get_available_timer(&timer);
+        result = mal_timer_get_available_timer(&timer);
         if (MAL_ERROR_OK != result) {
             return result;
         }

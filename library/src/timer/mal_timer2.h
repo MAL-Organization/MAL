@@ -91,6 +91,7 @@ typedef struct {
     mal_hertz_t frequency; //!< The frequency to count to.
     mal_hertz_t delta; //!< Frequency error tolerance.
     mal_timer_callback_t callback; //!< The callback to be executed on overflow.
+    void *callback_handle;
 } mal_timer_init_task_s;
 
 /**
@@ -133,6 +134,19 @@ MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_s *handle, bool active
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle);
+
+/**
+ * @brief Initialize directly a timer that periodically calls a function
+ * (task). Using this function will reduce code size at the cost of
+ * flexibility and safety.
+ * @param init Timer initialization parameters.
+ * @param direct_init A pointer to direct initialization parameters. See the
+ * hardware specific implementation to know what type this should be.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *direct_init, mal_timer_s *handle);
 
 /**
  * @brief Get the resolution of timer. The resolution is number of bits for the

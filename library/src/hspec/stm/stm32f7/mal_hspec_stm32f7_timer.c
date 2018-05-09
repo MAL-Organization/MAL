@@ -25,9 +25,11 @@
 
 #include "mal_hspec_stm32f7_timer.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
+#include "clock/mal_clock.h"
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
+static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle);
 
 static const mal_timer_e valid_timers[] = {
     MAL_TIMER_1,
@@ -114,7 +116,7 @@ MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_s *handle, bool active
 }
 
 mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution) {
-    switch (init->timer) {
+    switch (timer) {
         case MAL_TIMER_1:
         case MAL_TIMER_3:
         case MAL_TIMER_4:
@@ -147,7 +149,7 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
     // Get timer PCLK and apb prescaler
     uint32_t pclk;
     uint32_t apb_prescaler;
-    switch (init->timer) {
+    switch (timer) {
         case MAL_TIMER_1:
         case MAL_TIMER_8:
         case MAL_TIMER_9:
@@ -207,58 +209,72 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
         case MAL_TIMER_1:
             __HAL_RCC_TIM1_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM1;
+            timer1_handle = handle;
             break;
         case MAL_TIMER_2:
             __HAL_RCC_TIM2_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM2;
+            timer2_handle = handle;
             break;
         case MAL_TIMER_3:
             __HAL_RCC_TIM3_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM3;
+            timer3_handle = handle;
             break;
         case MAL_TIMER_4:
             __HAL_RCC_TIM4_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM4;
+            timer4_handle = handle;
             break;
         case MAL_TIMER_5:
             __HAL_RCC_TIM5_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM5;
+            timer5_handle = handle;
             break;
         case MAL_TIMER_6:
             __HAL_RCC_TIM6_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM6;
+            timer6_handle = handle;
             break;
         case MAL_TIMER_7:
             __HAL_RCC_TIM7_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM7;
+            timer7_handle = handle;
             break;
         case MAL_TIMER_8:
             __HAL_RCC_TIM8_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM8;
+            timer8_handle = handle;
             break;
         case MAL_TIMER_9:
             __HAL_RCC_TIM9_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM9;
+            timer9_handle = handle;
             break;
         case MAL_TIMER_10:
             __HAL_RCC_TIM10_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM10;
+            timer10_handle = handle;
             break;
         case MAL_TIMER_11:
             __HAL_RCC_TIM11_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM11;
+            timer11_handle = handle;
             break;
         case MAL_TIMER_12:
             __HAL_RCC_TIM12_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM12;
+            timer12_handle = handle;
             break;
         case MAL_TIMER_13:
             __HAL_RCC_TIM13_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM13;
+            timer13_handle = handle;
             break;
         case MAL_TIMER_14:
             __HAL_RCC_TIM14_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM14;
+            timer14_handle = handle;
             break;
         default:
             return MAL_ERROR_HARDWARE_INVALID;
@@ -324,4 +340,21 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    // Enable NVIC interrupt for timer
+    handle->update_irq = mal_hspec_stm32f7_timer_get_update_irq(init->timer);
+    NVIC_EnableIRQ(handle->update_irq);
+    NVIC_SetPriority(handle->update_irq, 2); // Find a way to manage priorities for interrupts
+    // Enable timer interrupt
+    handle->task_callback = init->callback;
+    handle->callback_handle = init->callback_handle;
+    handle->hal_timer_handle.Parent = handle;
+    HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    mal_hspec_stm32f7_timer_handle_update(htim->Parent);
+}
+
+static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle) {
+    handle->task_callback(handle->callback_handle);
 }

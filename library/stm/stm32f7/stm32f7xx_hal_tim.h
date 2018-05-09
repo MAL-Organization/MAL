@@ -298,6 +298,7 @@ typedef struct __TIM_HandleTypeDef
                                              This array is accessed by a @ref DMA_Handle_index */
   HAL_LockTypeDef             Lock;          /*!< Locking object                    */
   __IO HAL_TIM_StateTypeDef   State;         /*!< TIM operation state               */
+  void *Parent;                              /*!< Added by MAL                      */
 
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1)
   void  (* Base_MspInitCallback)         (struct __TIM_HandleTypeDef *htim);  /*!< TIM Base Msp Init Callback          */

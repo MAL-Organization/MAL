@@ -1,7 +1,7 @@
 /*
- * mal_hspec_stm32f7_timer.h
+ * mal_hspec_stm32f7_serial.h
  *
- *  Created on: May 8, 2018
+ *  Created on: May 9, 2018
  *      Author: olivi
  */
 /*
@@ -23,18 +23,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_
+#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_
+#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_
 
-#include "timer/mal_timer2.h"
-#include "stm32f7/stm32f7xx.h"
-#include "stm32f7/stm32f7xx_hal_tim.h"
+typedef struct MAL_SERIAL {
 
-typedef struct MAL_TIMER {
-    IRQn_Type update_irq;
-    TIM_HandleTypeDef hal_timer_handle;
-    mal_timer_callback_t task_callback;
-    void *callback_handle;
-} mal_timer_s;
+} mal_serial_s;
 
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_ */
+typedef struct MAL_SERIAL_INTERRUPT {
+
+} mal_serial_interrupt_s;
+
+#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_ */

@@ -9,5 +9,6 @@
 #define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
 
 #include "mal_hspec_stm32f7_timer.h"
+#include "mal_hspec_stm32f7_serial.h"
 
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */
