@@ -167,6 +167,21 @@ mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution);
 mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask);
 
 /**
+ * @brief Check if a timer is available for this MCU.
+ * @param timer The timer to check.
+ * @return Returns #MAL_ERROR_OK if available.
+ */
+mal_error_e mal_timer_is_valid(mal_timer_e timer);
+
+/**
+ * @brief Get a list of valid timers for this MCU.
+ * @param timers The returned list.
+ * @param size The size of the returned list.
+ * @return Returns #MAL_ERROR_OK if available.
+ */
+mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
+
+/**
  * This include is last because it defines hardware specific implementations of
  * structures. If not included last, circular dependencies will arise.
  */

@@ -29,6 +29,17 @@ static mal_error_e mal_timer_get_available_timer(mal_timer_e *timer);
 
 static mal_timer_state_s timer_states[MAL_TIMER_SIZE];
 
+void mal_timer_states_init(void) {
+	mal_timer_e i;
+	for (i = 0; i < MAL_TIMER_SIZE; i++) {
+		if (MAL_ERROR_OK == mal_timer_is_valid(i)) {
+			timer_states[i].is_available = true;
+		} else {
+			timer_states[i].is_available = false;
+		}
+	}
+}
+
 static mal_error_e mal_timer_get_available_timer(mal_timer_e *timer) {
   int i;
   for (i = 0; i < MAL_TIMER_SIZE; i++) {
@@ -76,4 +87,23 @@ mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask) {
         *mask = ((((uint64_t)1)<<((uint64_t)resolution)) - ((uint64_t)1));
     }
     return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_is_valid(mal_timer_e timer) {
+	uint8_t i;
+	mal_error_e result;
+	const mal_timer_e *timers;
+	uint8_t size;
+	result = mal_timer_get_valid_timers(&timers, &size);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+
+	for (i = 0; i < size; i++) {
+		if (timers[i] == timer) {
+			return MAL_ERROR_OK;
+		}
+	}
+
+	return MAL_ERROR_HARDWARE_INVALID;
 }
