@@ -1838,6 +1838,17 @@ __STATIC_INLINE void NVIC_EnableIRQ(IRQn_Type IRQn)
 
 
 /**
+  \brief   Enable External Interrupt
+  \details Enables a device-specific interrupt in the NVIC interrupt controller.
+  \param [in]      IRQn  External interrupt number. Value cannot be negative.
+ */
+__STATIC_INLINE uint32_t NVIC_GetEnableIRQ(IRQn_Type IRQn)
+{
+  return((uint32_t)(((NVIC->ISER[(((uint32_t)(int32_t)IRQn) >> 5UL)] & (1UL << (((uint32_t)(int32_t)IRQn) & 0x1FUL))) != 0UL) ? 1UL : 0UL));
+}
+
+
+/**
   \brief   Disable External Interrupt
   \details Disables a device-specific interrupt in the NVIC interrupt controller.
   \param [in]      IRQn  External interrupt number. Value cannot be negative.

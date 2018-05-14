@@ -101,8 +101,9 @@ static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer) {
     }
 }
 
+#include "stm32f7/stm32f7xx_hal_cortex.h"
 MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
-    bool active = NVIC_GetActive(handle->update_irq);
+    bool active = (bool)NVIC_GetEnableIRQ(handle->update_irq);
     NVIC_DisableIRQ(handle->update_irq);
     __DSB();
     __ISB();
@@ -147,7 +148,7 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
     uint32_t flash_latency;
     HAL_RCC_GetClockConfig(&clock_config, &flash_latency);
     // Get timer PCLK and apb prescaler
-    uint32_t pclk;
+    uint64_t pclk;
     uint32_t apb_prescaler;
     switch (timer) {
         case MAL_TIMER_1:
@@ -155,7 +156,8 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
         case MAL_TIMER_9:
         case MAL_TIMER_10:
         case MAL_TIMER_11:
-            pclk = HAL_RCC_GetPCLK2Freq();
+            // Save as mHz
+            pclk = (uint64_t)HAL_RCC_GetPCLK2Freq() * 1000ULL;
             apb_prescaler = clock_config.APB2CLKDivider;
             break;
         case MAL_TIMER_2:
@@ -167,7 +169,8 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
         case MAL_TIMER_12:
         case MAL_TIMER_13:
         case MAL_TIMER_14:
-            pclk = HAL_RCC_GetPCLK1Freq();
+            // Save as mHz
+            pclk = (uint64_t)HAL_RCC_GetPCLK1Freq() * 1000ULL;
             apb_prescaler = clock_config.APB1CLKDivider;
             break;
         default:
@@ -294,11 +297,11 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     // Try to find proper settings for requested frequency
     uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->frequency);
     uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->delta);
-    uint32_t prescaler;
+    uint32_t prescaler = 0;
     uint32_t period;
     bool found = false;
     uint64_t smallest_delta = UINT64_MAX;
-    for (period = mask; period > 0; period--) {
+    for (period = (uint32_t)mask; period > 0; period--) {
         for (prescaler = 1; prescaler <= (UINT16_MAX + 1); prescaler++) {
             uint64_t potential_frequency = timer_frequency / ((uint64_t)period * (uint64_t)prescaler);
             uint64_t actual_delta;
@@ -349,6 +352,108 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     handle->callback_handle = init->callback_handle;
     handle->hal_timer_handle.Parent = handle;
     HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
+}
+
+void TIM1_BRK_TIM9_IRQHandler(void) {
+    if (NULL != timer1_handle) {
+        HAL_TIM_IRQHandler(&timer1_handle->hal_timer_handle);
+    }
+    if (NULL != timer9_handle) {
+        HAL_TIM_IRQHandler(&timer9_handle->hal_timer_handle);
+    }
+}
+
+void TIM1_UP_TIM10_IRQHandler(void) {
+    if (NULL != timer1_handle) {
+        HAL_TIM_IRQHandler(&timer1_handle->hal_timer_handle);
+    }
+    if (NULL != timer10_handle) {
+        HAL_TIM_IRQHandler(&timer10_handle->hal_timer_handle);
+    }
+}
+
+void TIM1_TRG_COM_TIM11_IRQHandler(void) {
+    if (NULL != timer1_handle) {
+        HAL_TIM_IRQHandler(&timer1_handle->hal_timer_handle);
+    }
+    if (NULL != timer11_handle) {
+        HAL_TIM_IRQHandler(&timer11_handle->hal_timer_handle);
+    }
+}
+
+void TIM1_CC_IRQHandler(void) {
+    if (NULL != timer1_handle) {
+        HAL_TIM_IRQHandler(&timer1_handle->hal_timer_handle);
+    }
+}
+
+void TIM2_IRQHandler(void) {
+    if (NULL != timer2_handle) {
+        HAL_TIM_IRQHandler(&timer2_handle->hal_timer_handle);
+    }
+}
+
+void TIM3_IRQHandler(void) {
+    if (NULL != timer3_handle) {
+        HAL_TIM_IRQHandler(&timer3_handle->hal_timer_handle);
+    }
+}
+
+void TIM4_IRQHandler(void) {
+    if (NULL != timer4_handle) {
+        HAL_TIM_IRQHandler(&timer4_handle->hal_timer_handle);
+    }
+}
+
+void TIM5_IRQHandler(void) {
+    if (NULL != timer5_handle) {
+        HAL_TIM_IRQHandler(&timer5_handle->hal_timer_handle);
+    }
+}
+
+void TIM6_DAC_IRQHandler(void) {
+    if (NULL != timer6_handle) {
+        HAL_TIM_IRQHandler(&timer6_handle->hal_timer_handle);
+    }
+}
+
+void TIM7_IRQHandler(void) {
+    if (NULL != timer7_handle) {
+        HAL_TIM_IRQHandler(&timer7_handle->hal_timer_handle);
+    }
+}
+
+void TIM8_BRK_TIM12_IRQHandler(void) {
+    if (NULL != timer8_handle) {
+        HAL_TIM_IRQHandler(&timer8_handle->hal_timer_handle);
+    }
+    if (NULL != timer12_handle) {
+        HAL_TIM_IRQHandler(&timer12_handle->hal_timer_handle);
+    }
+}
+
+void TIM8_UP_TIM13_IRQHandler(void) {
+    if (NULL != timer8_handle) {
+        HAL_TIM_IRQHandler(&timer8_handle->hal_timer_handle);
+    }
+    if (NULL != timer13_handle) {
+        HAL_TIM_IRQHandler(&timer13_handle->hal_timer_handle);
+    }
+}
+
+void TIM8_TRG_COM_TIM14_IRQHandler(void) {
+    if (NULL != timer8_handle) {
+        HAL_TIM_IRQHandler(&timer8_handle->hal_timer_handle);
+    }
+    if (NULL != timer14_handle) {
+        HAL_TIM_IRQHandler(&timer14_handle->hal_timer_handle);
+    }
+}
+
+void TIM8_CC_IRQHandler(void) {
+    if (NULL != timer8_handle) {
+        HAL_TIM_IRQHandler(&timer8_handle->hal_timer_handle);
+    }
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
