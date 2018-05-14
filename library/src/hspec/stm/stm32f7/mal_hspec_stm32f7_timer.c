@@ -23,13 +23,18 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "timer/mal_timer2.h"
+#include "stm32f7/stm32f7xx_hal_gpio.h"
 #include "mal_hspec_stm32f7_timer.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "clock/mal_clock.h"
+#include "stm32f7/stm32f7xx_hal_gpio_ex.h"
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
 static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle);
+static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
+                                                       mal_hertz_t delta);
 
 static const mal_timer_e valid_timers[] = {
     MAL_TIMER_1,
@@ -204,11 +209,11 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle) {
+static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
+                                                       mal_hertz_t delta) {
     mal_error_e mal_result;
-    HAL_StatusTypeDef hal_result;
-    // Enable timer clock
-    switch (init->timer) {
+    // Initialize clock and timer specific handles handles
+    switch (timer) {
         case MAL_TIMER_1:
             __HAL_RCC_TIM1_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM1;
@@ -284,19 +289,19 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     }
     // Get timer input clock
     uint64_t timer_frequency;
-    mal_result = mal_hspec_stm32f7_timer_get_input_clk(init->timer, &timer_frequency);
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(timer, &timer_frequency);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
     // Fetch mask to get max period
     uint64_t mask;
-    mal_result = mal_timer_get_count_mask(init->timer, &mask);
+    mal_result = mal_timer_get_count_mask(timer, &mask);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
     // Try to find proper settings for requested frequency
-    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->frequency);
-    uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->delta);
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
+    uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(delta);
     uint32_t prescaler = 0;
     uint32_t period;
     bool found = false;
@@ -339,6 +344,19 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     handle->hal_timer_handle.Init.RepetitionCounter = 0;
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle) {
+    mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
+    // Common initialisation such as clock, local handles and more.
+    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialise timer in basic mode
     hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
@@ -352,6 +370,36 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     handle->callback_handle = init->callback_handle;
     handle->hal_timer_handle.Parent = handle;
     HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
+}
+
+mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init, mal_timer_s *handle) {
+    mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
+    // Common initialisation such as clock, local handles and more.
+    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Set IO in PWM mode
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode = GPIO_MODE_AF_PP;
+    gpio_init.Pull = GPIO_NOPULL;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+
+    gpio_init.Alternate = GPIO_AF2_TIM3;
+    // Initialise timer in PWM mode
+    hal_result = HAL_TIM_PWM_Init(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Configure channel
+    HAL_TIM_PWM_ConfigChannel()
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_s *handle, const mal_gpio_s *gpio, mal_ratio_t duty_cycle) {
+
 }
 
 void TIM1_BRK_TIM9_IRQHandler(void) {

@@ -95,6 +95,27 @@ typedef struct {
 } mal_timer_init_task_s;
 
 /**
+ * Initialization parameters of a PWM input.
+ */
+typedef struct {
+    mal_timer_e timer; /**< The timer to use for the PWM output.*/
+    mal_hertz_t frequency; /**< The frequency of the PWM.*/
+    mal_hertz_t delta; /**< The acceptable frequency delta.*/
+    const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
+} mal_timer_pwm_init_s;
+
+/**
+ * @brief Macro to help subtract 2 timer values regardless of the resolution.
+ * The result will be count2 - count1 respecting the two's complement wrap
+ * around. This means that for an 8 bit resolution timer, 1 - 255 = 2.
+ * @param count2 The count 2 value. Should be the most recent count.
+ * @param count1 The count 1 value. Should be the oldest count.
+ * @param mask The value obtained by #mal_timer_get_count_mask.
+ * @return The result of the subtraction.
+ */
+#define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-(count1)) & (mask))) & (mask))
+
+/**
  * Reserve a timer. This function is useful if you want to use
  * #MAL_HSPEC_TIMER_ANY to reserve a random timer. This allows the use of a
  * random timer when the specific timer is not important.
@@ -137,8 +158,7 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
 
 /**
  * @brief Initialize directly a timer that periodically calls a function
- * (task). Using this function will reduce code size at the cost of
- * flexibility and safety.
+ * (task).
  * @param init Timer initialization parameters.
  * @param direct_init A pointer to direct initialization parameters. See the
  * hardware specific implementation to know what type this should be.
@@ -147,6 +167,15 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *direct_init, mal_timer_s *handle);
+
+/**
+ * @brief Initializes a timer and the IO as a PWM generator.
+ * @param init The initialize structure of the pwm.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init, mal_timer_s *handle);
 
 /**
  * @brief Get the resolution of timer. The resolution is number of bits for the
@@ -180,6 +209,16 @@ mal_error_e mal_timer_is_valid(mal_timer_e timer);
  * @return Returns #MAL_ERROR_OK if available.
  */
 mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
+
+/**
+ * @brief Set the duty cycle of an initialized PWM IO.
+ * @param handle The timer of the PWM IO.
+ * @param gpio The GPIO the PWM is on.
+ * @param duty_cyle A mal_ratio_t value representing the duty cycle on/off
+ * ratio.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_s *handle, const mal_gpio_s *gpio, mal_ratio_t duty_cycle);
 
 /**
  * This include is last because it defines hardware specific implementations of
