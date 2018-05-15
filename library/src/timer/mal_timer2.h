@@ -69,6 +69,12 @@ typedef enum {
 typedef struct MAL_TIMER mal_timer_s;
 
 /**
+ * Timer PWM handle that must be defined by hardware specific implementation.
+ * Used to access the timer pwm functions.
+ */
+typedef struct MAL_TIMER_PWM mal_timer_pwm_s;
+
+/**
  * @brief Function pointer typdef for timer in task mode.
  * @param handle The given handle during initialization.
  * @return Return a status once you executed your callback. For now, nothing is
@@ -102,7 +108,7 @@ typedef struct {
     mal_hertz_t frequency; /**< The frequency of the PWM.*/
     mal_hertz_t delta; /**< The acceptable frequency delta.*/
     const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
-} mal_timer_pwm_init_s;
+} mal_timer_init_pwm_s;
 
 /**
  * @brief Macro to help subtract 2 timer values regardless of the resolution.
@@ -172,10 +178,12 @@ mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *
  * @brief Initializes a timer and the IO as a PWM generator.
  * @param init The initialize structure of the pwm.
  * @param handle The handle to initialize. This handle is used to access
- * subsequent functions.
+ * subsequent timer functions.
+ * @param pwm_handle The PWM handle to initialize. This handle is used to
+ * access subsequent PWM functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init, mal_timer_s *handle);
+mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle);
 
 /**
  * @brief Get the resolution of timer. The resolution is number of bits for the
@@ -218,7 +226,7 @@ mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size
  * ratio.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_s *handle, const mal_gpio_s *gpio, mal_ratio_t duty_cycle);
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle);
 
 /**
  * This include is last because it defines hardware specific implementations of

@@ -23,23 +23,14 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stm32f7/stm32f7xx_hal_gpio.h>
-#include <flash/mal_flash.h>
-#include <gpio/mal_gpio.h>
-#include "stm32f7/stm32f7xx_hal_gpio.h"
-#include "gpio/mal_gpio.h"
-#include "std/mal_stdint.h"
+#include "mal_hspec_stm32f7_gpio.h"
+#include "flash/mal_flash.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
-#include "stm32f7/stm32f7xx_hal_gpio.h"
 #include "power/mal_power.h"
-
-#define MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(pin) ((uint32_t)1 << (pin))
-
-static GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port);
 
 static mal_error_e mal_hspec_stm32f7_gpio_get_speed(uint64_t speed, uint32_t *speed_setting);
 
-static GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port) {
+GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port) {
     switch (port) {
         case MAL_GPIO_PORT_A:
             return GPIOA;
@@ -104,10 +95,8 @@ static mal_error_e mal_hspec_stm32f7_gpio_get_speed(uint64_t speed, uint32_t *sp
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
-    mal_error_e mal_result;
-    // Enable clock and select port
-    switch (gpio_init->gpio.port) {
+mal_error_e mal_hspec_stm32f7_gpio_enable_clock(mal_gpio_port_e port) {
+    switch (port) {
         case MAL_GPIO_PORT_A:
             __HAL_RCC_GPIOA_CLK_ENABLE();
             break;
@@ -134,6 +123,16 @@ mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
             break;
         default:
             return MAL_ERROR_HARDWARE_INVALID;
+    }
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
+    mal_error_e mal_result;
+    // Enable clock and select port
+    mal_result = mal_hspec_stm32f7_gpio_enable_clock(gpio_init->gpio.port);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
     }
     // Get port
     GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio_init->gpio.port);

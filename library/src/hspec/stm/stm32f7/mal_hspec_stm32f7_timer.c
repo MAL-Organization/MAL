@@ -23,18 +23,22 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "gpio/mal_gpio.h"
 #include "timer/mal_timer2.h"
 #include "stm32f7/stm32f7xx_hal_gpio.h"
 #include "mal_hspec_stm32f7_timer.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "clock/mal_clock.h"
 #include "stm32f7/stm32f7xx_hal_gpio_ex.h"
+#include "mal_hspec_stm32f7_gpio.h"
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
 static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle);
 static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
                                                        mal_hertz_t delta);
+static mal_error_e mal_hspec_stm32f7_timer_get_channel(mal_timer_e timer, const mal_gpio_s *gpio, uint32_t *channel);
+static mal_error_e mal_hspec_stm32f7_timer_get_alternate(mal_timer_e timer, uint32_t *alternate);
 
 static const mal_timer_e valid_timers[] = {
     MAL_TIMER_1,
@@ -212,6 +216,59 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
 static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
                                                        mal_hertz_t delta) {
     mal_error_e mal_result;
+    // Fetch local timer handle
+    mal_timer_s *local_handle;
+    switch (timer) {
+        case MAL_TIMER_1:
+            local_handle = timer1_handle;
+            break;
+        case MAL_TIMER_2:
+            local_handle = timer2_handle;
+            break;
+        case MAL_TIMER_3:
+            local_handle = timer3_handle;
+            break;
+        case MAL_TIMER_4:
+            local_handle = timer4_handle;
+            break;
+        case MAL_TIMER_5:
+            local_handle = timer5_handle;
+            break;
+        case MAL_TIMER_6:
+            local_handle = timer6_handle;
+            break;
+        case MAL_TIMER_7:
+            local_handle = timer7_handle;
+            break;
+        case MAL_TIMER_8:
+            local_handle = timer8_handle;
+            break;
+        case MAL_TIMER_9:
+            local_handle = timer9_handle;
+            break;
+        case MAL_TIMER_10:
+            local_handle = timer10_handle;
+            break;
+        case MAL_TIMER_11:
+            local_handle = timer11_handle;
+            break;
+        case MAL_TIMER_12:
+            local_handle = timer12_handle;
+            break;
+        case MAL_TIMER_13:
+            local_handle = timer13_handle;
+            break;
+        case MAL_TIMER_14:
+            local_handle = timer14_handle;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Check if timer is already initialized
+    bool validate_parameters = false;
+    if (NULL != local_handle) {
+        validate_parameters = true;
+    }
     // Initialize clock and timer specific handles handles
     switch (timer) {
         case MAL_TIMER_1:
@@ -280,12 +337,11 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
             timer13_handle = handle;
             break;
         case MAL_TIMER_14:
+        default:
             __HAL_RCC_TIM14_CLK_ENABLE();
             handle->hal_timer_handle.Instance = TIM14;
             timer14_handle = handle;
             break;
-        default:
-            return MAL_ERROR_HARDWARE_INVALID;
     }
     // Get timer input clock
     uint64_t timer_frequency;
@@ -337,13 +393,24 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
     if (!found) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
-    // Set timer
-    handle->hal_timer_handle.Init.Prescaler = prescaler - 1;
-    handle->hal_timer_handle.Init.Period = period;
-    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    // Remove one because register is 0 based.
+    prescaler -= 1;
+    // Validate or set
+    if (validate_parameters) {
+        if ((handle->hal_timer_handle.Init.Prescaler != prescaler) ||
+            (handle->hal_timer_handle.Init.Period != period)) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
+        return MAL_ERROR_ALREADY_INITIALIZED;
+    } else {
+        // Set timer
+        handle->hal_timer_handle.Init.Prescaler = prescaler;
+        handle->hal_timer_handle.Init.Period = period;
+        handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+        handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+        handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+        handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    }
 
     return MAL_ERROR_OK;
 }
@@ -353,13 +420,20 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     HAL_StatusTypeDef hal_result;
     // Common initialisation such as clock, local handles and more.
     mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
-    if (MAL_ERROR_OK != mal_result) {
+    if (MAL_ERROR_OK != mal_result && MAL_ERROR_ALREADY_INITIALIZED != mal_result) {
         return mal_result;
     }
     // Initialise timer in basic mode
-    hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
-    if (HAL_OK != hal_result) {
-        return MAL_ERROR_HARDWARE_INVALID;
+    if (MAL_ERROR_ALREADY_INITIALIZED == mal_result) {
+        if (MAL_HSPEC_STM32F7_TIMER_MODE_BASIC != handle->mode) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
+    } else {
+        hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_HARDWARE_INVALID;
+        }
+        handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_BASIC;
     }
     // Enable NVIC interrupt for timer
     handle->update_irq = mal_hspec_stm32f7_timer_get_update_irq(init->timer);
@@ -372,34 +446,331 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
 }
 
-mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init, mal_timer_s *handle) {
+static mal_error_e mal_hspec_stm32f7_timer_get_channel(mal_timer_e timer, const mal_gpio_s *gpio, uint32_t *channel) {
+    switch (timer) {
+        case MAL_TIMER_1:
+            if ((MAL_GPIO_PORT_A == gpio->port && 7 == gpio->pin) ||
+                (MAL_GPIO_PORT_E == gpio->port && 8 == gpio->pin) ||
+                (MAL_GPIO_PORT_E == gpio->port && 9 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 13 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 8 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 0 == gpio->pin) ||
+                       (MAL_GPIO_PORT_E == gpio->port && 10 == gpio->pin) ||
+                       (MAL_GPIO_PORT_E == gpio->port && 11 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 14 == gpio->pin) ||
+                       (MAL_GPIO_PORT_A == gpio->port && 9 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 1 == gpio->pin) ||
+                       (MAL_GPIO_PORT_E == gpio->port && 12 == gpio->pin) ||
+                       (MAL_GPIO_PORT_E == gpio->port && 13 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 15 == gpio->pin) ||
+                       (MAL_GPIO_PORT_A == gpio->port && 10 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_E == gpio->port && 14 == gpio->pin) ||
+                       (MAL_GPIO_PORT_A == gpio->port && 11 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_2:
+            if ((MAL_GPIO_PORT_A == gpio->port && 0 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 5 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 15 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 1 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 3 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 2 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 10 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 3 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 11 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_3:
+            if ((MAL_GPIO_PORT_A == gpio->port && 6 == gpio->pin) ||
+                (MAL_GPIO_PORT_C == gpio->port && 6 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 4 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 7 == gpio->pin) ||
+                       (MAL_GPIO_PORT_C == gpio->port && 7 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 5 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 0 == gpio->pin) ||
+                       (MAL_GPIO_PORT_C == gpio->port && 8 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 1 == gpio->pin) ||
+                       (MAL_GPIO_PORT_C == gpio->port && 9 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_4:
+            if ((MAL_GPIO_PORT_D == gpio->port && 12 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 6 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_D == gpio->port && 13 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 7 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_D == gpio->port && 14 == gpio->pin)  ||
+                       (MAL_GPIO_PORT_B == gpio->port && 8 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_D == gpio->port && 15 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 9 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_5:
+            if ((MAL_GPIO_PORT_A == gpio->port && 0 == gpio->pin) ||
+                (MAL_GPIO_PORT_H == gpio->port && 10 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 1 == gpio->pin) ||
+                       (MAL_GPIO_PORT_H == gpio->port && 11 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 2 == gpio->pin) ||
+                       (MAL_GPIO_PORT_H == gpio->port && 12 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_A == gpio->port && 3 == gpio->pin) ||
+                       (MAL_GPIO_PORT_I == gpio->port && 0 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_8:
+            if ((MAL_GPIO_PORT_A == gpio->port && 5 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 7 == gpio->pin) ||
+                (MAL_GPIO_PORT_C == gpio->port && 6 == gpio->pin) ||
+                (MAL_GPIO_PORT_H == gpio->port && 13 == gpio->pin) ||
+                (MAL_GPIO_PORT_I == gpio->port && 5 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 0 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 14 == gpio->pin) ||
+                       (MAL_GPIO_PORT_C == gpio->port && 7 == gpio->pin) ||
+                       (MAL_GPIO_PORT_H == gpio->port && 14 == gpio->pin) ||
+                       (MAL_GPIO_PORT_I == gpio->port && 6 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_B == gpio->port && 1 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 15 == gpio->pin) ||
+                       (MAL_GPIO_PORT_C == gpio->port && 8 == gpio->pin) ||
+                       (MAL_GPIO_PORT_H == gpio->port && 15 == gpio->pin) ||
+                       (MAL_GPIO_PORT_I == gpio->port && 7 == gpio->pin)) {
+                *channel = TIM_CHANNEL_3;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_C == gpio->port && 9 == gpio->pin) ||
+                       (MAL_GPIO_PORT_I == gpio->port && 2 == gpio->pin)) {
+                *channel = TIM_CHANNEL_4;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_9:
+            if ((MAL_GPIO_PORT_E == gpio->port && 5 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 2 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_E == gpio->port && 6 == gpio->pin) ||
+                       (MAL_GPIO_PORT_A == gpio->port && 3 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_10:
+            if ((MAL_GPIO_PORT_F == gpio->port && 6 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 8 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_11:
+            if ((MAL_GPIO_PORT_F == gpio->port && 7 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 9 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_12:
+            if ((MAL_GPIO_PORT_H == gpio->port && 6 == gpio->pin) ||
+                (MAL_GPIO_PORT_B == gpio->port && 14 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else if ((MAL_GPIO_PORT_H == gpio->port && 9 == gpio->pin) ||
+                       (MAL_GPIO_PORT_B == gpio->port && 15 == gpio->pin)) {
+                *channel = TIM_CHANNEL_2;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_13:
+            if ((MAL_GPIO_PORT_F == gpio->port && 8 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 6 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        case MAL_TIMER_14:
+            if ((MAL_GPIO_PORT_F == gpio->port && 9 == gpio->pin) ||
+                (MAL_GPIO_PORT_A == gpio->port && 7 == gpio->pin)) {
+                *channel = TIM_CHANNEL_1;
+                return MAL_ERROR_OK;
+            } else {
+                return MAL_ERROR_HARDWARE_INVALID;
+            }
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+}
+
+static mal_error_e mal_hspec_stm32f7_timer_get_alternate(mal_timer_e timer, uint32_t *alternate) {
+    switch (timer) {
+        case MAL_TIMER_1:
+            *alternate = GPIO_AF1_TIM1;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_2:
+            *alternate = GPIO_AF1_TIM2;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_3:
+            *alternate = GPIO_AF2_TIM3;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_4:
+            *alternate = GPIO_AF2_TIM4;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_5:
+            *alternate = GPIO_AF2_TIM5;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_8:
+            *alternate = GPIO_AF3_TIM8;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_9:
+            *alternate = GPIO_AF3_TIM9;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_10:
+            *alternate = GPIO_AF3_TIM10;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_11:
+            *alternate = GPIO_AF3_TIM11;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_12:
+            *alternate = GPIO_AF9_TIM12;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_13:
+            *alternate = GPIO_AF9_TIM13;
+            return MAL_ERROR_OK;
+        case MAL_TIMER_14:
+            *alternate = GPIO_AF9_TIM14;
+            return MAL_ERROR_OK;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+}
+
+mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle) {
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
     // Common initialisation such as clock, local handles and more.
-    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    mal_error_e common_result;
+    common_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    if (MAL_ERROR_OK != common_result && MAL_ERROR_ALREADY_INITIALIZED != common_result) {
+        return common_result;
+    }
+    // Enable PWM IO clock
+    mal_result = mal_hspec_stm32f7_gpio_enable_clock(init->pwm_io->port);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
     // Set IO in PWM mode
+    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(init->pwm_io->port);
     GPIO_InitTypeDef gpio_init;
     gpio_init.Mode = GPIO_MODE_AF_PP;
     gpio_init.Pull = GPIO_NOPULL;
     gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-
-    gpio_init.Alternate = GPIO_AF2_TIM3;
+    gpio_init.Pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(init->pwm_io->pin);
+    mal_result = mal_hspec_stm32f7_timer_get_alternate(init->timer, &gpio_init.Alternate);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    HAL_GPIO_Init(hal_port, &gpio_init);
     // Initialise timer in PWM mode
-    hal_result = HAL_TIM_PWM_Init(&handle->hal_timer_handle);
-    if (HAL_OK != hal_result) {
-        return MAL_ERROR_HARDWARE_INVALID;
+    if (MAL_ERROR_ALREADY_INITIALIZED == common_result) {
+        if (MAL_HSPEC_STM32F7_TIMER_MODE_PWM != handle->mode) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
+    } else {
+        hal_result = HAL_TIM_PWM_Init(&handle->hal_timer_handle);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_HARDWARE_INVALID;
+        }
+        handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_PWM;
+    }
+    // Set PWM handle
+    pwm_handle->handle = handle;
+    // Get channel
+    mal_result = mal_hspec_stm32f7_timer_get_channel(init->timer, init->pwm_io, &pwm_handle->channel);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
     }
     // Configure channel
-    HAL_TIM_PWM_ConfigChannel()
+    mal_result = mal_timer_set_pwm_duty_cycle(pwm_handle, MAL_TYPES_FLOAT_RATIO_TO_RATIO(0.0f, 1.0f));
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
 
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_s *handle, const mal_gpio_s *gpio, mal_ratio_t duty_cycle) {
-
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle) {
+    HAL_StatusTypeDef hal_result;
+    TIM_OC_InitTypeDef oc_config;
+    // Stop PWM for update
+    HAL_TIM_PWM_Stop(&handle->handle->hal_timer_handle, handle->channel);
+    // Update config
+    oc_config.OCMode = TIM_OCMODE_PWM1;
+    oc_config.OCPolarity = TIM_OCPOLARITY_HIGH;
+    oc_config.OCNPolarity = TIM_OCPOLARITY_HIGH;
+    oc_config.OCIdleState = TIM_OCNIDLESTATE_RESET;
+    oc_config.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+    oc_config.OCFastMode = TIM_OCFAST_DISABLE;
+    oc_config.Pulse = MAL_TYPES_RATIO_OF_INT_VALUE(duty_cycle, uint32_t,
+            handle->handle->hal_timer_handle.Instance->ARR);
+    hal_result = HAL_TIM_PWM_ConfigChannel(&handle->handle->hal_timer_handle, &oc_config, handle->channel);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Start PWM
+    hal_result = HAL_TIM_PWM_Start(&handle->handle->hal_timer_handle, handle->channel);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    return MAL_ERROR_OK;
 }
 
 void TIM1_BRK_TIM9_IRQHandler(void) {

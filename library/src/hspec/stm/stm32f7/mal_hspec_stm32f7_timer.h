@@ -30,11 +30,22 @@
 #include "stm32f7/stm32f7xx.h"
 #include "stm32f7/stm32f7xx_hal_tim.h"
 
+typedef enum {
+    MAL_HSPEC_STM32F7_TIMER_MODE_BASIC,
+    MAL_HSPEC_STM32F7_TIMER_MODE_PWM
+} mal_hspec_stm32f7_timer_mode_e;
+
 typedef struct MAL_TIMER {
     IRQn_Type update_irq;
     TIM_HandleTypeDef hal_timer_handle;
     mal_timer_callback_t task_callback;
     void *callback_handle;
+    mal_hspec_stm32f7_timer_mode_e  mode;
 } mal_timer_s;
+
+typedef struct MAL_TIMER_PWM {
+    mal_timer_s *handle;
+    uint32_t channel;
+} mal_timer_pwm_s;
 
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_ */
