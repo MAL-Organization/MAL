@@ -410,6 +410,7 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
         handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
         handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
         handle->hal_timer_handle.Init.RepetitionCounter = 0;
+        handle->timer = timer;
     }
 
     return MAL_ERROR_OK;
@@ -770,6 +771,21 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *frequency) {
+    mal_error_e result;
+    // Get timer frequency
+    uint64_t timer_frequency;
+    result = mal_hspec_stm32f7_timer_get_input_clk(handle->timer, &timer_frequency);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Compute frequency
+    timer_frequency /= (handle->hal_timer_handle.Instance->PSC + 1);
+    *frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(timer_frequency);
+
     return MAL_ERROR_OK;
 }
 

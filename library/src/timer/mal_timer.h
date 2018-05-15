@@ -54,15 +54,6 @@ typedef struct {
 } mal_timer_intput_capture_init_s;
 
 /**
- * @brief Get the actual counting frequency of a timer.
- * @param timer The timer to get the frequency from.
- * @param frequency A pointer to a mal_hertz_t that will contain the counting
- * frequency.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *frequency);
-
-/**
  * @brief Get the count register of a timer.
  * @param timer The timer to get the count from.
  * @param count A pointer to a uint64_t. It will contain the count.

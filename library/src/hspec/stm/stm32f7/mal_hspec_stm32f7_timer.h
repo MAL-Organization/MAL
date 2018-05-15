@@ -41,6 +41,7 @@ typedef struct MAL_TIMER {
     mal_timer_callback_t task_callback;
     void *callback_handle;
     mal_hspec_stm32f7_timer_mode_e  mode;
+    mal_timer_e timer;
 } mal_timer_s;
 
 typedef struct MAL_TIMER_PWM {

@@ -220,13 +220,22 @@ mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size
 
 /**
  * @brief Set the duty cycle of an initialized PWM IO.
- * @param handle The timer of the PWM IO.
+ * @param handle The handle of the PWM IO.
  * @param gpio The GPIO the PWM is on.
  * @param duty_cyle A mal_ratio_t value representing the duty cycle on/off
  * ratio.
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle);
+
+/**
+ * @brief Get the actual counting frequency of a timer.
+ * @param handle The timer handle to get the frequency from.
+ * @param frequency A pointer to a mal_hertz_t that will contain the counting
+ * frequency.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *frequency);
 
 /**
  * This include is last because it defines hardware specific implementations of
