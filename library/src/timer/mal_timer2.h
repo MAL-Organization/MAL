@@ -101,7 +101,7 @@ typedef struct {
 } mal_timer_init_task_s;
 
 /**
- * Initialization parameters of a PWM input.
+ * Initialization parameters of a PWM output.
  */
 typedef struct {
     mal_timer_e timer; /**< The timer to use for the PWM output.*/
@@ -109,6 +109,14 @@ typedef struct {
     mal_hertz_t delta; /**< The acceptable frequency delta.*/
     const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_timer_init_pwm_s;
+
+/**
+ * Initialization parameters of a timer in count mode.
+ */
+typedef struct {
+    mal_timer_e timer; /**< The timer to use for the count.*/
+    mal_hertz_t frequency; /**< The frequency to count at.*/
+} mal_timer_init_count_s;
 
 /**
  * @brief Macro to help subtract 2 timer values regardless of the resolution.
@@ -236,6 +244,23 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *frequency);
+
+/**
+ * @brief Get the count register of a timer.
+ * @param handle The timer handle to get the count from.
+ * @param count A pointer to a uint64_t. It will contain the count.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count);
+
+/**
+ * This is a simple timer initialization. You have to handle the overflow of the timer based on timer resolution.
+ * @param timer Timer count initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent timer functions.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle);
 
 /**
  * This include is last because it defines hardware specific implementations of

@@ -54,27 +54,6 @@ typedef struct {
 } mal_timer_intput_capture_init_s;
 
 /**
- * @brief Get the count register of a timer.
- * @param timer The timer to get the count from.
- * @param count A pointer to a uint64_t. It will contain the count.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count);
-
-/**
- * This is a simple timer initialization. The main difference between this and
- * the tick timer is you have to handle yourself the overflow of the timer
- * based on timer resolution. This method is much faster however because it
- * doesn't rely on interrupts to work. Use this to time precise events.
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
-
-/**
  * @brief Similar to mal_timer_free, but will be unmanaged. This means this
  * timer will not be flagged as busy and the use of timer ANY will not work
  * properly.

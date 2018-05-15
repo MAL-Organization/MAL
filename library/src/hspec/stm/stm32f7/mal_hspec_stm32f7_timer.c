@@ -35,8 +35,9 @@
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
 static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle);
-static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
-                                                       mal_hertz_t delta);
+static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle);
+static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
+                                                              mal_hertz_t frequency, mal_hertz_t delta);
 static mal_error_e mal_hspec_stm32f7_timer_get_channel(mal_timer_e timer, const mal_gpio_s *gpio, uint32_t *channel);
 static mal_error_e mal_hspec_stm32f7_timer_get_alternate(mal_timer_e timer, uint32_t *alternate);
 
@@ -213,62 +214,7 @@ static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint
     return MAL_ERROR_OK;
 }
 
-static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle, mal_hertz_t frequency,
-                                                       mal_hertz_t delta) {
-    mal_error_e mal_result;
-    // Fetch local timer handle
-    mal_timer_s *local_handle;
-    switch (timer) {
-        case MAL_TIMER_1:
-            local_handle = timer1_handle;
-            break;
-        case MAL_TIMER_2:
-            local_handle = timer2_handle;
-            break;
-        case MAL_TIMER_3:
-            local_handle = timer3_handle;
-            break;
-        case MAL_TIMER_4:
-            local_handle = timer4_handle;
-            break;
-        case MAL_TIMER_5:
-            local_handle = timer5_handle;
-            break;
-        case MAL_TIMER_6:
-            local_handle = timer6_handle;
-            break;
-        case MAL_TIMER_7:
-            local_handle = timer7_handle;
-            break;
-        case MAL_TIMER_8:
-            local_handle = timer8_handle;
-            break;
-        case MAL_TIMER_9:
-            local_handle = timer9_handle;
-            break;
-        case MAL_TIMER_10:
-            local_handle = timer10_handle;
-            break;
-        case MAL_TIMER_11:
-            local_handle = timer11_handle;
-            break;
-        case MAL_TIMER_12:
-            local_handle = timer12_handle;
-            break;
-        case MAL_TIMER_13:
-            local_handle = timer13_handle;
-            break;
-        case MAL_TIMER_14:
-            local_handle = timer14_handle;
-            break;
-        default:
-            return MAL_ERROR_HARDWARE_INVALID;
-    }
-    // Check if timer is already initialized
-    bool validate_parameters = false;
-    if (NULL != local_handle) {
-        validate_parameters = true;
-    }
+static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle) {
     // Initialize clock and timer specific handles handles
     switch (timer) {
         case MAL_TIMER_1:
@@ -343,6 +289,73 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
             timer14_handle = handle;
             break;
     }
+    // Save timer
+    handle->timer = timer;
+
+    return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
+                                                              mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    // Fetch local timer handle
+    mal_timer_s *local_handle;
+    switch (timer) {
+        case MAL_TIMER_1:
+            local_handle = timer1_handle;
+            break;
+        case MAL_TIMER_2:
+            local_handle = timer2_handle;
+            break;
+        case MAL_TIMER_3:
+            local_handle = timer3_handle;
+            break;
+        case MAL_TIMER_4:
+            local_handle = timer4_handle;
+            break;
+        case MAL_TIMER_5:
+            local_handle = timer5_handle;
+            break;
+        case MAL_TIMER_6:
+            local_handle = timer6_handle;
+            break;
+        case MAL_TIMER_7:
+            local_handle = timer7_handle;
+            break;
+        case MAL_TIMER_8:
+            local_handle = timer8_handle;
+            break;
+        case MAL_TIMER_9:
+            local_handle = timer9_handle;
+            break;
+        case MAL_TIMER_10:
+            local_handle = timer10_handle;
+            break;
+        case MAL_TIMER_11:
+            local_handle = timer11_handle;
+            break;
+        case MAL_TIMER_12:
+            local_handle = timer12_handle;
+            break;
+        case MAL_TIMER_13:
+            local_handle = timer13_handle;
+            break;
+        case MAL_TIMER_14:
+            local_handle = timer14_handle;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Check if timer is already initialized
+    bool validate_parameters = false;
+    if (NULL != local_handle) {
+        validate_parameters = true;
+    }
+    // Execute common initialization
+    mal_result = mal_hspec_stm32f7_timer_common_init(timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
     // Get timer input clock
     uint64_t timer_frequency;
     mal_result = mal_hspec_stm32f7_timer_get_input_clk(timer, &timer_frequency);
@@ -410,7 +423,6 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
         handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
         handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
         handle->hal_timer_handle.Init.RepetitionCounter = 0;
-        handle->timer = timer;
     }
 
     return MAL_ERROR_OK;
@@ -420,7 +432,7 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
     // Common initialisation such as clock, local handles and more.
-    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    mal_result = mal_hspec_stm32f7_timer_common_update_init(init->timer, handle, init->frequency, init->delta);
     if (MAL_ERROR_OK != mal_result && MAL_ERROR_ALREADY_INITIALIZED != mal_result) {
         return mal_result;
     }
@@ -699,7 +711,7 @@ mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, 
     HAL_StatusTypeDef hal_result;
     // Common initialisation such as clock, local handles and more.
     mal_error_e common_result;
-    common_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle, init->frequency, init->delta);
+    common_result = mal_hspec_stm32f7_timer_common_update_init(init->timer, handle, init->frequency, init->delta);
     if (MAL_ERROR_OK != common_result && MAL_ERROR_ALREADY_INITIALIZED != common_result) {
         return common_result;
     }
@@ -786,6 +798,65 @@ mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *freq
     timer_frequency /= (handle->hal_timer_handle.Instance->PSC + 1);
     *frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(timer_frequency);
 
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle) {
+    mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
+    // Execute common init
+    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(init->timer, &timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Try to find proper settings for requested frequency
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->frequency);
+    uint32_t prescaler = 0;
+    bool found = false;
+    for (prescaler = 1; prescaler <= (UINT16_MAX + 1); prescaler++) {
+        uint64_t potential_frequency = timer_frequency / (uint64_t)prescaler;
+        if (potential_frequency != target_frequency) {
+            continue;
+        }
+        found = true;
+        break;
+    }
+    if (!found) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Fetch mask to get max period
+    uint64_t mask;
+    mal_result = mal_timer_get_count_mask(init->timer, &mask);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Set timer
+    handle->hal_timer_handle.Init.Prescaler = prescaler - 1;
+    handle->hal_timer_handle.Init.Period = (uint32_t)mask;
+    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    hal_result = HAL_TIM_Base_Start(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {
+    *count = handle->hal_timer_handle.Instance->CNT;
     return MAL_ERROR_OK;
 }
 
