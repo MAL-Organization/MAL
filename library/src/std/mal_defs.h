@@ -45,6 +45,11 @@
 #define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
 
 /**
+ * Use to remove compiler/IDE warnings.
+ */
+#define MAL_DEFS_UNUSED(value) (void)(value)
+
+/**
  * @}
  */
 
