@@ -31,7 +31,7 @@ static mal_timer_state_s timer_states[MAL_TIMER_SIZE];
 
 void mal_timer_states_init(void) {
 	mal_timer_e i;
-	for (i = 0; i < MAL_TIMER_SIZE; i++) {
+	for (i = MAL_TIMER_1; i < MAL_TIMER_SIZE; i++) {
 		if (MAL_ERROR_OK == mal_timer_is_valid(i)) {
 			timer_states[i].is_available = true;
 		} else {
@@ -44,7 +44,7 @@ static mal_error_e mal_timer_get_available_timer(mal_timer_e *timer) {
   int i;
   for (i = 0; i < MAL_TIMER_SIZE; i++) {
       if (timer_states[i].is_available) {
-          *timer = i;
+          *timer = (mal_timer_e)i;
           return MAL_ERROR_OK;
       }
   }
@@ -106,4 +106,11 @@ mal_error_e mal_timer_is_valid(mal_timer_e timer) {
 	}
 
 	return MAL_ERROR_HARDWARE_INVALID;
+}
+
+mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state) {
+    // Copy timer
+    *state = timer_states[timer];
+    // Check if timer is valid
+    return mal_timer_is_valid(timer);
 }

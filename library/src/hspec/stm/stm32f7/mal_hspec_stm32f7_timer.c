@@ -34,12 +34,16 @@
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
-static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle);
 static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_timer_s *handle);
 static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
                                                               mal_hertz_t frequency, mal_hertz_t delta);
 static mal_error_e mal_hspec_stm32f7_timer_get_channel(mal_timer_e timer, const mal_gpio_s *gpio, uint32_t *channel);
 static mal_error_e mal_hspec_stm32f7_timer_get_alternate(mal_timer_e timer, uint32_t *alternate);
+static bool mal_hspec_stm32f7_timer_is_used(mal_timer_e timer);
+static mal_error_e mal_hspec_stm32f7_timer_common_count_init(mal_timer_e timer, mal_timer_s *handle,
+                                                             mal_hertz_t frequency);
+static mal_error_e mal_hspec_stm32f7_timer_init_io(const mal_gpio_s *gpio, mal_timer_e timer);
+static IRQn_Type mal_hspec_stm32f7_timer_get_compare_irq(mal_timer_e timer);
 
 static const mal_timer_e valid_timers[] = {
     MAL_TIMER_1,
@@ -111,10 +115,43 @@ static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer) {
     }
 }
 
-#include "stm32f7/stm32f7xx_hal_cortex.h"
+static IRQn_Type mal_hspec_stm32f7_timer_get_compare_irq(mal_timer_e timer) {
+    switch (timer) {
+        case MAL_TIMER_1:
+            return TIM1_CC_IRQn;
+        case MAL_TIMER_2:
+            return TIM2_IRQn;
+        case MAL_TIMER_3:
+            return TIM3_IRQn;
+        case MAL_TIMER_4:
+            return TIM4_IRQn;
+        case MAL_TIMER_5:
+            return TIM5_IRQn;
+        case MAL_TIMER_6:
+            return TIM6_DAC_IRQn;
+        case MAL_TIMER_7:
+            return TIM7_IRQn;
+        case MAL_TIMER_8:
+            return TIM8_CC_IRQn;
+        case MAL_TIMER_9:
+            return TIM1_BRK_TIM9_IRQn;
+        case MAL_TIMER_10:
+            return TIM1_UP_TIM10_IRQn;
+        case MAL_TIMER_11:
+            return TIM1_TRG_COM_TIM11_IRQn;
+        case MAL_TIMER_12:
+            return TIM8_BRK_TIM12_IRQn;
+        case MAL_TIMER_13:
+            return TIM8_UP_TIM13_IRQn;
+        case MAL_TIMER_14:
+        default:
+            return TIM8_TRG_COM_TIM14_IRQn;
+    }
+}
+
 MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
-    bool active = (bool)NVIC_GetEnableIRQ(handle->update_irq);
-    NVIC_DisableIRQ(handle->update_irq);
+    bool active = (bool)NVIC_GetEnableIRQ(handle->irq);
+    NVIC_DisableIRQ(handle->irq);
     __DSB();
     __ISB();
     return active;
@@ -122,7 +159,7 @@ MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
 
 MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_s *handle, bool active) {
     if (active) {
-        NVIC_EnableIRQ(handle->update_irq);
+        NVIC_EnableIRQ(handle->irq);
     }
 }
 
@@ -295,10 +332,7 @@ static mal_error_e mal_hspec_stm32f7_timer_common_init(mal_timer_e timer, mal_ti
     return MAL_ERROR_OK;
 }
 
-static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
-                                                              mal_hertz_t frequency, mal_hertz_t delta) {
-    mal_error_e mal_result;
-    // Fetch local timer handle
+static bool mal_hspec_stm32f7_timer_is_used(mal_timer_e timer) {
     mal_timer_s *local_handle;
     switch (timer) {
         case MAL_TIMER_1:
@@ -347,10 +381,17 @@ static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer,
             return MAL_ERROR_HARDWARE_INVALID;
     }
     // Check if timer is already initialized
-    bool validate_parameters = false;
     if (NULL != local_handle) {
-        validate_parameters = true;
+        return true;
     }
+    return false;
+}
+
+static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
+                                                              mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    // Check if timer is already initialized
+    bool validate_parameters = mal_hspec_stm32f7_timer_is_used(timer);
     // Execute common initialization
     mal_result = mal_hspec_stm32f7_timer_common_init(timer, handle);
     if (MAL_ERROR_OK != mal_result) {
@@ -428,6 +469,65 @@ static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer,
     return MAL_ERROR_OK;
 }
 
+static mal_error_e mal_hspec_stm32f7_timer_common_count_init(mal_timer_e timer, mal_timer_s *handle,
+                                                             mal_hertz_t frequency) {
+    mal_error_e mal_result;
+    // Check if timer is already initialized
+    bool validate_parameters = mal_hspec_stm32f7_timer_is_used(timer);
+    // Execute common initialization
+    mal_result = mal_hspec_stm32f7_timer_common_init(timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(timer, &timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Try to find proper settings for requested frequency
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
+    uint32_t prescaler = 0;
+    bool found = false;
+    for (prescaler = 1; prescaler <= (UINT16_MAX + 1); prescaler++) {
+        uint64_t potential_frequency = timer_frequency / (uint64_t)prescaler;
+        if (potential_frequency != target_frequency) {
+            continue;
+        }
+        found = true;
+        break;
+    }
+    if (!found) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Fetch mask to get max period
+    uint64_t mask;
+    mal_result = mal_timer_get_count_mask(timer, &mask);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Remove one because register is 0 based.
+    prescaler -= 1;
+    // Validate or set
+    if (validate_parameters) {
+        if ((handle->hal_timer_handle.Init.Prescaler != prescaler) ||
+            (handle->hal_timer_handle.Init.Period != (uint32_t)mask)) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
+        return MAL_ERROR_ALREADY_INITIALIZED;
+    } else {
+        handle->hal_timer_handle.Init.Prescaler = prescaler;
+        handle->hal_timer_handle.Init.Period = (uint32_t)mask;
+        handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+        handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+        handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+        handle->hal_timer_handle.Init.RepetitionCounter = 0;
+        handle->hal_timer_handle.Parent = handle;
+    }
+
+    return MAL_ERROR_OK;
+}
+
 mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle) {
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
@@ -449,13 +549,12 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
         handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_BASIC;
     }
     // Enable NVIC interrupt for timer
-    handle->update_irq = mal_hspec_stm32f7_timer_get_update_irq(init->timer);
-    NVIC_EnableIRQ(handle->update_irq);
-    NVIC_SetPriority(handle->update_irq, 2); // Find a way to manage priorities for interrupts
+    handle->irq = mal_hspec_stm32f7_timer_get_update_irq(init->timer);
+    NVIC_EnableIRQ(handle->irq);
+    NVIC_SetPriority(handle->irq, 2); // Find a way to manage priorities for interrupts
     // Enable timer interrupt
     handle->task_callback = init->callback;
     handle->callback_handle = init->callback_handle;
-    handle->hal_timer_handle.Parent = handle;
     HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
 }
 
@@ -715,23 +814,11 @@ mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, 
     if (MAL_ERROR_OK != common_result && MAL_ERROR_ALREADY_INITIALIZED != common_result) {
         return common_result;
     }
-    // Enable PWM IO clock
-    mal_result = mal_hspec_stm32f7_gpio_enable_clock(init->pwm_io->port);
+    // Initialize PWM IO
+    mal_result = mal_hspec_stm32f7_timer_init_io(init->pwm_io, init->timer);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
-    // Set IO in PWM mode
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(init->pwm_io->port);
-    GPIO_InitTypeDef gpio_init;
-    gpio_init.Mode = GPIO_MODE_AF_PP;
-    gpio_init.Pull = GPIO_NOPULL;
-    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    gpio_init.Pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(init->pwm_io->pin);
-    mal_result = mal_hspec_stm32f7_timer_get_alternate(init->timer, &gpio_init.Alternate);
-    if (MAL_ERROR_OK != mal_result) {
-        return mal_result;
-    }
-    HAL_GPIO_Init(hal_port, &gpio_init);
     // Initialise timer in PWM mode
     if (MAL_ERROR_ALREADY_INITIALIZED == common_result) {
         if (MAL_HSPEC_STM32F7_TIMER_MODE_PWM != handle->mode) {
@@ -802,55 +889,131 @@ mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *freq
 }
 
 mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle) {
-    mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
     // Execute common init
-    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle);
-    if (MAL_ERROR_OK != mal_result) {
-        return mal_result;
+    mal_error_e common_result;
+    common_result = mal_hspec_stm32f7_timer_common_count_init(init->timer, handle, init->frequency);
+    if (MAL_ERROR_OK != common_result && MAL_ERROR_ALREADY_INITIALIZED != common_result) {
+        return common_result;
     }
-    // Get timer input clock
-    uint64_t timer_frequency;
-    mal_result = mal_hspec_stm32f7_timer_get_input_clk(init->timer, &timer_frequency);
-    if (MAL_ERROR_OK != mal_result) {
-        return mal_result;
-    }
-    // Try to find proper settings for requested frequency
-    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->frequency);
-    uint32_t prescaler = 0;
-    bool found = false;
-    for (prescaler = 1; prescaler <= (UINT16_MAX + 1); prescaler++) {
-        uint64_t potential_frequency = timer_frequency / (uint64_t)prescaler;
-        if (potential_frequency != target_frequency) {
-            continue;
+    // Initialise timer
+    if (MAL_ERROR_ALREADY_INITIALIZED == common_result) {
+        if (MAL_HSPEC_STM32F7_TIMER_MODE_COUNT != handle->mode) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
         }
-        found = true;
-        break;
-    }
-    if (!found) {
-        return MAL_ERROR_HARDWARE_INVALID;
-    }
-    // Fetch mask to get max period
-    uint64_t mask;
-    mal_result = mal_timer_get_count_mask(init->timer, &mask);
-    if (MAL_ERROR_OK != mal_result) {
-        return mal_result;
-    }
-    // Set timer
-    handle->hal_timer_handle.Init.Prescaler = prescaler - 1;
-    handle->hal_timer_handle.Init.Period = (uint32_t)mask;
-    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    handle->hal_timer_handle.Init.RepetitionCounter = 0;
-    hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
-    if (HAL_OK != hal_result) {
-        return MAL_ERROR_HARDWARE_INVALID;
+    } else {
+        hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_HARDWARE_INVALID;
+        }
+        handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_COUNT;
     }
     hal_result = HAL_TIM_Base_Start(&handle->hal_timer_handle);
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_hspec_stm32f7_timer_init_io(const mal_gpio_s *gpio, mal_timer_e timer) {
+    mal_error_e mal_result;
+    // Enable input IO clock
+    mal_result = mal_hspec_stm32f7_gpio_enable_clock(gpio->port);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Set IO in input capture mode
+    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio->port);
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode = GPIO_MODE_AF_PP;
+    gpio_init.Pull = GPIO_NOPULL;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init.Pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio->pin);
+    mal_result = mal_hspec_stm32f7_timer_get_alternate(timer, &gpio_init.Alternate);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    HAL_GPIO_Init(hal_port, &gpio_init);
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, mal_timer_s *handle,
+                                         mal_timer_input_capture_s *input_capture_handle) {
+    mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
+    // Common initialisation such as clock, local handles and more.
+    mal_error_e common_result;
+    common_result = mal_hspec_stm32f7_timer_common_count_init(init->timer, handle, init->frequency);
+    if (MAL_ERROR_OK != common_result && MAL_ERROR_ALREADY_INITIALIZED != common_result) {
+        return common_result;
+    }
+    // Initialize input capture IO
+    mal_result = mal_hspec_stm32f7_timer_init_io(init->input_io, init->timer);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialise timer in input capture mode
+    if (MAL_ERROR_ALREADY_INITIALIZED == common_result) {
+        if (MAL_HSPEC_STM32F7_TIMER_MODE_COUNT != handle->mode) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
+    } else {
+        hal_result = HAL_TIM_IC_Init(&handle->hal_timer_handle);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_HARDWARE_INVALID;
+        }
+        handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_COUNT;
+    }
+    // Get channel index
+    uint32_t channel;
+    mal_result = mal_hspec_stm32f7_timer_get_channel(init->timer, init->input_io, &channel);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    uint32_t channel_index = channel >> 2U;
+    // Set input capture handle
+    handle->input_capture_handles[channel_index] = input_capture_handle;
+    input_capture_handle->handle = handle;
+    input_capture_handle->callback = init->callback;
+    input_capture_handle->callback_handle = init->callback_handle;
+    // Configure channel
+    TIM_IC_InitTypeDef ic_init;
+    if (MAL_TIMER_INPUT_RISING == init->input_event) {
+        ic_init.ICPolarity = TIM_ICPOLARITY_RISING;
+    } else if (MAL_TIMER_INPUT_FALLING == init->input_event) {
+        ic_init.ICPolarity = TIM_ICPOLARITY_FALLING;
+    } else {
+        ic_init.ICPolarity = TIM_ICPOLARITY_BOTHEDGE;
+    }
+    ic_init.ICSelection = TIM_ICSELECTION_DIRECTTI;
+    switch (init->input_divider) {
+        case 1:
+            ic_init.ICPrescaler = TIM_ICPSC_DIV1;
+            break;
+        case 2:
+            ic_init.ICPrescaler = TIM_ICPSC_DIV2;
+            break;
+        case 4:
+            ic_init.ICPrescaler = TIM_ICPSC_DIV4;
+            break;
+        case 8:
+            ic_init.ICPrescaler = TIM_ICPSC_DIV8;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    ic_init.ICFilter = 0;
+    hal_result = HAL_TIM_IC_ConfigChannel(&handle->hal_timer_handle, &ic_init, channel);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Enable NVIC interrupt for timer
+    handle->irq = mal_hspec_stm32f7_timer_get_compare_irq(init->timer);
+    NVIC_EnableIRQ(handle->irq);
+    NVIC_SetPriority(handle->irq, 2); // Find a way to manage priorities for interrupts
+    // Start timer
+    HAL_TIM_IC_Start_IT(&handle->hal_timer_handle, channel);
 
     return MAL_ERROR_OK;
 }
@@ -963,9 +1126,34 @@ void TIM8_CC_IRQHandler(void) {
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    mal_hspec_stm32f7_timer_handle_update(htim->Parent);
+    mal_timer_s *handle = htim->Parent;
+    handle->task_callback(handle->callback_handle);
 }
 
-static void mal_hspec_stm32f7_timer_handle_update(mal_timer_s *handle) {
-    handle->task_callback(handle->callback_handle);
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+    // Get input capture handle
+    mal_timer_s *handle = htim->Parent;
+    mal_timer_input_capture_s *input_capture_handle;
+    switch (htim->Channel) {
+        case HAL_TIM_ACTIVE_CHANNEL_1:
+            input_capture_handle = handle->input_capture_handles[0];
+            break;
+        case HAL_TIM_ACTIVE_CHANNEL_2:
+            input_capture_handle = handle->input_capture_handles[1];
+            break;
+        case HAL_TIM_ACTIVE_CHANNEL_3:
+            input_capture_handle = handle->input_capture_handles[2];
+            break;
+        case HAL_TIM_ACTIVE_CHANNEL_4:
+            input_capture_handle = handle->input_capture_handles[3];
+            break;
+        default:
+            // Should not get here
+            return;
+    }
+    if (NULL == input_capture_handle) {
+        return;
+    }
+    // Execute callback
+    input_capture_handle->callback(input_capture_handle->callback_handle, handle->hal_timer_handle.Instance->CNT);
 }

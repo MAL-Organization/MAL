@@ -75,10 +75,14 @@ typedef struct MAL_TIMER mal_timer_s;
 typedef struct MAL_TIMER_PWM mal_timer_pwm_s;
 
 /**
+ * Timer input capture handle that must be defined by hardware specific
+ * implementation. Used to access the timer input capture functions.
+ */
+typedef struct MAL_TIMER_INPUT_CAPTURE mal_timer_input_capture_s;
+
+/**
  * @brief Function pointer typdef for timer in task mode.
  * @param handle The given handle during initialization.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
  */
 typedef void (*mal_timer_callback_t)(void *handle);
 
@@ -109,6 +113,35 @@ typedef struct {
     mal_hertz_t delta; /**< The acceptable frequency delta.*/
     const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
 } mal_timer_init_pwm_s;
+
+/**
+ * Possible timer input triggers.
+ */
+typedef enum {
+    MAL_TIMER_INPUT_RISING, //!< Rising event.
+    MAL_TIMER_INPUT_FALLING,//!< Falling event.
+    MAL_TIMER_INPUT_BOTH    //!< Rising and falling event.
+} mal_timer_input_e;
+
+/**
+ * @brief Function pointer typdef for timer in input capture mode.
+ * @param handle The callback handle given during initialization.
+ * @param count The captured count.
+ */
+typedef void (*mal_timer_input_capture_callback_t)(void *handle, uint64_t count);
+
+/**
+ * Initialization parameters of a capture input.
+ */
+typedef struct {
+    mal_timer_e timer; /**< The timer to use for the input capture.*/
+    mal_hertz_t frequency; /**< The frequency to count to.*/
+    const mal_gpio_s *input_io; /**< The gpio of the input capture.*/
+    mal_timer_input_e input_event; /**< The input event to capture.*/
+    uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
+    mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
+    void *callback_handle; /**< This will be passed back at callback execution.*/
+} mal_timer_init_intput_capture_s;
 
 /**
  * Initialization parameters of a timer in count mode.
@@ -261,6 +294,27 @@ mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count);
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle);
+
+/**
+ * @brief Returns the state of the timer.
+ * @param timer The desired timer.
+ * @param state A pointer to a mal_timer_state_s structure. The timer state
+ * will be copied there.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state);
+
+/**
+ * @brief Initialize a timer as input capture timer.
+ * @param init The initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent timer functions.
+ * @param input_capture_handle The input capture handle to initialize. This
+ * handle is used to access subsequent PWM functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, mal_timer_s *handle,
+                                         mal_timer_input_capture_s *input_capture_handle);
 
 /**
  * This include is last because it defines hardware specific implementations of

@@ -24,55 +24,6 @@
 #define TIMER_MAL_TIMER_H_
 
 /**
- * Possible timer input triggers.
- */
-typedef enum {
-	MAL_TIMER_INPUT_RISING, //!< Rising event.
-	MAL_TIMER_INPUT_FALLING,//!< Falling event.
-	MAL_TIMER_INPUT_BOTH    //!< Rising and falling event.
-} mal_timer_input_e;
-
-/**
- * @brief Function pointer typdef for timer in input capture mode.
- * @param timer Will provide the timer executing the callback.
- * @param count The captured count.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
- */
-typedef mal_error_e (*mal_timer_input_capture_callback_t)(mal_timer_e timer, uint64_t count);
-
-/**
- * Initialization parameters of a capture input.
- */
-typedef struct {
-	mal_timer_e timer; /**< The timer to use for the input capture.*/
-	mal_hertz_t frequency; /**< The frequency to count to.*/
-	const mal_gpio_s *input_io; /**< The gpio of the input capture.*/
-	mal_timer_input_e input_event; /**< The input event to capture.*/
-	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
-	mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
-} mal_timer_intput_capture_init_s;
-
-/**
- * @brief Similar to mal_timer_free, but will be unmanaged. This means this
- * timer will not be flagged as busy and the use of timer ANY will not work
- * properly.
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency);
-
-/**
- * @brief Return the tick of a timer when initialized in tick mode.
- * @param handle The timer to check for tick.
- * @return The tick count.
- */
-uint64_t mal_timer_get_tick(mal_timer_e handle);
-
-/**
  * @brief Frees a used timer.
  * @param timer The timer to free.
  * @return #MAL_ERROR_OK on success.
@@ -87,31 +38,6 @@ mal_error_e mal_timer_free(mal_timer_e timer);
  * @return
  */
 mal_error_e mal_timer_free_unmanaged(mal_timer_e timer);
-
-/**
- * @brief Returns the state of the timer.
- * @param timer The desired timer.
- * @param state A pointer to a mal_timer_state_s structure. The timer state
- * will be copied there.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state);
-
-/**
- * @brief Initialize a timer as input capture timer.
- * @param init The initialization parameters.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init);
-
-/**
- * @brief Similar to mal_timer_init_input_capture, but will be unmanaged. This
- * means this timer will not be flagged as busy and the use of timer ANY will
- * not work properly.
- * @param The initialization parameters.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init);
 
 /**
  * @}
