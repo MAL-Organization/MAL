@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_flash.h
- *
- *  Created on: Sep 8, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,8 +17,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_FLASH_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_FLASH_H_
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
@@ -32,15 +26,15 @@
 
 typedef struct {
 	uint32_t size;
-} mal_hspec_mingw_flash_page_info_s;
+} mal_hspec_gnu_flash_page_info_s;
 
 typedef struct {
-	mal_hspec_mingw_flash_page_info_s *pages;
+	mal_hspec_gnu_flash_page_info_s *pages;
 	uint32_t page_count;
-} mal_hspec_mingw_flash_info_s;
+} mal_hspec_gnu_flash_info_s;
 
-void mal_hspec_mingw_flash_set_flash(mal_hspec_mingw_flash_info_s *info);
+void mal_hspec_gnu_flash_set_flash(mal_hspec_gnu_flash_info_s *info);
 
-mal_error_e mal_hspec_mingw_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count);
+mal_error_e mal_hspec_gnu_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_FLASH_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_FLASH_H_ */

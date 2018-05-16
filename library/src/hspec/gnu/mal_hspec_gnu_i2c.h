@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_i2c.h
- *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,16 +17,16 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_I2C_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_I2C_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_I2C_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_I2C_H_
 
 #include "std/mal_bool.h"
 #include "i2c/mal_i2c.h"
 
-mal_error_e mal_hspec_mingw_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_s *msg);
+mal_error_e mal_hspec_gnu_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_s *msg);
 
-bool mal_hspec_mingw_i2c_lock_interface(mal_i2c_e interface, uint32_t timeout_ms);
+bool mal_hspec_gnu_i2c_lock_interface(mal_i2c_e interface, uint32_t timeout_ms);
 
-void mal_hspec_mingw_i2c_unlock_interface(mal_i2c_e interface);
+void mal_hspec_gnu_i2c_unlock_interface(mal_i2c_e interface);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_I2C_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_I2C_H_ */

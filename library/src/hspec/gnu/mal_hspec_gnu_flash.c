@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_flash.c
- *
- *  Created on: Sep 8, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -25,16 +19,16 @@
 
 #include <string.h>
 
-#include "mal_hspec_mingw_flash.h"
+#include "mal_hspec_gnu_flash.h"
 #include "std/mal_stdlib.h"
 
 static uint8_t **flash_pages = NULL;
-static mal_hspec_mingw_flash_info_s flash_info = {
+static mal_hspec_gnu_flash_info_s flash_info = {
 	NULL,
 	0
 };
 
-void mal_hspec_mingw_flash_set_flash(mal_hspec_mingw_flash_info_s *info) {
+void mal_hspec_gnu_flash_set_flash(mal_hspec_gnu_flash_info_s *info) {
 	// Free previous pages
 	for (uint32_t i = 0; i < flash_info.page_count; i++) {
 		free(flash_pages[i]);
@@ -44,7 +38,7 @@ void mal_hspec_mingw_flash_set_flash(mal_hspec_mingw_flash_info_s *info) {
 	free(flash_info.pages);
 	// Set page count
 	flash_info.page_count = info->page_count;
-	flash_info.pages = (mal_hspec_mingw_flash_page_info_s*)malloc(sizeof(mal_hspec_mingw_flash_page_info_s) * info->page_count);
+	flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * info->page_count);
 	// Allocate pages
 	flash_pages = (uint8_t**)malloc(sizeof(uint8_t*) * info->page_count);
 	for (uint32_t i = 0; i < flash_info.page_count; i++) {
@@ -72,7 +66,7 @@ mal_error_e mal_flash_erase_page(uint32_t page) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count) {
+mal_error_e mal_hspec_gnu_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count) {
 	for (uint32_t i = 0; i < count; i++) {
 		uint64_t current_address = start_address + i;
 		uint32_t current_page = mal_flash_get_page_from_address(current_address);
@@ -84,11 +78,11 @@ mal_error_e mal_hspec_mingw_flash_write_uint8_values(uint64_t start_address, uin
 }
 
 mal_error_e mal_flash_write_uint16_values(unsigned int start_address, uint16_t *values, uint32_t count) {
-	return mal_hspec_mingw_flash_write_uint8_values(start_address, (uint8_t*)values, count * sizeof(uint16_t));
+	return mal_hspec_gnu_flash_write_uint8_values(start_address, (uint8_t *) values, count * sizeof(uint16_t));
 }
 
 mal_error_e mal_flash_write_uint32_values(unsigned int start_address, uint32_t *values, uint32_t count) {
-	return mal_hspec_mingw_flash_write_uint8_values(start_address, (uint8_t*)values, count * sizeof(uint32_t));
+	return mal_hspec_gnu_flash_write_uint8_values(start_address, (uint8_t *) values, count * sizeof(uint32_t));
 }
 
 uint32_t mal_flash_get_page_from_address(unsigned int address) {

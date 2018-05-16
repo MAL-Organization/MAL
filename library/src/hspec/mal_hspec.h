@@ -28,8 +28,8 @@
 
 #if defined(MAL_STM)
 #include "hspec/stm/mal_hspec_stm.h"
-#elif defined(MAL_MINGW)
-#include "hspec/mingw/mal_hspec_mingw.h"
+#elif defined(MAL_GNU)
+#include "hspec/gnu/mal_hspec_gnu.h"
 #endif
 
 #endif /* HSPEC_MAL_HSPEC_H_ */

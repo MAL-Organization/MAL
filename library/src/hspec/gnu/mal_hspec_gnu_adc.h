@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_clock.c
- *
- *  Created on: Mar 26, 2016
- *      Author: olivi
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,8 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "clock/mal_clock.h"
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_ADC_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_ADC_H_
 
-mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
-	return MAL_ERROR_OK;
-}
+#include "adc/mal_adc.h"
+
+void mal_hspec_gnu_adc_set_value(mal_adc_e adc, float value);
+
+void mal_hspec_gnu_adc_do_async(mal_adc_e adc);
+
+bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc);
+
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_ADC_H_ */

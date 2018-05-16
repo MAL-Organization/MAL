@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_adc.c
- *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,7 +17,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_adc.h"
+#include "mal_hspec_gnu_adc.h"
 #include "std/mal_stdlib.h"
 #include "power/mal_power.h"
 
@@ -64,7 +58,7 @@ mal_error_e mal_adc_resolution(mal_adc_e adc, uint8_t *resolution) {
 	return MAL_ERROR_OK;
 }
 
-void mal_hspec_mingw_adc_set_value(mal_adc_e adc, float value) {
+void mal_hspec_gnu_adc_set_value(mal_adc_e adc, float value) {
 	adc_array[adc].value = value;
 }
 
@@ -76,7 +70,7 @@ mal_error_e mal_adc_async_read(mal_adc_e adc, mal_adc_read_callback_t callback) 
 	return MAL_ERROR_HARDWARE_UNAVAILABLE;
 }
 
-void mal_hspec_mingw_adc_do_async(mal_adc_e adc) {
+void mal_hspec_gnu_adc_do_async(mal_adc_e adc) {
 	if (NULL != adc_array[adc].callback) {
 		// Fetch callback
 		mal_adc_read_callback_t cb = adc_array[adc].callback;
@@ -89,7 +83,7 @@ void mal_hspec_mingw_adc_do_async(mal_adc_e adc) {
 	}
 }
 
-bool mal_hspec_mingw_adc_peek_async(mal_adc_e adc) {
+bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc) {
 	return adc_array[adc].callback != NULL;
 }
 

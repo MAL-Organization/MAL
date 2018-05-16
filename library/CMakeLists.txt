@@ -37,6 +37,15 @@ set(COMMON_SRCS ${UTILS_SRCS};${ADC_SRCS};${CAN_SRCS};${CLOCK_SRCS};${DAC_SRCS};
         ${TIMER_SRCS};${UUID_SRCS};${WATCHDOG_SRCS})
 
 set(COMMON_OPTIONS ${OPTIMIZATION_LVL};${DEBUG_LVL})
+
+# GNU section
+file(GLOB_RECURSE GNU_HAL_SOURCES "src/hspec/gnu/*.c" "src/hspec/gnu/*.h")
+add_library(GNU STATIC ${COMMON_SRCS};${GNU_HAL_SOURCES})
+set_target_properties(GNU PROPERTIES OUTPUT_NAME "mal")
+target_include_directories(GNU PRIVATE ${COMMON_STM_INCS})
+target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
+target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
+
 # Change compiler for libraries
 set(CMAKE_C_COMPILER arm-none-eabi-gcc)
 # Change archiver
@@ -65,7 +74,6 @@ set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_D
 # STM32F767ZI section
 add_library(STM32F767ZI STATIC ${COMMON_STM32F7_SRCS})
 set_target_properties(STM32F767ZI PROPERTIES OUTPUT_NAME "mal")
-set_target_properties(STM32F767ZI PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/STM32F767ZI)
 target_include_directories(STM32F767ZI PRIVATE ${COMMON_STM_INCS})
 target_compile_options(STM32F767ZI BEFORE PRIVATE ${COMMON_STM32F7_OPTIONS})
 target_compile_definitions(STM32F767ZI PRIVATE ${COMMON_STM32F7_DEFS};-DSTM32F767xx)

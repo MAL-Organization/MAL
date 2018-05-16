@@ -20,8 +20,8 @@
  * @brief Functions to access and configure the timers of the MCU.
  */
 
-#ifndef TIMER_MAL_TIMER2_H_
-#define TIMER_MAL_TIMER2_H_
+#ifndef TIMER_MAL_TIMER_H_
+#define TIMER_MAL_TIMER_H_
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
@@ -329,4 +329,4 @@ mal_error_e mal_timer_free(mal_timer_s *handle);
  */
 #include "hspec/mal_hspec.h"
 
-#endif /* TIMER_MAL_TIMER2_H_ */
+#endif /* TIMER_MAL_TIMER_H_ */

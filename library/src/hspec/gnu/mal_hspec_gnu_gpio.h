@@ -1,10 +1,4 @@
 /*
- * mal_hspec_mingw.h
- *
- *  Created on: Mar 8, 2018
- *      Author: Olivier
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
@@ -23,9 +17,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_GPIO_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_GPIO_H_
 
-#include "hspec/mingw/mal_hspec_mingw_serial.h"
+#include "gpio/mal_gpio.h"
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
+void mal_hspec_gnu_gpio_execute_callback(mal_gpio_s gpio);
+
+mal_error_e mal_hspec_gnu_set_mocked_gpio(const mal_gpio_s *gpio, bool value);
+
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_GPIO_H_ */

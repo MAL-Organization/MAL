@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_can.h
- *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,13 +17,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_CAN_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_CAN_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_CAN_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_CAN_H_
 
 #include "can/mal_can.h"
 
-mal_error_e mal_hspec_mingw_can_get_tx_msg(mal_can_e interface, mal_can_msg_s *msg);
+mal_error_e mal_hspec_gnu_can_get_tx_msg(mal_can_e interface, mal_can_msg_s *msg);
 
-mal_error_e mal_hspec_mingw_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg);
+mal_error_e mal_hspec_gnu_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_CAN_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_CAN_H_ */

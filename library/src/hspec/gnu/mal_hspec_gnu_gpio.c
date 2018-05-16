@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_gpio.c
- *
- *  Created on: Mar 24, 2016
- *      Author: Kevin
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,7 +17,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_gpio.h"
+#include "mal_hspec_gnu_gpio.h"
 #include "std/mal_stdlib.h"
 
 typedef struct {
@@ -44,7 +38,7 @@ mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_gpio_s *gpio, bool value) {
+mal_error_e mal_hspec_gnu_set_mocked_gpio(const mal_gpio_s *gpio, bool value) {
 	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIR_OUT) {
 			return MAL_ERROR_HARDWARE_INVALID;
 	}
@@ -56,17 +50,17 @@ mal_error_e mal_hspec_mingw_set_mocked_gpio(const mal_gpio_s *gpio, bool value) 
 	switch (gpio_array[gpio->port][gpio->pin].event) {
 		case (MAL_GPIO_EVENT_FALLING):
 				if (old_value == 1 && value == 0) {
-					mal_hspec_mingw_gpio_execute_callback(*gpio);
+                    mal_hspec_gnu_gpio_execute_callback(*gpio);
 				}
 				break;
 		case (MAL_GPIO_EVENT_RISING):
 				if (old_value == 0 && value == 1) {
-					mal_hspec_mingw_gpio_execute_callback(*gpio);
+                    mal_hspec_gnu_gpio_execute_callback(*gpio);
 				}
 				break;
 		case (MAL_GPIO_EVENT_BOTH):
 				if (old_value != value) {
-					mal_hspec_mingw_gpio_execute_callback(*gpio);
+                    mal_hspec_gnu_gpio_execute_callback(*gpio);
 				}
 				break;
 		default:
@@ -100,7 +94,7 @@ mal_error_e mal_gpio_event_init(mal_gpio_init_s *gpio_init, mal_gpio_event_init_
 	return MAL_ERROR_OK;
 }
 
-void mal_hspec_mingw_gpio_execute_callback(mal_gpio_s gpio) {
+void mal_hspec_gnu_gpio_execute_callback(mal_gpio_s gpio) {
 	if (NULL != gpio_array[gpio.port][gpio.pin].callback) {
 		// Fetch callback
 		mal_gpio_event_callback_t cb = gpio_array[gpio.port][gpio.pin].callback;
