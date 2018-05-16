@@ -24,7 +24,7 @@
  */
 
 #include "gpio/mal_gpio.h"
-#include "timer/mal_timer2.h"
+#include "timer/mal_timer.h"
 #include "stm32f7/stm32f7xx_hal_gpio.h"
 #include "mal_hspec_stm32f7_timer.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
@@ -1020,6 +1020,90 @@ mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, 
 
 mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {
     *count = handle->hal_timer_handle.Instance->CNT;
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_free(mal_timer_s *handle) {
+    HAL_StatusTypeDef hal_result;
+    // Make sure timer is used
+    if (!mal_hspec_stm32f7_timer_is_used(handle->timer)) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Disable interrupt
+    mal_timer_disable_interrupt(handle);
+    // Disable timer
+    hal_result = HAL_TIM_Base_DeInit(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Reset peripheral
+    switch (handle->timer) {
+        case MAL_TIMER_1:
+            __HAL_RCC_TIM1_FORCE_RESET();
+            timer1_handle = NULL;
+            break;
+        case MAL_TIMER_2:
+            __HAL_RCC_TIM2_FORCE_RESET();
+            timer2_handle = NULL;
+            break;
+        case MAL_TIMER_3:
+            __HAL_RCC_TIM3_FORCE_RESET();
+            timer3_handle = NULL;
+            break;
+        case MAL_TIMER_4:
+            __HAL_RCC_TIM4_FORCE_RESET();
+            timer4_handle = NULL;
+            break;
+        case MAL_TIMER_5:
+            __HAL_RCC_TIM5_FORCE_RESET();
+            timer5_handle = NULL;
+            break;
+        case MAL_TIMER_6:
+            __HAL_RCC_TIM6_FORCE_RESET();
+            timer6_handle = NULL;
+            break;
+        case MAL_TIMER_7:
+            __HAL_RCC_TIM7_FORCE_RESET();
+            timer7_handle = NULL;
+            break;
+        case MAL_TIMER_8:
+            __HAL_RCC_TIM8_FORCE_RESET();
+            timer8_handle = NULL;
+            break;
+        case MAL_TIMER_9:
+            __HAL_RCC_TIM9_FORCE_RESET();
+            timer9_handle = NULL;
+            break;
+        case MAL_TIMER_10:
+            __HAL_RCC_TIM10_FORCE_RESET();
+            timer10_handle = NULL;
+            break;
+        case MAL_TIMER_11:
+            __HAL_RCC_TIM11_FORCE_RESET();
+            timer11_handle = NULL;
+            break;
+        case MAL_TIMER_12:
+            __HAL_RCC_TIM12_FORCE_RESET();
+            timer12_handle = NULL;
+            break;
+        case MAL_TIMER_13:
+            __HAL_RCC_TIM13_FORCE_RESET();
+            timer13_handle = NULL;
+            break;
+        case MAL_TIMER_14:
+            __HAL_RCC_TIM14_FORCE_RESET();
+            timer14_handle = NULL;
+            break;
+        default:
+            return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Flush handles
+    handle->input_capture_handles[0] = NULL;
+    handle->input_capture_handles[1] = NULL;
+    handle->input_capture_handles[2] = NULL;
+    handle->input_capture_handles[3] = NULL;
+    handle->callback_handle = NULL;
+
     return MAL_ERROR_OK;
 }
 

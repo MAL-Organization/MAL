@@ -26,7 +26,7 @@
 #ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_
 #define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_
 
-#include "timer/mal_timer2.h"
+#include "timer/mal_timer.h"
 #include "stm32f7/stm32f7xx.h"
 #include "stm32f7/stm32f7xx_hal_tim.h"
 
