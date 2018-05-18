@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_uuid.c
- *
- *  Created on: Mar 25, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,22 +17,14 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
-#include <time.h>
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_RESET_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_RESET_H_
 
-#include "mal_hspec_mingw_uuid.h"
+#include "std/mal_bool.h"
+#include "reset/mal_reset.h"
 
-static uint64_t local_uuid = 0;
+bool mal_hspec_gnu_reset_get_request(void);
 
-mal_error_e mal_uuid_read(uint64_t *uuid) {
-	if (!local_uuid) {
-		srand(time(NULL));
-		local_uuid = (uint64_t)rand();
-	}
-	*uuid = local_uuid;
-	return MAL_ERROR_OK;
-}
+void mal_hspec_gnu_reset_set_reset_source(mal_reset_source_e source);
 
-void mal_hspec_mingw_uuid_set(uint64_t uuid) {
-	local_uuid = uuid;
-}
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_RESET_H_ */

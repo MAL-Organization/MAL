@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_spi.c
- *
- *  Created on: May 19, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,15 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_spi.h"
+#include "mal_hspec_gnu_spi.h"
 #include "std/mal_stdlib.h"
 
 typedef struct {
 	mal_spi_master_init_s init_parameters;
 	mal_spi_msg_s *active_msg;
-} mingw_spi_interface_s;
+} gnu_spi_interface_s;
 
-mingw_spi_interface_s interfaces[MAL_SPI_SIZE];
+gnu_spi_interface_s interfaces[MAL_SPI_SIZE];
 
 mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	// Save initialization parameters
@@ -52,7 +46,7 @@ mal_error_e mal_spi_start_transaction(mal_spi_e interface, mal_spi_msg_s *msg) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg) {
+mal_error_e mal_hspec_gnu_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg) {
 	if (NULL == interfaces[interface].active_msg) {
 		return MAL_ERROR_EMPTY;
 	}

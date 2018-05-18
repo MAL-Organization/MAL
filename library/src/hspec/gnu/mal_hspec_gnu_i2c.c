@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_i2c.c
- *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -39,9 +33,9 @@ typedef struct {
 	mal_i2c_msg_s message_buffer[MESSAGE_BUFFER_SIZE];
 	HANDLE mutex;
 	bool interrupt_active;
-} mingw_i2c_interface_s;
+} gnu_i2c_interface_s;
 
-static mingw_i2c_interface_s i2c_interfaces[MAL_I2C_SIZE];
+static gnu_i2c_interface_s i2c_interfaces[MAL_I2C_SIZE];
 
 mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	// Save init

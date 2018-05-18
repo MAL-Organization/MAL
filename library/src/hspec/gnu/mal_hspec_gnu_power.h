@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_timer.h
- *
- *  Created on: Mar 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,12 +17,11 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_POWER_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_POWER_H_
 
-#include "timer/mal_timer.h"
-#include "gpio/mal_gpio.h"
+#include "power/mal_power.h"
 
-mal_error_e mal_hspec_mingw_timer_do_input_capture_callback(mal_timer_e timer, const mal_gpio_s *io, uint64_t value);
+void mal_hspec_gnu_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_TIMER_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_POWER_H_ */

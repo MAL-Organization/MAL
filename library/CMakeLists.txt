@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(mal)
+project(mal C)
+
+message(STATUS ${MAL_TOOLCHAIN_NAME})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -16,7 +18,7 @@ set(CAN_SRCS src/can/mal_can.h src/can/mal_can_buffer.c src/can/mal_can_buffer.h
 set(CLOCK_SRCS src/clock/mal_clock.c src/clock/mal_clock.h)
 set(DAC_SRCS src/dac/mal_dac.c src/dac/mal_dac.h)
 set(FLASH_SRCS src/flash/mal_flash.c src/flash/mal_flash.h)
-set(GPIO_SRCS src/gpio/mal_gpio.h)
+set(GPIO_SRCS src/gpio/mal_gpio.h src/gpio/mal_gpio_definitions.h)
 set(HSPEC_SRCS src/hspec/mal_hspec.h)
 set(I2C_SRCS src/i2c/mal_i2c.h src/i2c/mal_i2c_buffer.c src/i2c/mal_i2c_buffer.h)
 set(POWER_SRCS src/power/mal_power.h)
@@ -39,18 +41,17 @@ set(COMMON_SRCS ${UTILS_SRCS};${ADC_SRCS};${CAN_SRCS};${CLOCK_SRCS};${DAC_SRCS};
 set(COMMON_OPTIONS ${OPTIMIZATION_LVL};${DEBUG_LVL})
 
 # GNU section
-file(GLOB_RECURSE GNU_HAL_SOURCES "src/hspec/gnu/*.c" "src/hspec/gnu/*.h")
-add_library(GNU STATIC ${COMMON_SRCS};${GNU_HAL_SOURCES})
-set_target_properties(GNU PROPERTIES OUTPUT_NAME "mal")
-target_include_directories(GNU PRIVATE ${COMMON_STM_INCS})
-target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
-target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
+if(MAL_TOOLCHAIN_NAME STREQUAL "mingw")
+    # Setting AR in toolchain file does not seem to work
+    set(CMAKE_AR mingw32-gcc-ar)
+    file(GLOB_RECURSE GNU_HAL_SOURCES "src/hspec/gnu/*.c" "src/hspec/gnu/*.h")
+    add_library(GNU ${COMMON_SRCS};${GNU_HAL_SOURCES})
+    set_target_properties(GNU PROPERTIES OUTPUT_NAME "mal")
+    target_include_directories(GNU PRIVATE ${COMMON_STM_INCS})
+    target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
+    target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
+endif()
 
-# Change compiler for libraries
-set(CMAKE_C_COMPILER arm-none-eabi-gcc)
-# Change archiver
-set(CMAKE_AR arm-none-eabi-ar)
-set(CMAKE_RANLIB arm-none-eabi-ranlib)
 # ARM section
 set(COMMON_ARM_INCS cmsis;cortexm)
 set(COMMON_ARM_SRCS ${COMMON_SRCS};cmsis/cmsis/cmsis_gcc.h;cmsis/cmsis/core_cmFunc.h;cmsis/cmsis/core_cmInstr.h;
@@ -68,16 +69,18 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_power.c;src/hspec/stm/stm32f7/mal_hspec_stm32f7_reset.c;
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_serial.h;src/hspec/stm/stm32f7/mal_hspec_stm32f7_startup.c;
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.c;src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.h;
-        cmsis/cm7/core_cm7.h;${STM32F7_HAL_SOURCES} src/hspec/stm/stm32f7/mal_hspec_stm32f7_gpio.h)
+        cmsis/cm7/core_cm7.h;${STM32F7_HAL_SOURCES} src/hspec/stm/stm32f7/mal_hspec_stm32f7_gpio.h src/gpio/mal_gpio_definitions.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
-# STM32F767ZI section
-add_library(STM32F767ZI STATIC ${COMMON_STM32F7_SRCS})
-set_target_properties(STM32F767ZI PROPERTIES OUTPUT_NAME "mal")
-target_include_directories(STM32F767ZI PRIVATE ${COMMON_STM_INCS})
-target_compile_options(STM32F767ZI BEFORE PRIVATE ${COMMON_STM32F7_OPTIONS})
-target_compile_definitions(STM32F767ZI PRIVATE ${COMMON_STM32F7_DEFS};-DSTM32F767xx)
-# STM32F072CB section
-add_library(STM32F072CB STATIC ${COMMON_STM_SRCS})
-target_compile_options(STM32F072CB BEFORE PRIVATE -mcpu=cortex-m0;${COMMON_ARM_OPTIONS})
-target_compile_definitions(STM32F072CB PRIVATE -DMAL_STM)
+if(MAL_TOOLCHAIN_NAME STREQUAL "arm")
+    # STM32F767ZI section
+    add_library(STM32F767ZI ${COMMON_STM32F7_SRCS})
+    set_target_properties(STM32F767ZI PROPERTIES OUTPUT_NAME "mal")
+    target_include_directories(STM32F767ZI PRIVATE ${COMMON_STM_INCS})
+    target_compile_options(STM32F767ZI BEFORE PRIVATE ${COMMON_STM32F7_OPTIONS})
+    target_compile_definitions(STM32F767ZI PRIVATE ${COMMON_STM32F7_DEFS};-DSTM32F767xx)
+    ## STM32F072CB section
+    #add_library(STM32F072CB STATIC ${COMMON_STM_SRCS})
+    #target_compile_options(STM32F072CB BEFORE PRIVATE -mcpu=cortex-m0;${COMMON_ARM_OPTIONS})
+    #target_compile_definitions(STM32F072CB PRIVATE -DMAL_STM)
+endif()

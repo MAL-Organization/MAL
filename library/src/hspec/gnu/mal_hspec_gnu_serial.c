@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_serial.c
- *
- *  Created on: Nov 6, 2017
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2017 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,7 +17,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_serial.h"
+#include "mal_hspec_gnu_serial.h"
 
 mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     // Save init
@@ -31,7 +25,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     // Initialise circular buffer
     mal_circular_buffer_init((void*)handle->data_buffer,
                              sizeof(uint16_t),
-                             sizeof(uint16_t) * MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE,
+                             sizeof(uint16_t) * MAL_HSPEC_GNU_SERIAL_DATA_BUFFER_SIZE,
                              &handle->tx_circular_buffer);
     return MAL_ERROR_OK;
 }
@@ -46,7 +40,7 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
     return result;
 }
 
-mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *data) {
+mal_error_e mal_hspec_gnu_serial_get_tx_data(mal_serial_s *handle, uint16_t *data) {
     mal_error_e result;
     // Remove message from buffer
     result = mal_circular_buffer_read(&handle->tx_circular_buffer, data);
@@ -63,7 +57,7 @@ mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *d
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_s *handle, uint16_t data) {
+mal_error_e mal_hspec_gnu_serial_push_rx_data(mal_serial_s *handle, uint16_t data) {
     return handle->init.rx_callback(handle->init.rx_callback_handle, data);
 }
 

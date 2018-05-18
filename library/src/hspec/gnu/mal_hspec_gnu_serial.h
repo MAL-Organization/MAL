@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_serial.h
- *
- *  Created on: Nov 6, 2017
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2017 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,27 +17,27 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_SERIAL_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_SERIAL_H_
 
 #include "serial/mal_serial.h"
 #include "utils/mal_circular_buffer.h"
 #include "std/mal_stdint.h"
 
-#define MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE 100
+#define MAL_HSPEC_GNU_SERIAL_DATA_BUFFER_SIZE 100
 
 typedef struct MAL_SERIAL {
     mal_serial_init_s init;
     mal_circular_buffer_s tx_circular_buffer;
-    uint16_t data_buffer[MAL_HSPEC_MINGW_SERIAL_DATA_BUFFER_SIZE];
+    uint16_t data_buffer[MAL_HSPEC_GNU_SERIAL_DATA_BUFFER_SIZE];
 } mal_serial_s;
 
 typedef struct MAL_SERIAL_INTERRUPT {
 
 } mal_serial_interrupt_s;
 
-mal_error_e mal_hspec_mingw_serial_get_tx_data(mal_serial_s *handle, uint16_t *data);
+mal_error_e mal_hspec_gnu_serial_get_tx_data(mal_serial_s *handle, uint16_t *data);
 
-mal_error_e mal_hspec_mingw_serial_push_rx_data(mal_serial_s *handle, uint16_t data);
+mal_error_e mal_hspec_gnu_serial_push_rx_data(mal_serial_s *handle, uint16_t data);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_SERIAL_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_SERIAL_H_ */

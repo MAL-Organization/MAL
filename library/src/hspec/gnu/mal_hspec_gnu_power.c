@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_startup.c
- *
- *  Created on: Jul 10, 2017
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,8 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "startup/mal_startup.h"
+#include "mal_hspec_gnu_power.h"
 
-void mal_startup_hardware(void) {
+static mal_volts_t rail_values[MAL_POWER_RAIL_SIZE];
 
+mal_error_e mal_power_get_rail_voltage(mal_power_rail_e rail, mal_volts_t *value) {
+	*value = rail_values[rail];
+	return MAL_ERROR_OK;
+}
+
+void mal_hspec_gnu_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value) {
+	rail_values[rail] = value;
 }

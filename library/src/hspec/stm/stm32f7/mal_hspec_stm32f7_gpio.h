@@ -26,6 +26,15 @@
 
 #define MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(pin) ((uint32_t)1 << (pin))
 
+typedef struct MAL_GPIO {
+    GPIO_TypeDef *hal_port;
+    uint32_t hal_pin;
+} mal_gpio_s;
+
+typedef struct MAL_GPIO_EVENT {
+
+} mal_gpio_event_s;
+
 mal_error_e mal_hspec_stm32f7_gpio_enable_clock(mal_gpio_port_e port);
 
 GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port);

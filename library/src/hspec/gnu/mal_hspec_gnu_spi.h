@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_power.h
- *
- *  Created on: Jan 30, 2017
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,11 +17,11 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_SPI_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_SPI_H_
 
-#include "power/mal_power.h"
+#include "spi/mal_spi.h"
 
-void mal_hspec_mingw_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value);
+mal_error_e mal_hspec_gnu_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg);
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_POWER_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_SPI_H_ */

@@ -27,7 +27,7 @@
 #include "std/mal_stdint.h"
 #include "std/mal_bool.h"
 #include "std/mal_types.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
 
 /**
@@ -111,7 +111,8 @@ typedef struct {
     mal_timer_e timer; /**< The timer to use for the PWM output.*/
     mal_hertz_t frequency; /**< The frequency of the PWM.*/
     mal_hertz_t delta; /**< The acceptable frequency delta.*/
-    const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
+    mal_gpio_port_e port; /**< The port of the PWM GPIO to initialize.*/
+    uint8_t pin; /**< The pin of the port of the PWM GPIO to initialize. */
 } mal_timer_init_pwm_s;
 
 /**
@@ -136,7 +137,8 @@ typedef void (*mal_timer_input_capture_callback_t)(void *handle, uint64_t count)
 typedef struct {
     mal_timer_e timer; /**< The timer to use for the input capture.*/
     mal_hertz_t frequency; /**< The frequency to count to.*/
-    const mal_gpio_s *input_io; /**< The gpio of the input capture.*/
+    mal_gpio_port_e port; /**< The port of the input capture GPIO to initialize.*/
+    uint8_t pin; /**< The pin of the port of the input captrure GPIO to initialize. */
     mal_timer_input_e input_event; /**< The input event to capture.*/
     uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
     mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
@@ -192,7 +194,7 @@ MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle);
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_s *handle, bool active);
+MAL_DEFS_INLINE void mal_timer_set_interrupt(mal_timer_s *handle, bool active);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task).

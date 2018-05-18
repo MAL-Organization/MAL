@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_spi.h
- *
- *  Created on: May 19, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,11 +17,18 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_SPI_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_SPI_H_
+#include "timer/mal_timer.h"
+#include "std/mal_defs.h"
 
-#include "spi/mal_spi.h"
+mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle) {
+    MAL_DEFS_UNUSED(init);
+    MAL_DEFS_UNUSED(handle);
+    MAL_DEFS_UNUSED(pwm_handle);
+	return MAL_ERROR_OK;
+}
 
-mal_error_e mal_hspec_mingw_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg);
-
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_SPI_H_ */
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle) {
+    MAL_DEFS_UNUSED(handle);
+    MAL_DEFS_UNUSED(duty_cycle);
+	return MAL_ERROR_OK;
+}

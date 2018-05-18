@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_uuid.h
- *
- *  Created on: Mar 25, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,12 +17,21 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_UUID_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_UUID_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_TIMER_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_TIMER_H_
 
-#include "std/mal_error.h"
-#include "std/mal_stdint.h"
+#include "timer/mal_timer.h"
+#include "gpio/mal_gpio_definitions.h"
 
-void mal_hspec_mingw_uuid_set(uint64_t uuid);
+typedef struct MAL_TIMER {
+    mal_timer_e timer;
+} mal_timer_s;
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_UUID_H_ */
+typedef struct MAL_TIMER_PWM {
+
+} mal_timer_pwm_s;
+
+mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  mal_gpio_port_e port, uint8_t pin,
+                                                          uint64_t value);
+
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_TIMER_H_ */

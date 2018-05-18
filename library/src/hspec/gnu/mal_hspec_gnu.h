@@ -17,9 +17,9 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_H_
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_H_
 
-#include "hspec/mingw/mal_hspec_mingw_serial.h"
+#include "hspec/gnu/mal_hspec_gnu_serial.h"
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_H_ */
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_H_ */

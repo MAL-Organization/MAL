@@ -27,6 +27,7 @@
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
 #include "std/mal_defs.h"
+#include "gpio/mal_gpio_definitions.h"
 
 /**
  * @defgroup GPIO
@@ -35,36 +36,24 @@
  */
 
 /**
- * Possible GPIO ports.
+ * GPIO handle that must be defined by hardware specific implementation. Used
+ * to access the gpio functions.
  */
-typedef enum {
-	MAL_GPIO_PORT_A = 0,  //!< MAL_PORT_A
-	MAL_GPIO_PORT_B = 1,  //!< MAL_PORT_B
-	MAL_GPIO_PORT_C = 2,  //!< MAL_PORT_C
-	MAL_GPIO_PORT_D = 3,  //!< MAL_PORT_D
-	MAL_GPIO_PORT_E = 4,  //!< MAL_PORT_E
-	MAL_GPIO_PORT_F = 5,  //!< MAL_PORT_F
-	MAL_GPIO_PORT_G = 6,  //!< MAL_PORT_G
-	MAL_GPIO_PORT_H = 7,  //!< MAL_PORT_H
-	MAL_GPIO_PORT_I = 8,  //!< MAL_PORT_I
-	MAL_GPIO_PORT_SIZE = 9 //!< MAL_PORT_SIZE
-} mal_gpio_port_e;
+typedef struct MAL_GPIO mal_gpio_s;
 
 /**
- * Defines a GPIO.
+ * GPIO event handle that must be defined by hardware specific implementation.
+ * Used to access the gpio event functions.
  */
-typedef struct {
-	mal_gpio_port_e port; /**< The port of the GPIO.*/
-	uint8_t pin; /**< The pin of the GPIO.*/
-} mal_gpio_s;
+typedef struct MAL_GPIO_EVENT mal_gpio_event_s;
 
 /**
  * Possible GPIO directions.
  */
 typedef enum {
-	MAL_GPIO_DIR_IN,//!< MAL_GPIO_DIR_IN
-	MAL_GPIO_DIR_OUT//!< MAL_GPIO_DIR_OUT
-} mal_gpio_dir_e;
+	MAL_GPIO_DIRECTION_IN,//!< Set a gpio as an input
+	MAL_GPIO_DIRECTION_OUT//!< Set a gpio as an output
+} mal_gpio_direction_e;
 
 /**
  * Possible GPIO types.
@@ -84,11 +73,12 @@ typedef enum {
 } mal_gpio_pupd_e;
 
 /**
- * Parameters to initialise a GPIO.
+ * Parameters to initialize a GPIO.
  */
 typedef struct {
-	mal_gpio_s gpio; /**< The gpio to initialize.*/
-	mal_gpio_dir_e direction; /**< The direction of the GPIO.*/
+	mal_gpio_port_e port; /**< The port of the GPIO to initialize.*/
+	uint8_t pin; /**< The pin of the port of the GPIO to initialize.*/
+	mal_gpio_direction_e direction; /**< The direction of the GPIO.*/
 	mal_gpio_out_e output_config; /**< The output configuration (type) of the GPIO.*/
 	mal_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
 	uint64_t speed; /**< The refresh speed of the GPIO in hertz.*/
@@ -105,17 +95,21 @@ typedef enum {
 
 /**
  * @brief GPIO event callback.
- * @return Return a status of the callback.
+ * @param handle The handle given during initialization.
  */
-typedef mal_error_e (*mal_gpio_event_callback_t)(mal_gpio_s *gpio);
+typedef void (*mal_gpio_event_callback_t)(void *handle);
 
 /**
  * Parameters to initialize an event.
  */
 typedef struct {
-	const mal_gpio_s *gpio; /**< The gpio for the event.*/
+    mal_gpio_port_e port; /**< The port of the GPIO for the event.*/
+    uint8_t pin; /**< The pin of the port of the GPIO for the event. */
+    mal_gpio_pupd_e pupd; /**< The pull-up and pull-down configuration.*/
+    uint64_t speed; /**< The refresh speed of the GPIO in hertz.*/
 	mal_gpio_event_e event; /**< The event that will trigger.*/
 	mal_gpio_event_callback_t callback; /**< The callback to execute upon event.*/
+	void *handle; /**< This will be passed to the callback.*/
 } mal_gpio_event_init_s;
 
 /**
@@ -124,68 +118,79 @@ typedef struct {
  * @param value Boolean value. Set true to set the IO high, false for low.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_set(const mal_gpio_s *gpio, bool value);
+mal_error_e mal_gpio_set(mal_gpio_s *gpio, bool value);
 
 /**
- * @brief Returns the value of a GPIO.
+ * @brief Fetches the value of a GPIO.
  * @param gpio A pointer of type ::mal_hspec_gpio_s.
- * @return Boolean value. Returns true if IO is high, false if low.
+ * @param value Will contain the value of the GPIO.
+ * @return #MAL_ERROR_OK on success.
  */
-bool mal_gpio_get(const mal_gpio_s *gpio);
+mal_error_e mal_gpio_get(mal_gpio_s *gpio, bool *value);
 
 /**
  * @brief Toggles and IO. If the IO is high, it will go low and vice-versa.
  * @param gpio A pointer of type ::mal_hspec_gpio_s.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_toggle(const mal_gpio_s *gpio);
+mal_error_e mal_gpio_toggle(mal_gpio_s *gpio);
 
 /**
  * @brief Removes a GPIO event.
- * @param gpio A pointer of type ::mal_hspec_gpio_s.
+ * @param handle The handle of the event to remove.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_event_remove(const mal_gpio_s *gpio);
+mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle);
 
 /**
  * @brief Disable interrupt for a GPIO event.
- * @param gpio A pointer of type ::mal_hspec_gpio_s.
+ * @param handle The event to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(const mal_gpio_s *gpio);
+MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle);
 
 /**
  * @brief Enable interrupt for a GPIO event.
- * @param gpio A pointer of type ::mal_hspec_gpio_s.
+ * @param handle The event to disable the interrupt from.
  * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_gpio_event_enable_interrupt(const mal_gpio_s *gpio, bool active);
+MAL_DEFS_INLINE void mal_gpio_event_set_interrupt(mal_gpio_event_s *handle, bool active);
 
 /**
  * @brief Initialize a GPIO.
- * @param gpio_init Initialize parameters.
+ * @param init Initialize parameters.
+ * @param handle The handle to initialize. Use this handle to access GPIO
+ * functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init);
+mal_error_e mal_gpio_init(mal_gpio_init_s *init, mal_gpio_s *handle);
 
 /**
  * @brief Initialize a GPIO event. An event will allow you to execute code when
  * a GPIO changes state.
- * @param gpio_init GPIO initialize parameters.
- * @param event_init Event initialize parameters.
+ * @param init Initialize parameters.
+ * @param gpio_handle The GPIO handle to initialize. Use this handle to access
+ * GPIO functions.
+ * @param event_handle The event handle to initialize. Use this handle to
+ * access GPIO functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_event_init(mal_gpio_init_s *gpio_init, mal_gpio_event_init_s *event_init);
+mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_handle, mal_gpio_event_s *event_handle);
 
 /**
  * @brief Return the GPIO to a safe state.
- * @param gpio The GPIO to reset.
+ * @param gpio The GPIO handle to reset.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_gpio_deinit(const mal_gpio_s *gpio);
+mal_error_e mal_gpio_deinit(mal_gpio_s *gpio);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

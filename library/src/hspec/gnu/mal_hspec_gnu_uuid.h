@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_power.c
- *
- *  Created on: Jan 30, 2017
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,15 +17,12 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_mingw_power.h"
+#ifndef HSPEC_GNU_MAL_HSPEC_GNU_UUID_H_
+#define HSPEC_GNU_MAL_HSPEC_GNU_UUID_H_
 
-static mal_volts_t rail_values[MAL_POWER_RAIL_SIZE];
+#include "std/mal_error.h"
+#include "std/mal_stdint.h"
 
-mal_error_e mal_power_get_rail_voltage(mal_power_rail_e rail, mal_volts_t *value) {
-	*value = rail_values[rail];
-	return MAL_ERROR_OK;
-}
+void mal_hspec_gnu_uuid_set(uint64_t uuid);
 
-void mal_hspec_mingw_power_set_rail_voltage(mal_power_rail_e rail, mal_volts_t value) {
-	rail_values[rail] = value;
-}
+#endif /* HSPEC_GNU_MAL_HSPEC_GNU_UUID_H_ */

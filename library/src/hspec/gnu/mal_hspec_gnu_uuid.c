@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_reset.h
- *
- *  Created on: Jul 27, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,14 +17,22 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_
-#define HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_
+#include <stdlib.h>
+#include <time.h>
 
-#include "std/mal_bool.h"
-#include "reset/mal_reset.h"
+#include "mal_hspec_gnu_uuid.h"
 
-bool mal_hspec_mingw_reset_get_request(void);
+static uint64_t local_uuid = 0;
 
-void mal_hspec_mingw_reset_set_reset_source(mal_reset_source_e source);
+mal_error_e mal_uuid_read(uint64_t *uuid) {
+	if (!local_uuid) {
+		srand(time(NULL));
+		local_uuid = (uint64_t)rand();
+	}
+	*uuid = local_uuid;
+	return MAL_ERROR_OK;
+}
 
-#endif /* HSPEC_MINGW_MAL_HSPEC_MINGW_RESET_H_ */
+void mal_hspec_gnu_uuid_set(uint64_t uuid) {
+	local_uuid = uuid;
+}

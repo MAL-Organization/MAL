@@ -22,8 +22,22 @@
 
 #include "gpio/mal_gpio.h"
 
-void mal_hspec_gnu_gpio_execute_callback(mal_gpio_s gpio);
+/**
+ * Number of IO per port.
+ */
+#define MAL_HSPEC_GNU_GPIO_PORT_SIZE    32
 
-mal_error_e mal_hspec_gnu_set_mocked_gpio(const mal_gpio_s *gpio, bool value);
+typedef struct MAL_GPIO {
+    mal_gpio_port_e port;
+    uint8_t pin;
+} mal_gpio_s;
+
+typedef struct MAL_GPIO_EVENT {
+    mal_gpio_s *gpio_handle;
+} mal_gpio_event_s;
+
+void mal_hspec_gnu_gpio_execute_callback(mal_gpio_port_e port, uint8_t pin);
+
+mal_error_e mal_hspec_gnu_set_mocked_gpio(mal_gpio_port_e port, uint8_t pin, bool value);
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_GPIO_H_ */

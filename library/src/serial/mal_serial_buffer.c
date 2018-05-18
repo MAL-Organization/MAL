@@ -37,8 +37,10 @@ mal_error_e mal_serial_buffer_init(mal_serial_buffer_handle_s *handle, mal_seria
     // Initialize port
     mal_serial_init_s serial_init;
     serial_init.port = init->port;
-    serial_init.rx_gpio = init->rx_gpio;
-    serial_init.tx_gpio = init->tx_gpio;
+    serial_init.rx_gpio_port = init->rx_gpio_port;
+    serial_init.rx_gpio_pin = init->rx_gpio_pin;
+    serial_init.tx_gpio_port = init->tx_gpio_port;
+    serial_init.tx_gpio_pin = init->tx_gpio_pin;
     serial_init.baudrate = init->baudrate;
     serial_init.data_size = init->data_size;
     serial_init.parity = init->parity;

@@ -127,71 +127,71 @@ mal_error_e mal_hspec_stm32f7_gpio_enable_clock(mal_gpio_port_e port) {
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
+mal_error_e mal_gpio_init(mal_gpio_init_s *init, mal_gpio_s *handle) {
     mal_error_e mal_result;
     // Enable clock and select port
-    mal_result = mal_hspec_stm32f7_gpio_enable_clock(gpio_init->gpio.port);
+    mal_result = mal_hspec_stm32f7_gpio_enable_clock(init->port);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
-    // Get port
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio_init->gpio.port);
+    // Get port and pin
+    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(init->port);
+    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(init->pin);
     // Configure GPIO
-    GPIO_InitTypeDef  hal_gpio_init;
+    GPIO_InitTypeDef hal_gpio_init;
     hal_gpio_init.Alternate = 0;
-    hal_gpio_init.Pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio_init->gpio.pin);
-    if (MAL_GPIO_DIR_IN == gpio_init->direction) {
+    hal_gpio_init.Pin = hal_pin;
+    if (MAL_GPIO_DIRECTION_IN == init->direction) {
         hal_gpio_init.Mode = GPIO_MODE_INPUT;
     } else {
         // Select type
-        if (MAL_GPIO_OUT_PP == gpio_init->output_config) {
+        if (MAL_GPIO_OUT_PP == init->output_config) {
             hal_gpio_init.Mode = GPIO_MODE_OUTPUT_PP;
         } else {
             hal_gpio_init.Mode = GPIO_MODE_OUTPUT_OD;
         }
         // Select speed. Assuming 10 pF capacitance.
-        mal_result = mal_hspec_stm32f7_gpio_get_speed(gpio_init->speed, &hal_gpio_init.Speed);
+        mal_result = mal_hspec_stm32f7_gpio_get_speed(init->speed, &hal_gpio_init.Speed);
         if (MAL_ERROR_OK != mal_result) {
             return mal_result;
         }
     }
-    if (MAL_GPIO_PUPD_PU == gpio_init->pupd) {
+    if (MAL_GPIO_PUPD_PU == init->pupd) {
         hal_gpio_init.Pull = GPIO_PULLUP;
-    } else if (MAL_GPIO_PUPD_PD == gpio_init->pupd) {
+    } else if (MAL_GPIO_PUPD_PD == init->pupd) {
         hal_gpio_init.Pull = GPIO_PULLDOWN;
     } else {
         hal_gpio_init.Pull = GPIO_NOPULL;
     }
     HAL_GPIO_Init(hal_port, &hal_gpio_init);
+    // Save handle
+    handle->hal_port = hal_port;
+    handle->hal_pin = hal_pin;
 
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_set(const mal_gpio_s *gpio, bool value) {
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio->port);
-    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio->pin);
-    HAL_GPIO_WritePin(hal_port, (uint16_t)hal_pin, (GPIO_PinState)value);
-
+mal_error_e mal_gpio_set(mal_gpio_s *gpio, bool value) {
+    HAL_GPIO_WritePin(gpio->hal_port, (uint16_t)gpio->hal_pin, (GPIO_PinState)value);
     return MAL_ERROR_OK;
 }
 
-bool mal_gpio_get(const mal_gpio_s *gpio) {
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio->port);
-    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio->pin);
-    GPIO_PinState hal_pin_state = HAL_GPIO_ReadPin(hal_port, (uint16_t)hal_pin);
-    return GPIO_PIN_SET == hal_pin_state;
-}
-
-mal_error_e mal_gpio_toggle(const mal_gpio_s *gpio) {
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio->port);
-    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio->pin);
-    HAL_GPIO_TogglePin(hal_port, (uint16_t)hal_pin);
+mal_error_e mal_gpio_get(mal_gpio_s *gpio, bool *value) {
+    GPIO_PinState hal_pin_state = HAL_GPIO_ReadPin(gpio->hal_port, (uint16_t)gpio->hal_pin);
+    if (GPIO_PIN_SET == hal_pin_state) {
+        *value = true;
+    } else {
+        *value = false;
+    }
     return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_deinit(const mal_gpio_s *gpio) {
-    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(gpio->port);
-    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(gpio->pin);
-    HAL_GPIO_DeInit(hal_port, hal_pin);
+mal_error_e mal_gpio_toggle(mal_gpio_s *gpio) {
+    HAL_GPIO_TogglePin(gpio->hal_port, (uint16_t)gpio->hal_pin);
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_gpio_deinit(mal_gpio_s *gpio) {
+    HAL_GPIO_DeInit(gpio->hal_port, gpio->hal_pin);
     return MAL_ERROR_OK;
 }

@@ -1,11 +1,5 @@
 /*
- * mal_hspec_mingw_pwm.c
- *
- *  Created on: Apr 7, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -23,12 +17,8 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "timer/mal_timer.h"
+#include "startup/mal_startup.h"
 
-mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init) {
-	return MAL_ERROR_OK;
-}
+void mal_startup_hardware(void) {
 
-mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gpio, mal_ratio_t duty_cycle) {
-	return MAL_ERROR_OK;
 }
