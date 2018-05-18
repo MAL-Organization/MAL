@@ -23,3 +23,4 @@ add_executable(mal-test
         utils/test_mal_e3prom.cpp
         utils/test_mal_pool.cpp
         main.cpp)
+target_link_libraries(mal-test ${PROJECT_SOURCE_DIR}/../library/build-mingw/libmal.a)

@@ -40,12 +40,12 @@ protected:
 	virtual void SetUp() {
 		// Set flash info
 		this->flash_info.page_count = 4;
-		this->flash_info.pages = (mal_hspec_mingw_flash_page_info_s*)malloc(sizeof(mal_hspec_mingw_flash_page_info_s) * this->flash_info.page_count);
-		this->flash_info.pages[0].size = this->first_page_size;
-		this->flash_info.pages[1].size = this->second_page_size;
-		this->flash_info.pages[2].size = this->first_page_size;
-		this->flash_info.pages[3].size = this->second_page_size;
-		mal_hspec_mingw_flash_set_flash(&this->flash_info);
+		this->flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * this->flash_info.page_count);
+		this->flash_info.pages[0].size = (uint32_t)this->first_page_size;
+		this->flash_info.pages[1].size = (uint32_t)this->second_page_size;
+		this->flash_info.pages[2].size = (uint32_t)this->first_page_size;
+		this->flash_info.pages[3].size = (uint32_t)this->second_page_size;
+		mal_hspec_gnu_flash_set_flash(&this->flash_info);
 	}
 
 	virtual void TearDown() {
@@ -267,7 +267,7 @@ TEST_F(TestMalE3prom, InitWithPrimaryDecommissioned) {
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
 	uint32_t rom_size = (this->first_page_size + this->second_page_size) / (sizeof(uint32_t) * 2);
-	uint32_t last_primary_value;
+	uint32_t last_primary_value = 0;
 	for (uint32_t i = 0; i < rom_size; i++) {
 		uint32_t read_value;
 		result = mal_e3prom_write_value(&e3prom, 0, i);
@@ -288,10 +288,10 @@ TEST_F(TestMalE3prom, InitWithPrimaryDecommissioned) {
 	key_address += mal_flash_get_page_size(3);
 	key_address -= sizeof(uint32_t) * 2;
 	uint32_t key = MAL_E3PROM_STATE_KEY;
-	mal_flash_write_uint32_values(key_address, &key, 1);
+	mal_flash_write_uint32_values((unsigned int)key_address, &key, 1);
 	uint64_t value_address = key_address + sizeof(uint32_t);
 	value = MAL_E3PROM_STATE_INITIALIZING;
-	mal_flash_write_uint32_values(value_address, &value, 1);
+	mal_flash_write_uint32_values((unsigned int)value_address, &value, 1);
 	// Now, the emulated flash is initialized. We will reinitialize to make
 	// sure the e3prom handles initialized flash.
 	init.primary_start_page = 0;
@@ -339,7 +339,7 @@ TEST_F(TestMalE3prom, InitWithSecondaryDecommissioned) {
 	// Make sure we switched to secondary section
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_SECONDARY) << "Secondary section should be active";
 	// Write enough times to switch sections
-	uint32_t last_secondary_value;
+	uint32_t last_secondary_value = 0;
 	for (uint32_t i = 0; i < rom_size; i++) {
 		uint32_t read_value;
 		result = mal_e3prom_write_value(&e3prom, 0, i);
@@ -360,10 +360,10 @@ TEST_F(TestMalE3prom, InitWithSecondaryDecommissioned) {
 	key_address += mal_flash_get_page_size(1);
 	key_address -= sizeof(uint32_t) * 2;
 	uint32_t key = MAL_E3PROM_STATE_KEY;
-	mal_flash_write_uint32_values(key_address, &key, 1);
+	mal_flash_write_uint32_values((unsigned int)key_address, &key, 1);
 	uint64_t value_address = key_address + sizeof(uint32_t);
 	value = MAL_E3PROM_STATE_INITIALIZING;
-	mal_flash_write_uint32_values(value_address, &value, 1);
+	mal_flash_write_uint32_values((unsigned int)value_address, &value, 1);
 	// Now, the emulated flash is initialized. We will reinitialize to make
 	// sure the e3prom handles initialized flash.
 	init.primary_start_page = 0;
