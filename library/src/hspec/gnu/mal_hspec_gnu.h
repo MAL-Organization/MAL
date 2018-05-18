@@ -21,5 +21,7 @@
 #define HSPEC_GNU_MAL_HSPEC_GNU_H_
 
 #include "hspec/gnu/mal_hspec_gnu_serial.h"
+#include "hspec/gnu/mal_hspec_gnu_gpio.h"
+#include "hspec/gnu/mal_hspec_gnu_dac.h"
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_H_ */

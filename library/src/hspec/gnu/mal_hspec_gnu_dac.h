@@ -17,30 +17,13 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef MAL_MAL_HSPEC_GNU_DAC_H
+#define MAL_MAL_HSPEC_GNU_DAC_H
+
 #include "dac/mal_dac.h"
 
-typedef struct {
-	mal_dac_e dac;
-	mal_dac_init_s init;
-	uint64_t value;
-} dac_info_s;
+typedef struct MAL_DAC {
+    mal_dac_e dac;
+} mal_dac_s;
 
-static dac_info_s dac_array[MAL_DAC_SIZE];
-
-mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
-	dac_array[init->dac].dac = init->dac;
-	dac_array[init->dac].init = *init;
-	dac_array[init->dac].value = 0;
-	handle->dac = init->dac;
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_dac_write_bits(mal_dac_s *handle, uint64_t value) {
-	dac_array[handle->dac].value = value;
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution) {
-	*resolution = dac_array[handle->dac].init.bit_resolution;
-	return MAL_ERROR_OK;
-}
+#endif //MAL_MAL_HSPEC_GNU_DAC_H

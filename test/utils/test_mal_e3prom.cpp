@@ -25,7 +25,7 @@
 
 extern "C" {
 #include "utils/mal_e3prom.h"
-#include "hspec/mingw/mal_hspec_mingw_flash.h"
+#include "hspec/gnu/mal_hspec_gnu_flash.h"
 #include "flash/mal_flash.h"
 }
 
@@ -35,7 +35,7 @@ class TestMalE3prom : public ::testing::Test {
 protected:
 	static const int first_page_size = 128;
 	static const int second_page_size = 256;
-	mal_hspec_mingw_flash_info_s flash_info;
+	mal_hspec_gnu_flash_info_s flash_info;
 
 	virtual void SetUp() {
 		// Set flash info

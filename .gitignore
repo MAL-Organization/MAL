@@ -5,6 +5,8 @@ library/build-mingw/
 library/build.properties
 library/pom.xml.releaseBackup
 library/release.properties
+test/.idea/
+test/cmake-build-debug/
 *.pyc
 library/build-scripts/.idea/
 qemu-test/.settings/language.settings.xml

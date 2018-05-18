@@ -23,9 +23,10 @@
 #ifndef DAC_MAL_DAC_H_
 #define DAC_MAL_DAC_H_
 
-#include "gpio/mal_gpio.h"
 #include "std/mal_stdint.h"
 #include "std/mal_types.h"
+#include "gpio/mal_gpio_definitions.h"
+#include "std/mal_error.h"
 
 /**
  * @defgroup DAC
@@ -44,54 +45,69 @@ typedef enum {
 } mal_dac_e;
 
 /**
+ * DAC handle that must be defined by hardware specific implementation. Used
+ * to access the dac functions.
+ */
+typedef struct MAL_DAC mal_dac_s;
+
+/**
  * The initialization parameters of a DAC.
  */
 typedef struct {
     mal_dac_e dac; /**< To DAC to initialize.*/
-    const mal_gpio_s *gpio; /**< The GPIO pin of the DAC.*/
+    mal_gpio_port_e port; /**< The port of the GPIO of the DAC.*/
+    uint8_t pin; /**< The pin of the GPIO of the DAC.*/
     uint8_t bit_resolution; /**< The resolution of the DAC.*/
 } mal_dac_init_s;
 
 /**
  * @brief Write to a DAC.
- * @param dac The DAC to write to. Should be of type ::mal_hspec_dac_e.
+ * @param handle The DAC to write to.
  * @param value A value of type uint64_t that that contains the data to write.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_write_bits(mal_dac_e dac, uint64_t value);
+mal_error_e mal_dac_write_bits(mal_dac_s *handle, uint64_t value);
 
 /**
  * @brief Get the resolution of the DAC.
- * @param dac The DAC to get the resolution from.
+ * @param handle The DAC to get the resolution from.
  * @param resolution A pointer of type uint8_t that will contain the
  * resolution.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_resolution(mal_dac_e dac, uint8_t *resolution);
+mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution);
 
 /**
  * @brief Initialize a DAC.
  * @param init The initialization parameters.
+ * @param handle The handle to initialize. Use this handle to access subsequent
+ * DAC functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_init(mal_dac_init_s *init);
+mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle);
 
 /**
  * @brief Write to a DAC, but as volts instead of LSBs.
- * @param dac The DAC to write to.
+ * @param handle The DAC to write to.
  * @param value The value to write.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_write_volts(mal_dac_e dac, mal_volts_t value);
+mal_error_e mal_dac_write_volts(mal_dac_s *handle, mal_volts_t value);
 
 /**
  * @brief Convert a bit value of a DAC to volts.
- * @param dac The DAC to which the bit value will be written to.
+ * @param handle The DAC to which the bit value will be written to.
  * @param value The value to write.
  * @param bit_value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_dac_volts_to_bits(mal_dac_e dac, mal_volts_t value, uint64_t *bit_value);
+mal_error_e mal_dac_volts_to_bits(mal_dac_s *handle, mal_volts_t value, uint64_t *bit_value);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}
