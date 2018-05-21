@@ -69,7 +69,7 @@ mal_error_e mal_flash_erase_page(uint32_t page) {
 mal_error_e mal_hspec_gnu_flash_write_uint8_values(uint64_t start_address, uint8_t *values, uint32_t count) {
 	for (uint32_t i = 0; i < count; i++) {
 		uint64_t current_address = start_address + i;
-		uint32_t current_page = mal_flash_get_page_from_address(current_address);
+		uint32_t current_page = mal_flash_get_page_from_address((unsigned int)current_address);
 		uint64_t address_offset = current_address - mal_flash_get_page_start_address(current_page);
 		// Write byte
 		flash_pages[current_page][address_offset] = values[i];
@@ -105,7 +105,7 @@ unsigned int mal_flash_get_page_start_address(uint32_t page) {
 	for (uint32_t i = 0; i < page; i++) {
 		current_start_address += mal_flash_get_page_size(i);
 	}
-	return current_start_address;
+	return (unsigned int)current_start_address;
 }
 
 MAL_DEFS_INLINE uint8_t mal_flash_read_uint8(unsigned int address) {
@@ -122,7 +122,7 @@ MAL_DEFS_INLINE uint16_t mal_flash_read_uint16(unsigned int address) {
 	uint8_t byte_0 = mal_flash_read_uint8(address);
 	uint8_t byte_1 = mal_flash_read_uint8(address + 1);
 	uint16_t value = byte_0;
-	value |= (uint16_t)byte_1 << 8;
+	value |= (uint16_t)byte_1 << 8U;
 	return value;
 }
 
@@ -134,7 +134,7 @@ MAL_DEFS_INLINE uint32_t mal_flash_read_uint32(unsigned int address) {
 	uint16_t word_0 = mal_flash_read_uint16(address);
 	uint16_t word_1 = mal_flash_read_uint16(address + 2);
 	uint32_t value = word_0;
-	value |= (uint32_t)word_1 << 16;
+	value |= (uint32_t)word_1 << 16U;
 	return value;
 }
 
@@ -146,10 +146,10 @@ MAL_DEFS_INLINE uint64_t mal_flash_read_uint64(unsigned int address) {
 	uint32_t word_0 = mal_flash_read_uint32(address);
 	uint32_t word_1 = mal_flash_read_uint32(address + 4);
 	uint64_t value = word_0;
-	value |= (uint64_t)word_1 << 32;
+	value |= (uint64_t)word_1 << 32U;
 	return value;
 }
 
-MAL_DEFS_INLINE uint8_t mal_flash_read_int64(unsigned int address) {
+MAL_DEFS_INLINE int64_t mal_flash_read_int64(unsigned int address) {
 	return (int64_t)mal_flash_read_uint64(address);
 }

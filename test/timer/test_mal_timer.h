@@ -26,10 +26,18 @@
 #ifndef TIMER_TEST_MAL_TIMER_H_
 #define TIMER_TEST_MAL_TIMER_H_
 
+extern "C" {
+#include "timer/mal_timer.h"
+}
+
 #include "gtest/gtest.h"
 
 class TestMalTimer: public ::testing::Test {
 protected:
+	static const mal_timer_e test_timer = MAL_TIMER_1;
+
+	mal_timer_s handle;
+
 	virtual void SetUp();
 	virtual void TearDown();
 };

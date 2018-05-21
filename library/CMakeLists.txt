@@ -44,6 +44,13 @@ set(COMMON_OPTIONS ${OPTIMIZATION_LVL};${DEBUG_LVL})
 if(MAL_TOOLCHAIN_NAME STREQUAL "mingw")
     # Setting AR in toolchain file does not seem to work
     set(CMAKE_AR mingw32-gcc-ar)
+endif()
+if(MAL_TOOLCHAIN_NAME STREQUAL "cygwin")
+    include_directories($ENV{CYGWIN_PATH}/../usr/include)
+    # Setting AR in toolchain file does not seem to work
+    set(CMAKE_AR $ENV{CYGWIN_PATH}/gcc-ar.exe)
+endif()
+if(MAL_TOOLCHAIN_NAME STREQUAL "mingw" OR MAL_TOOLCHAIN_NAME STREQUAL "cygwin")
     file(GLOB_RECURSE GNU_HAL_SOURCES "src/hspec/gnu/*.c" "src/hspec/gnu/*.h")
     add_library(GNU ${COMMON_SRCS};${GNU_HAL_SOURCES})
     set_target_properties(GNU PROPERTIES OUTPUT_NAME "mal")

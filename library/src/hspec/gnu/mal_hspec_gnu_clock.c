@@ -18,7 +18,9 @@
  */
 
 #include "clock/mal_clock.h"
+#include "std/mal_defs.h"
 
 mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
+	MAL_DEFS_UNUSED(clk);
 	return MAL_ERROR_OK;
 }

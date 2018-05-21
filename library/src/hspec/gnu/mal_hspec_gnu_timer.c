@@ -23,21 +23,22 @@
 #include "std/mal_stdint.h"
 #include "mal_hspec_gnu_gpio.h"
 #include "std/mal_defs.h"
-#include <windows.h> // Leave this include last, windows defines the word interface and it creates conflicts.
+#include <pthread.h>
+#include <unistd.h>
 
 typedef struct {
 	mal_timer_e timer;
 	float frequency;
 	mal_timer_callback_t callack;
 	void *callback_handle;
-	HANDLE thread;
+	pthread_t thread;
 	volatile bool active;
 	volatile uint32_t count;
 	mal_timer_input_capture_callback_t intput_capture_cb[MAL_GPIO_PORT_SIZE][MAL_HSPEC_GNU_GPIO_PORT_SIZE];
     void* intput_capture_cb_handles[MAL_GPIO_PORT_SIZE][MAL_HSPEC_GNU_GPIO_PORT_SIZE];
 } gnu_timer_s;
 
-static DWORD WINAPI timer_thread(LPVOID lpParameter);
+static void* timer_thread(void *handle);
 static void count_timer_callback(void *handle);
 
 static mal_timer_e available_timers[MAL_TIMER_SIZE];
@@ -67,33 +68,31 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
 	gnu_timers[init->timer].callback_handle = init->callback_handle;
 	// Set handle
     handle->timer = init->timer;
+    handle->used = true;
 	// Set timer active
 	gnu_timers[init->timer].active = true;
 	// Create thread
-	gnu_timers[init->timer].thread = CreateThread(NULL, /*Default security settings*/
-											        0, /*Default stack size*/
-											        &timer_thread,
-											        &gnu_timers[init->timer],
-											        0 /*Thread starts now*/,
-											        NULL /*No thread identifier*/);
-	if (NULL == gnu_timers[init->timer].thread) {
+	int pthread_result;
+    pthread_result = pthread_create(&gnu_timers[init->timer].thread, NULL, &timer_thread, &gnu_timers[init->timer]);
+    if (pthread_result) {
 		return MAL_ERROR_INIT_FAILED;
 	}
 
 	return MAL_ERROR_OK;
 }
 
-static DWORD WINAPI timer_thread(LPVOID lpParameter) {
+static void* timer_thread(void *handle) {
 	// Save timer
-	gnu_timer_s *timer = (gnu_timer_s*)lpParameter;
+	gnu_timer_s *timer = (gnu_timer_s*)handle;
 	// Compute sleep time
-	DWORD sleep_time;
+	timespec_t sleep_time;
 	float period = 1.0f / timer->frequency;
-	sleep_time = (DWORD)(1000.0f * period);
+	sleep_time.tv_sec = (time_t)(period);
+	sleep_time.tv_nsec = (long)(period * 1000000000.0f);
 	// Run loop
 	while (timer->active) {
 		// Sleep
-		Sleep(sleep_time);
+        nanosleep(&sleep_time, NULL);
 		// Execute callback
 		if (timer->active && NULL != timer->callack) {
 			timer->callack(timer->callback_handle);
@@ -106,7 +105,7 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
 	// Set timer as not active
 	gnu_timers[handle->timer].active = false;
 	// Join thread
-	WaitForSingleObject(gnu_timers[handle->timer].thread, INFINITE);
+	pthread_join(gnu_timers[handle->timer].thread, NULL);
 
 	return MAL_ERROR_OK;
 }
@@ -152,6 +151,7 @@ mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, 
     gnu_timers[init->timer].intput_capture_cb_handles[init->port][init->pin] = init->callback_handle;
 	// Set handle
     handle->timer = init->timer;
+    handle->used = true;
 	// Set timer active
 	gnu_timers[init->timer].active = true;
 

@@ -26,7 +26,7 @@ static uint64_t local_uuid = 0;
 
 mal_error_e mal_uuid_read(uint64_t *uuid) {
 	if (!local_uuid) {
-		srand(time(NULL));
+		srand((unsigned int)time(NULL));
 		local_uuid = (uint64_t)rand();
 	}
 	*uuid = local_uuid;

@@ -2,11 +2,12 @@ library/.idea/
 library/target/
 library/build-arm/
 library/build-mingw/
+library/build-cygwin/
 library/build.properties
 library/pom.xml.releaseBackup
 library/release.properties
 test/.idea/
-test/cmake-build-debug/
+test/build-cygwin/
 *.pyc
 library/build-scripts/.idea/
 qemu-test/.settings/language.settings.xml

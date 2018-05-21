@@ -29,7 +29,7 @@
  * @{
  */
 
-#ifdef MAL_MINGW
+#ifdef MAL_GNU
 
 /**
  * Skip inlines for MINGW.

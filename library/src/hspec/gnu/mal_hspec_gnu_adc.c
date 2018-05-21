@@ -20,6 +20,7 @@
 #include "mal_hspec_gnu_adc.h"
 #include "std/mal_stdlib.h"
 #include "power/mal_power.h"
+#include "std/mal_defs.h"
 
 typedef struct {
 	mal_adc_e adc;
@@ -88,9 +89,11 @@ bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc) {
 }
 
 MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc) {
+	MAL_DEFS_UNUSED(adc);
     return false;
 }
 
 MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active) {
-    // Nothing to do
+    MAL_DEFS_UNUSED(adc);
+    MAL_DEFS_UNUSED(active);
 }

@@ -17,12 +17,10 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <windows.h>
-#undef interface
-#include <process.h>
-
 #include "mal_hspec_gnu_i2c.h"
 #include "utils/mal_circular_buffer.h"
+#include "pthread.h"
+#include "std/mal_defs.h"
 
 #define MESSAGE_BUFFER_SIZE	100
 #define I2C_LOCK_DELAY		1000
@@ -31,7 +29,7 @@ typedef struct {
 	mal_i2c_init_s init;
 	mal_circular_buffer_s tx_circular_buffer;
 	mal_i2c_msg_s message_buffer[MESSAGE_BUFFER_SIZE];
-	HANDLE mutex;
+	pthread_mutex_t mutex;
 	bool interrupt_active;
 } gnu_i2c_interface_s;
 
@@ -41,7 +39,7 @@ mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	// Save init
 	i2c_interfaces[init->interface].init = *init;
 	// Create mutex
-	i2c_interfaces[init->interface].mutex = CreateMutex(NULL, FALSE, NULL);
+	i2c_interfaces[init->interface].mutex = PTHREAD_MUTEX_INITIALIZER;
 	i2c_interfaces[init->interface].interrupt_active = true;
 	// Initialise circular buffer
 	mal_circular_buffer_init((void*)i2c_interfaces[init->interface].message_buffer,
@@ -52,6 +50,7 @@ mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 }
 
 mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init) {
+	MAL_DEFS_UNUSED(direct_init);
     return mal_i2c_init_master(init);
 }
 
@@ -65,12 +64,17 @@ mal_error_e mal_hspec_gnu_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_
 }
 
 bool mal_hspec_gnu_i2c_lock_interface(mal_i2c_e interface, uint32_t timeout_ms) {
-	DWORD result = WaitForSingleObject(i2c_interfaces[interface].mutex, timeout_ms);
-	return result == WAIT_OBJECT_0;
+    int result;
+    timespec_t timeout;
+    uint32_t seconds = timeout_ms / 1000;
+    timeout.tv_sec = seconds;
+    timeout.tv_nsec = (timeout_ms - (seconds * 1000)) * 1000000;
+    result = pthread_mutex_timedlock(&i2c_interfaces[interface].mutex, &timeout);
+	return 0 == result;
 }
 
 void mal_hspec_gnu_i2c_unlock_interface(mal_i2c_e interface) {
-	ReleaseMutex(i2c_interfaces[interface].mutex);
+    pthread_mutex_unlock(&i2c_interfaces[interface].mutex);
 }
 
 MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_e interface) {

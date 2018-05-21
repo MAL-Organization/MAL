@@ -19,6 +19,7 @@
 
 #include "mal_hspec_gnu_spi.h"
 #include "std/mal_stdlib.h"
+#include "std/mal_defs.h"
 
 typedef struct {
 	mal_spi_master_init_s init_parameters;
@@ -69,9 +70,11 @@ mal_error_e mal_hspec_mingw_spi_end_transaction(mal_spi_e interface) {
 }
 
 MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface) {
+	MAL_DEFS_UNUSED(interface);
     return false;
 }
 
 MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active) {
-    // Nothing to do
+    MAL_DEFS_UNUSED(interface);
+    MAL_DEFS_UNUSED(active);
 }

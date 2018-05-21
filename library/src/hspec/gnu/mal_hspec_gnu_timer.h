@@ -22,9 +22,11 @@
 
 #include "timer/mal_timer.h"
 #include "gpio/mal_gpio_definitions.h"
+#include "std/mal_bool.h"
 
 typedef struct MAL_TIMER {
     mal_timer_e timer;
+    bool used;
 } mal_timer_s;
 
 typedef struct MAL_TIMER_PWM {

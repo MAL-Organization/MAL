@@ -79,7 +79,7 @@ MAL_DEFS_INLINE uint64_t mal_flash_read_uint64(unsigned int address);
  * @brief Read a signed 64 bit integer from memory.
  * @param address The memory address to read from.
  */
-MAL_DEFS_INLINE uint8_t mal_flash_read_int64(unsigned int address);
+MAL_DEFS_INLINE int64_t mal_flash_read_int64(unsigned int address);
 
 /**
  * @brief This function will write an array of uint16 values to flash from the
