@@ -39,7 +39,7 @@ mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	// Save init
 	i2c_interfaces[init->interface].init = *init;
 	// Create mutex
-	i2c_interfaces[init->interface].mutex = PTHREAD_MUTEX_INITIALIZER;
+	i2c_interfaces[init->interface].mutex = (pthread_mutex_t)PTHREAD_MUTEX_INITIALIZER;
 	i2c_interfaces[init->interface].interrupt_active = true;
 	// Initialise circular buffer
 	mal_circular_buffer_init((void*)i2c_interfaces[init->interface].message_buffer,
@@ -65,7 +65,7 @@ mal_error_e mal_hspec_gnu_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_
 
 bool mal_hspec_gnu_i2c_lock_interface(mal_i2c_e interface, uint32_t timeout_ms) {
     int result;
-    timespec_t timeout;
+    struct timespec timeout;
     uint32_t seconds = timeout_ms / 1000;
     timeout.tv_sec = seconds;
     timeout.tv_nsec = (timeout_ms - (seconds * 1000)) * 1000000;

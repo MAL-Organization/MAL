@@ -85,7 +85,7 @@ static void* timer_thread(void *handle) {
 	// Save timer
 	gnu_timer_s *timer = (gnu_timer_s*)handle;
 	// Compute sleep time
-	timespec_t sleep_time;
+	struct timespec sleep_time;
 	float period = 1.0f / timer->frequency;
 	sleep_time.tv_sec = (time_t)(period);
 	sleep_time.tv_nsec = (long)(period * 1000000000.0f);

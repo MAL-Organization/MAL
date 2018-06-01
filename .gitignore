@@ -3,11 +3,13 @@ library/target/
 library/build-arm/
 library/build-mingw/
 library/build-cygwin/
+library/build-gcc/
 library/build.properties
 library/pom.xml.releaseBackup
 library/release.properties
 test/.idea/
 test/build-cygwin/
+test/build-gcc/
 *.pyc
 library/build-scripts/.idea/
 qemu-test/.settings/language.settings.xml
