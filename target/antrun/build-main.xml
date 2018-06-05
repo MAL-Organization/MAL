@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <echoproperties destfile="C:\Users\olivi\MAL\target/initialize.properties"/>
+  <exec failifexecutionfails="true" failonerror="true" executable="python3">
+    <arg value="C:\Users\olivi\MAL\target\..\build-scripts\compile.py"/>
+    <arg value="C:\Users\olivi\MAL\target/initialize.properties"/>
+  </exec>
+</target>
+</project>

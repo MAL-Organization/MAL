@@ -7,8 +7,23 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(OPTIMIZATION_LVL -O0)
-set(DEBUG_LVL -g3)
+# Set debug and optimaization
+set(CMAKE_C_FLAGS  "")
+set(CMAKE_C_FLAGS_DEBUG "")
+set(CMAKE_C_FLAGS_RELEASE  "")
+set(CMAKE_CXX_FLAGS "")
+set(CMAKE_CXX_FLAGS_DEBUG "")
+set(CMAKE_CXX_FLAGS_RELEASE  "")
+if(SET_OPTIMIZATION)
+    set(OPTIMIZATION_LVL -${SET_OPTIMIZATION})
+else()
+    set(OPTIMIZATION_LVL -O0)
+endif()
+if (OPTIMIZATION_LVL STREQUAL "-O0")
+    set(DEBUG_LVL -g3)
+else()
+    set(DEBUG_LVL )
+endif()
 
 include_directories(src)
 
@@ -62,6 +77,9 @@ if(MAL_TOOLCHAIN_NAME STREQUAL "mingw" OR MAL_TOOLCHAIN_NAME STREQUAL "cygwin" O
     target_include_directories(GNU PRIVATE ${COMMON_STM_INCS})
     target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
     target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
+    get_target_property(GNU_PROJECT_SOURCES GNU SOURCES)
+    message(~~~~~)
+    message("${GNU_PROJECT_SOURCES}")
 endif()
 
 # ARM section

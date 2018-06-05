@@ -11,6 +11,7 @@ test/.idea/
 test/build-cygwin/
 test/build-gcc/
 *.pyc
-library/build-scripts/.idea/
+build-scripts/.idea/
+build-scripts/CMakeFiles/
 qemu-test/.settings/language.settings.xml
 qemu-test/.settings/org.eclipse.cdt.codan.core.prefs

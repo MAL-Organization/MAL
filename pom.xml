@@ -9,13 +9,14 @@
 	<description>MAL library</description>
 
 	<properties>
-		<build.configurations>STM32F072CB,STM32F072RB,MINGW</build.configurations>
-		<build.excludes />
-		<optimization.levels>optimize,more,most,size,debug,none</optimization.levels>
-		<path.to.workspace>${basedir}/../eclipse</path.to.workspace>
+		<!--<build.configurations>STM32F767ZI,GNU</build.configurations>-->
+		<build.configurations>GNU</build.configurations>
+		<build.toolchain.default>arm</build.toolchain.default>
+		<build.toolchain.gnu>cygwin</build.toolchain.gnu>
+		<build.optimization.levels>Ofast,Os,O3,O2,O1,O0</build.optimization.levels>
 		<path.to.doc>${basedir}/../docs</path.to.doc>
-		<path.to.doc.resources>${basedir}/../docs-resources</path.to.doc.resources>
-		<path.to.src>${basedir}/src</path.to.src>
+		<path.to.doc.resources>${basedir}/docs-resources</path.to.doc.resources>
+		<build.folder>${project.build.directory}/build</build.folder>
 	</properties>
 
 	<scm>
@@ -53,31 +54,6 @@
 			<plugin>
 			  <artifactId>maven-release-plugin</artifactId>
 			  <version>2.5.3</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<id>copy-headers</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>clean</goal>
-						</goals>
-						<configuration>
-							<filesets>
-								<fileset>
-									<directory>${path.to.workspace}</directory>
-									<includes>
-										<include>**/*</include>
-									</includes>
-									<excludes />
-									<followSymlinks>false</followSymlinks>
-								</fileset>
-							</filesets>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -196,7 +172,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/..</outputDirectory>
+                            <outputDirectory>${basedir}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${path.to.doc.resources}</directory>
