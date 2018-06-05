@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 project(mal C)
 
+function(ConsoleProcessMessage)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E echo "${ARGN}")
+endfunction()
+
 message(STATUS ${MAL_TOOLCHAIN_NAME})
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -78,8 +82,8 @@ if(MAL_TOOLCHAIN_NAME STREQUAL "mingw" OR MAL_TOOLCHAIN_NAME STREQUAL "cygwin" O
     target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
     target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
     get_target_property(GNU_PROJECT_SOURCES GNU SOURCES)
-    message(~~~~~)
-    message("${GNU_PROJECT_SOURCES}")
+    ConsoleProcessMessage("~~~~~GNU")
+    ConsoleProcessMessage(${GNU_PROJECT_SOURCES})
 endif()
 
 # ARM section
@@ -109,6 +113,9 @@ if(MAL_TOOLCHAIN_NAME STREQUAL "arm")
     target_include_directories(STM32F767ZI PRIVATE ${COMMON_STM_INCS})
     target_compile_options(STM32F767ZI BEFORE PRIVATE ${COMMON_STM32F7_OPTIONS})
     target_compile_definitions(STM32F767ZI PRIVATE ${COMMON_STM32F7_DEFS};-DSTM32F767xx)
+    get_target_property(STM32F767ZI_PROJECT_SOURCES STM32F767ZI SOURCES)
+    ConsoleProcessMessage("~~~~~STM32F767ZI")
+    ConsoleProcessMessage(${STM32F767ZI_PROJECT_SOURCES})
     ## STM32F072CB section
     #add_library(STM32F072CB STATIC ${COMMON_STM_SRCS})
     #target_compile_options(STM32F072CB BEFORE PRIVATE -mcpu=cortex-m0;${COMMON_ARM_OPTIONS})

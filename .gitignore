@@ -1,5 +1,5 @@
+target/
 library/.idea/
-library/target/
 library/build-arm/
 library/build-mingw/
 library/build-cygwin/
