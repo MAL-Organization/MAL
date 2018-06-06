@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_gpio.c
- *
- *  Created on: Jun 24, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -36,44 +30,42 @@ static uint8_t get_exti_port_source(mal_gpio_port_e port);
 static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin);
 IRQn_Type mal_hspec_stm32f0_gpio_get_exti_irq(uint8_t pin);
 
-static mal_gpio_event_callback_t gpio_event_callbacks[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE];
+static mal_gpio_event_s *gpio_events[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE];
 
-/**
- * The port size for STM32F0 is 16. We need to remember which port is
- * associated to which exti line. This where we do it.
- */
-static mal_gpio_port_e exti_ports[16];
-
-mal_error_e mal_gpio_init(mal_gpio_init_s *gpio_init) {
+mal_error_e mal_gpio_init(mal_gpio_init_s *init, mal_gpio_s *handle) {
 	// Enable clock domain
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(gpio_init->gpio.port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->port), ENABLE);
+	handle->port_handle = mal_hspec_stm32f0_get_gpio_typedef(init->port);
+	handle->gpio_pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->pin);
+	handle->mal_port = init->port;
+	handle->mal_pin = init->pin;
 	// Set GPIO
-	GPIO_InitTypeDef init;
-	if (MAL_GPIO_DIR_IN == gpio_init->direction) {
-		init.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitTypeDef gpio_init;
+	if (MAL_GPIO_DIRECTION_IN == init->direction) {
+		gpio_init.GPIO_Mode = GPIO_Mode_IN;
 	} else {
-		init.GPIO_Mode = GPIO_Mode_OUT;
-		if (MAL_GPIO_OUT_PP == gpio_init->output_config) {
-			init.GPIO_OType = GPIO_OType_PP;
+		gpio_init.GPIO_Mode = GPIO_Mode_OUT;
+		if (MAL_GPIO_OUT_PP == init->output_config) {
+			gpio_init.GPIO_OType = GPIO_OType_PP;
 		} else {
-			init.GPIO_OType = GPIO_OType_OD;
+			gpio_init.GPIO_OType = GPIO_OType_OD;
 		}
 	}
-	init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio_init->gpio.pin);
-	switch (gpio_init->pupd) {
+	gpio_init.GPIO_Pin = handle->gpio_pin;
+	switch (init->pupd) {
 	case MAL_GPIO_PUPD_PU:
-		init.GPIO_PuPd = GPIO_PuPd_UP;
+		gpio_init.GPIO_PuPd = GPIO_PuPd_UP;
 		break;
 	case MAL_GPIO_PUPD_PD:
-		init.GPIO_PuPd = GPIO_PuPd_DOWN;
+		gpio_init.GPIO_PuPd = GPIO_PuPd_DOWN;
 		break;
 	case MAL_GPIO_PUPD_NONE:
 	default:
-		init.GPIO_PuPd = GPIO_PuPd_NOPULL;
+		gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
 		break;
 	}
-	init.GPIO_Speed = get_gpio_speed(gpio_init->speed);
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(gpio_init->gpio.port), &init);
+	gpio_init.GPIO_Speed = get_gpio_speed(init->speed);
+	GPIO_Init(handle->port_handle, &gpio_init);
 
 	return MAL_ERROR_OK;
 }
@@ -87,29 +79,29 @@ GPIOSpeed_TypeDef get_gpio_speed(uint64_t speed) {
 	return GPIO_Speed_Level_1;
 }
 
-mal_error_e mal_gpio_set(const mal_gpio_s *gpio, bool value) {
+mal_error_e mal_gpio_set(mal_gpio_s *gpio, bool value) {
 	BitAction action = Bit_RESET;
 
 	if (value) {
 		action = Bit_SET;
 	}
-	GPIO_WriteBit(mal_hspec_stm32f0_get_gpio_typedef(gpio->port), MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio->pin),
-			action);
+	GPIO_WriteBit(gpio->port_handle, (uint16_t)gpio->gpio_pin, action);
 
 	return MAL_ERROR_OK;
 }
 
-bool mal_gpio_get(const mal_gpio_s *gpio) {
-	uint8_t result = GPIO_ReadInputDataBit(mal_hspec_stm32f0_get_gpio_typedef(gpio->port),
-			MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio->pin));
+mal_error_e mal_gpio_get(mal_gpio_s *gpio, bool *value) {
+	uint8_t result = GPIO_ReadInputDataBit(gpio->port_handle, (uint16_t)gpio->gpio_pin);
 	if (Bit_SET == result) {
-		return true;
-	}
-	return false;
+		*value = true;
+	} else {
+        *value = false;
+    }
+    return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_toggle(const mal_gpio_s *gpio) {
-	uint8_t state = GPIO_ReadOutputDataBit(mal_hspec_stm32f0_get_gpio_typedef(gpio->port), MAL_HSPEC_STM32F0_GET_GPIO_PIN(gpio->pin));
+mal_error_e mal_gpio_toggle(mal_gpio_s *gpio) {
+	uint8_t state = GPIO_ReadOutputDataBit(gpio->port_handle, (uint16_t)gpio->gpio_pin);
 	if (Bit_SET == state) {
 	    mal_gpio_set(gpio, false);
 	} else {
@@ -118,28 +110,37 @@ mal_error_e mal_gpio_toggle(const mal_gpio_s *gpio) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_gpio_event_init(mal_gpio_init_s *gpio_init, mal_gpio_event_init_s *event_init) {
-	mal_error_e result = mal_gpio_init(gpio_init);
+mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_handle, mal_gpio_event_s *event_handle) {
+    mal_gpio_init_s gpio_init;
+    gpio_init.port = init->port;
+    gpio_init.pin = init->pin;
+    gpio_init.pupd = init->pupd;
+    gpio_init.direction = MAL_GPIO_DIRECTION_IN;
+    gpio_init.speed = init->speed;
+	mal_error_e result = mal_gpio_init(&gpio_init, gpio_handle);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 	// Enable syscfg clock
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+	// Initialize handle
+    event_handle->port = init->port;
+    event_handle->pin = init->pin;
+    event_handle->irq = mal_hspec_stm32f0_gpio_get_exti_irq(init->pin);
+    event_handle->callback = init->callback;
+    event_handle->callback_handle = init->handle;
+    gpio_events[init->pin] = event_handle;
 	// Disable interrupt
-	mal_gpio_event_disable_interrupt(event_init->gpio);
+	mal_gpio_event_disable_interrupt(event_handle);
 	// Configure EXTI source
-	SYSCFG_EXTILineConfig(get_exti_port_source(event_init->gpio->port), event_init->gpio->pin);
-	// Save callback
-	gpio_event_callbacks[event_init->gpio->pin] = event_init->callback;
-	// Save port
-	exti_ports[event_init->gpio->pin] = event_init->gpio->port;
+	SYSCFG_EXTILineConfig(get_exti_port_source(init->port), init->pin);
 	// Configure EXTI
 	EXTI_InitTypeDef exti_init;
-	exti_init.EXTI_Line = (1 << event_init->gpio->pin);
+	exti_init.EXTI_Line = ((uint32_t)1 << init->pin);
 	exti_init.EXTI_Mode = EXTI_Mode_Interrupt;
-	if (MAL_GPIO_EVENT_FALLING == event_init->event) {
+	if (MAL_GPIO_EVENT_FALLING == init->event) {
 		exti_init.EXTI_Trigger = EXTI_Trigger_Falling;
-	} else if (MAL_GPIO_EVENT_RISING == event_init->event) {
+	} else if (MAL_GPIO_EVENT_RISING == init->event) {
 		exti_init.EXTI_Trigger = EXTI_Trigger_Rising;
 	} else {
 		exti_init.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
@@ -147,7 +148,7 @@ mal_error_e mal_gpio_event_init(mal_gpio_init_s *gpio_init, mal_gpio_event_init_
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_gpio_event_enable_interrupt(event_init->gpio, true);
+	mal_gpio_event_set_interrupt(event_handle, true);
 
 	return MAL_ERROR_OK;
 }
@@ -205,57 +206,53 @@ void EXTI4_15_IRQHandler(void) {
 }
 
 static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
-	mal_gpio_s event_gpio;
-	event_gpio.pin = pin;
-	event_gpio.port = exti_ports[pin];
+	mal_gpio_event_s *event = gpio_events[pin];
 	if (EXTI_GetITStatus(exti_line) != RESET) {
 		EXTI_ClearITPendingBit(exti_line);
-		if (gpio_event_callbacks[pin] != NULL) {
-			gpio_event_callbacks[pin](&event_gpio);
+		if (NULL != event) {
+            event->callback(event->callback_handle);
 		}
 	}
 }
 
-mal_error_e mal_gpio_event_remove(const mal_gpio_s *gpio) {
+mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
 	// Disable interrupt
-	bool active = mal_gpio_event_disable_interrupt(gpio);
-	// Remove callback
-	gpio_event_callbacks[gpio->pin] = NULL;
+	bool active = mal_gpio_event_disable_interrupt(handle);
+	// Remove event
+    gpio_events[handle->pin] = NULL;
 	// Disable EXTI
 	EXTI_InitTypeDef exti_init;
-	exti_init.EXTI_Line = (1 << gpio->pin);
+	exti_init.EXTI_Line = ((uint32_t)1 << handle->pin);
 	exti_init.EXTI_Mode = EXTI_Mode_Interrupt;
 	exti_init.EXTI_LineCmd = DISABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_gpio_event_enable_interrupt(gpio, active);
+	mal_gpio_event_set_interrupt(handle, active);
 
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(const mal_gpio_s *gpio) {
-	IRQn_Type irq = mal_hspec_stm32f0_gpio_get_exti_irq((gpio)->pin);
-	bool active = NVIC_GetActive(irq);
-	NVIC_DisableIRQ(irq);
+MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle) {
+	bool active = NVIC_GetActive(handle->irq);
+	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
 	return active;
 }
 
-MAL_DEFS_INLINE void mal_gpio_event_enable_interrupt(const mal_gpio_s *gpio, bool active) {
+MAL_DEFS_INLINE void mal_gpio_event_set_interrupt(mal_gpio_event_s *handle, bool active) {
 	if (active) {
-		NVIC_EnableIRQ(mal_hspec_stm32f0_gpio_get_exti_irq((gpio)->pin));
+		NVIC_EnableIRQ(handle->irq);
 	}
 }
 
-mal_error_e mal_gpio_deinit(const mal_gpio_s *gpio) {
-	// Disable IRQ interrupt
-	mal_gpio_event_disable_interrupt(gpio);
+mal_error_e mal_gpio_deinit(mal_gpio_s *gpio) {
 	// Set IO to input
 	mal_gpio_init_s gpio_init;
-	gpio_init.gpio = *gpio;
-	gpio_init.direction = MAL_GPIO_DIR_IN;
+	gpio_init.port = gpio->mal_port;
+	gpio_init.pin = gpio->mal_pin;
+	gpio_init.direction = MAL_GPIO_DIRECTION_IN;
 	gpio_init.pupd = MAL_GPIO_PUPD_NONE;
 	gpio_init.speed = UINT64_MAX;
-	return mal_gpio_init(&gpio_init);
+	return mal_gpio_init(&gpio_init, gpio);
 }
