@@ -7,5 +7,3 @@ set(CMAKE_CXX_COMPILER $ENV{CYGWIN_PATH}/g++.exe)
 # Change archiver
 set(CMAKE_AR $ENV{CYGWIN_PATH}/gcc-ar.exe)
 set(CMAKE_RANLIB $ENV{CYGWIN_PATH}/gcc-ranlib.exe)
-
-set(MAL_LIB_PATH ${PROJECT_SOURCE_DIR}/../library/build-cygwin/libmal.a)
