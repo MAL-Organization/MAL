@@ -110,7 +110,7 @@ set(COMMON_STM32F0_SRCS ${COMMON_STM_SRCS};${STM32F0_SP_SOURCES};src/hspec/stm/s
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.c;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_uuid.c;
-        src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h)
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h src/hspec/stm/stm32f0/mal_hspec_stm32f0_dac.h)
 set(COMMON_STM32F0_OPTIONS -mcpu=cortex-m0;-mfloat-abi=soft;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F0_DEFS ${COMMON_STM_DEFS};-DMAL_STM32F0;-DUSE_STDPERIPH_DRIVER)
 # STM32F072 sections

@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_dac.c
- *
- *  Created on: Oct 24, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -27,8 +21,9 @@
 #include "stm32f0/stm32f0xx_dac.h"
 #include "mal_hspec_stm32f0_cmn.h"
 #include "dac/mal_dac.h"
+#include "std/mal_defs.h"
 
-mal_error_e mal_dac_init(mal_dac_init_s *init) {
+mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
 	static bool initialized = false;
 	// Enable clock, all DACs are on port A for this MCU.
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
@@ -36,9 +31,9 @@ mal_error_e mal_dac_init(mal_dac_init_s *init) {
 	// Set GPIO
 	GPIO_InitTypeDef gpio_init;
 	gpio_init.GPIO_Mode = GPIO_Mode_AN;
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->gpio->pin);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->pin);
 	gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->gpio->port), &gpio_init);
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->port), &gpio_init);
 	// Reset DAC
 	if (!initialized) {
 		DAC_DeInit();
@@ -60,31 +55,28 @@ mal_error_e mal_dac_init(mal_dac_init_s *init) {
 	DAC_Cmd(channel, ENABLE);
 	// Flag that this was at least initialized once
 	initialized = true;
+	// Initialize handle
+    switch (init->dac) {
+        case MAL_DAC_1:
+            handle->set_channel_data = &DAC_SetChannel1Data;
+            break;
+        case MAL_DAC_2:
+            handle->set_channel_data = &DAC_SetChannel2Data;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_dac_write_bits(mal_dac_e dac, uint64_t value) {
-	switch (dac) {
-		case MAL_DAC_1:
-			DAC_SetChannel1Data(DAC_Align_12b_R, value);
-			break;
-		case MAL_DAC_2:
-			DAC_SetChannel2Data(DAC_Align_12b_R, value);
-			break;
-		default:
-			return MAL_ERROR_HARDWARE_INVALID;
-	}
+mal_error_e mal_dac_write_bits(mal_dac_s *handle, uint64_t value) {
+    handle->set_channel_data(DAC_Align_12b_R, (uint16_t)value);
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_dac_resolution(mal_dac_e dac, uint8_t *resolution) {
-	switch (dac) {
-		case MAL_DAC_1:
-		case MAL_DAC_2:
-			*resolution = 12;
-			return MAL_ERROR_OK;
-		default:
-			return MAL_ERROR_HARDWARE_INVALID;
-	}
+mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution) {
+    MAL_DEFS_UNUSED(handle);
+    *resolution = 12;
+    return MAL_ERROR_OK;
 }
