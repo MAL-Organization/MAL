@@ -96,6 +96,29 @@ set(COMMON_ARM_OPTIONS ${COMMON_OPTIONS};-mthumb;-fmessage-length=0;-fsigned-cha
 set(COMMON_STM_INCS ${COMMON_ARM_INCS};stm)
 set(COMMON_STM_SRCS ${COMMON_ARM_SRCS};src/hspec/stm/mal_hspec_stm.h)
 set(COMMON_STM_DEFS -DMAL_STM)
+# STM32F0 sections
+file(GLOB_RECURSE STM32F0_SP_SOURCES "stm/stm32f0/*.c" "stm/stm32f0/*.h")
+set(COMMON_STM32F0_SRCS ${COMMON_STM_SRCS};${STM32F0_SP_SOURCES};src/hspec/stm/stm32f0/mal_hspec_stm32f0.h;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_can.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_can.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_cmn.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_dac.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_dma.h;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_flash.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_gpio.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_i2c.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_i2c.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_nvic.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_nvic.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_power.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_reset.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_uuid.c;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h)
+set(COMMON_STM32F0_OPTIONS -mcpu=cortex-m0;-mfloat-abi=soft;${COMMON_ARM_OPTIONS})
+set(COMMON_STM32F0_DEFS ${COMMON_STM_DEFS};-DMAL_STM32F0;-DUSE_STDPERIPH_DRIVER)
+# STM32F072 sections
+set(COMMON_STM32F072_SRCS ${COMMON_STM32F0_SRCS};src/hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072.c;
+        src/hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_dma.c;
+        src/hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_flash.c;
+        src/hspec/stm/stm32f0/stm32f072/mal_hspec_stm32f072_timer.c)
+set(COMMON_STM32F072_DEFS ${COMMON_STM32F0_DEFS};-DMAL_STM32F072;-DSTM32F072)
 # STM32F7 sections
 file(GLOB_RECURSE STM32F7_HAL_SOURCES "stm/stm32f7/*.c" "stm/stm32f7/*.h")
 set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32f7.h;
@@ -103,7 +126,8 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_power.c;src/hspec/stm/stm32f7/mal_hspec_stm32f7_reset.c;
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_serial.h;src/hspec/stm/stm32f7/mal_hspec_stm32f7_startup.c;
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.c;src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.h;
-        cmsis/cm7/core_cm7.h;${STM32F7_HAL_SOURCES} src/hspec/stm/stm32f7/mal_hspec_stm32f7_gpio.h src/gpio/mal_gpio_definitions.h)
+        cmsis/cm7/core_cm7.h;${STM32F7_HAL_SOURCES};src/hspec/stm/stm32f7/mal_hspec_stm32f7_gpio.h;
+        src/gpio/mal_gpio_definitions.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 if(MAL_TOOLCHAIN_NAME STREQUAL "arm")
@@ -116,8 +140,16 @@ if(MAL_TOOLCHAIN_NAME STREQUAL "arm")
     get_target_property(STM32F767ZI_PROJECT_SOURCES STM32F767ZI SOURCES)
     ConsoleProcessMessage("~~~~~STM32F767ZI")
     ConsoleProcessMessage(${STM32F767ZI_PROJECT_SOURCES})
-    ## STM32F072CB section
-    #add_library(STM32F072CB STATIC ${COMMON_STM_SRCS})
-    #target_compile_options(STM32F072CB BEFORE PRIVATE -mcpu=cortex-m0;${COMMON_ARM_OPTIONS})
-    #target_compile_definitions(STM32F072CB PRIVATE -DMAL_STM)
+    # STM32F072CB section
+    add_library(STM32F072CB ${COMMON_STM32F072_SRCS};
+            src/hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb.c;
+            src/hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_flash.c;
+            src/hspec/stm/stm32f0/stm32f072/stm32f072cb/mal_hspec_stm32f072cb_timer.c)
+    set_target_properties(STM32F072CB PROPERTIES OUTPUT_NAME "mal")
+    target_include_directories(STM32F072CB PRIVATE ${COMMON_STM_INCS})
+    target_compile_options(STM32F072CB BEFORE PRIVATE ${COMMON_STM32F0_OPTIONS})
+    target_compile_definitions(STM32F072CB PRIVATE ${COMMON_STM32F072_DEFS};-DMAL_STM32F072CB)
+    get_target_property(STM32F072CB_PROJECT_SOURCES STM32F072CB SOURCES)
+    ConsoleProcessMessage("~~~~~STM32F072CB")
+    ConsoleProcessMessage(${STM32F072CB_PROJECT_SOURCES})
 endif()

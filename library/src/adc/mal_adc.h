@@ -24,7 +24,7 @@
 #ifndef ADC_MAL_ADC_H_
 #define ADC_MAL_ADC_H_
 
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
@@ -36,6 +36,12 @@
  * @brief @copybrief mal_adc.h
  * @{
  */
+
+/**
+* ADC handle that must be defined by hardware specific implementation. Used
+* to access the adc functions.
+*/
+typedef struct MAL_ADC mal_adc_s;
 
 /**
  * The possible ADCs.
@@ -65,64 +71,64 @@ typedef enum {
  */
 typedef struct {
 	mal_adc_e adc; /**< To ADC to initialize.*/
-	const mal_gpio_s *gpio; /**< The GPIO pin of the ADC.*/
+	mal_gpio_port_e port; /**< The port of the ADC GPIO to initialize.*/
+	uint8_t pin; /**< The pin of the port of the ADC GPIO to initialize. */
 	uint8_t bit_resolution; /**< The resolution of the ADC.*/
 } mal_adc_init_s;
 
 /**
  * @brief This callback will be executed when an ADC read is complete.
- * @param adc The ADC the value was read from.
+ * @param handle The handle given for the callback.
  * @param value The value read.
  * @return Return a status once you executed your callback. For now, nothing is
  * done with this status.
  */
-typedef mal_error_e (*mal_adc_read_callback_t)(mal_adc_e adc, uint64_t value);
+typedef mal_error_e (*mal_adc_read_callback_t)(void *handle, uint64_t value);
 
 /**
  * @brief Read an ADC.
- * @param adc The ADC to read from. Should be of type ::mal_hspec_adc_e.
+ * @param handle The ADC handle to read from.
  * @param value A pointer of type uint64_t that that will contain the data
  * read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value);
+mal_error_e mal_adc_read_bits(mal_adc_s *handle, uint64_t *value);
 
 /**
  * @brief Get the resolution of the ADC.
- * @param adc The ADC to get the resolution from.
+ * @param handle The ADC to get the resolution from.
  * @param resolution A pointer of type uint8_t that will contain the
  * resolution.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_resolution(mal_adc_e adc, uint8_t *resolution);
+mal_error_e mal_adc_resolution(mal_adc_s *handle, uint8_t *resolution);
 
 /**
  * @brief Start an async read. A callback will be executed once the read is
  * complete.
- * @param adc The ADC to read from. Should be of type ::mal_hspec_adc_e.
- * @param callback The callback to execute once the read is complete. Should be
- * of type ::mal_hspec_adc_read_callback_t.
+ * @param handle The ADC to read from.
+ * @param callback The callback to execute once the read is complete.
+ * @param callback_handle This handle will be passed to the callback funtion.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_async_read(mal_adc_e adc, mal_adc_read_callback_t callback);
+mal_error_e mal_adc_async_read(mal_adc_s *handle, mal_adc_read_callback_t callback, void *callback_handle);
 
 /**
  * @brief Disable interrupts for an ADC.
- * @param adc The ADC to disable the interrupt. Should be of type
- * ::mal_hspec_adc_e.
+ * @param handle The ADC to disable the interrupt.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc);
+MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_s *handle);
 
 /**
  * @brief Enable interrupts for an ADC.
- * @param adc The ADC to enable the interrupt.
+ * @param handle The ADC to enable the interrupt.
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active);
+MAL_DEFS_INLINE void mal_adc_set_interrupt(mal_adc_s *handle, bool active);
 
 /**
  * @brief Get the maximum resolution of the ADC.
@@ -136,26 +142,28 @@ mal_error_e mal_adc_maximum_resolution(mal_adc_e adc, uint8_t *resolution);
 /**
  * @brief Initialize an ADC.
  * @param init The initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_init(mal_adc_init_s *init);
+mal_error_e mal_adc_init(mal_adc_init_s *init, mal_adc_s *handle);
 
 /**
  * @brief Read an ADC values, but as volts instead of LSBs.
- * @param adc The ADC to read from.
+ * @param handle The ADC to read from.
  * @param value The value read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_volts(mal_adc_e adc, mal_volts_t *value);
+mal_error_e mal_adc_read_volts(mal_adc_s *handle, mal_volts_t *value);
 
 /**
  * @brief Convert a bit value of an ADC to volts.
- * @param adc The ADC from which the bit value was read from.
+ * @param handle The ADC from which the bit value was read from.
  * @param bit_value The value read rom the ADC.
  * @param value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_bits_to_volts(mal_adc_e adc, uint64_t bit_value, mal_volts_t *value);
+mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value);
 
 /**
  * @}

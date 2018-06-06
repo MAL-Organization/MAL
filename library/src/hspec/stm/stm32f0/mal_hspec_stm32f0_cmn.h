@@ -162,7 +162,7 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 #include "timer/mal_timer.h"
 
 
-#define MAL_HSPEC_STM32F0_GET_GPIO_PIN(pin) (1 << pin)
+#define MAL_HSPEC_STM32F0_GET_GPIO_PIN(pin) ((uint32_t)1 << pin)
 
 GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_gpio_port_e port);
 

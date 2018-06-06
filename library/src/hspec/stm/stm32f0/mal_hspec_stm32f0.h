@@ -31,6 +31,7 @@
 #include "std/mal_bool.h"
 
 #include "mal_hspec_stm32f0_serial.h"
+#include "mal_hspec_stm32f0_adc.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 

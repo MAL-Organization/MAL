@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_adc.c
- *
- *  Created on: Sep 11, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -30,18 +24,19 @@
 #include "stm32f0/stm32f0xx_adc.h"
 #include "std/mal_bool.h"
 #include "std/mal_stdlib.h"
+#include "std/mal_defs.h"
 
 static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resolution);
-static void start_adc_conversion(mal_adc_e adc);
+static void start_adc_conversion(mal_adc_s *handle);
 
-static mal_adc_read_callback_t adc_callbacks[MAL_ADC_SIZE];
+static mal_adc_s *adc_handles[16];
 
-mal_error_e mal_adc_init(mal_adc_init_s *init) {
+mal_error_e mal_adc_init(mal_adc_init_s *init, mal_adc_s *handle) {
 	static bool initialised = false;
 	ADC_InitTypeDef adc_init;
 	mal_error_e result;
 	// Enable GPIO clock domain
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->gpio->port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->port), ENABLE);
 	// Enable ADC clock domain
 	if (!initialised) {
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
@@ -49,9 +44,9 @@ mal_error_e mal_adc_init(mal_adc_init_s *init) {
 	// Set GPIO
 	GPIO_InitTypeDef gpio_init;
 	gpio_init.GPIO_Mode = GPIO_Mode_AN;
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->gpio->pin);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->pin);
 	gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->gpio->port), &gpio_init);
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->port), &gpio_init);
 	// Reset ADC
 	if (!initialised) {
 		ADC_DeInit(ADC1);
@@ -84,8 +79,13 @@ mal_error_e mal_adc_init(mal_adc_init_s *init) {
 	if (!initialised) {
 		ADC_Cmd(ADC1, ENABLE);
 	}
-
 	initialised = true;
+	// Initialize handle
+	handle->adc_channel = (uint32_t)1 << init->adc;
+	handle->resolution = init->bit_resolution;
+	// Save handle
+    adc_handles[init->adc] = handle;
+
 	return MAL_ERROR_OK;
 }
 
@@ -108,15 +108,15 @@ static mal_error_e get_adc_resolution(uint8_t bit_resolution, uint32_t *resoluti
 	}
 }
 
-mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value) {
+mal_error_e mal_adc_read_bits(mal_adc_s *handle, uint64_t *value) {
 	// Disable interrupt
     // 12 equates to ADC_IRQ. However, the name of the constant changes based
     // on the MCU because it is multiplex with other interrupts in some of them. It
     // is simpler to use the constant directly.
-	NVIC_DisableIRQ(12);
+	NVIC_DisableIRQ((IRQn_Type)12);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, DISABLE);
 	// Start conversion
-	start_adc_conversion(adc);
+	start_adc_conversion(handle);
 	// Wait end of conversion
 	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
 	// Read value
@@ -125,50 +125,36 @@ mal_error_e mal_adc_read_bits(mal_adc_e adc, uint64_t *value) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_adc_async_read(mal_adc_e adc, mal_adc_read_callback_t callback) {
-	NVIC_InitTypeDef nvic_init;
+mal_error_e mal_adc_async_read(mal_adc_s *handle, mal_adc_read_callback_t callback, void *callback_handle) {
 	// Save callback
-	adc_callbacks[adc] = callback;
+    handle->callback = callback;
+    handle->callback_handle = callback_handle;
 	// Configure interrupt
 	// 12 equates to ADC_IRQ. However, the name of the constant changes based
 	// on the MCU because it is multiplex with other interrupts in some of them. It
 	// is simpler to use the constant directly.
-	NVIC_EnableIRQ(12);
+	NVIC_EnableIRQ((IRQn_Type)12);
 	ADC_ITConfig(ADC1, ADC_IT_EOC, ENABLE);
 	// Start conversion
-	start_adc_conversion(adc);
+	start_adc_conversion(handle);
 
 	return MAL_ERROR_OK;
 }
 
-static void start_adc_conversion(mal_adc_e adc) {
+static void start_adc_conversion(mal_adc_s *handle) {
 	// Clear ADC configuration
 	ADC1->CHSELR = 0;
 	// Configure channel
-	ADC_ChannelConfig(ADC1, 1 << adc, ADC_SampleTime_239_5Cycles);
+	ADC_ChannelConfig(ADC1, handle->adc_channel, ADC_SampleTime_239_5Cycles);
 	// Wait for ADC to be ready
 	while(ADC_GetFlagStatus(ADC1, ADC_FLAG_ADRDY) == RESET);
 	// Start conversion
 	ADC_StartOfConversion(ADC1);
 }
 
-mal_error_e mal_adc_resolution(mal_adc_e adc, uint8_t *resolution) {
-	switch (ADC1->CFGR1 & ADC_CFGR1_RES) {
-	case ADC_Resolution_12b:
-		*resolution = 12;
-		return MAL_ERROR_OK;
-	case ADC_Resolution_10b:
-		*resolution = 10;
-		return MAL_ERROR_OK;
-	case ADC_Resolution_8b:
-		*resolution = 8;
-		return MAL_ERROR_OK;
-	case ADC_Resolution_6b:
-		*resolution = 6;
-		return MAL_ERROR_OK;
-	default:
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
+mal_error_e mal_adc_resolution(mal_adc_s *handle, uint8_t *resolution) {
+	*resolution = handle->resolution;
+    return MAL_ERROR_OK;
 }
 
 void ADC1_COMP_IRQHandler(void) {
@@ -228,29 +214,31 @@ void ADC1_COMP_IRQHandler(void) {
 			return;
 	}
 	// Execute callback
-	mal_adc_read_callback_t cb = adc_callbacks[adc];
-	adc_callbacks[adc] = NULL;
-	if (cb != NULL) {
-		cb(adc, ADC_GetConversionValue(ADC1));
+	if (adc_handles[adc]->callback != NULL) {
+		adc_handles[adc]->callback(adc_handles[adc]->callback_handle, ADC_GetConversionValue(ADC1));
 	}
 }
 
-MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_e adc) {
+MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_s *handle) {
+    MAL_DEFS_UNUSED(handle);
 	// 12 equates to ADC_IRQ. However, the name of the constant changes based
 	// on the MCU because it is multiplex with other interrupts in some of them. It
 	// is simpler to use the constant directly.
-	bool active = NVIC_GetActive(12);
+	bool active = NVIC_GetActive((IRQn_Type)12);
 	// Enable interrupts
-	NVIC_DisableIRQ(12);
+	NVIC_DisableIRQ((IRQn_Type)12);
 	__DSB();
 	__ISB();
 
 	return active;
 }
 
-MAL_DEFS_INLINE void mal_adc_enable_interrupt(mal_adc_e adc, bool active) {
+MAL_DEFS_INLINE void mal_adc_set_interrupt(mal_adc_s *handle, bool active) {
+    MAL_DEFS_UNUSED(handle);
 	if (active) {
-		NVIC_EnableIRQ(12);
+		NVIC_EnableIRQ((IRQn_Type)12);
+	} else {
+        NVIC_DisableIRQ((IRQn_Type)12);
 	}
 }
 
