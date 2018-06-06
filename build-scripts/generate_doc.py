@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Generate documentation
     process_arguments = list()
     process_arguments.append("doxygen")
-    process_arguments.append(properties["basedir"] + "/../Doxyfile")
+    process_arguments.append(os.path.join(properties["basedir"], "Doxyfile"))
     retcode = subprocess.call(process_arguments)
     if retcode != 0:
         exit(retcode)

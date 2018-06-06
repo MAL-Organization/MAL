@@ -15,7 +15,7 @@
 		<build.toolchain.gnu>cygwin</build.toolchain.gnu>
 		<!-- <build.optimization.levels>Ofast,Os,O3,O2,O1,O0</build.optimization.levels> -->
 		<build.optimization.levels>O0</build.optimization.levels>
-		<path.to.doc>${basedir}/../docs</path.to.doc>
+		<path.to.doc>${basedir}/docs</path.to.doc>
 		<path.to.doc.resources>${basedir}/docs-resources</path.to.doc.resources>
 		<build.folder>${project.build.directory}/build</build.folder>
 		<build.test.folder>${project.build.directory}/test-build</build.test.folder>
