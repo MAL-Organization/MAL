@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_can.h
- *
- *  Created on: Jun 24, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -26,7 +20,45 @@
 #ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
 #define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
 
+#include "can/mal_can.h"
+#include "std/mal_stdlib.h"
 #include "std/mal_stdint.h"
+#include "std/mal_bool.h"
+
+#define MAL_HSPEC_STM32F0_CAN_FILTER_BANKS_SIZE	14
+#define MAL_HSPEC_STM32F0_CAN_FILTER_STD_SIZE		2
+
+typedef struct {
+    uint32_t id;
+    uint32_t mask;
+} mal_hspec_stm32f0_can_extended_filter_s;
+
+typedef struct {
+    uint16_t id[MAL_HSPEC_STM32F0_CAN_FILTER_STD_SIZE];
+    uint16_t mask[MAL_HSPEC_STM32F0_CAN_FILTER_STD_SIZE];
+} mal_hspec_stm32f0_can_standard_filter_s;
+
+typedef union {
+    mal_hspec_stm32f0_can_extended_filter_s ext;
+    mal_hspec_stm32f0_can_standard_filter_s std;
+} mal_hspec_stm32f0_can_filter_u;
+
+typedef struct {
+    mal_hspec_stm32f0_can_filter_u filter;
+    uint8_t filter_count;
+    mal_can_id_type_e type;
+    bool is_active;
+    uint8_t fifo;
+} mal_hspec_stm32f0_can_filter_bank_s;
+
+typedef struct MAL_CAN {
+    mal_can_tx_callback_t tx_callback;
+    void *tx_callback_handle;
+    mal_can_rx_callback_t rx_callback;
+    void *rx_callback_handle;
+    mal_hspec_stm32f0_can_filter_bank_s can_filter_banks[MAL_HSPEC_STM32F0_CAN_FILTER_BANKS_SIZE];
+    volatile bool interface_active;
+} mal_can_s;
 
 /**
  * Struct for direct initialization of a CAN interface.

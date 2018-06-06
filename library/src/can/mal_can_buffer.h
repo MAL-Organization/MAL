@@ -38,7 +38,7 @@
  * A handle containing all the variables related to a buffer.
  */
 typedef struct {
-	mal_can_e interface; /**< The CAN interface of the buffer.*/
+	mal_can_s *handle; /**< The CAN interface of the buffer.*/
 	volatile mal_circular_buffer_s tx_buffer; /**< The transmit buffer.*/
 	volatile mal_circular_buffer_s rx_buffer; /**< The receive buffer.*/
 } mal_can_buffer_handle_s;
@@ -48,8 +48,10 @@ typedef struct {
  */
 typedef struct {
 	mal_can_e interface; /**< The CAN interface to initialize and use.*/
-	const mal_gpio_s *tx_gpio; /**< The GPIO of the tx pin.*/
-	const mal_gpio_s *rx_gpio; /**< The GPIO of the rx pin.*/
+	mal_gpio_port_e tx_port; /**< The port of the TX GPIO to initialize.*/
+	uint8_t tx_pin; /**< The pin of the port of the TX GPIO to initialize. */
+	mal_gpio_port_e rx_port; /**< The port of the RX GPIO to initialize.*/
+	uint8_t rx_pin; /**< The pin of the port of the RX GPIO to initialize. */
 	uint64_t bitrate; /**< The bitrate of the CAN bus.*/
 	uint8_t *rx_buffer; /**< This should be an array of bytes in multiple of size of ::mal_hspec_can_msg_s.*/
 	uint64_t rx_buffer_size; /**< The size of the rx buffer in bytes.*/
@@ -61,7 +63,7 @@ typedef struct {
  * @brief This function will uninitialize a CAN buffer.
  * @param handle The handle to the CAN buffer.
  */
-#define mal_can_buffer_deinit(handle) mal_can_deinit((handle)->interface)
+#define mal_can_buffer_deinit(handle) mal_can_deinit((handle)->handle)
 
 /**
  * @brief Initialize a CAN buffer and a CAN interface.
@@ -69,7 +71,8 @@ typedef struct {
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init);
+mal_error_e mal_can_buffer_init(mal_can_buffer_init_s *init, mal_can_buffer_handle_s *buffer_handle,
+								 mal_can_s *can_handle);
 
 /**
  * @brief Initialize a CAN buffer and a CAN interface using direct initialization.
@@ -79,7 +82,8 @@ mal_error_e mal_can_buffer_init(mal_can_buffer_handle_s *handle, mal_can_buffer_
  * hardware specific implementation to know what type this should be.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_can_buffer_direct_init(mal_can_buffer_handle_s *handle, mal_can_buffer_init_s *init, const void *direct_init);
+mal_error_e mal_can_buffer_direct_init(mal_can_buffer_init_s *init, const void *direct_init,
+                                       mal_can_buffer_handle_s *buffer_handle, mal_can_s *can_handle);
 
 
 /**

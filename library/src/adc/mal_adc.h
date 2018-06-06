@@ -39,7 +39,7 @@
 
 /**
 * ADC handle that must be defined by hardware specific implementation. Used
-* to access the adc functions.
+* to access the ADC functions.
 */
 typedef struct MAL_ADC mal_adc_s;
 
@@ -80,10 +80,8 @@ typedef struct {
  * @brief This callback will be executed when an ADC read is complete.
  * @param handle The handle given for the callback.
  * @param value The value read.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
  */
-typedef mal_error_e (*mal_adc_read_callback_t)(void *handle, uint64_t value);
+typedef void (*mal_adc_read_callback_t)(void *handle, uint64_t value);
 
 /**
  * @brief Read an ADC.
@@ -164,6 +162,12 @@ mal_error_e mal_adc_read_volts(mal_adc_s *handle, mal_volts_t *value);
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

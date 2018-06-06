@@ -158,7 +158,7 @@ typedef enum MAL_HSPEC_STM32F0_AF {
 #define MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE	2
 
 #include "stm32f0/stm32f0xx_gpio.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "timer/mal_timer.h"
 
 
@@ -168,7 +168,8 @@ GPIO_TypeDef* mal_hspec_stm32f0_get_gpio_typedef(mal_gpio_port_e port);
 
 uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_gpio_port_e port);
 
-mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function);
+mal_error_e mal_hspec_stm32f0_get_pin_af(mal_gpio_port_e port, uint8_t pin, mal_hspec_stm32f0_af_e af,
+										  uint8_t *function);
 
 /**
  * @brief Get the supported alternate functions by pin for the current MCU.
@@ -177,7 +178,7 @@ mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32
  */
 void mal_hspec_stm32f0_get_timer_afs(const mal_hspec_stm32f0_af_e (**afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE]);
 
-mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_gpio_s *gpio, mal_timer_e timer, uint8_t *function);
+mal_error_e mal_hspec_stm32f0_get_timer_af(mal_gpio_port_e port, uint8_t pin, mal_timer_e timer, uint8_t *function);
 
 mal_error_e mal_hspec_stm32f0_get_port_afs(mal_gpio_port_e port, const mal_hspec_stm32f0_af_e (**afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE]);
 
