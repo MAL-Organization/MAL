@@ -91,6 +91,7 @@ MemManage_Handler (void)
     }
 }
 
+#if defined(MAL_STM32F7)
 void __attribute__ ((section(".after_vectors"),weak,naked))
 BusFault_Handler (void)
 {
@@ -183,6 +184,7 @@ UsageFault_Handler_C (ExceptionStackFrame* frame __attribute__((unused)),
     {
     }
 }
+#endif
 
 void __attribute__ ((section(".after_vectors"),weak))
 DebugMon_Handler (void)
