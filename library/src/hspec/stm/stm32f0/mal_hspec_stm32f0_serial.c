@@ -30,6 +30,7 @@
 #include "stm32f0/stm32f0xx_dma.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_dma.h"
 #include "hspec/stm/stm32f0/mal_hspec_stm32f0_nvic.h"
+#include "std/mal_defs.h"
 
 static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *port);
 static mal_error_e mal_hspec_stm32f0_serial_save_handle(mal_serial_port_e port, mal_serial_s *handle);
@@ -45,8 +46,8 @@ static mal_serial_s *port_usart4;
 mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     mal_error_e result;
     // Enable GPIO clocks
-    RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->tx_gpio->port), ENABLE);
-    RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->rx_gpio->port), ENABLE);
+    RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->tx_port), ENABLE);
+    RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->rx_port), ENABLE);
     // Enable serial clock
     switch (init->port) {
         case MAL_SERIAL_PORT_1:
@@ -88,28 +89,28 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         default:
             return MAL_ERROR_HARDWARE_INVALID;
     }
-    result = mal_hspec_stm32f0_get_pin_af(init->tx_gpio, tx_af, &function);
+    result = mal_hspec_stm32f0_get_pin_af(init->tx_port, init->tx_pin, tx_af, &function);
     if (MAL_ERROR_OK != result) {
         return result;
     }
-    GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->tx_gpio->port), init->tx_gpio->pin, function);
+    GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->tx_port), init->tx_pin, function);
 
-    result = mal_hspec_stm32f0_get_pin_af(init->rx_gpio, rx_af, &function);
+    result = mal_hspec_stm32f0_get_pin_af(init->rx_port, init->rx_pin, rx_af, &function);
     if (MAL_ERROR_OK != result) {
         return result;
     }
-    GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->rx_gpio->port), init->rx_gpio->pin, function);
+    GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->rx_port), init->rx_pin, function);
     // Configure GPIOs
     GPIO_InitTypeDef gpio_init;
-    gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->tx_gpio->pin);
+    gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->tx_pin);
     gpio_init.GPIO_Mode = GPIO_Mode_AF;
     gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
     gpio_init.GPIO_OType = GPIO_OType_PP;
     gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->tx_gpio->port), &gpio_init);
+    GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->tx_port), &gpio_init);
 
-    gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->rx_gpio->pin);
-    GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->rx_gpio->port), &gpio_init);
+    gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->rx_pin);
+    GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->rx_port), &gpio_init);
     // Get correct typedef
     USART_TypeDef *usart_typedef;
     switch (init->port) {
@@ -132,7 +133,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     USART_DeInit(usart_typedef);
     // Initialize interface
     USART_InitTypeDef usart_init;
-    usart_init.USART_BaudRate = init->baudrate;
+    usart_init.USART_BaudRate = (uint32_t)init->baudrate;
     usart_init.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
     usart_init.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
     switch (init->parity) {
@@ -396,7 +397,7 @@ static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port) {
                 // changes based on the MCU because it is not available on all of
                 // them. It is simpler to use the constant directly. If the MCU
                 // does not support these ports, the code will not get here.
-                return 29;
+                return (IRQn_Type)29;
         }
 }
 
@@ -408,6 +409,7 @@ MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_seri
 }
 
 MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+    MAL_DEFS_UNUSED(handle);
     mal_hspec_stm32f0_nvic_set(state->mask);
 }
 
@@ -454,7 +456,7 @@ static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
 
 static void mal_hspec_stm32f0_serial_handle_rx_dma(mal_serial_s *handle) {
     // Save transfered data
-    uint8_t data_count = MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE - handle->rx_dma_channel->CNDTR;
+    uint8_t data_count = (uint8_t)(MAL_HSPEC_STM32F0_SERIAL_DMA_BUFFER_SIZE - handle->rx_dma_channel->CNDTR);
     // Clear interrupt
     DMA_ClearITPendingBit(handle->rx_dma_flag);
     // Disable channel to allow reconfiguration
