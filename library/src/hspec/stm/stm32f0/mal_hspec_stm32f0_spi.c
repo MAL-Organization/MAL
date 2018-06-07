@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_spi.c
- *
- *  Created on: Mar 30, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -25,7 +19,6 @@
 
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
-#include "stm32f0/stm32f0xx_spi.h"
 #include "std/mal_stdlib.h"
 #include "std/mal_bool.h"
 #include "spi/mal_spi.h"
@@ -33,49 +26,37 @@
 
 #define DATA_SIZE_MASK	0xF00
 
-typedef struct {
-	mal_spi_e interface;
-	SPI_TypeDef *spi_typedef;
-	// Runtime settings
-	const mal_gpio_s *select;
-	mal_spi_select_mode_e select_mode;
-	mal_spi_select_polarity_e select_polarity;
-	// Runtime variables
-	volatile bool is_active;
-	mal_spi_msg_s *active_msg;
-	uint8_t out_data_ptr;
-	uint8_t in_data_ptr;
-} stm_spi_interface_s;
-
 IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_spi_e interface);
 
-static mal_error_e get_local_interface(mal_spi_e interface,
-									   stm_spi_interface_s **local_interface);
+static mal_error_e set_select_io(mal_spi_s *handle, bool selected);
 
-static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
-								 bool selected);
+static void handle_spi_interrupt(mal_spi_s *handle);
 
-static void handle_spi_interrupt(stm_spi_interface_s *local_interface);
+static void send_data(mal_spi_s *handle);
 
-static void send_data(stm_spi_interface_s *local_interface);
+mal_spi_s *spi1_interface;
+mal_spi_s *spi2_interface;
 
-stm_spi_interface_s spi1_interface;
-stm_spi_interface_s spi2_interface;
-
-mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
+mal_error_e mal_spi_init_master(mal_spi_master_init_s *init, mal_spi_s *handle) {
 	mal_error_e result;
 	// Enable GPIO clocks
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->mosi->port), ENABLE);
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->miso->port), ENABLE);
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->clk->port), ENABLE);
-	if (NULL != init->select) {
-		RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->select->port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->mosi_port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->miso_port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->clk_port), ENABLE);
+	if (MAL_SPI_SELECT_MODE_SOFTWARE == init->select_mode || MAL_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
+		RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->select_port), ENABLE);
 	}
-	// Enable SPI clock
+	// Enable SPI clock and save handles
 	if (MAL_SPI_1 == init->interface) {
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-	} else {
+		handle->spi_typedef = SPI1;
+		spi1_interface = handle;
+	} else if (MAL_SPI_2 == init->interface) {
 		RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+        handle->spi_typedef = SPI2;
+        spi2_interface = handle;
+	} else {
+	    return MAL_ERROR_HARDWARE_INVALID;
 	}
 	// Select correct I2C pin functions
 	mal_hspec_stm32f0_af_e mosi_af;
@@ -96,48 +77,49 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	// Configure alternate function
 	uint8_t function;
 	// MOSI
-	result = mal_hspec_stm32f0_get_pin_af(init->mosi, mosi_af, &function);
+	result = mal_hspec_stm32f0_get_pin_af(init->mosi_port, init->mosi_pin, mosi_af, &function);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
-	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->mosi->port), init->mosi->pin, function);
+	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->mosi_port), init->mosi_pin, function);
 	// MISO
-	result = mal_hspec_stm32f0_get_pin_af(init->miso, miso_af, &function);
+	result = mal_hspec_stm32f0_get_pin_af(init->miso_port, init->miso_pin, miso_af, &function);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
-	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->miso->port), init->miso->pin, function);
+	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->miso_port), init->miso_pin, function);
 	// Clk
-	result = mal_hspec_stm32f0_get_pin_af(init->clk, clk_af, &function);
+	result = mal_hspec_stm32f0_get_pin_af(init->clk_port, init->clk_pin, clk_af, &function);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
-	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), init->clk->pin, function);
+	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->clk_port), init->clk_pin, function);
 	// Select, only if the select mode is hardware
 	if (MAL_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
-		result = mal_hspec_stm32f0_get_pin_af(init->clk, clk_af, &function);
+		result = mal_hspec_stm32f0_get_pin_af(init->select_port, init->select_pin, select_af, &function);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
-		GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), init->clk->pin, function);
+		GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->select_port), init->select_pin, function);
 	// Select mode is software, initialize IO as output
 	} else if (MAL_SPI_SELECT_MODE_SOFTWARE == init->select_mode) {
 		// Initialize GPIO
 		mal_gpio_init_s gpio_init;
-		gpio_init.direction = MAL_GPIO_DIR_OUT;
-		gpio_init.gpio = *init->select;
+		gpio_init.direction = MAL_GPIO_DIRECTION_OUT;
+		gpio_init.port = init->select_port;
+		gpio_init.pin = init->select_pin;
 		gpio_init.output_config = MAL_GPIO_OUT_PP;
 		gpio_init.pupd = MAL_GPIO_PUPD_NONE;
 		gpio_init.speed = UINT64_MAX;
-		result = mal_gpio_init(&gpio_init);
+		result = mal_gpio_init(&gpio_init, &handle->select);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
 		// Set unselected
 		if (MAL_SPI_SELECT_POLARITY_HIGH == init->select_polarity) {
-			result = mal_gpio_set(init->select, false);
+			result = mal_gpio_set(&handle->select, false);
 		} else {
-			result = mal_gpio_set(init->select, true);
+			result = mal_gpio_set(&handle->select, true);
 		}
 		if (MAL_ERROR_OK != result) {
 			return result;
@@ -150,28 +132,21 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	gpio_init.GPIO_OType = GPIO_OType_PP;
 	gpio_init.GPIO_PuPd = GPIO_PuPd_UP;
 	// MOSI
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->mosi->pin);
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->mosi->port), &gpio_init);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->mosi_pin);
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->mosi_port), &gpio_init);
 	// MISO
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->miso->pin);
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->miso->port), &gpio_init);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->miso_pin);
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->miso_port), &gpio_init);
 	// Clk
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->clk->pin);
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->clk->port), &gpio_init);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->clk_pin);
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->clk_port), &gpio_init);
 	// Select, only if select mode is hardware
 	if (MAL_SPI_SELECT_MODE_HARDWARE == init->select_mode) {
-		gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->miso->pin);
-		GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->miso->port), &gpio_init);
-	}
-	// Get SPI typedef
-	SPI_TypeDef *spi_typedef;
-	if (MAL_SPI_1 == init->interface) {
-		spi_typedef = SPI1;
-	} else {
-		spi_typedef = SPI2;
+		gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->miso_pin);
+		GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->miso_port), &gpio_init);
 	}
 	// Clear interface
-	SPI_I2S_DeInit(spi_typedef);
+	SPI_I2S_DeInit(handle->spi_typedef);
 	// Initialize interface
 	SPI_InitTypeDef spi_init;
 	// Set full duplex mode
@@ -207,7 +182,7 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 				return MAL_ERROR_HARDWARE_INVALID;
 			}
 			spi_init.SPI_NSS = SPI_NSS_Hard;
-			SPI_NSSPulseModeCmd(spi_typedef, ENABLE);
+			SPI_NSSPulseModeCmd(handle->spi_typedef, ENABLE);
 			break;
 		case MAL_SPI_SELECT_MODE_SOFTWARE:
 		case MAL_SPI_SELECT_MODE_USER:
@@ -226,15 +201,16 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	// subtract 1 to the value to set to the register.
 	bool found = false;
 	int prescaler = 0;
+	uint64_t clock_speed = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(init->clock_speed) / 1000;
 	for (prescaler = 0; prescaler <= 7; prescaler++) {
 		uint32_t current_clock = clocks.PCLK_Frequency >> (prescaler + 1);
 		// Check if this is a match
-		if (current_clock == init->clock_speed) {
+		if (current_clock == clock_speed) {
 			found = true;
 			break;
 		}
 		// Check if we should keep looking
-		if (current_clock < init->clock_speed) {
+		if (current_clock < clock_speed) {
 			break;
 		}
 	}
@@ -242,7 +218,7 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 		return MAL_ERROR_CLOCK_ERROR;
 	}
 	// The prescaler bits start at bit 3
-	spi_init.SPI_BaudRatePrescaler = prescaler << 3;
+	spi_init.SPI_BaudRatePrescaler = (uint16_t)(prescaler << 3);
 	// Set bit order
 	if (MAL_SPI_BIT_ORDER_MSB == init->bit_order) {
 		spi_init.SPI_FirstBit = SPI_FirstBit_MSB;
@@ -250,7 +226,7 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 		spi_init.SPI_FirstBit = SPI_FirstBit_LSB;
 	}
 	// Initialize
-	SPI_Init(spi_typedef, &spi_init);
+	SPI_Init(handle->spi_typedef, &spi_init);
 	// Set proper rx fifo threshold
 	uint16_t fifo_threshold = SPI_RxFIFOThreshold_QF;
 	// If words are more than a byte then we only want to know when 2 bytes are
@@ -259,76 +235,50 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	if (init->data_size > MAL_SPI_DATA_8_BITS) {
 		fifo_threshold = SPI_RxFIFOThreshold_HF;
 	}
-	SPI_RxFIFOThresholdConfig(spi_typedef, fifo_threshold);
-	// Initialize local interface
-	stm_spi_interface_s *local_interface;
-	result = get_local_interface(init->interface, &local_interface);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	local_interface->active_msg = NULL;
-	local_interface->interface = init->interface;
-	local_interface->is_active = false;
-	local_interface->select = init->select;
-	local_interface->select_mode = init->select_mode;
-	local_interface->select_polarity = init->select_polarity;
-	local_interface->spi_typedef = spi_typedef;
+	SPI_RxFIFOThresholdConfig(handle->spi_typedef, fifo_threshold);
+	// Initialize handle
+	handle->active_msg = NULL;
+	handle->is_active = false;
+	handle->select_mode = init->select_mode;
+	handle->select_polarity = init->select_polarity;
+	handle->irq = mal_hspec_stm32f0_spi_get_irq(init->interface);
 	// Configure IRQ
 	//FIXME To fix with issue #19.
-	NVIC_EnableIRQ(mal_hspec_stm32f0_spi_get_irq(init->interface));
-	NVIC_SetPriority(mal_hspec_stm32f0_spi_get_irq(init->interface), 10);
+	NVIC_EnableIRQ(handle->irq);
+	NVIC_SetPriority(handle->irq, 10);
 	// Enable SPI interface
-	SPI_Cmd(spi_typedef, ENABLE);
+	SPI_Cmd(handle->spi_typedef, ENABLE);
 
 	return MAL_ERROR_OK;
 }
 
-static mal_error_e get_local_interface(mal_spi_e interface, stm_spi_interface_s **local_interface) {
-	switch (interface) {
-		case MAL_SPI_1:
-			*local_interface = &spi1_interface;
-			return MAL_ERROR_OK;
-		case MAL_SPI_2:
-			*local_interface = &spi2_interface;
-			return MAL_ERROR_OK;
-		default:
-			return MAL_ERROR_HARDWARE_INVALID;
-	}
-}
-
-mal_error_e mal_spi_start_transaction(mal_spi_e interface, mal_spi_msg_s *msg) {
-	mal_error_e result = MAL_ERROR_OK;
-	// Get local interface
-	stm_spi_interface_s *local_interface;
-	result = get_local_interface(interface, &local_interface);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
+mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
+	mal_error_e result;
 	// Deactivate interrupt
-	bool active = mal_spi_disable_interrupt(interface);
+	bool active = mal_spi_disable_interrupt(handle);
 	// Check if interface is available
-	if (!local_interface->is_active) {
+	if (!handle->is_active) {
 		// Set active message
-		local_interface->active_msg = msg;
+		handle->active_msg = msg;
 		// Set select IO
-		result = set_select_io(local_interface, true);
+		result = set_select_io(handle, true);
 		if (MAL_ERROR_OK == result) {
 			// Set interface active
-			local_interface->is_active = true;
+			handle->is_active = true;
 			// Set data pointers
-			local_interface->out_data_ptr = 0;
-			local_interface->in_data_ptr = 0;
+			handle->out_data_ptr = 0;
+			handle->in_data_ptr = 0;
 			// Send first data byte
-			send_data(local_interface);
+			send_data(handle);
 			// Set interrupts active
-			SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_TXE, ENABLE);
-			SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_RXNE, ENABLE);
+			SPI_I2S_ITConfig(handle->spi_typedef, SPI_I2S_IT_TXE, ENABLE);
+			SPI_I2S_ITConfig(handle->spi_typedef, SPI_I2S_IT_RXNE, ENABLE);
 		}
 	} else {
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Restore interrupt
-	mal_spi_enable_interrupt(interface, active);
+	mal_spi_set_interrupt(handle, active);
 
 	return result;
 }
@@ -343,36 +293,33 @@ IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_spi_e interface) {
 	}
 }
 
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface) {
-	IRQn_Type irq = mal_hspec_stm32f0_spi_get_irq(interface);
-	bool active = NVIC_GetActive(irq);
-	NVIC_DisableIRQ(irq);
+MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle) {
+	bool active = NVIC_GetActive(handle->irq);
+	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
 	return active;
 }
 
-MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active) {
+MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active) {
     if (active) {
-        NVIC_EnableIRQ(mal_hspec_stm32f0_spi_get_irq(interface));
+        NVIC_EnableIRQ(handle->irq);
     }
 }
 
-static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
-								 bool selected) {
+static mal_error_e set_select_io(mal_spi_s *handle, bool selected) {
 	// Extract correct select IO and polarity
-	const mal_gpio_s *select_io = NULL;
-	mal_spi_select_polarity_e polarity;
+	mal_gpio_s *select_io = NULL;
+	mal_spi_select_polarity_e polarity = MAL_SPI_SELECT_POLARITY_LOW;
 	// Check if the active message specifies an IO
-	if (NULL != local_interface->active_msg &&
-		NULL != local_interface->active_msg->select) {
-		select_io = local_interface->active_msg->select;
-		polarity = local_interface->active_msg->select_polarity;
+	if (NULL != handle->active_msg &&
+		NULL != handle->active_msg->select) {
+		select_io = handle->active_msg->select;
+		polarity = handle->active_msg->select_polarity;
 	} else {
-		if (MAL_SPI_SELECT_MODE_SOFTWARE == local_interface->select_mode &&
-			NULL != local_interface->select) {
-			select_io = local_interface->select;
-			polarity = local_interface->select_polarity;
+		if (MAL_SPI_SELECT_MODE_SOFTWARE == handle->select_mode) {
+			select_io = &handle->select;
+			polarity = handle->select_polarity;
 		}
 	}
 	// Nothing to do if no IO is specified. This can happen when the interface
@@ -390,75 +337,73 @@ static mal_error_e set_select_io(stm_spi_interface_s *local_interface,
 }
 
 void SPI1_IRQHandler(void) {
-	handle_spi_interrupt(&spi1_interface);
+	handle_spi_interrupt(spi1_interface);
 }
 
 void SPI2_IRQHandler(void) {
-	handle_spi_interrupt(&spi2_interface);
+	handle_spi_interrupt(spi2_interface);
 }
 
-static void handle_spi_interrupt(stm_spi_interface_s *local_interface) {
+static void handle_spi_interrupt(mal_spi_s *handle) {
 	// Check transmit empty buffer interrupt
-	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_TXE) == SET) {
+	if (SPI_I2S_GetITStatus(handle->spi_typedef, SPI_I2S_IT_TXE) == SET) {
 		// Check if we still have data to send
-		if (local_interface->out_data_ptr < local_interface->active_msg->data_length) {
-			send_data(local_interface);
+		if (handle->out_data_ptr < handle->active_msg->data_length) {
+			send_data(handle);
 		}
 	}
 	// Check receiver not empty buffer interrupt
-	if (SPI_I2S_GetITStatus(local_interface->spi_typedef, SPI_I2S_IT_RXNE) == SET) {
+	if (SPI_I2S_GetITStatus(handle->spi_typedef, SPI_I2S_IT_RXNE) == SET) {
 		// Get next index
-		uint8_t index = local_interface->in_data_ptr++;
+		uint8_t index = handle->in_data_ptr++;
 		// Read data
 		uint16_t data;
-		if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
-			data = SPI_I2S_ReceiveData16(local_interface->spi_typedef);
+		if ((handle->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
+			data = SPI_I2S_ReceiveData16(handle->spi_typedef);
 		} else {
-			data = SPI_ReceiveData8(local_interface->spi_typedef);
+			data = SPI_ReceiveData8(handle->spi_typedef);
 		}
-		local_interface->active_msg->data[index] = data;
+		handle->active_msg->data[index] = data;
 
 		// Check if transaction is complete
-		if (local_interface->in_data_ptr >= local_interface->active_msg->data_length) {
+		if (handle->in_data_ptr >= handle->active_msg->data_length) {
 			// Deselect device
-			set_select_io(local_interface, false);
+			set_select_io(handle, false);
 			// Message transaction is complete
 			// Execute callback
 			mal_spi_msg_s *next_message = NULL;
-			if (NULL != local_interface->active_msg->callback) {
-				local_interface->active_msg->callback(
-												local_interface->active_msg,
-												&next_message);
+			if (NULL != handle->active_msg->callback) {
+				handle->active_msg->callback(handle->active_msg->handle, handle->active_msg, &next_message);
 			}
 			// Check if we have a new message
 			if (NULL == next_message) {
 				// No new message, set interface inactive
-				local_interface->is_active = false;
+				handle->is_active = false;
 				// Set interrupts inactive
-				SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_TXE, DISABLE);
-				SPI_I2S_ITConfig(local_interface->spi_typedef, SPI_I2S_IT_RXNE, DISABLE);
+				SPI_I2S_ITConfig(handle->spi_typedef, SPI_I2S_IT_TXE, DISABLE);
+				SPI_I2S_ITConfig(handle->spi_typedef, SPI_I2S_IT_RXNE, DISABLE);
 				return;
 			}
 			// Set interface for next message
-			local_interface->active_msg = next_message;
+			handle->active_msg = next_message;
 			// Set select IO
-			set_select_io(local_interface, true);
+			set_select_io(handle, true);
 			// Set data pointer
-			local_interface->out_data_ptr = 0;
-			local_interface->in_data_ptr = 0;
+			handle->out_data_ptr = 0;
+			handle->in_data_ptr = 0;
 		}
 	}
 }
 
-static void send_data(stm_spi_interface_s *local_interface) {
+static void send_data(mal_spi_s *handle) {
 	// Get index
-	uint8_t index = local_interface->out_data_ptr++;
+	uint8_t index = handle->out_data_ptr++;
 	// Get next word
-	uint16_t data = local_interface->active_msg->data[index];
+	uint16_t data = handle->active_msg->data[index];
 	// Send the next data word
-	if ((local_interface->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
-		SPI_I2S_SendData16(local_interface->spi_typedef, data);
+	if ((handle->spi_typedef->CR2 & DATA_SIZE_MASK) > SPI_DataSize_8b) {
+		SPI_I2S_SendData16(handle->spi_typedef, data);
 	} else {
-		SPI_SendData8(local_interface->spi_typedef, data);
+		SPI_SendData8(handle->spi_typedef, (uint8_t)data);
 	}
 }

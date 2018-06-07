@@ -24,14 +24,21 @@
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
+#include "std/mal_types.h"
 
 /**
  * @defgroup SPI
  * @brief @copybrief mal_spi.h
  * @{
  */
+
+/**
+* SPI handle that must be defined by hardware specific implementation. Used
+* to access the SPI functions.
+*/
+typedef struct MAL_SPI mal_spi_s;
 
 /**
  * The possible SPI interfaces.
@@ -109,15 +116,15 @@ typedef enum {
  */
 typedef struct {
     mal_spi_e interface;/**< The SPI interface to initialize.*/
-    uint64_t clock_speed;/**< The clock speed to set in Hz.*/
-    const mal_gpio_s *mosi;/**< The master out slave in pin.*/
-    const mal_gpio_s *miso;/**< The master in slave out pin.*/
-    const mal_gpio_s *clk;/**< The clock pin.*/
-    const mal_gpio_s *select;/**< The select pin. This can be set to NULL if it
-                                  is to be omitted. This could be because the
-                                  mode is user or there is no global select
-                                  pin. If not NULL, it should point to static
-                                  memory space.*/
+    mal_hertz_t clock_speed;/**< The clock speed to set.*/
+    mal_gpio_port_e mosi_port; /**< The port of the MOSI GPIO to initialize.*/
+    uint8_t mosi_pin; /**< The pin of the port of the MOSI GPIO to initialize. */
+    mal_gpio_port_e miso_port; /**< The port of the MISO GPIO to initialize.*/
+    uint8_t miso_pin; /**< The pin of the port of the MISO GPIO to initialize. */
+    mal_gpio_port_e clk_port; /**< The port of the CLK GPIO to initialize.*/
+    uint8_t clk_pin; /**< The pin of the port of the CLK GPIO to initialize. */
+    mal_gpio_port_e select_port; /**< The port of the select GPIO to initialize. This can be omitted. This could be because the mode is user or there is no global select pin.*/
+    uint8_t select_pin; /**< The pin of the port of the select GPIO to initialize. This can be omitted. This could be because the mode is user or there is no global select pin.*/
     mal_spi_select_mode_e select_mode;/**< The select mode.*/
     mal_spi_data_size_e data_size;/**< The size of each words.*/
     mal_spi_bit_order_e bit_order;/**< The order of each bit in a word.*/
@@ -133,12 +140,12 @@ typedef struct MAL_SPI_MSG mal_spi_msg_s;
 /**
  * This callback will be executed at the end of a transaction where the MCU is
  * the master.
+ * @param handle The handle given.
  * @param msg The message of the transaction containing only the received data.
  * @param next_msg The next message to send. Set to #NULL if no message should
  * be transmitted.
- * @return At this point, the return code is not taken into account.
  */
-typedef mal_error_e (*mal_spi_master_transaction_complete_t)(mal_spi_msg_s *msg, mal_spi_msg_s **next_msg);
+typedef void (*mal_spi_master_transaction_complete_t)(void *handle, mal_spi_msg_s *msg, mal_spi_msg_s **next_msg);
 
 /**
  * This structures contains all the data to do an SPI transaction.
@@ -158,44 +165,47 @@ typedef struct MAL_SPI_MSG {
                                                               execute when the
                                                               transaction is
                                                               over.*/
+    void *handle; /**< This handle will be passed to the callback.*/
 } mal_spi_msg_s;
 
 /**
  * @brief Start an SPI transfer as a master. Note that this is not a blocking
  * call. Use the callback of the message to receive the result.
- * @param interface The SPI interface from ::mal_hspec_spi_e.
+ * @param handle The SPI interface to use.
  * @param msg A pointer to the SPI message of type ::mal_hspec_spi_msg_s. Note
  * that this pointer should point to static memory space. The driver will use
  * the message during the transfer.
  * @return @MAL_ERROR_OK on success.
  */
-mal_error_e mal_spi_start_transaction(mal_spi_e interface, mal_spi_msg_s *msg);
+mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg);
 
 /**
  * @brief Disable an SPI interrupt.
- * @param interface The interface to disable the interrupt from of type
- * ::mal_hspec_spi_e.
+ * @param handle The interface to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface);
+MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle);
 
 /**
- * @brief Enable an SPI interrupt.
- * @param interface The interface to enable the interrupt from of type
- * ::mal_hspec_spi_e.
+ * @brief Set an SPI interrupt.
+ * @param handle The interface to set the interrupt from.
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active);
+MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active);
 
 /**
  * @brief Initialize an SPI interface as a master interface.
  * @param init The initialization parameters.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_spi_init_master(mal_spi_master_init_s *init);
+mal_error_e mal_spi_init_master(mal_spi_master_init_s *init, mal_spi_s *handle);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

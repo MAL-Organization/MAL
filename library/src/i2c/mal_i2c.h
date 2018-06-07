@@ -23,10 +23,11 @@
 #ifndef I2C_MAL_I2C_H_
 #define I2C_MAL_I2C_H_
 
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
 #include "std/mal_defs.h"
+#include "std/mal_bool.h"
 
 /**
  * @defgroup I2C

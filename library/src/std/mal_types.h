@@ -39,7 +39,7 @@
 #ifdef MAL_FLOAT
 #define __MAL_TYPES_TYPE_TO_MILLI(type, value)			((type)((value) * 1000.0f))
 #else
-#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			(value)
+#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			(type)(value)
 #endif
 /**
  * @endcond
