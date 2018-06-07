@@ -31,6 +31,22 @@
 #include "timer/mal_timer.h"
 #include "mal_hspec_stm32f0_cmn.h"
 
+typedef struct MAL_TIMER {
+    mal_timer_e timer;
+    mal_timer_callback_t callback;
+    void *handle;
+    TIM_TypeDef *stm_handle;
+    IRQn_Type irq;
+} mal_timer_s;
+
+typedef struct MAL_TIMER_PWM {
+
+} mal_timer_pwm_s;
+
+typedef struct MAL_TIMER_INPUT_CAPTURE {
+
+} mal_timer_input_capture_s;
+
 /**
  * Struct for direct initialization of a timer interface.
  */
@@ -63,11 +79,11 @@ TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer);
 /**
  * Needed by tests.
  */
-mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
+mal_error_e mal_hspec_stm32f0_timer_get_input_clk(uint64_t *clock);
 
 /**
  * Needed by tests.
  */
-uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer);
+uint16_t mal_hspec_stm32f0_timer_get_channel(mal_gpio_port_e port, uint8_t pin, mal_timer_e timer);
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_TIMER_H_ */

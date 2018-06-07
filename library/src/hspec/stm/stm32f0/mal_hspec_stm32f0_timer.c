@@ -29,72 +29,98 @@
 #include "stm32f0/stm32f0xx_rcc.h"
 #include "mal_hspec_stm32f0_cmn.h"
 
-#define INVOKE_TASK_CALLBACK(timer) do { \
-	if (timer_callbacks[timer].task_cb != NULL) { \
-		timer_callbacks[timer].task_cb(timer); \
-	} \
-}while(0)
-
-typedef union {
-	mal_timer_callback_t task_cb;
-	mal_timer_input_capture_callback_t ic_cb;
-} timer_callback_u;
-
 static mal_error_e mal_hspec_stm32f0_timer_init_timer_rcc(mal_timer_e timer);
 
 static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer);
 
-static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags);
+static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_s *handle, uint16_t flags);
 
-static timer_callback_u timer_callbacks[MAL_TIMER_SIZE];
+static mal_timer_s *timer1;
+static mal_timer_s *timer2;
+static mal_timer_s *timer3;
+static mal_timer_s *timer6;
+static mal_timer_s *timer7;
+static mal_timer_s *timer14;
+static mal_timer_s *timer15;
+static mal_timer_s *timer16;
+static mal_timer_s *timer17;
 
-mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init) {
-	mal_error_e result;
+static mal_error_e mal_hspec_stm32f0_timer_common_task_init(mal_timer_init_task_s *init,
+                                                            TIM_TimeBaseInitTypeDef *init_time_base,
+                                                            mal_timer_s *handle) {
+    mal_error_e result;
+    // Initialise peripheral clock
+    result = mal_hspec_stm32f0_timer_init_timer_rcc(init->timer);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Initialize handle
+    handle->timer = init->timer;
+    handle->callback = init->callback;
+    handle->handle = init->callback_handle;
+    handle->stm_handle = mal_hspec_stm32f0_timer_get_typedef(init->timer);
+    handle->irq = mal_hspec_stm32f0_get_timer_update_irq(init->timer);
+    // Initialise base timer
+    TIM_TimeBaseInit(handle->stm_handle, init_time_base);
+    // Save handle
+    switch (handle->timer) {
+        case MAL_TIMER_1:
+            timer1 = handle;
+            break;
+        case MAL_TIMER_2:
+            timer2 = handle;
+            break;
+        case MAL_TIMER_3:
+            timer3 = handle;
+            break;
+        case MAL_TIMER_6:
+            timer6 = handle;
+            break;
+        case MAL_TIMER_7:
+            timer7 = handle;
+            break;
+        case MAL_TIMER_14:
+            timer14 = handle;
+            break;
+        case MAL_TIMER_15:
+            timer15 = handle;
+            break;
+        case MAL_TIMER_16:
+            timer16 = handle;
+            break;
+        case MAL_TIMER_17:
+            timer17 = handle;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
+    // Enable NVIC interrupt for timer
+    NVIC_EnableIRQ(handle->irq);
+    NVIC_SetPriority(handle->irq, 2); // Find a way to manage priorities for interrupts
+    // Enable timer interrupt
+    TIM_ITConfig(handle->stm_handle, TIM_IT_Update, ENABLE);
+    // Enable timer
+    TIM_Cmd(handle->stm_handle, ENABLE);
+}
+
+mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *direct_init, mal_timer_s *handle) {
 	// Read direct init
 	mal_hspec_stm32f0_timer_direct_init_s *stm_direct_init;
 	stm_direct_init = (mal_hspec_stm32f0_timer_direct_init_s*)direct_init;
-	// Initialise peripheral clock
-	result = mal_hspec_stm32f0_timer_init_timer_rcc(init->timer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Initialise time base timer
 	TIM_TimeBaseInitTypeDef params;
 	TIM_TimeBaseStructInit(&params);
 	params.TIM_CounterMode = TIM_CounterMode_Up;
 	params.TIM_Prescaler = stm_direct_init->prescaler;
 	params.TIM_Period = stm_direct_init->period;
-	TIM_TimeBaseInit(tim, &params);
-	// Save tick handle
-	timer_callbacks[init->timer].task_cb = init->callback;
-	// Enable NVIC interrupt for timer
-	if (NULL != init->callback) {
-		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(init->timer);
-		NVIC_EnableIRQ(irq);
-		NVIC_SetPriority(irq, 2); // Find a way to manage priorities for interrupts
-		// Enable timer interrupt
-		TIM_ITConfig(tim, TIM_IT_Update, ENABLE);
-	}
-	// Enable timer
-	TIM_Cmd(tim, ENABLE);
-
-	return MAL_ERROR_OK;
+	return mal_hspec_stm32f0_timer_common_task_init(init, &params, handle);
 }
 
-mal_error_e mal_timer_init(mal_timer_init_s *init) {
+mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle) {
 	mal_error_e result;
-	// Initialise peripheral clock
-	result = mal_hspec_stm32f0_timer_init_timer_rcc(init->timer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Get timer frequency
 	uint64_t timer_frequency;
-	result = mal_hspec_stm32f0_timer_get_input_clk(init->timer, &timer_frequency);
+	result = mal_hspec_stm32f0_timer_get_input_clk(&timer_frequency);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
@@ -103,7 +129,7 @@ mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	TIM_TimeBaseStructInit(&params);
 	params.TIM_CounterMode = TIM_CounterMode_Up;
 	// Choose longest count to get maximum precision
-	uint16_t prescaler;
+	uint16_t prescaler = 1;
 	uint16_t period;
 	bool found = false;
 	uint64_t smallest_delta = UINT64_MAX;
@@ -139,23 +165,9 @@ mal_error_e mal_timer_init(mal_timer_init_s *init) {
 	if (!found) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
-	params.TIM_Prescaler = prescaler - 1;
+	params.TIM_Prescaler = (uint16_t)(prescaler - 1);
 	params.TIM_Period = period;
-	TIM_TimeBaseInit(tim, &params);
-	// Save tick handle
-	timer_callbacks[init->timer].task_cb = init->callback;
-	// Enable NVIC interrupt for timer
-	if (NULL != init->callback) {
-		IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(init->timer);
-		NVIC_EnableIRQ(irq);
-		NVIC_SetPriority(irq, 2); // Find a way to manage priorities for interrupts
-		// Enable timer interrupt
-		TIM_ITConfig(tim, TIM_IT_Update, ENABLE);
-	}
-	// Enable timer
-	TIM_Cmd(tim, ENABLE);
-
-	return MAL_ERROR_OK;
+	return mal_hspec_stm32f0_timer_common_task_init(init, &params, handle);
 }
 
 static mal_error_e mal_hspec_stm32f0_timer_init_timer_rcc(mal_timer_e timer) {
@@ -179,56 +191,55 @@ return MAL_ERROR_OK;
 }
 
 static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer) {
-switch (timer) {
-case MAL_TIMER_1:
-	return RCC_APB2Periph_TIM1;
-case MAL_TIMER_2:
-	return RCC_APB1Periph_TIM2;
-case MAL_TIMER_3:
-	return RCC_APB1Periph_TIM3;
-case MAL_TIMER_6:
-	return RCC_APB1Periph_TIM6;
-case MAL_TIMER_7:
-	return RCC_APB1Periph_TIM7;
-case MAL_TIMER_14:
-	return RCC_APB1Periph_TIM14;
-case MAL_TIMER_15:
-	return RCC_APB2Periph_TIM15;
-case MAL_TIMER_16:
-	return RCC_APB2Periph_TIM16;
-case MAL_TIMER_17:
-default:
-	return RCC_APB2Periph_TIM17;
-}
+    switch (timer) {
+        case MAL_TIMER_1:
+            return RCC_APB2Periph_TIM1;
+        case MAL_TIMER_2:
+            return RCC_APB1Periph_TIM2;
+        case MAL_TIMER_3:
+            return RCC_APB1Periph_TIM3;
+        case MAL_TIMER_6:
+            return RCC_APB1Periph_TIM6;
+        case MAL_TIMER_7:
+            return RCC_APB1Periph_TIM7;
+        case MAL_TIMER_14:
+            return RCC_APB1Periph_TIM14;
+        case MAL_TIMER_15:
+            return RCC_APB2Periph_TIM15;
+        case MAL_TIMER_16:
+            return RCC_APB2Periph_TIM16;
+        case MAL_TIMER_17:
+        default:
+            return RCC_APB2Periph_TIM17;
+    }
 }
 
 TIM_TypeDef* mal_hspec_stm32f0_timer_get_typedef(mal_timer_e timer) {
 	switch (timer) {
-	case MAL_TIMER_1:
-		return TIM1;
-	case MAL_TIMER_2:
-		return TIM2;
-	case MAL_TIMER_3:
-		return TIM3;
-	case MAL_TIMER_6:
-		return TIM6;
-	case MAL_TIMER_7:
-		return TIM7;
-	case MAL_TIMER_14:
-		return TIM14;
-	case MAL_TIMER_15:
-		return TIM15;
-	case MAL_TIMER_16:
-		return TIM16;
-	case MAL_TIMER_17:
-		return TIM17;
-	default:
-		return NULL;
+        case MAL_TIMER_1:
+            return TIM1;
+        case MAL_TIMER_2:
+            return TIM2;
+        case MAL_TIMER_3:
+            return TIM3;
+        case MAL_TIMER_6:
+            return TIM6;
+        case MAL_TIMER_7:
+            return TIM7;
+        case MAL_TIMER_14:
+            return TIM14;
+        case MAL_TIMER_15:
+            return TIM15;
+        case MAL_TIMER_16:
+            return TIM16;
+        case MAL_TIMER_17:
+            return TIM17;
+        default:
+            return NULL;
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_timer_get_input_clk(mal_timer_e timer,
-  										  	  	  uint64_t *clock) {
+mal_error_e mal_hspec_stm32f0_timer_get_input_clk(uint64_t *clock) {
 	// MCU clocks
 	RCC_ClocksTypeDef clocks;
 	RCC_GetClocksFreq(&clocks);
@@ -263,7 +274,7 @@ void TIM1_CC_IRQHandler(void) {
 	TIM_ClearFlag(TIM1, TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_1, TIM1, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer1, cc_flags);
 	}
 }
 
@@ -271,7 +282,9 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 	// Clear interrupts
 	TIM_ClearFlag(TIM1, TIM_FLAG_Update);
 	// Handles interrupt
-	INVOKE_TASK_CALLBACK(MAL_TIMER_1);
+	if (NULL != timer1) {
+        timer1->callback(timer1->handle);
+	}
 }
 
 void TIM2_IRQHandler(void) {
@@ -293,9 +306,11 @@ void TIM2_IRQHandler(void) {
 	TIM_ClearFlag(TIM2, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_2, TIM2, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer2, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_2);
+        if (NULL != timer2) {
+            timer2->callback(timer2->handle);
+        }
 	}
 }
 
@@ -318,22 +333,28 @@ void TIM3_IRQHandler(void) {
 	TIM_ClearFlag(TIM3, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_3, TIM3, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer3, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_3);
+        if (NULL != timer3) {
+            timer3->callback(timer3->handle);
+        }
 	}
 }
 
 void TIM6_DAC_IRQHandler(void) {
 	TIM_ClearFlag(TIM6, TIM_FLAG_Update);
 	// Handles tick
-	INVOKE_TASK_CALLBACK(MAL_TIMER_6);
+    if (NULL != timer6) {
+        timer6->callback(timer6->handle);
+    }
 }
 
 void TIM7_IRQHandler(void) {
 	TIM_ClearFlag(TIM7, TIM_FLAG_Update);
 	// Handles tick
-	INVOKE_TASK_CALLBACK(MAL_TIMER_7);
+    if (NULL != timer7) {
+        timer7->callback(timer7->handle);
+    }
 }
 
 void TIM14_IRQHandler(void) {
@@ -346,9 +367,11 @@ void TIM14_IRQHandler(void) {
 	TIM_ClearFlag(TIM14, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_14, TIM14, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer14, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_14);
+        if (NULL != timer14) {
+            timer14->callback(timer14->handle);
+        }
 	}
 }
 
@@ -365,9 +388,11 @@ void TIM15_IRQHandler(void) {
 	TIM_ClearFlag(TIM15, TIM_FLAG_Update|TIM_FLAG_CC1|TIM_FLAG_CC2);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_15, TIM15, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer15, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_15);
+        if (NULL != timer15) {
+            timer15->callback(timer15->handle);
+        }
 	}
 }
 
@@ -381,9 +406,11 @@ void TIM16_IRQHandler(void) {
 	TIM_ClearFlag(TIM16, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_16, TIM16, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer16, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_16);
+        if (NULL != timer16) {
+            timer16->callback(timer16->handle);
+        }
 	}
 }
 
@@ -397,50 +424,79 @@ void TIM17_IRQHandler(void) {
 	TIM_ClearFlag(TIM17, TIM_FLAG_Update|TIM_FLAG_CC1);
 	// Handles interrupt
 	if (cc_flags) {
-		mal_hspec_stm32f0_timer_input_capture_interrupt(MAL_TIMER_17, TIM17, cc_flags);
+        mal_hspec_stm32f0_timer_input_capture_interrupt(timer17, cc_flags);
 	} else {
-		INVOKE_TASK_CALLBACK(MAL_TIMER_17);
+        if (NULL != timer17) {
+            timer17->callback(timer17->handle);
+        }
 	}
 }
 
-mal_error_e mal_timer_free_unmanaged(mal_timer_e timer) {
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
+mal_error_e mal_timer_free(mal_timer_s *handle) {
 	// Disable timer
-	TIM_Cmd(tim, DISABLE);
+	TIM_Cmd(handle->stm_handle, DISABLE);
 	// Disable interrupt
-	TIM_ITConfig(tim, TIM_IT_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4, DISABLE);
-	NVIC_DisableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer));
-	NVIC_DisableIRQ(mal_hspec_stm32f0_get_timer_compare_irq(timer));
+	TIM_ITConfig(handle->stm_handle, TIM_IT_Update|TIM_FLAG_CC1|TIM_FLAG_CC2|TIM_FLAG_CC3|TIM_FLAG_CC4, DISABLE);
+	NVIC_DisableIRQ(handle->irq);
 	// Unitialise timer
-	TIM_DeInit(tim);
-	// Remove callback
-	timer_callbacks[timer].task_cb = NULL;
-	timer_callbacks[timer].ic_cb = NULL;
+	TIM_DeInit(handle->stm_handle);
+	// Remove handle
+    switch (handle->timer) {
+        case MAL_TIMER_1:
+            timer1 = NULL;
+            break;
+        case MAL_TIMER_2:
+            timer2 = NULL;
+            break;
+        case MAL_TIMER_3:
+            timer3 = NULL;
+            break;
+        case MAL_TIMER_6:
+            timer6 = NULL;
+            break;
+        case MAL_TIMER_7:
+            timer7 = NULL;
+            break;
+        case MAL_TIMER_14:
+            timer14 = NULL;
+            break;
+        case MAL_TIMER_15:
+            timer15 = NULL;
+            break;
+        case MAL_TIMER_16:
+            timer16 = NULL;
+            break;
+        case MAL_TIMER_17:
+            timer17 = NULL;
+            break;
+        default:
+            return MAL_ERROR_HARDWARE_INVALID;
+    }
 
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_e timer) {
-	IRQn_Type irq = mal_hspec_stm32f0_get_timer_update_irq(timer);
-	bool active = NVIC_GetActive(irq);
-	NVIC_DisableIRQ(irq);
+MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
+	bool active = NVIC_GetActive(handle->irq);
+	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
 	return active;
 }
 
-MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active) {
+MAL_DEFS_INLINE void mal_timer_set_interrupt(mal_timer_s *handle, bool active) {
 	if (active) {
-		NVIC_EnableIRQ(mal_hspec_stm32f0_get_timer_update_irq(timer));
+		NVIC_EnableIRQ(handle->irq);
+	} else {
+        NVIC_DisableIRQ(handle->irq);
 	}
 }
 
-uint16_t mal_hspec_stm32f0_timer_get_channel(const mal_gpio_s *gpio, mal_timer_e timer) {
+uint16_t mal_hspec_stm32f0_timer_get_channel(mal_gpio_port_e port, uint8_t pin, mal_timer_e timer) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
-	switch ((*timer_afs)[gpio->port][gpio->pin][timer]) {
+	switch ((*timer_afs)[port][pin][timer]) {
 		case MAL_HSPEC_STM32F0_AF_TIM1_CH1:
 		case MAL_HSPEC_STM32F0_AF_TIM1_CH1N:
 		case MAL_HSPEC_STM32F0_AF_TIM2_CH1_ETR:
@@ -811,26 +867,26 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 	return MAL_ERROR_OK;
 }
 
-static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_e timer, TIM_TypeDef *stm_timer, uint16_t flags) {
+static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_s *handle, uint16_t flags) {
 	// Check every channel and execute callbacks
 	if (flags & TIM_FLAG_CC1) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR1);
+		if (timer_callbacks[handle].ic_cb != NULL) {
+			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR1);
 		}
 	}
 	if (flags & TIM_FLAG_CC2) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR2);
+		if (timer_callbacks[handle].ic_cb != NULL) {
+			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR2);
 		}
 	}
 	if (flags & TIM_FLAG_CC3) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR3);
+		if (timer_callbacks[handle].ic_cb != NULL) {
+			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR3);
 		}
 	}
 	if (flags & TIM_FLAG_CC4) {
-		if (timer_callbacks[timer].ic_cb != NULL) {
-			timer_callbacks[timer].ic_cb(timer, stm_timer->CCR4);
+		if (timer_callbacks[handle].ic_cb != NULL) {
+			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR4);
 		}
 	}
 }
