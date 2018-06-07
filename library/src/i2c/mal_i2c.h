@@ -35,6 +35,12 @@
  */
 
 /**
+* CAN handle that must be defined by hardware specific implementation. Used
+* to access the CAN functions.
+*/
+typedef struct MAL_I2C mal_i2c_s;
+
+/**
  * Possible I2C interfaces.
  */
 typedef enum {
@@ -48,8 +54,10 @@ typedef enum {
  */
 typedef struct {
     mal_i2c_e interface; /**< The I2C interface.*/
-    const mal_gpio_s *scl_gpio; /**< The GPIO of the scl pin.*/
-    const mal_gpio_s *sda_gpio; /**< The GPIO of the sda pin.*/
+    mal_gpio_port_e scl_port; /**< The port of the SCL GPIO to initialize.*/
+    uint8_t scl_pin; /**< The pin of the port of the SCL GPIO to initialize. */
+    mal_gpio_port_e sda_port; /**< The port of the SDA GPIO to initialize.*/
+    uint8_t sda_pin; /**< The pin of the port of the SDA GPIO to initialize. */
     uint64_t bitrate; /**< The bitrate of the interface.*/
 } mal_i2c_init_s;
 
@@ -87,14 +95,14 @@ typedef struct MAL_I2C_MSG mal_i2c_msg_s;
 
 /**
  * @brief This callback is used when a transaction completes.
- * @param interface The interface the transaction completed on.
+ * @param handle The handle given with the message;
  * @param packet The packet received.
  * @param result The result of the transaction.
- * @param next_msg The next message to send. This message will be sent immediately.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
+ * @param next_msg The next message to send. This message will be sent immediately. If there is no message to send,
+ * set this to #NULL.
  */
-typedef mal_error_e (*mal_i2c_callback_t)(mal_i2c_e interface, mal_i2c_packet_s *packet, mal_i2c_result_e result, mal_i2c_msg_s **next_msg);
+typedef void (*mal_i2c_callback_t)(void *handle, mal_i2c_packet_s *packet, mal_i2c_result_e result,
+                                   mal_i2c_msg_s **next_msg);
 
 /**
  * I2C message.
@@ -102,7 +110,17 @@ typedef mal_error_e (*mal_i2c_callback_t)(mal_i2c_e interface, mal_i2c_packet_s 
 typedef struct /** @cond SKIP*/MAL_I2C_MSG /** @endcond*/ {
     mal_i2c_packet_s packet; /**< The packet containing the core of the message.*/
     mal_i2c_callback_t callback; /**< The callback to execute once the transaction is complete.*/
+    void *handle; /**< This will be passed to the callback.*/
 } mal_i2c_msg_s;
+
+/**
+ * @brief Initialize an I2C interface as a master interface.
+ * @param init The initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_i2c_init_master(mal_i2c_init_s *init, mal_i2c_s *handle);
 
 /**
  * @brief Function to initialize directly the interface. Using this function
@@ -111,44 +129,41 @@ typedef struct /** @cond SKIP*/MAL_I2C_MSG /** @endcond*/ {
  * @param init Initialization parameters.
  * @param direc_init A pointer to direct initialization parameter. See the
  * hardware specific implementation to know what type this should be.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init);
+mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init, mal_i2c_s *handle);
 
 /**
  * @brief Start an I2C transfer as a master. Note that this is not a blocking
  * call. Use the callback of the message to receive the result.
- * @param interface The I2C interface from ::mal_hspec_i2c_e.
- * @param msg A pointer to the I2C message of type ::mal_hspec_i2c_msg_s.
- * @return @MAL_ERROR_OK on success.
+ * @param handle The I2C handle to start the transfer on.
+ * @param msg A pointer to the I2C message to send.
+ * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_i2c_transfer(mal_i2c_e interface, mal_i2c_msg_s *msg);
+mal_error_e mal_i2c_transfer(mal_i2c_s *handle, mal_i2c_msg_s *msg);
 
 /**
  * @brief Disable an I2C interrupt.
- * @param interface The interface to disable the interrupt from of type
- * ::mal_hspec_i2c_e.
+ * @param handle The interface to disable the interrupt from.
  * @return Returns true if interrupt was active before disabling it.
  */
-MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_e interface);
+MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_s *handle);
 
 /**
  * @brief Enable an I2C interrupt.
- * @param interface The interface to enable the interrupt from of type
- * ::mal_hspec_i2c_e.
+ * @param handle The interface to enable the interrupt from.
  * @param active A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_i2c_enable_interrupt(mal_i2c_e interface, bool active);
+MAL_DEFS_INLINE void mal_i2c_set_interrupt(mal_i2c_s *handle, bool active);
 
 /**
- * @brief Initialize an I2C interface as a master interface.
- * @param init The initialization parameters.
- * @return Returns #MAL_ERROR_OK on success.
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
  */
-mal_error_e mal_i2c_init_master(mal_i2c_init_s *init);
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

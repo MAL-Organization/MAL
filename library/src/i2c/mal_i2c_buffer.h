@@ -47,28 +47,37 @@ typedef struct {
  * A structure that contains all the necessary variables for the I2C buffer.
  */
 typedef struct {
-	mal_i2c_e interface; /**< The I2C interface.*/
+	mal_i2c_s *handle; /**< The I2C interface.*/
 	volatile mal_circular_buffer_s buffer; /**< A circular buffer.*/
 	volatile mal_i2c_msg_s active_msg; /**< The active message of the buffer.*/
+    volatile mal_i2c_callback_t callback;
+    volatile void *callback_handle;
+    mal_i2c_msg_s *cb_next_msg;
 } mal_i2c_buffer_handle_s;
 
 /**
  * @brief Function to initialize an I2C buffer.
  * @param init The initialization parameters.
- * @param handle A handle to initialize.
+ * @param buffer_handle A handle to initialize. Used to access subsequent i2c buffer calls.
+ * @param i2c_handle The I2C handle to initialize. This handle is used to access
+ * subsequent I2C functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle);
+mal_error_e mal_i2c_buffer_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *buffer_handle,
+                                mal_i2c_s *i2c_handle);
 
 /**
  * @brief Initialize an I2C buffer and an I2C interface using direct initialization.
  * @param init The initialization parameters.
- * @param handle A handle to initialize.
  * @param direct_init A pointer to direct initialization parameter. See the
  * hardware specific implementation to know what type this should be.
+ * @param buffer_handle A handle to initialize. Used to access subsequent i2c buffer calls.
+ * @param i2c_handle The I2C handle to initialize. This handle is used to access
+ * subsequent I2C functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_i2c_buffer_direct_init(mal_i2c_buffer_init_s *init, mal_i2c_buffer_handle_s *handle, const void *direct_init);
+mal_error_e mal_i2c_buffer_direct_init(mal_i2c_buffer_init_s *init, const void *direct_init,
+                                       mal_i2c_buffer_handle_s *buffer_handle, mal_i2c_s *i2c_handle);
 
 /**
  * @brief Write a message to the buffer.

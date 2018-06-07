@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_i2c.h
- *
- *  Created on: Jun 24, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -26,7 +20,29 @@
 #ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_
 #define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_I2C_H_
 
+#include "i2c/mal_i2c.h"
 #include "std/mal_stdint.h"
+#include "std/mal_bool.h"
+#include "stm32f0/stm32f0xx_i2c.h"
+
+typedef enum {
+    I2C_STATE_START,
+    I2C_STATE_RECEIVING,
+    I2C_STATE_ERROR,
+    I2C_STATE_WAITING_TRANSFER_COMPLETE,
+    I2C_STATE_TRANSMITTING,
+    I2C_STATE_WAIT_STOP
+} mal_hspec_stm32f0_i2c_states_e;
+
+typedef struct MAL_I2C {
+    mal_i2c_msg_s *msg;
+    volatile bool is_active;
+    volatile mal_hspec_stm32f0_i2c_states_e state;
+    volatile uint8_t data_ptr;
+    volatile mal_i2c_cmd_e cmd;
+    I2C_TypeDef *stm_handle;
+    IRQn_Type irq;
+} mal_i2c_s;
 
 /**
  * Struct for direct initialization of a CAN interface.
