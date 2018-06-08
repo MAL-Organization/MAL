@@ -8,10 +8,6 @@ import os
 from common import extract_properties, clean_build_folder, prepare_cmake_build, build_cmake_project
 
 
-def get_headers(build_configuration: str, cmake_file: str):
-    pass
-
-
 if __name__ == '__main__':
     properties = extract_properties(sys.argv[1])
     # Load requested build configurations

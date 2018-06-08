@@ -1,7 +1,7 @@
 import shutil
 import subprocess
 from collections import OrderedDict
-from typing import Tuple, List
+from typing import List
 
 
 def extract_properties(property_file_path: str) -> dict:
@@ -56,6 +56,7 @@ def build_cmake_project(build_path: str, target: str):
     process_arguments.append("--clean-first")
     process_arguments.append("--target")
     process_arguments.append(target)
+    process_arguments.append("-- -j 4")
     result = subprocess.call(process_arguments)
     if result != 0:
         exit(result)
