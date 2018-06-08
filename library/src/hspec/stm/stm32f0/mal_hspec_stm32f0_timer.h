@@ -31,6 +31,8 @@
 #include "timer/mal_timer.h"
 #include "mal_hspec_stm32f0_cmn.h"
 
+typedef void (*mal_hspec_stm32f0_timer_set_compare_t)(TIM_TypeDef *tim, uint32_t compare);
+
 typedef struct MAL_TIMER {
     mal_timer_e timer;
     mal_timer_callback_t callback;
@@ -40,7 +42,8 @@ typedef struct MAL_TIMER {
 } mal_timer_s;
 
 typedef struct MAL_TIMER_PWM {
-
+    mal_timer_s *timer_handle;
+    mal_hspec_stm32f0_timer_set_compare_t set_compare;
 } mal_timer_pwm_s;
 
 typedef struct MAL_TIMER_INPUT_CAPTURE {
