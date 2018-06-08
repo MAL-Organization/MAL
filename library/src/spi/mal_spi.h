@@ -27,6 +27,7 @@
 #include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
 #include "std/mal_types.h"
+#include "std/mal_bool.h"
 
 /**
  * @defgroup SPI
@@ -110,6 +111,10 @@ typedef enum {
     MAL_SPI_BIT_ORDER_MSB,//!< Most significant bit first
     MAL_SPI_BIT_ORDER_LSB //!< Least significant bit first
 } mal_spi_bit_order_e;
+
+/// @cond SKIP
+typedef struct MAL_GPIO mal_gpio_s;
+/// @endcond
 
 /**
  * All parameters to initialize an SPI interface as a master.

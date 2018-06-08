@@ -28,7 +28,8 @@ typedef struct {
 
 gnu_spi_interface_s interfaces[MAL_SPI_SIZE];
 
-mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
+mal_error_e mal_spi_init_master(mal_spi_master_init_s *init, mal_spi_s *handle) {
+	handle->interface = init->interface;
 	// Save initialization parameters
 	interfaces[init->interface].init_parameters = *init;
 	// Initialize variables
@@ -37,12 +38,12 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_spi_start_transaction(mal_spi_e interface, mal_spi_msg_s *msg) {
-	if (NULL == interfaces[interface].active_msg) {
+mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
+	if (NULL == interfaces[handle->interface].active_msg) {
 		return MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Save message
-	interfaces[interface].active_msg = msg;
+	interfaces[handle->interface].active_msg = msg;
 
 	return MAL_ERROR_OK;
 }
@@ -63,18 +64,20 @@ mal_error_e mal_hspec_mingw_spi_end_transaction(mal_spi_e interface) {
 	}
 	// Execute callback
 	mal_spi_msg_s *next_msg = NULL;
-	interfaces[interface].active_msg->callback(interfaces[interface].active_msg, &next_msg);
+	interfaces[interface].active_msg->callback(interfaces[interface].active_msg->handle,
+                                               interfaces[interface].active_msg,
+                                               &next_msg);
 	interfaces[interface].active_msg = next_msg;
 
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_e interface) {
-	MAL_DEFS_UNUSED(interface);
+MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle) {
+	MAL_DEFS_UNUSED(handle);
     return false;
 }
 
-MAL_DEFS_INLINE void mal_spi_enable_interrupt(mal_spi_e interface, bool active) {
-    MAL_DEFS_UNUSED(interface);
+MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active) {
+    MAL_DEFS_UNUSED(handle);
     MAL_DEFS_UNUSED(active);
 }
