@@ -56,7 +56,9 @@ def build_cmake_project(build_path: str, target: str):
     process_arguments.append("--clean-first")
     process_arguments.append("--target")
     process_arguments.append(target)
-    process_arguments.append("-- -j 4")
+    process_arguments.append("--")
+    process_arguments.append("-j")
+    process_arguments.append("4")
     result = subprocess.call(process_arguments)
     if result != 0:
         exit(result)
