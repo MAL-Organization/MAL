@@ -31,6 +31,8 @@
 #include "timer/mal_timer.h"
 #include "mal_hspec_stm32f0_cmn.h"
 
+#define MAL_HSPEC_STM32F0_TIMER_CHANNEL_COUNT    4
+
 typedef void (*mal_hspec_stm32f0_timer_set_compare_t)(TIM_TypeDef *tim, uint32_t compare);
 
 typedef struct MAL_TIMER {
@@ -39,6 +41,8 @@ typedef struct MAL_TIMER {
     void *handle;
     TIM_TypeDef *stm_handle;
     IRQn_Type irq;
+    mal_hertz_t count_frequency;
+    mal_timer_input_capture_s *input_capture_handles[MAL_HSPEC_STM32F0_TIMER_CHANNEL_COUNT];
 } mal_timer_s;
 
 typedef struct MAL_TIMER_PWM {
@@ -47,7 +51,8 @@ typedef struct MAL_TIMER_PWM {
 } mal_timer_pwm_s;
 
 typedef struct MAL_TIMER_INPUT_CAPTURE {
-
+    mal_timer_input_capture_callback_t callback;
+    void *callback_handle;
 } mal_timer_input_capture_s;
 
 /**

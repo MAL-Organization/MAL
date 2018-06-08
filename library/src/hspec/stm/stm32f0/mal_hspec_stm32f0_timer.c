@@ -35,12 +35,13 @@ static uint32_t mal_hspec_stm32f0_timer_get_rcc_timer(mal_timer_e timer);
 
 static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_s *handle, uint16_t flags);
 
-static mal_error_e mal_hspec_stm32f0_timer_get_time_base(TIM_TimeBaseInitTypeDef *time_base, mal_hertz_t frequency,
-                                                         mal_hertz_t delta);
+static mal_error_e mal_hspec_stm32f0_timer_get_update_time_base(TIM_TimeBaseInitTypeDef *time_base,
+                                                                mal_hertz_t frequency,
+                                                                mal_hertz_t delta);
 
-static mal_error_e mal_hspec_stm32f0_timer_common_update_init(mal_timer_e timer,
-                                                              TIM_TimeBaseInitTypeDef *init_time_base,
-                                                              mal_timer_s *handle);
+static mal_error_e mal_hspec_stm32f0_timer_common_init(mal_timer_e timer,
+                                                       TIM_TimeBaseInitTypeDef *init_time_base,
+                                                       mal_timer_s *handle);
 
 static mal_timer_s *timer1;
 static mal_timer_s *timer2;
@@ -52,10 +53,16 @@ static mal_timer_s *timer15;
 static mal_timer_s *timer16;
 static mal_timer_s *timer17;
 
-static mal_error_e mal_hspec_stm32f0_timer_common_update_init(mal_timer_e timer,
-                                                              TIM_TimeBaseInitTypeDef *init_time_base,
-                                                              mal_timer_s *handle) {
+static mal_error_e mal_hspec_stm32f0_timer_common_init(mal_timer_e timer,
+                                                       TIM_TimeBaseInitTypeDef *init_time_base,
+                                                       mal_timer_s *handle) {
     mal_error_e result;
+    // Get timer frequency
+    uint64_t timer_frequency;
+    result = mal_hspec_stm32f0_timer_get_input_clk(&timer_frequency);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
     // Initialise peripheral clock
     result = mal_hspec_stm32f0_timer_init_timer_rcc(timer);
     if (MAL_ERROR_OK != result) {
@@ -64,6 +71,7 @@ static mal_error_e mal_hspec_stm32f0_timer_common_update_init(mal_timer_e timer,
     // Initialize handle
     handle->timer = timer;
     handle->stm_handle = mal_hspec_stm32f0_timer_get_typedef(timer);
+    handle->count_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ((timer_frequency * 1000ULL) / (uint64_t)init_time_base->TIM_Prescaler);
     // Initialise base timer
     TIM_TimeBaseInit(handle->stm_handle, init_time_base);
     // Save handle
@@ -107,7 +115,7 @@ static mal_error_e mal_hspec_stm32f0_timer_common_task_init(mal_timer_init_task_
                                                             mal_timer_s *handle) {
     mal_error_e result;
     // Initialise common update parts
-    result = mal_hspec_stm32f0_timer_common_update_init(init->timer, init_time_base, handle);
+    result = mal_hspec_stm32f0_timer_common_init(init->timer, init_time_base, handle);
     if (MAL_ERROR_OK != result) {
         return result;
     }
@@ -137,8 +145,9 @@ mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *
 	return mal_hspec_stm32f0_timer_common_task_init(init, &params, handle);
 }
 
-static mal_error_e mal_hspec_stm32f0_timer_get_time_base(TIM_TimeBaseInitTypeDef *time_base, mal_hertz_t frequency,
-                                                         mal_hertz_t delta) {
+static mal_error_e mal_hspec_stm32f0_timer_get_update_time_base(TIM_TimeBaseInitTypeDef *time_base,
+                                                                mal_hertz_t frequency,
+                                                                mal_hertz_t delta) {
     mal_error_e result;
     // Get timer frequency
     uint64_t timer_frequency;
@@ -198,7 +207,7 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
 	mal_error_e result;
 	// Get timer frequency
     TIM_TimeBaseInitTypeDef params;
-	result = mal_hspec_stm32f0_timer_get_time_base(&params, init->frequency, init->delta);
+	result = mal_hspec_stm32f0_timer_get_update_time_base(&params, init->frequency, init->delta);
 	if (MAL_ERROR_OK != result) {
         return result;
 	}
@@ -591,14 +600,14 @@ mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, 
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Get timer parameters
     TIM_TimeBaseInitTypeDef time_base_init;
-    result = mal_hspec_stm32f0_timer_get_time_base(&time_base_init, init->frequency, init->delta);
+    result = mal_hspec_stm32f0_timer_get_update_time_base(&time_base_init, init->frequency, init->delta);
     if (MAL_ERROR_OK != result) {
         return result;
     }
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
-	    result = mal_hspec_stm32f0_timer_common_update_init(init->timer, &time_base_init, handle);
+	    result = mal_hspec_stm32f0_timer_common_init(init->timer, &time_base_init, handle);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
@@ -688,131 +697,122 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer,
-						                   mal_hertz_t frequency) {
+static mal_error_e mal_hspec_stm32f0_timer_get_count_time_base(TIM_TimeBaseInitTypeDef *time_base,
+                                                               mal_timer_e timer,
+                                                               mal_hertz_t frequency) {
+    mal_error_e result;
+    // Get timer frequency
+    uint64_t timer_frequency;
+    result = mal_hspec_stm32f0_timer_get_input_clk(&timer_frequency);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Initialize time base timer
+    TIM_TimeBaseStructInit(time_base);
+    time_base->TIM_CounterMode = TIM_CounterMode_Up;
+    // Compute prescaler
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
+    if (0 == target_frequency) {
+        return MAL_ERROR_CLOCK_ERROR;
+    }
+    uint32_t prescaler = (uint32_t)((timer_frequency * 1000ULL) / timer_frequency);
+    if (prescaler > (UINT16_MAX+ 1)) {
+        return MAL_ERROR_CLOCK_ERROR;
+    }
+    // Round up prescaler to at least 1
+    if (0 == prescaler) {
+        prescaler += 1;
+    }
+    time_base->TIM_Prescaler = (uint16_t)(prescaler - 1);
+    // Set maximum value
+    uint8_t resolution;
+    result = mal_timer_get_resolution(timer, &resolution);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    uint32_t max_value = (uint32_t)((1ULL << ((uint64_t)resolution)) - 1ULL);
+    time_base->TIM_Period = max_value;
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle) {
 	mal_error_e result;
-	// Initialize peripheral clock
-	result = mal_hspec_stm32f0_timer_init_timer_rcc(timer);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
-	// Get timer frequency
-	uint64_t timer_frequency;
-	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
 	// Initialize time base timer
 	TIM_TimeBaseInitTypeDef params;
-	TIM_TimeBaseStructInit(&params);
-	params.TIM_CounterMode = TIM_CounterMode_Up;
-	// Compute prescaler
-	if (0 == frequency) {
-		return MAL_ERROR_CLOCK_ERROR;
-	}
-	uint32_t prescaler = (timer_frequency * 1000) / frequency;
-	if (prescaler > (UINT16_MAX+ 1)) {
-		return MAL_ERROR_CLOCK_ERROR;
-	}
-	// Round up prescaler to at least 1
-	if (0 == prescaler) {
-		prescaler += 1;
-	}
-	params.TIM_Prescaler = prescaler - 1;
-	// Set maximum value
-	uint8_t resolution;
-	result = mal_timer_get_resolution(timer, &resolution);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	uint32_t max_value = (((uint64_t)1) << ((uint64_t)resolution)) - (uint64_t)1;
-	params.TIM_Period = max_value;
-
-	TIM_TimeBaseInit(tim, &params);
+	result = mal_hspec_stm32f0_timer_get_count_time_base(&params, init->timer, init->frequency);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    result = mal_hspec_stm32f0_timer_common_init(init->timer, &params, handle);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
 	// Enable timer
-	TIM_Cmd(tim, ENABLE);
+	TIM_Cmd(handle->stm_handle, ENABLE);
 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *frequency) {
+mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *frequency) {
+	*frequency = handle->count_frequency;
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {
+	*count = handle->stm_handle->CNT;
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, mal_timer_s *handle,
+                                         mal_timer_input_capture_s *input_capture_handle) {
 	mal_error_e result;
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
-	if (NULL == tim) {
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	// Get timer frequency
-	uint64_t timer_frequency;
-	result = mal_hspec_stm32f0_timer_get_input_clk(timer, &timer_frequency);
-	if (MAL_ERROR_OK != result) {
-		return result;
-	}
-	// Compute frequency
-	mal_hertz_t prescaler_value = (uint32_t)tim->PSC + 1;
-	*frequency = (mal_hertz_t)timer_frequency / prescaler_value;
-
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count) {
-	// Get timer
-	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(timer);
-	if (NULL == tim) {
-		return MAL_ERROR_HARDWARE_INVALID;
-	}
-	// Get value
-	*count = tim->CNT;
-
-	return MAL_ERROR_OK;
-}
-
-mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init) {
-	mal_error_e result;
+    // Get time base parameters
+    TIM_TimeBaseInitTypeDef time_base_init;
+    result = mal_hspec_stm32f0_timer_get_count_time_base(&time_base_init, init->timer, init->frequency);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
 	// Get timer
 	TIM_TypeDef *tim = mal_hspec_stm32f0_timer_get_typedef(init->timer);
 	// Check if the timer is already initialized
 	if (!(tim->CR1 & TIM_CR1_CEN)) {
 		// Initialize timer
-		result = mal_timer_init_count_unmanaged(init->timer, init->frequency);
-		if (MAL_ERROR_OK != result) {
-			return result;
-		}
+        result = mal_hspec_stm32f0_timer_common_init(init->timer, &time_base_init, handle);
+        if (MAL_ERROR_OK != result) {
+            return result;
+        }
+        // Enable timer
+        TIM_Cmd(handle->stm_handle, ENABLE);
 	} else {
-		// Timer is already initialized check if parameters match
-		mal_timer_state_s state;
-		result = mal_timer_get_state(init->timer, &state);
-		if (MAL_ERROR_OK != result) {
-			return result;
-		}
-		// Check frequency
-		if (init->frequency != state.frequency) {
-			return MAL_ERROR_HARDWARE_UNAVAILABLE;
-		}
+        // Check parameters
+        if (handle->stm_handle->ARR != time_base_init.TIM_Period ||
+            handle->stm_handle->PSC != time_base_init.TIM_Prescaler) {
+            return MAL_ERROR_HARDWARE_UNAVAILABLE;
+        }
 	}
 	// Enable GPIO clock
-	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->input_io->port), ENABLE);
+	RCC_AHBPeriphClockCmd(mal_hspec_stm32f0_get_rcc_gpio_port(init->port), ENABLE);
 	// Configure alternate function
 	uint8_t function;
-	result = mal_hspec_stm32f0_get_timer_af(init->input_io, init->timer, &function);
+	result = mal_hspec_stm32f0_get_timer_af(init->port, init->pin, init->timer, &function);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
-	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->input_io->port), init->input_io->pin, function);
+	GPIO_PinAFConfig(mal_hspec_stm32f0_get_gpio_typedef(init->port), init->pin, function);
 	// Configure GPIO
 	GPIO_InitTypeDef gpio_init;
-	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->input_io->pin);
+	gpio_init.GPIO_Pin = MAL_HSPEC_STM32F0_GET_GPIO_PIN(init->pin);
 	gpio_init.GPIO_Mode = GPIO_Mode_AF;
 	gpio_init.GPIO_Speed = GPIO_Speed_50MHz;
 	gpio_init.GPIO_OType = GPIO_OType_PP;
 	gpio_init.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->input_io->port), &gpio_init);
-	// Disable timer while we set the PWM output
+	GPIO_Init(mal_hspec_stm32f0_get_gpio_typedef(init->port), &gpio_init);
+	// Disable timer while we set the IO
 	TIM_Cmd(tim, DISABLE);
 	// Get timer channel
-	uint16_t timer_channel = mal_hspec_stm32f0_timer_get_channel(init->input_io, init->timer);
+	uint16_t timer_channel = mal_hspec_stm32f0_timer_get_channel(init->port, init->pin, init->timer);
+	uint16_t ic_index = (uint16_t)(timer_channel / 4);
 	// Configure input channel
 	TIM_ICInitTypeDef input_capture_init;
 	TIM_ICStructInit(&input_capture_init);
@@ -852,13 +852,15 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 	}
 	// Initialize input
 	TIM_ICInit(tim, &input_capture_init);
-	// Save callback
-	timer_callbacks[init->timer].ic_cb = init->callback;
+	// Save handles
+    handle->irq = mal_hspec_stm32f0_get_timer_compare_irq(init->timer);
+    handle->input_capture_handles[ic_index] = input_capture_handle;
+    input_capture_handle->callback = init->callback;
+    input_capture_handle->callback_handle = init->callback_handle;
 	// Enable NVIC interrupt for timer
 	if (NULL != init->callback) {
-		IRQn_Type irq = mal_hspec_stm32f0_get_timer_compare_irq(init->timer);
-		NVIC_EnableIRQ(irq);
-		NVIC_SetPriority(irq, 2); // MAL Issue #19 Find a way to manage priorities for interrupts
+		NVIC_EnableIRQ(handle->irq);
+		NVIC_SetPriority(handle->irq, 2); // MAL Issue #19 Find a way to manage priorities for interrupts
 		// Enable timer interrupt
 		uint16_t tim_interrupt;
 		switch (timer_channel) {
@@ -887,23 +889,27 @@ mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init
 static void mal_hspec_stm32f0_timer_input_capture_interrupt(mal_timer_s *handle, uint16_t flags) {
 	// Check every channel and execute callbacks
 	if (flags & TIM_FLAG_CC1) {
-		if (timer_callbacks[handle].ic_cb != NULL) {
-			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR1);
+		if (handle->input_capture_handles[0]->callback != NULL) {
+            handle->input_capture_handles[0]->callback(handle->input_capture_handles[0]->callback_handle,
+                                                       handle->stm_handle->CCR1);
 		}
 	}
 	if (flags & TIM_FLAG_CC2) {
-		if (timer_callbacks[handle].ic_cb != NULL) {
-			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR2);
+		if (handle->input_capture_handles[1]->callback != NULL) {
+            handle->input_capture_handles[1]->callback(handle->input_capture_handles[1]->callback_handle,
+                                                       handle->stm_handle->CCR2);
 		}
 	}
 	if (flags & TIM_FLAG_CC3) {
-		if (timer_callbacks[handle].ic_cb != NULL) {
-			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR3);
+		if (handle->input_capture_handles[2]->callback != NULL) {
+            handle->input_capture_handles[2]->callback(handle->input_capture_handles[2]->callback_handle,
+                                                       handle->stm_handle->CCR3);
 		}
 	}
 	if (flags & TIM_FLAG_CC4) {
-		if (timer_callbacks[handle].ic_cb != NULL) {
-			timer_callbacks[handle].ic_cb(handle, stm_timer->CCR4);
+		if (handle->input_capture_handles[3]->callback != NULL) {
+            handle->input_capture_handles[3]->callback(handle->input_capture_handles[3]->callback_handle,
+                                                       handle->stm_handle->CCR4);
 		}
 	}
 }
