@@ -23,6 +23,10 @@
 #include "std/mal_bool.h"
 #include "i2c/mal_i2c.h"
 
+typedef struct MAL_I2C {
+    mal_i2c_e interface;
+} mal_i2c_s;
+
 mal_error_e mal_hspec_gnu_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_s *msg);
 
 bool mal_hspec_gnu_i2c_lock_interface(mal_i2c_e interface, uint32_t timeout_ms);

@@ -35,7 +35,8 @@ typedef struct {
 
 static gnu_i2c_interface_s i2c_interfaces[MAL_I2C_SIZE];
 
-mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
+mal_error_e mal_i2c_init_master(mal_i2c_init_s *init, mal_i2c_s *handle) {
+	handle->interface = init->interface;
 	// Save init
 	i2c_interfaces[init->interface].init = *init;
 	// Create mutex
@@ -49,14 +50,14 @@ mal_error_e mal_i2c_init_master(mal_i2c_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init) {
+mal_error_e mal_i2c_master_direct_init(mal_i2c_init_s *init, const void *direct_init, mal_i2c_s *handle) {
 	MAL_DEFS_UNUSED(direct_init);
-    return mal_i2c_init_master(init);
+    return mal_i2c_init_master(init, handle);
 }
 
-mal_error_e mal_i2c_transfer(mal_i2c_e interface, mal_i2c_msg_s *msg) {
+mal_error_e mal_i2c_transfer(mal_i2c_s *handle, mal_i2c_msg_s *msg) {
 	// Write to buffer
-	return mal_circular_buffer_write(&i2c_interfaces[interface].tx_circular_buffer, msg);
+	return mal_circular_buffer_write(&i2c_interfaces[handle->interface].tx_circular_buffer, msg);
 }
 
 mal_error_e mal_hspec_gnu_i2c_get_transfer_msg(mal_i2c_e interface, mal_i2c_msg_s *msg) {
@@ -77,18 +78,18 @@ void mal_hspec_gnu_i2c_unlock_interface(mal_i2c_e interface) {
     pthread_mutex_unlock(&i2c_interfaces[interface].mutex);
 }
 
-MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_e interface) {
-	bool interface_state = i2c_interfaces[interface].interrupt_active;
+MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_s *handle) {
+	bool interface_state = i2c_interfaces[handle->interface].interrupt_active;
 	if (interface_state) {
-		mal_hspec_gnu_i2c_lock_interface(interface, I2C_LOCK_DELAY);
-		i2c_interfaces[interface].interrupt_active = false;
+		mal_hspec_gnu_i2c_lock_interface(handle->interface, I2C_LOCK_DELAY);
+		i2c_interfaces[handle->interface].interrupt_active = false;
 	}
 	return interface_state;
 }
 
-MAL_DEFS_INLINE void mal_i2c_enable_interrupt(mal_i2c_e interface, bool active) {
+MAL_DEFS_INLINE void mal_i2c_set_interrupt(mal_i2c_s *handle, bool active) {
 	if (active) {
-		i2c_interfaces[interface].interrupt_active = true;
-		mal_hspec_gnu_i2c_unlock_interface(interface);
+		i2c_interfaces[handle->interface].interrupt_active = true;
+		mal_hspec_gnu_i2c_unlock_interface(handle->interface);
 	}
 }

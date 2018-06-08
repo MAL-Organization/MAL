@@ -26,5 +26,6 @@
 #include "hspec/gnu/mal_hspec_gnu_timer.h"
 #include "hspec/gnu/mal_hspec_gnu_adc.h"
 #include "hspec/gnu/mal_hspec_gnu_can.h"
+#include "hspec/gnu/mal_hspec_gnu_i2c.h"
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_H_ */
