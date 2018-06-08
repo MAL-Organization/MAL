@@ -25,5 +25,6 @@
 #include "hspec/gnu/mal_hspec_gnu_dac.h"
 #include "hspec/gnu/mal_hspec_gnu_timer.h"
 #include "hspec/gnu/mal_hspec_gnu_adc.h"
+#include "hspec/gnu/mal_hspec_gnu_can.h"
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_H_ */

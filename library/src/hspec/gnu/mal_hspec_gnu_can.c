@@ -25,15 +25,18 @@
 
 typedef struct {
 	mal_can_init_s init;
+	mal_can_s *handle;
 	mal_circular_buffer_s tx_circular_buffer;
 	mal_can_msg_s message_buffer[MESSAGE_BUFFER_SIZE];
 } gnu_can_interface_s;
 
 static gnu_can_interface_s can_interfaces[MAL_CAN_SIZE];
 
-mal_error_e mal_can_init(mal_can_init_s *init) {
+mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
+	handle->interface = init->interface;
 	// Save init
 	can_interfaces[init->interface].init = *init;
+	can_interfaces[init->interface].handle = handle;
 	// Initialise circular buffer
 	mal_circular_buffer_init((void*)can_interfaces[init->interface].message_buffer,
 							 sizeof(mal_can_msg_s),
@@ -42,15 +45,15 @@ mal_error_e mal_can_init(mal_can_init_s *init) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init) {
+mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init, mal_can_s *handle) {
 	MAL_DEFS_UNUSED(direct_init);
-    return mal_can_init(init);
+    return mal_can_init(init, handle);
 }
 
-mal_error_e mal_can_transmit(mal_can_e interface, mal_can_msg_s *msg) {
+mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
 	mal_error_e result;
 	// Write to buffer
-	result = mal_circular_buffer_write(&can_interfaces[interface].tx_circular_buffer, msg);
+	result = mal_circular_buffer_write(&can_interfaces[handle->interface].tx_circular_buffer, msg);
 	if (MAL_ERROR_OK != result) {
 		return MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
@@ -66,40 +69,40 @@ mal_error_e mal_hspec_gnu_can_get_tx_msg(mal_can_e interface, mal_can_msg_s *msg
 	}
 	// Execute tx callback
 	mal_can_msg_s next_msg;
-	result = can_interfaces[interface].init.tx_callback(interface, &next_msg);
+	result = can_interfaces[interface].init.tx_callback(can_interfaces[interface].init.tx_callback_handle, &next_msg);
 	if (MAL_ERROR_OK == result) {
-	    mal_can_transmit(interface, &next_msg);
+	    mal_can_transmit(can_interfaces[interface].handle, &next_msg);
 	}
 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_can_add_filter(mal_can_e interface, mal_can_filter_s *filter) {
-	MAL_DEFS_UNUSED(interface);
+mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
+	MAL_DEFS_UNUSED(handle);
 	MAL_DEFS_UNUSED(filter);
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_can_remove_filter(mal_can_e interface, mal_can_filter_s *filter) {
-	MAL_DEFS_UNUSED(interface);
+mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
+	MAL_DEFS_UNUSED(handle);
 	MAL_DEFS_UNUSED(filter);
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_gnu_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg) {
-	return can_interfaces[interface].init.rx_callback(interface, msg);
+void mal_hspec_gnu_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg) {
+	return can_interfaces[interface].init.rx_callback(can_interfaces[interface].init.rx_callback_handle, msg);
 }
 
-void mal_can_deinit(mal_can_e interface) {
-    MAL_DEFS_UNUSED(interface);
+mal_error_e mal_can_deinit(mal_can_s *handle) {
+    MAL_DEFS_UNUSED(handle);
 }
 
-MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_e interface) {
-	MAL_DEFS_UNUSED(interface);
+MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_s *handle) {
+	MAL_DEFS_UNUSED(handle);
     return false;
 }
 
-MAL_DEFS_INLINE void mal_can_enable_interrupt(mal_can_e interface, bool active) {
-    MAL_DEFS_UNUSED(interface);
+MAL_DEFS_INLINE void mal_can_set_interrupt(mal_can_s *handle, bool active) {
+    MAL_DEFS_UNUSED(handle);
     MAL_DEFS_UNUSED(active);
 }
