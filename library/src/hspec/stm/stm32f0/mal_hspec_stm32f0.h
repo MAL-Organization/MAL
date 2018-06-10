@@ -37,6 +37,7 @@
 #include "mal_hspec_stm32f0_can.h"
 #include "mal_hspec_stm32f0_i2c.h"
 #include "mal_hspec_stm32f0_spi.h"
+#include "mal_hspec_stm32f0_timer.h"
 
 #define MAL_HSPEC_STM32F0_MAX_FREQUENCY	48000000
 
