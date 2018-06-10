@@ -5,8 +5,6 @@ function(ConsoleProcessMessage)
     execute_process(COMMAND ${CMAKE_COMMAND} -E echo "${ARGN}")
 endfunction()
 
-message(STATUS ${MAL_TOOLCHAIN_NAME})
-
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -78,7 +76,6 @@ if(MAL_TOOLCHAIN_NAME STREQUAL "mingw" OR MAL_TOOLCHAIN_NAME STREQUAL "cygwin" O
     file(GLOB_RECURSE GNU_HAL_SOURCES "src/hspec/gnu/*.c" "src/hspec/gnu/*.h")
     add_library(GNU ${COMMON_SRCS};${GNU_HAL_SOURCES})
     set_target_properties(GNU PROPERTIES OUTPUT_NAME "mal")
-    target_include_directories(GNU PRIVATE ${COMMON_STM_INCS})
     target_compile_options(GNU BEFORE PRIVATE ${COMMON_OPTIONS})
     target_compile_definitions(GNU PRIVATE -DMAL_GNU -DMAL_FLOAT)
     get_target_property(GNU_PROJECT_SOURCES GNU SOURCES)
@@ -110,7 +107,9 @@ set(COMMON_STM32F0_SRCS ${COMMON_STM_SRCS};${STM32F0_SP_SOURCES};src/hspec/stm/s
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_serial.c;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.h;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_uuid.c;
-        src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h src/hspec/stm/stm32f0/mal_hspec_stm32f0_dac.h src/hspec/stm/stm32f0/mal_hspec_stm32f0_gpio.h src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.h)
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_dac.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_gpio.h;
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.h;cmsis/cm0/core_cm0.h;cmsis/cm0/core_cm0.c)
 set(COMMON_STM32F0_OPTIONS -mcpu=cortex-m0;-mfloat-abi=soft;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F0_DEFS ${COMMON_STM_DEFS};-DMAL_STM32F0;-DUSE_STDPERIPH_DRIVER)
 # STM32F072 sections
