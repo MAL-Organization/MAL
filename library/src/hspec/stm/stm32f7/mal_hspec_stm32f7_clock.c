@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f7_clock.c
- *
- *  Created on: May 3, 2018
- *      Author: olivi
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
