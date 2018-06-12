@@ -63,7 +63,7 @@ typedef struct {
  * @brief This function will uninitialize a CAN buffer.
  * @param handle The handle to the CAN buffer.
  */
-#define mal_can_buffer_deinit(handle) mal_can_deinit((handle)->handle)
+#define mal_can_buffer_deinit(buffer) mal_can_deinit((buffer)->handle)
 
 /**
  * @brief Initialize a CAN buffer and a CAN interface.
