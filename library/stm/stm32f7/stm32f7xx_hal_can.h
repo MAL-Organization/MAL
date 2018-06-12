@@ -233,6 +233,8 @@ typedef struct __CAN_HandleTypeDef
   __IO uint32_t               ErrorCode;                 /*!< CAN Error code.
                                                               This parameter can be a value of @ref CAN_Error_Code */
 
+    void                      *Parent;                    /*!< Added by MAL                      */
+
 } CAN_HandleTypeDef;
 
 /**

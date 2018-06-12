@@ -39,4 +39,6 @@ mal_error_e mal_hspec_stm32f7_gpio_enable_clock(mal_gpio_port_e port);
 
 GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port);
 
+mal_error_e mal_hspec_stm32f7_gpio_init_alternate(mal_gpio_port_e port, uint8_t pin, uint32_t alternate);
+
 #endif //MAL_MAL_HSPEC_STM32F7_GPIO_H

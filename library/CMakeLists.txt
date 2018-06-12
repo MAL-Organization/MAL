@@ -31,7 +31,7 @@ include_directories(src)
 
 # Top level source files
 set(ADC_SRCS src/adc/mal_adc.c src/adc/mal_adc.h)
-set(CAN_SRCS src/can/mal_can.h src/can/mal_can_buffer.c src/can/mal_can_buffer.h)
+set(CAN_SRCS src/can/mal_can.h src/can/mal_can_buffer.c src/can/mal_can_buffer.h src/can/mal_can_definitions.h)
 set(CLOCK_SRCS src/clock/mal_clock.c src/clock/mal_clock.h)
 set(DAC_SRCS src/dac/mal_dac.c src/dac/mal_dac.h)
 set(FLASH_SRCS src/flash/mal_flash.c src/flash/mal_flash.h)
@@ -91,7 +91,8 @@ set(COMMON_ARM_OPTIONS ${COMMON_OPTIONS};-mthumb;-fmessage-length=0;-fsigned-cha
         -ffreestanding)
 # STM sections
 set(COMMON_STM_INCS ${COMMON_ARM_INCS};stm)
-set(COMMON_STM_SRCS ${COMMON_ARM_SRCS};src/hspec/stm/mal_hspec_stm.h)
+set(COMMON_STM_SRCS ${COMMON_ARM_SRCS};src/hspec/stm/mal_hspec_stm.h;src/hspec/stm/mal_hspec_stm_bcan.h;
+        src/hspec/stm/mal_hspec_stm_bcan.c)
 set(COMMON_STM_DEFS -DMAL_STM)
 # STM32F0 sections
 file(GLOB_RECURSE STM32F0_SP_SOURCES "stm/stm32f0/*.c" "stm/stm32f0/*.h")
@@ -126,7 +127,7 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_serial.h;src/hspec/stm/stm32f7/mal_hspec_stm32f7_startup.c;
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.c;src/hspec/stm/stm32f7/mal_hspec_stm32f7_timer.h;
         cmsis/cm7/core_cm7.h;${STM32F7_HAL_SOURCES};src/hspec/stm/stm32f7/mal_hspec_stm32f7_gpio.h;
-        src/gpio/mal_gpio_definitions.h)
+        src/hspec/stm/stm32f7/mal_hspec_stm32f7_can.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_can.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 if(MAL_TOOLCHAIN_NAME STREQUAL "arm")

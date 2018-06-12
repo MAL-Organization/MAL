@@ -23,6 +23,7 @@
 #ifndef CAN_MAL_CAN_H_
 #define CAN_MAL_CAN_H_
 
+#include "mal_can_definitions.h"
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
 #include "gpio/mal_gpio_definitions.h"
@@ -52,16 +53,9 @@ typedef struct MAL_CAN mal_can_s;
 typedef enum {
     MAL_CAN_1 = 0,  //!< MAL_HSPEC_CAN_1
     MAL_CAN_2 = 1,  //!< MAL_HSPEC_CAN_2
-    MAL_CAN_SIZE = 2//!< MAL_HSPEC_CAN_SIZE
+    MAL_CAN_3 = 2,  //!< MAL_HSPEC_CAN_3
+    MAL_CAN_SIZE = 3//!< MAL_HSPEC_CAN_SIZE
 } mal_can_e;
-
-/**
- * The possible ID types.
- */
-typedef enum {
-    MAL_CAN_ID_STANDARD,//!< MAL_HSPEC_CAN_ID_STANDARD
-    MAL_CAN_ID_EXTENDED //!< MAL_HSPEC_CAN_ID_EXTENDED
-} mal_can_id_type_e;
 
 /**
  * The variables related to a CAN message.
@@ -105,16 +99,6 @@ typedef struct {
     mal_can_rx_callback_t rx_callback; /**< The callback to be executed when a message is received.*/
     void *rx_callback_handle; /**< The handle that will be passed to the TX callback.*/
 } mal_can_init_s;
-
-/**
- * The variables of a CAN filter.
- */
-typedef struct {
-    uint32_t id; /**< The id of the filter.*/
-    uint32_t mask; /**< The mask of the filter. Only bits of id matching with
-                        bits equal to 1 of the filter will be considered.*/
-    mal_can_id_type_e id_type; /**< The type of ID to filter.*/
-} mal_can_filter_s;
 
 /**
  * @brief Initialize a CAN interface.

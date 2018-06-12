@@ -1,7 +1,7 @@
 /**
- * @file mal_gpio_definitions.h
+ * @file mal_can_definitions.h
  * @author Olivier Allaire
- * @date May 17 2018
+ * @date June 12 2018
  * @copyright Copyright (c) 2018 Olivier Allaire
  * @par This file is part of MAL.
  *
@@ -20,32 +20,34 @@
  * @brief Hardware independent definitions for GPIOs.
  */
 
-#ifndef MAL_MAL_GPIO_DEFINITIONS_H
-#define MAL_MAL_GPIO_DEFINITIONS_H
+#ifndef MAL_MAL_CAN_DEFINITIONS_H
+#define MAL_MAL_CAN_DEFINITIONS_H
+
+#include "std/mal_stdint.h"
 
 /**
- * @addtogroup GPIO
+ * @addtogroup CAN
  * @{
  */
 
 /**
- * Possible GPIO ports.
- */
+* The possible ID types.
+*/
 typedef enum {
-    MAL_GPIO_PORT_A = 0,  //!< MAL_PORT_A
-    MAL_GPIO_PORT_B = 1,  //!< MAL_PORT_B
-    MAL_GPIO_PORT_C = 2,  //!< MAL_PORT_C
-    MAL_GPIO_PORT_D = 3,  //!< MAL_PORT_D
-    MAL_GPIO_PORT_E = 4,  //!< MAL_PORT_E
-    MAL_GPIO_PORT_F = 5,  //!< MAL_PORT_F
-    MAL_GPIO_PORT_G = 6,  //!< MAL_PORT_G
-    MAL_GPIO_PORT_H = 7,  //!< MAL_PORT_H
-    MAL_GPIO_PORT_I = 8,  //!< MAL_PORT_I
-    MAL_GPIO_PORT_SIZE = 9 //!< MAL_PORT_SIZE
-} mal_gpio_port_e;
+    MAL_CAN_ID_STANDARD,//!< MAL_HSPEC_CAN_ID_STANDARD
+    MAL_CAN_ID_EXTENDED //!< MAL_HSPEC_CAN_ID_EXTENDED
+} mal_can_id_type_e;
 
-
+/**
+ * The variables of a CAN filter.
+ */
+typedef struct {
+    uint32_t id; /**< The id of the filter.*/
+    uint32_t mask; /**< The mask of the filter. Only bits of id matching with
+                        bits equal to 1 of the filter will be considered.*/
+    mal_can_id_type_e id_type; /**< The type of ID to filter.*/
+} mal_can_filter_s;
 
 /** @}*/
 
-#endif //MAL_MAL_GPIO_DEFINITIONS_H
+#endif //MAL_MAL_CAN_DEFINITIONS_H

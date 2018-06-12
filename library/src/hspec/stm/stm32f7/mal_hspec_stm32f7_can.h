@@ -17,32 +17,21 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
-#define HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_
+#ifndef MAL_MAL_HSPEC_STM32F7_CAN_H
+#define MAL_MAL_HSPEC_STM32F7_CAN_H
 
-#include "can/mal_can.h"
-#include "std/mal_stdlib.h"
-#include "std/mal_stdint.h"
-#include "std/mal_bool.h"
+#include "stm32f7/stm32f7xx_hal_can.h"
+#include "stm32f7/stm32f7xx.h"
 #include "hspec/stm/mal_hspec_stm_bcan.h"
+#include "std/mal_bool.h"
 
 typedef struct MAL_CAN {
-    mal_can_tx_callback_t tx_callback;
-    void *tx_callback_handle;
-    mal_can_rx_callback_t rx_callback;
-    void *rx_callback_handle;
-    mal_hspec_stm_bcan_filter_banks_s can_filter_banks;
-    volatile bool interface_active;
+    CAN_HandleTypeDef hal_can_handle;
+    bool interface_active;
+    IRQn_Type f0_irq;
+    IRQn_Type f1_irq;
+    IRQn_Type tx_irq;
+    mal_hspec_stm_bcan_filter_banks_s filter_banks;
 } mal_can_s;
 
-/**
- * Struct for direct initialization of a CAN interface.
- */
-typedef struct {
-	uint8_t bs1;		//!< TSEG1 register
-	uint8_t bs2;		//!< TSEG2 register
-	uint8_t sjw;		//!< SJW register
-	uint16_t prescaler;	//!< Prescaler register
-} mal_hspec_stm32f0_can_direct_init_s;
-
-#endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_CAN_H_ */
+#endif //MAL_MAL_HSPEC_STM32F7_CAN_H
