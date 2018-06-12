@@ -44,7 +44,7 @@ set(SERIAL_SRCS src/serial/mal_serial.h src/serial/mal_serial_buffer.c src/seria
 set(SPI_SRCS src/spi/mal_spi.h)
 set(STARTUP_SRCS src/startup/mal_startup.c src/startup/mal_startup.h)
 set(STD_SRCS src/std/mal_error.h src/std/mal_stdint.h src/std/mal_bool.h src/std/mal_defs.h src/std/mal_math.c
-        src/std/mal_math.h src/std/mal_stdlib.h src/std/mal_types.h)
+        src/std/mal_math.h src/std/mal_stdlib.h src/std/mal_types.h src/std/mal_string.h src/std/mal_stdarg.h)
 set(TIMER_SRCS src/timer/mal_timer.c src/timer/mal_timer.h)
 set(UTILS_SRCS src/utils/mal_circular_buffer.c src/utils/mal_circular_buffer.h src/utils/mal_e3prom.c
         src/utils/mal_e3prom.h src/utils/mal_pool.c src/utils/mal_pool.h)
