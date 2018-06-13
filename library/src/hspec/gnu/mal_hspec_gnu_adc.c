@@ -93,12 +93,12 @@ bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc) {
 	return adc_array[adc].callback != NULL;
 }
 
-MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_s *handle) {
+MAL_DEFS_INLINE void mal_adc_disable_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state) {
 	MAL_DEFS_UNUSED(handle);
-    return false;
+    MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_adc_set_interrupt(mal_adc_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_adc_restore_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(active);
+    MAL_DEFS_UNUSED(state);
 }

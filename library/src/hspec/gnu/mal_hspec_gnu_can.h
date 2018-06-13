@@ -26,6 +26,10 @@ typedef struct MAL_CAN {
     mal_can_e interface;
 } mal_can_s;
 
+typedef struct MAL_CAN_INTERRUPT_STATE {
+
+} mal_can_interrupt_state_s;
+
 mal_error_e mal_hspec_gnu_can_get_tx_msg(mal_can_e interface, mal_can_msg_s *msg);
 
 void mal_hspec_gnu_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg);

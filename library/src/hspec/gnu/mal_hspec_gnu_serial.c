@@ -62,12 +62,12 @@ mal_error_e mal_hspec_gnu_serial_push_rx_data(mal_serial_s *handle, uint16_t dat
     return handle->init.rx_callback(handle->init.rx_callback_handle, data);
 }
 
-MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
     MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+MAL_DEFS_INLINE void mal_serial_restore_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
     MAL_DEFS_UNUSED(state);
 }

@@ -167,7 +167,7 @@ mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init, m
 
 mal_error_e mal_can_deinit(mal_can_s *handle) {
 	// Disable interrupt
-	mal_can_disable_interrupt(handle);
+    mal_can_disable_interrupt(handle, NULL);
 	// Uninitialize interface
 	CAN_DeInit(CAN);
 }
@@ -220,7 +220,8 @@ static void can_read_fifo(uint8_t fifo) {
 mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
 	mal_error_e result = MAL_ERROR_OK;
 	// Disable interrupts to get true status of TX queue
-	bool active = mal_can_disable_interrupt(handle);
+    mal_can_interrupt_state_s state;
+	mal_can_disable_interrupt(handle, &state);
 	// Check if queue is empty
 	if (!handle->interface_active) {
 		handle->interface_active = true;
@@ -230,7 +231,7 @@ mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 
-    mal_can_set_interrupt(handle, active);
+	mal_can_restore_interrupt(handle, &state);
 
 	return result;
 }
@@ -255,7 +256,8 @@ static void can_transmit_msg(mal_can_msg_s *msg) {
 mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 	mal_error_e result;
 	// Disable interrupts
-	bool active = mal_can_disable_interrupt(handle);
+    mal_can_interrupt_state_s state;
+	mal_can_disable_interrupt(handle, &state);
 	// Find a free filter
 	uint8_t filter_index;
 	result = mal_hspec_stm_bcan_add_filter(&handle->can_filter_banks, filter, &filter_index);
@@ -282,14 +284,15 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 		CAN_FilterInit(&filter_init);
 	}
 
-	mal_can_set_interrupt(handle, active);
+	mal_can_restore_interrupt(handle, &state);
 
 	return result;
 }
 
 mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 	// Disable interrupts
-	bool active = mal_can_disable_interrupt(handle);
+    mal_can_interrupt_state_s state;
+	mal_can_disable_interrupt(handle, &state);
 	// Find filter index
 	uint8_t filter_index;
 	bool found = mal_hspec_stm_bcan_remove_filter(&handle->can_filter_banks, filter, &filter_index);
@@ -316,29 +319,26 @@ mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 		CAN_FilterInit(&filter_init);
 	}
 
-	mal_can_set_interrupt(handle, active);
+	mal_can_restore_interrupt(handle, &state);
 
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_s *handle) {
+MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
 	// 30 equates to CAN_IRQ. However, the name of the constant changes based
 	// on the MCU because it is not available on all of them. It is simpler to
 	// use the constant directly.
-	bool active = NVIC_GetActive((IRQn_Type)30);
+	state->active = NVIC_GetActive((IRQn_Type)30);
 	// Enable interrupts
 	NVIC_DisableIRQ((IRQn_Type)30);
 	__DSB();
 	__ISB();
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_can_set_interrupt(mal_can_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    if (active) {
+    if (state->active) {
         NVIC_EnableIRQ((IRQn_Type)30);
-    } else {
-        NVIC_DisableIRQ((IRQn_Type)30);
     }
 }

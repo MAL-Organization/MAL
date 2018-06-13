@@ -30,8 +30,8 @@ typedef struct MAL_SERIAL {
 
 } mal_serial_s;
 
-typedef struct MAL_SERIAL_INTERRUPT {
+typedef struct MAL_SERIAL_INTERRUPT_STATE {
 
-} mal_serial_interrupt_s;
+} mal_serial_interrupt_state_s;
 
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_ */

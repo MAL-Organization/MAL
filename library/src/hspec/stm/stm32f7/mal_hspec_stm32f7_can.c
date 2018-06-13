@@ -175,7 +175,7 @@ static mal_error_e mal_hspec_stm32f7_can_get_irqs(mal_can_e interface, IRQn_Type
 mal_error_e mal_can_deinit(mal_can_s *handle) {
     HAL_StatusTypeDef hal_result;
     // Disable interrupt
-    mal_can_disable_interrupt(handle);
+    mal_can_disable_interrupt(handle, NULL);
     // Reset interface
     hal_result = HAL_CAN_DeInit(&handle->hal_can_handle);
     if (HAL_OK != hal_result) {
@@ -188,7 +188,7 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
     HAL_StatusTypeDef hal_result = HAL_OK;
     mal_error_e result;
     // Disable interrupts
-    bool active = mal_can_disable_interrupt(handle);
+    bool active = mal_can_disable_interrupt(handle, NULL);
     // Find a free filter
     uint8_t filter_index;
     result = mal_hspec_stm_bcan_add_filter(&handle->filter_banks, filter, &filter_index);
@@ -219,7 +219,7 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
         }
         hal_result = HAL_CAN_ConfigFilter(&handle->hal_can_handle, &filter_init);
     }
-    mal_can_set_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, active);
 
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
@@ -230,7 +230,7 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
     HAL_StatusTypeDef hal_result = HAL_OK;
     // Disable interrupts
-    bool active = mal_can_disable_interrupt(handle);
+    bool active = mal_can_disable_interrupt(handle, NULL);
     // Find filter index
     uint8_t filter_index;
     bool found = mal_hspec_stm_bcan_remove_filter(&handle->filter_banks, filter, &filter_index);
@@ -262,7 +262,7 @@ mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
         hal_result = HAL_CAN_ConfigFilter(&handle->hal_can_handle, &filter_init);
     }
 
-    mal_can_set_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, active);
 
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
@@ -273,7 +273,7 @@ mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
     mal_error_e result;
     // Disable interrupts to get true status of TX queue
-    bool active = mal_can_disable_interrupt(handle);
+    bool active = mal_can_disable_interrupt(handle, NULL);
     // Check if queue is empty
     if (!handle->interface_active) {
         handle->interface_active = true;
@@ -285,7 +285,7 @@ mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
         result = MAL_ERROR_HARDWARE_UNAVAILABLE;
     }
 
-    mal_can_set_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, active);
 
     return result;
 }
@@ -309,6 +309,10 @@ static mal_error_e mal_hspec_stm32f7_can_transmit_msg(mal_can_s *handle, mal_can
     }
 
     return MAL_ERROR_OK;
+}
+
+MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
+
 }
 
 //TODO 1 and 2

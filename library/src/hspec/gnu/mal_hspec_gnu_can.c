@@ -97,12 +97,12 @@ mal_error_e mal_can_deinit(mal_can_s *handle) {
     MAL_DEFS_UNUSED(handle);
 }
 
-MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_s *handle) {
+MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
 	MAL_DEFS_UNUSED(handle);
-    return false;
+	MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_can_set_interrupt(mal_can_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(active);
+    MAL_DEFS_UNUSED(state);
 }

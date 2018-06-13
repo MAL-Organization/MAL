@@ -451,18 +451,15 @@ IRQn_Type mal_hspec_stm32f0_i2c_get_irq(mal_i2c_e interface) {
 	}
 }
 
-MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_s *handle) {
-	bool active = NVIC_GetActive(handle->irq);
+MAL_DEFS_INLINE void mal_i2c_disable_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state) {
+	state->active = NVIC_GetActive(handle->irq);
 	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_i2c_set_interrupt(mal_i2c_s *handle, bool active) {
-    if (active) {
+MAL_DEFS_INLINE void mal_i2c_restore_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state) {
+    if (state->active) {
         NVIC_EnableIRQ(handle->irq);
-    } else {
-        NVIC_DisableIRQ(handle->irq);
     }
 }

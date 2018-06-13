@@ -55,6 +55,10 @@ typedef struct MAL_TIMER_INPUT_CAPTURE {
     void *callback_handle;
 } mal_timer_input_capture_s;
 
+typedef struct MAL_TIMER_INTERRUPT_STATE {
+    bool active;
+} mal_timer_interrupt_state_s;
+
 /**
  * Struct for direct initialization of a timer interface.
  */

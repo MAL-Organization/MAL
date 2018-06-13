@@ -131,7 +131,8 @@ mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_ha
     event_handle->callback_handle = init->handle;
     gpio_events[init->pin] = event_handle;
 	// Disable interrupt
-	mal_gpio_event_disable_interrupt(event_handle);
+    mal_gpio_interrupt_state_s state;
+    mal_gpio_event_disable_interrupt(event_handle, &state);
 	// Configure EXTI source
 	SYSCFG_EXTILineConfig(get_exti_port_source(init->port), init->pin);
 	// Configure EXTI
@@ -148,7 +149,8 @@ mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_ha
 	exti_init.EXTI_LineCmd = ENABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_gpio_event_set_interrupt(event_handle, true);
+    state.active = true;
+	mal_gpio_event_restore_interrupt(event_handle, &state);
 
 	return MAL_ERROR_OK;
 }
@@ -217,7 +219,8 @@ static void handle_exti_interrupt(uint32_t exti_line, uint8_t pin) {
 
 mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
 	// Disable interrupt
-	bool active = mal_gpio_event_disable_interrupt(handle);
+    mal_gpio_interrupt_state_s state;
+	mal_gpio_event_disable_interrupt(handle, &state);
 	// Remove event
     gpio_events[handle->pin] = NULL;
 	// Disable EXTI
@@ -227,21 +230,20 @@ mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
 	exti_init.EXTI_LineCmd = DISABLE;
 	EXTI_Init(&exti_init);
 	// Enable interrupt
-	mal_gpio_event_set_interrupt(handle, active);
+	mal_gpio_event_restore_interrupt(handle, &state);
 
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle) {
-	bool active = NVIC_GetActive(handle->irq);
+MAL_DEFS_INLINE void mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
+	state->active = NVIC_GetActive(handle->irq);
 	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_gpio_event_set_interrupt(mal_gpio_event_s *handle, bool active) {
-	if (active) {
+MAL_DEFS_INLINE void mal_gpio_event_restore_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
+	if (state->active) {
 		NVIC_EnableIRQ(handle->irq);
 	}
 }

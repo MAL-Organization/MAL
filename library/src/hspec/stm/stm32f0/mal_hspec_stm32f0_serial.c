@@ -319,12 +319,12 @@ static void mal_hspec_stm32f0_serial_interrupt(mal_serial_s *handle) {
     if (USART_GetITStatus(handle->usart_typedef, USART_IT_IDLE) == SET) {
         USART_ClearITPendingBit(handle->usart_typedef, USART_IT_IDLE);
         // Disable serial interrupts
-        mal_serial_interrupt_s state;
+        mal_serial_interrupt_state_s state;
         mal_serial_disable_interrupt(handle, &state);
         // Check for RX transfer complete
         mal_hspec_stm32f0_serial_handle_rx_dma(handle);
         // Restore interrupts
-        mal_serial_enable_interrupt(handle, &state);
+        mal_serial_restore_interrupt(handle, &state);
     }
 }
 
@@ -334,7 +334,7 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
         return MAL_ERROR_HARDWARE_UNAVAILABLE;
     }
     // Disable interrupts
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(handle, &state);
     if (handle->dma_mode) {
         // Fill data buffer
@@ -359,7 +359,7 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
         USART_ITConfig(handle->usart_typedef, USART_IT_TXE, ENABLE);
     }
     handle->active = true;
-    mal_serial_enable_interrupt(handle, &state);
+    mal_serial_restore_interrupt(handle, &state);
 
     return MAL_ERROR_OK;
 }
@@ -401,14 +401,14 @@ static IRQn_Type mal_hspec_stm32f0_serial_get_irq(mal_serial_port_e port) {
         }
 }
 
-MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state) {
     state->mask = mal_hspec_stm32f0_nvic_get_activity(handle->nvic_mask);
     mal_hspec_stm32f0_nvic_clear(handle->nvic_mask);
     __DSB();
     __ISB();
 }
 
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state) {
+MAL_DEFS_INLINE void mal_serial_restore_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
     mal_hspec_stm32f0_nvic_set(state->mask);
 }
@@ -416,7 +416,7 @@ MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_seria
 static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
     mal_serial_s *serial_handle = handle;
     // Disable serial interrupts
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(serial_handle, &state);
     // Check for RX transfer complete
     if (SET == DMA_GetITStatus(serial_handle->rx_dma_flag)) {
@@ -451,7 +451,7 @@ static void mal_hspec_stm32f0_serial_dma_callback(void *handle) {
         }
     }
     // Restore interrupts
-    mal_serial_enable_interrupt(serial_handle, &state);
+    mal_serial_restore_interrupt(serial_handle, &state);
 }
 
 static void mal_hspec_stm32f0_serial_handle_rx_dma(mal_serial_s *handle) {

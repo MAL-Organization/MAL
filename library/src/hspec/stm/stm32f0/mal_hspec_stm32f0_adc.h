@@ -30,4 +30,8 @@ typedef struct MAL_ADC {
     void *callback_handle;
 } mal_adc_s;
 
+typedef struct MAL_ADC_INTERRUPT_STATE {
+    bool active;
+} mal_adc_interrupt_state_s;
+
 #endif //MAL_MAL_HSPEC_STM32F0_ADC_H

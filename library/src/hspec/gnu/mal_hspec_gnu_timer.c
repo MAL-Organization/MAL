@@ -165,12 +165,12 @@ mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  ma
     return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
+MAL_DEFS_INLINE void mal_timer_disable_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    return false;
+	MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_timer_set_interrupt(mal_timer_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_timer_restore_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(active);
+    MAL_DEFS_UNUSED(state);
 }

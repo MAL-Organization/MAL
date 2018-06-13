@@ -78,17 +78,16 @@ void mal_hspec_gnu_i2c_unlock_interface(mal_i2c_e interface) {
     pthread_mutex_unlock(&i2c_interfaces[interface].mutex);
 }
 
-MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_s *handle) {
-	bool interface_state = i2c_interfaces[handle->interface].interrupt_active;
-	if (interface_state) {
+MAL_DEFS_INLINE void mal_i2c_disable_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state) {
+	state->active = i2c_interfaces[handle->interface].interrupt_active;
+	if (state->active) {
 		mal_hspec_gnu_i2c_lock_interface(handle->interface, I2C_LOCK_DELAY);
 		i2c_interfaces[handle->interface].interrupt_active = false;
 	}
-	return interface_state;
 }
 
-MAL_DEFS_INLINE void mal_i2c_set_interrupt(mal_i2c_s *handle, bool active) {
-	if (active) {
+MAL_DEFS_INLINE void mal_i2c_restore_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state) {
+	if (state->active) {
 		i2c_interfaces[handle->interface].interrupt_active = true;
 		mal_hspec_gnu_i2c_unlock_interface(handle->interface);
 	}

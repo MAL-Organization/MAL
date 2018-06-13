@@ -118,7 +118,7 @@ typedef struct {
  * This structure is used to retain interrupt status between disable and
  * enable. Must be defined by the hardware specific implementation.
  */
-typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
+typedef struct MAL_SERIAL_INTERRUPT_STATE mal_serial_interrupt_state_s;
 
 /**
  * @brief Initialize the given serial interface with the given parameters.
@@ -141,17 +141,16 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data);
 /**
  * @brief Disable a serial port interrupt.
  * @param handle The port to disable the interrupt from.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state);
 
 /**
  * @brief Enable a serial port interrupt.
  * @param handle The port to enable the interrupt from.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_restore_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state);
 
 /**
  * This include is last because it defines hardware specific implementations of

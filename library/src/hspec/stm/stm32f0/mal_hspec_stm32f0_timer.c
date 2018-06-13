@@ -520,19 +520,16 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
-	bool active = NVIC_GetActive(handle->irq);
+MAL_DEFS_INLINE void mal_timer_disable_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
+	state->active = NVIC_GetActive(handle->irq);
 	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_timer_set_interrupt(mal_timer_s *handle, bool active) {
-	if (active) {
+MAL_DEFS_INLINE void mal_timer_restore_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
+	if (state->active) {
 		NVIC_EnableIRQ(handle->irq);
-	} else {
-        NVIC_DisableIRQ(handle->irq);
 	}
 }
 

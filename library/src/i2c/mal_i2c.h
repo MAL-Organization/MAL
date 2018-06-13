@@ -42,6 +42,12 @@
 typedef struct MAL_I2C mal_i2c_s;
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_I2C_INTERRUPT_STATE mal_i2c_interrupt_state_s;
+
+/**
  * Possible I2C interfaces.
  */
 typedef enum {
@@ -148,17 +154,16 @@ mal_error_e mal_i2c_transfer(mal_i2c_s *handle, mal_i2c_msg_s *msg);
 /**
  * @brief Disable an I2C interrupt.
  * @param handle The interface to disable the interrupt from.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_i2c_disable_interrupt(mal_i2c_s *handle);
+MAL_DEFS_INLINE void mal_i2c_disable_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state);
 
 /**
  * @brief Enable an I2C interrupt.
  * @param handle The interface to enable the interrupt from.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_i2c_set_interrupt(mal_i2c_s *handle, bool active);
+MAL_DEFS_INLINE void mal_i2c_restore_interrupt(mal_i2c_s *handle, mal_i2c_interrupt_state_s *state);
 
 /**
  * This include is last because it defines hardware specific implementations of

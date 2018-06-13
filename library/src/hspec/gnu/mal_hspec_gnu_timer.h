@@ -33,6 +33,10 @@ typedef struct MAL_TIMER_PWM {
 
 } mal_timer_pwm_s;
 
+typedef struct MAL_TIMER_INTERRUPT_STATE {
+
+} mal_timer_interrupt_state_s;
+
 mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  mal_gpio_port_e port, uint8_t pin,
                                                           uint64_t value);
 

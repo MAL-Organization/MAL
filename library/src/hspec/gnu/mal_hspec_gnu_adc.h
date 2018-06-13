@@ -26,6 +26,10 @@ typedef struct MAL_ADC {
     mal_adc_e adc;
 } mal_adc_s;
 
+typedef struct MAL_ADC_INTERRUPT_STATE {
+
+} mal_adc_interrupt_state_s;
+
 void mal_hspec_gnu_adc_set_value(mal_adc_e adc, float value);
 
 void mal_hspec_gnu_adc_do_async(mal_adc_e adc);

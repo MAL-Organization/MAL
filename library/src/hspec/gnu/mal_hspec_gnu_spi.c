@@ -72,12 +72,12 @@ mal_error_e mal_hspec_mingw_spi_end_transaction(mal_spi_e interface) {
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle) {
+MAL_DEFS_INLINE void mal_spi_disable_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
 	MAL_DEFS_UNUSED(handle);
-    return false;
+	MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_spi_restore_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(active);
+    MAL_DEFS_UNUSED(state);
 }

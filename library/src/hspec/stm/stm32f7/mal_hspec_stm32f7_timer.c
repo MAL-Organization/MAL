@@ -150,16 +150,15 @@ static IRQn_Type mal_hspec_stm32f7_timer_get_compare_irq(mal_timer_e timer) {
     }
 }
 
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle) {
-    bool active = (bool)NVIC_GetEnableIRQ(handle->irq);
+MAL_DEFS_INLINE void mal_timer_disable_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
+    state->active = (bool)NVIC_GetEnableIRQ(handle->irq);
     NVIC_DisableIRQ(handle->irq);
     __DSB();
     __ISB();
-    return active;
 }
 
-MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_s *handle, bool active) {
-    if (active) {
+MAL_DEFS_INLINE void mal_timer_restore_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state) {
+    if (state->active) {
         NVIC_EnableIRQ(handle->irq);
     }
 }
@@ -1024,7 +1023,7 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
         return MAL_ERROR_OPERATION_INVALID;
     }
     // Disable interrupt
-    mal_timer_disable_interrupt(handle);
+    mal_timer_disable_interrupt(handle, NULL);
     // Disable timer
     hal_result = HAL_TIM_Base_DeInit(&handle->hal_timer_handle);
     if (HAL_OK != hal_result) {

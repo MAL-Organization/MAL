@@ -59,8 +59,8 @@ typedef struct MAL_SERIAL {
     uint32_t rx_dma_flag;
 } mal_serial_s;
 
-typedef struct MAL_SERIAL_INTERRUPT {
+typedef struct MAL_SERIAL_INTERRUPT_STATE {
     uint32_t mask;
-} mal_serial_interrupt_s;
+} mal_serial_interrupt_state_s;
 
 #endif /* HSPEC_STM_STM32F0_MAL_HSPEC_STM32F0_SERIAL_H_ */

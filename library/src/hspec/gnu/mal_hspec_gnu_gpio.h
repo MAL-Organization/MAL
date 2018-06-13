@@ -36,6 +36,10 @@ typedef struct MAL_GPIO_EVENT {
     mal_gpio_s *gpio_handle;
 } mal_gpio_event_s;
 
+typedef struct MAL_GPIO_INTERRUPT_STATE {
+
+} mal_gpio_interrupt_state_s;
+
 void mal_hspec_gnu_gpio_execute_callback(mal_gpio_port_e port, uint8_t pin);
 
 mal_error_e mal_hspec_gnu_set_mocked_gpio(mal_gpio_port_e port, uint8_t pin, bool value);

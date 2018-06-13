@@ -131,12 +131,12 @@ mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
 	return MAL_ERROR_OK;
 }
 
-MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle) {
+MAL_DEFS_INLINE void mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    return false;
+	MAL_DEFS_UNUSED(state);
 }
 
-MAL_DEFS_INLINE void mal_gpio_event_set_interrupt(mal_gpio_event_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_gpio_event_restore_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(active);
+    MAL_DEFS_UNUSED(state);
 }

@@ -44,6 +44,12 @@
 typedef struct MAL_ADC mal_adc_s;
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_ADC_INTERRUPT_STATE mal_adc_interrupt_state_s;
+
+/**
  * The possible ADCs.
  */
 typedef enum {
@@ -114,19 +120,19 @@ mal_error_e mal_adc_async_read(mal_adc_s *handle, mal_adc_read_callback_t callba
 /**
  * @brief Disable interrupts for an ADC.
  * @param handle The ADC to disable the interrupt.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_s *handle);
+MAL_DEFS_INLINE void mal_adc_disable_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state);
 
 /**
  * @brief Enable interrupts for an ADC.
  * @param handle The ADC to enable the interrupt.
- * @param active A boolean that indicates if the interrupt should be activated.
+ * @param state A boolean that indicates if the interrupt should be activated.
  * Use the returned state of the disable function.
  * @return Nothing. This macro is meant to be standalone on a line. Do not
  * equate or use as a condition.
  */
-MAL_DEFS_INLINE void mal_adc_set_interrupt(mal_adc_s *handle, bool active);
+MAL_DEFS_INLINE void mal_adc_restore_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state);
 
 /**
  * @brief Get the maximum resolution of the ADC.

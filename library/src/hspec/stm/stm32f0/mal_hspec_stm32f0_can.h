@@ -35,6 +35,10 @@ typedef struct MAL_CAN {
     volatile bool interface_active;
 } mal_can_s;
 
+typedef struct MAL_CAN_INTERRUPT_STATE {
+    bool active;
+} mal_can_interrupt_state_s;
+
 /**
  * Struct for direct initialization of a CAN interface.
  */

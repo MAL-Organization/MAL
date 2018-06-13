@@ -26,6 +26,10 @@ typedef struct MAL_SPI {
     mal_spi_e interface;
 } mal_spi_s;
 
+typedef struct MAL_SPI_INTERRUPT_STATE {
+
+} mal_spi_interrupt_state_s;
+
 mal_error_e mal_hspec_gnu_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg);
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_SPI_H_ */

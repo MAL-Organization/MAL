@@ -44,6 +44,10 @@ typedef struct MAL_I2C {
     IRQn_Type irq;
 } mal_i2c_s;
 
+typedef struct MAL_I2C_INTERRUPT_STATE {
+    bool active;
+} mal_i2c_interrupt_state_s;
+
 /**
  * Struct for direct initialization of a CAN interface.
  */

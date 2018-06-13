@@ -255,7 +255,8 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init, mal_spi_s *handle) 
 mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
 	mal_error_e result;
 	// Deactivate interrupt
-	bool active = mal_spi_disable_interrupt(handle);
+	mal_spi_interrupt_state_s state;
+	mal_spi_disable_interrupt(handle, &state);
 	// Check if interface is available
 	if (!handle->is_active) {
 		// Set active message
@@ -278,7 +279,7 @@ mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
 		result = MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Restore interrupt
-	mal_spi_set_interrupt(handle, active);
+	mal_spi_restore_interrupt(handle, &state);
 
 	return result;
 }
@@ -293,16 +294,15 @@ IRQn_Type mal_hspec_stm32f0_spi_get_irq(mal_spi_e interface) {
 	}
 }
 
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle) {
-	bool active = NVIC_GetActive(handle->irq);
+MAL_DEFS_INLINE void mal_spi_disable_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
+	state->active = NVIC_GetActive(handle->irq);
 	NVIC_DisableIRQ(handle->irq);
 	__DSB();
 	__ISB();
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active) {
-    if (active) {
+MAL_DEFS_INLINE void mal_spi_restore_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
+    if (state->active) {
         NVIC_EnableIRQ(handle->irq);
     }
 }

@@ -70,7 +70,8 @@ mal_error_e mal_i2c_buffer_direct_init(mal_i2c_buffer_init_s *init, const void *
 
 mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_i2c_msg_s *msg) {
 	mal_error_e result = MAL_ERROR_HARDWARE_UNAVAILABLE;
-	bool active = mal_i2c_disable_interrupt(handle->handle);
+	mal_i2c_interrupt_state_s state;
+	mal_i2c_disable_interrupt(handle->handle, &state);
 	// Try to send message
 	if (NULL == handle->callback) {
 		// Copy msg to active msg
@@ -94,7 +95,7 @@ mal_error_e mal_i2c_buffer_write(mal_i2c_buffer_handle_s *handle, mal_i2c_msg_s 
 	if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
 		result = mal_circular_buffer_write((mal_circular_buffer_s*)&handle->buffer, msg);
 	}
-	mal_i2c_set_interrupt(handle->handle, active);
+	mal_i2c_restore_interrupt(handle->handle, &state);
 	return result;
 }
 

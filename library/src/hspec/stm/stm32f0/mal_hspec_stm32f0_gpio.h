@@ -39,4 +39,8 @@ typedef struct MAL_GPIO_EVENT {
     uint8_t pin;
 } mal_gpio_event_s;
 
+typedef struct MAL_GPIO_INTERRUPT_STATE {
+    bool active;
+} mal_gpio_interrupt_state_s;
+
 #endif //MAL_MAL_HSPEC_STM32F0_GPIO_H

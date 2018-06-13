@@ -219,26 +219,22 @@ void ADC1_COMP_IRQHandler(void) {
 	}
 }
 
-MAL_DEFS_INLINE bool mal_adc_disable_interrupt(mal_adc_s *handle) {
+MAL_DEFS_INLINE void mal_adc_disable_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
 	// 12 equates to ADC_IRQ. However, the name of the constant changes based
 	// on the MCU because it is multiplex with other interrupts in some of them. It
 	// is simpler to use the constant directly.
-	bool active = NVIC_GetActive((IRQn_Type)12);
+	state->active = NVIC_GetActive((IRQn_Type)12);
 	// Enable interrupts
 	NVIC_DisableIRQ((IRQn_Type)12);
 	__DSB();
 	__ISB();
-
-	return active;
 }
 
-MAL_DEFS_INLINE void mal_adc_set_interrupt(mal_adc_s *handle, bool active) {
+MAL_DEFS_INLINE void mal_adc_restore_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state) {
     MAL_DEFS_UNUSED(handle);
-	if (active) {
+	if (state->active) {
 		NVIC_EnableIRQ((IRQn_Type)12);
-	} else {
-        NVIC_DisableIRQ((IRQn_Type)12);
 	}
 }
 

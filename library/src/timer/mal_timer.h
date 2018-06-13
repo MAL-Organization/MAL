@@ -87,6 +87,12 @@ typedef struct MAL_TIMER_INPUT_CAPTURE mal_timer_input_capture_s;
 typedef void (*mal_timer_callback_t)(void *handle);
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_TIMER_INTERRUPT_STATE mal_timer_interrupt_state_s;
+
+/**
  * Information for reserved timers.
  */
 typedef struct {
@@ -179,22 +185,17 @@ mal_error_e mal_timer_reserve(mal_timer_e timer, mal_timer_e *reserved_timer);
 
 /**
  * @brief Disable interrupts for a timer.
- * @param timer The timer to disable the interrupt. Should be of type
- * ::mal_hspec_timer_e.
- * @return Returns true if interrupt was active before disabling it.
+ * @param timer The timer to disable the interrupt.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_s *handle);
+MAL_DEFS_INLINE void mal_timer_disable_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state);
 
 /**
  * @brief Enable interrupts for a timer.
- * @param timer The timer to enable the interrupt. Should be of type
- * ::mal_hspec_timer_e.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @param timer The timer to restore the interrupt to.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_timer_set_interrupt(mal_timer_s *handle, bool active);
+MAL_DEFS_INLINE void mal_timer_restore_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state);
 
 /**
  * @brief Initialize a timer that periodically calls a function (task).

@@ -48,6 +48,12 @@ typedef struct MAL_GPIO mal_gpio_s;
 typedef struct MAL_GPIO_EVENT mal_gpio_event_s;
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_GPIO_INTERRUPT_STATE mal_gpio_interrupt_state_s;
+
+/**
  * Possible GPIO directions.
  */
 typedef enum {
@@ -145,18 +151,16 @@ mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle);
 /**
  * @brief Disable interrupt for a GPIO event.
  * @param handle The event to disable the interrupt from.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle);
+MAL_DEFS_INLINE void mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state);
 
 /**
- * @brief Enable interrupt for a GPIO event.
- * @param handle The event to disable the interrupt from.
- * @param active A boolean that indicates if the interrupt should be activated.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @brief Restore an interrupt for a GPIO event.
+ * @param handle The event to restore the interrupt from.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_gpio_event_set_interrupt(mal_gpio_event_s *handle, bool active);
+MAL_DEFS_INLINE void mal_gpio_event_restore_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state);
 
 /**
  * @brief Initialize a GPIO.

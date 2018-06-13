@@ -59,4 +59,8 @@ typedef struct MAL_TIMER_INPUT_CAPTURE {
     void *callback_handle;
 } mal_timer_input_capture_s;
 
+typedef struct MAL_TIMER_INTERRUPT_STATE {
+    bool active;
+} mal_timer_interrupt_state_s;
+
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_TIMER_H_ */

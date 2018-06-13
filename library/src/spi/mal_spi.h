@@ -27,7 +27,6 @@
 #include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
 #include "std/mal_types.h"
-#include "std/mal_bool.h"
 
 /**
  * @defgroup SPI
@@ -40,6 +39,12 @@
 * to access the SPI functions.
 */
 typedef struct MAL_SPI mal_spi_s;
+
+/**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_SPI_INTERRUPT_STATE mal_spi_interrupt_state_s;
 
 /**
  * The possible SPI interfaces.
@@ -187,17 +192,16 @@ mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg);
 /**
  * @brief Disable an SPI interrupt.
  * @param handle The interface to disable the interrupt from.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_spi_disable_interrupt(mal_spi_s *handle);
+MAL_DEFS_INLINE void mal_spi_disable_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state);
 
 /**
  * @brief Set an SPI interrupt.
  * @param handle The interface to set the interrupt from.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_spi_set_interrupt(mal_spi_s *handle, bool active);
+MAL_DEFS_INLINE void mal_spi_restore_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state);
 
 /**
  * @brief Initialize an SPI interface as a master interface.

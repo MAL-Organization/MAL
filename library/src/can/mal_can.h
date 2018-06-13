@@ -43,6 +43,12 @@
 typedef struct MAL_CAN mal_can_s;
 
 /**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_CAN_INTERRUPT_STATE mal_can_interrupt_state_s;
+
+/**
  * The maximum number of bytes possible in a CAN message.
  */
 #define MAL_CAN_MAX_DATA_SIZE 8
@@ -155,17 +161,16 @@ mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg);
 /**
  * @brief Disable interrupts for a CAN interface.
  * @param handle The interface to disable the interrupt.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_can_disable_interrupt(mal_can_s *handle);
+MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state);
 
 /**
  * @brief Enable interrupts for a CAN interface.
- * @param handle The interface to enable the interrupt.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
+ * @param handle The interface to restore the interrupt.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_can_set_interrupt(mal_can_s *handle, bool active);
+MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state);
 
 /**
  * This include is last because it defines hardware specific implementations of

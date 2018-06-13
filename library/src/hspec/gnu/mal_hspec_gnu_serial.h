@@ -32,9 +32,9 @@ typedef struct MAL_SERIAL {
     uint16_t data_buffer[MAL_HSPEC_GNU_SERIAL_DATA_BUFFER_SIZE];
 } mal_serial_s;
 
-typedef struct MAL_SERIAL_INTERRUPT {
+typedef struct MAL_SERIAL_INTERRUPT_STATE {
 
-} mal_serial_interrupt_s;
+} mal_serial_interrupt_state_s;
 
 mal_error_e mal_hspec_gnu_serial_get_tx_data(mal_serial_s *handle, uint16_t *data);
 

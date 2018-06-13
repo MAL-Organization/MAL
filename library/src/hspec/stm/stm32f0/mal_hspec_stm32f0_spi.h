@@ -38,4 +38,8 @@ typedef struct MAL_SPI {
     uint8_t in_data_ptr;
 } mal_spi_s;
 
+typedef struct MAL_SPI_INTERRUPT_STATE {
+    bool active;
+} mal_spi_interrupt_state_s;
+
 #endif //MAL_MAL_HSPEC_STM32F0_SPI_H
