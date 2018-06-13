@@ -29,22 +29,30 @@ static mal_error_e mal_hspec_stm32f7_can_init_io(mal_can_e interface, mal_gpio_p
 static mal_error_e mal_hspec_stm32f7_can_get_irqs(mal_can_e interface, IRQn_Type *f0_irq, IRQn_Type *f1_irq,
                                                   IRQn_Type *tx_irq);
 static mal_error_e mal_hspec_stm32f7_can_transmit_msg(mal_can_s *handle, mal_can_msg_s *msg);
+static void mal_hspec_stm32f7_can_handle_rx_interrupt(mal_can_s *handle, uint32_t fifo);
+
+static mal_can_s *mal_hspec_stm32f7_can_1;
+static mal_can_s *mal_hspec_stm32f7_can_2;
+static mal_can_s *mal_hspec_stm32f7_can_3;
 
 mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
-    // Initialize CAN clock and set handle
+    // Initialize CAN clock and set handles
     switch (init->interface) {
         case MAL_CAN_1:
             __HAL_RCC_CAN1_CLK_ENABLE();
+            mal_hspec_stm32f7_can_1 = handle;
             handle->hal_can_handle.Instance = CAN1;
             break;
         case MAL_CAN_2:
             __HAL_RCC_CAN2_CLK_ENABLE();
+            mal_hspec_stm32f7_can_2 = handle;
             handle->hal_can_handle.Instance = CAN2;
             break;
         case MAL_CAN_3:
             __HAL_RCC_CAN3_CLK_ENABLE();
+            mal_hspec_stm32f7_can_3 = handle;
             handle->hal_can_handle.Instance = CAN3;
             break;
         default:
@@ -102,6 +110,10 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     // Set handle
     handle->hal_can_handle.Parent = handle;
     handle->interface_active = false;
+    handle->tx_callback = init->tx_callback;
+    handle->tx_callback_handle = init->tx_callback_handle;
+    handle->rx_callback = init->rx_callback;
+    handle->rx_callback_handle = init->rx_callback_handle;
     // Enable interrupts
     mal_result = mal_hspec_stm32f7_can_get_irqs(init->interface, &handle->f0_irq, &handle->f1_irq, &handle->tx_irq);
     if (MAL_ERROR_OK != mal_result) {
@@ -175,7 +187,8 @@ static mal_error_e mal_hspec_stm32f7_can_get_irqs(mal_can_e interface, IRQn_Type
 mal_error_e mal_can_deinit(mal_can_s *handle) {
     HAL_StatusTypeDef hal_result;
     // Disable interrupt
-    mal_can_disable_interrupt(handle, NULL);
+    mal_can_interrupt_state_s state;
+    mal_can_disable_interrupt(handle, &state);
     // Reset interface
     hal_result = HAL_CAN_DeInit(&handle->hal_can_handle);
     if (HAL_OK != hal_result) {
@@ -188,7 +201,8 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
     HAL_StatusTypeDef hal_result = HAL_OK;
     mal_error_e result;
     // Disable interrupts
-    bool active = mal_can_disable_interrupt(handle, NULL);
+    mal_can_interrupt_state_s state;
+    mal_can_disable_interrupt(handle, &state);
     // Find a free filter
     uint8_t filter_index;
     result = mal_hspec_stm_bcan_add_filter(&handle->filter_banks, filter, &filter_index);
@@ -219,7 +233,7 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
         }
         hal_result = HAL_CAN_ConfigFilter(&handle->hal_can_handle, &filter_init);
     }
-    mal_can_restore_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, &state);
 
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
@@ -230,7 +244,8 @@ mal_error_e mal_can_add_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
     HAL_StatusTypeDef hal_result = HAL_OK;
     // Disable interrupts
-    bool active = mal_can_disable_interrupt(handle, NULL);
+    mal_can_interrupt_state_s state;
+    mal_can_disable_interrupt(handle, &state);
     // Find filter index
     uint8_t filter_index;
     bool found = mal_hspec_stm_bcan_remove_filter(&handle->filter_banks, filter, &filter_index);
@@ -262,7 +277,7 @@ mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
         hal_result = HAL_CAN_ConfigFilter(&handle->hal_can_handle, &filter_init);
     }
 
-    mal_can_restore_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, &state);
 
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
@@ -273,7 +288,8 @@ mal_error_e mal_can_remove_filter(mal_can_s *handle, mal_can_filter_s *filter) {
 mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
     mal_error_e result;
     // Disable interrupts to get true status of TX queue
-    bool active = mal_can_disable_interrupt(handle, NULL);
+    mal_can_interrupt_state_s state;
+    mal_can_disable_interrupt(handle, &state);
     // Check if queue is empty
     if (!handle->interface_active) {
         handle->interface_active = true;
@@ -285,7 +301,7 @@ mal_error_e mal_can_transmit(mal_can_s *handle, mal_can_msg_s *msg) {
         result = MAL_ERROR_HARDWARE_UNAVAILABLE;
     }
 
-    mal_can_restore_interrupt(handle, active);
+    mal_can_restore_interrupt(handle, &state);
 
     return result;
 }
@@ -312,13 +328,114 @@ static mal_error_e mal_hspec_stm32f7_can_transmit_msg(mal_can_s *handle, mal_can
 }
 
 MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
-
+    state->f0_irq_state = (bool)NVIC_GetEnableIRQ(handle->f0_irq);
+    state->f1_irq_state = (bool)NVIC_GetEnableIRQ(handle->f1_irq);
+    state->tx_irq_state = (bool)NVIC_GetEnableIRQ(handle->tx_irq);
+    NVIC_DisableIRQ(handle->f0_irq);
+    NVIC_DisableIRQ(handle->f1_irq);
+    NVIC_DisableIRQ(handle->tx_irq);
+    __DSB();
+    __ISB();
 }
 
-//TODO 1 and 2
+MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
+    if (state->f0_irq_state) {
+        NVIC_EnableIRQ(handle->f0_irq);
+    }
+    if (state->f1_irq_state) {
+        NVIC_EnableIRQ(handle->f0_irq);
+    }
+    if (state->tx_irq_state) {
+        NVIC_EnableIRQ(handle->f0_irq);
+    }
+}
+
+void CAN1_TX_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_1->hal_can_handle);
+}
+
+void CAN1_RX0_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_1->hal_can_handle);
+}
+
+void CAN1_RX1_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_1->hal_can_handle);
+}
+
+void CAN2_TX_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_2->hal_can_handle);
+}
+
+void CAN2_RX0_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_2->hal_can_handle);
+}
+
+void CAN2_RX1_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_2->hal_can_handle);
+}
+
+void CAN3_TX_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_3->hal_can_handle);
+}
+
+void CAN3_RX0_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_3->hal_can_handle);
+}
+
+void CAN3_RX1_IRQHandler(void) {
+    HAL_CAN_IRQHandler(&mal_hspec_stm32f7_can_3->hal_can_handle);
+}
+
+static void mal_hspec_stm32f7_can_handle_tx_interrupt(mal_can_s *handle) {
+    mal_error_e mal_result;
+    mal_can_msg_s msg;
+    mal_result = handle->tx_callback(handle->tx_callback_handle, &msg);
+    if (MAL_ERROR_OK == mal_result) {
+        mal_hspec_stm32f7_can_transmit_msg(handle, &msg);
+    } else {
+        HAL_CAN_DeactivateNotification(&handle->hal_can_handle, CAN_IT_TX_MAILBOX_EMPTY);
+        handle->interface_active = false;
+    }
+}
+
 void HAL_CAN_TxMailbox0CompleteCallback(CAN_HandleTypeDef *hcan) {
+    mal_hspec_stm32f7_can_handle_tx_interrupt(hcan->Parent);
+}
+
+void HAL_CAN_TxMailbox1CompleteCallback(CAN_HandleTypeDef *hcan) {
+    mal_hspec_stm32f7_can_handle_tx_interrupt(hcan->Parent);
+}
+
+void HAL_CAN_TxMailbox2CompleteCallback(CAN_HandleTypeDef *hcan) {
+    mal_hspec_stm32f7_can_handle_tx_interrupt(hcan->Parent);
+}
+
+static void mal_hspec_stm32f7_can_handle_rx_interrupt(mal_can_s *handle, uint32_t fifo) {
+    HAL_StatusTypeDef hal_result;
+    mal_can_msg_s msg;
+    CAN_RxHeaderTypeDef msg_header;
+    // Read FIFO
+    hal_result = HAL_CAN_GetRxMessage(&handle->hal_can_handle, fifo, &msg_header, msg.data);
+    if (HAL_OK != hal_result) {
+        return;
+    }
+    // Transfer msg
+    if (CAN_ID_STD == msg_header.IDE) {
+        msg.id = msg_header.StdId;
+        msg.id_type = MAL_CAN_ID_STANDARD;
+    } else {
+        msg.id = msg_header.ExtId;
+        msg.id_type = MAL_CAN_ID_EXTENDED;
+    }
+    msg.size = (uint8_t)msg_header.DLC;
+    handle->rx_callback(handle->rx_callback_handle, &msg);
 }
 
 //TODO 1 and 2
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+    mal_hspec_stm32f7_can_handle_rx_interrupt(hcan->Parent, CAN_RX_FIFO0);
+}
+
+void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+    mal_hspec_stm32f7_can_handle_rx_interrupt(hcan->Parent, CAN_RX_FIFO1);
 }

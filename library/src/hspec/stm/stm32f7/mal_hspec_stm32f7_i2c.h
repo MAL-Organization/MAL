@@ -17,13 +17,11 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
+#ifndef MAL_MAL_HSPEC_STM32F7_I2C_H
+#define MAL_MAL_HSPEC_STM32F7_I2C_H
 
-#include "mal_hspec_stm32f7_timer.h"
-#include "mal_hspec_stm32f7_serial.h"
-#include "mal_hspec_stm32f7_gpio.h"
-#include "mal_hspec_stm32f7_can.h"
-#include "mal_hspec_stm32f7_i2c.h"
+typedef struct MAL_I2C_INTERRUPT_STATE {
 
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */
+} mal_i2c_interrupt_state_s;
+
+#endif //MAL_MAL_HSPEC_STM32F7_I2C_H

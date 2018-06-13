@@ -17,13 +17,4 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
-
-#include "mal_hspec_stm32f7_timer.h"
-#include "mal_hspec_stm32f7_serial.h"
-#include "mal_hspec_stm32f7_gpio.h"
-#include "mal_hspec_stm32f7_can.h"
 #include "mal_hspec_stm32f7_i2c.h"
-
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */
