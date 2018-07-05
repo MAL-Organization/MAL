@@ -25,6 +25,8 @@
 
 bool mal_hspec_gnu_reset_get_request(void);
 
+void mal_hspec_gnu_reset_clear_request(void);
+
 void mal_hspec_gnu_reset_set_reset_source(mal_reset_source_e source);
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_RESET_H_ */

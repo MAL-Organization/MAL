@@ -34,7 +34,7 @@ bool mal_hspec_gnu_reset_get_request(void) {
 	return reset_requested;
 }
 
-void mal_hspec_mingw_reset_clear_request(void) {
+void mal_hspec_gnu_reset_clear_request(void) {
 	reset_requested = false;
 }
 
