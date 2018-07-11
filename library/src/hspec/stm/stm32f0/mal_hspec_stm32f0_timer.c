@@ -712,7 +712,7 @@ static mal_error_e mal_hspec_stm32f0_timer_get_count_time_base(TIM_TimeBaseInitT
     if (0 == target_frequency) {
         return MAL_ERROR_CLOCK_ERROR;
     }
-    uint32_t prescaler = (uint32_t)((timer_frequency * 1000ULL) / timer_frequency);
+    uint32_t prescaler = (uint32_t)((timer_frequency * 1000ULL) / target_frequency);
     if (prescaler > (UINT16_MAX+ 1)) {
         return MAL_ERROR_CLOCK_ERROR;
     }
