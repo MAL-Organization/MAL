@@ -52,6 +52,11 @@ if __name__ == '__main__':
         # Extract headers
         headers_path = os.path.join(bc_path, "headers")
         for bc_source in bc_sources:
+            # Filter path so it matches syntax of lib path
+            bc_source = Path(bc_source).as_posix()
+            # Some files will have the drive letter capitalized, make it lower case so it matches maven's syntax
+            if bc_source.startswith("C:"):
+                bc_source = bc_source.replace("C:", "c:", 1)
             if bc_source.endswith(".h"):
                 # Clean path
                 if lib_path in bc_source:
