@@ -35,7 +35,7 @@ mal_error_e mal_hspec_stm_bcan_get_bit_timing(uint64_t bitrate, uint64_t pclk, u
                                               int32_t *tseg2, uint32_t *sjw) {
     // Compute bit time
     bool done = false;
-    for (*prescaler = 1; *prescaler <= 1024; prescaler++) {
+    for (*prescaler = 1; *prescaler <= 1024; (*prescaler)++) {
         // Calculate total time quantas
         uint32_t tq_total = (uint32_t )(pclk / (*prescaler * bitrate));
         if (!tq_total) {
