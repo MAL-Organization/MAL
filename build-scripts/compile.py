@@ -1,5 +1,4 @@
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -16,6 +15,10 @@ if __name__ == '__main__':
     build_optimize_levels = properties["build.optimization.levels"].split(",")
     # Load lib path
     lib_path = Path(os.path.join(properties["basedir"], "library")).as_posix()
+    compare_lib_path = lib_path
+    # Drive letter capitalization is inconsistent, make it lower case so it matches all the time
+    if compare_lib_path.startswith("C:"):
+        compare_lib_path = compare_lib_path.replace("C:", "c:", 1)
     # Load build paths
     build_path = Path(properties["build.folder"]).as_posix()
     binary_name = "lib{}.a".format(properties["project.name"])
@@ -54,17 +57,21 @@ if __name__ == '__main__':
         for bc_source in bc_sources:
             # Filter path so it matches syntax of lib path
             bc_source = Path(bc_source).as_posix()
-            # Some files will have the drive letter capitalized, make it lower case so it matches maven's syntax
+            # Drive letter capitalization is inconsistent, make it lower case so it matches all the time
             if bc_source.startswith("C:"):
                 bc_source = bc_source.replace("C:", "c:", 1)
             if bc_source.endswith(".h"):
                 # Clean path
-                if lib_path in bc_source:
-                    bc_source = bc_source.replace(lib_path, "")
+                if compare_lib_path in bc_source:
+                    bc_source = bc_source.replace(compare_lib_path, "")
                     # Remove dangling slash
                     bc_source = bc_source[1:]
                 # Copy to output
                 source_file = os.path.join(lib_path, bc_source)
                 output_file = os.path.join(headers_path, bc_source)
                 os.makedirs(os.path.dirname(output_file), exist_ok=True)
-                shutil.copy(source_file, output_file)
+                try:
+                    shutil.copy(source_file, output_file)
+                except shutil.SameFileError:
+                    print("Error copying {} to {}".format(bc_source, output_file))
+                    raise
