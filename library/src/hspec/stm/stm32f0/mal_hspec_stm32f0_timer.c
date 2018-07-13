@@ -130,6 +130,7 @@ static mal_error_e mal_hspec_stm32f0_timer_common_task_init(mal_timer_init_task_
     TIM_ITConfig(handle->stm_handle, TIM_IT_Update, ENABLE);
     // Enable timer
     TIM_Cmd(handle->stm_handle, ENABLE);
+    return MAL_ERROR_OK;
 }
 
 mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *direct_init, mal_timer_s *handle) {

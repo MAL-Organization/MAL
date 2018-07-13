@@ -30,16 +30,16 @@
 mal_reset_source_e mal_reset_get_source_unmanaged(void) {
 	mal_reset_source_e source = MAL_RESET_SOURCE_UNKNOWN;
 	// Get current source based on RCC flags
-	if (RCC_GetFlagStatus(RCC_FLAG_SFTRST) == ENABLE) {
+	if (RCC_GetFlagStatus(RCC_FLAG_SFTRST) == SET) {
 		source = MAL_RESET_SOURCE_SOFTWARE;
-	} else if ((RCC_GetFlagStatus(RCC_FLAG_WWDGRST) == ENABLE) ||
-			   (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) == ENABLE)) {
+	} else if ((RCC_GetFlagStatus(RCC_FLAG_WWDGRST) == SET) ||
+			   (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) == SET)) {
 		source = MAL_RESET_SOURCE_WATCHDOG;
-	} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST) == ENABLE) {
+	} else if (RCC_GetFlagStatus(RCC_FLAG_PORRST) == SET) {
 		source = MAL_RESET_SOURCE_POWER;
-	} else if (RCC_GetFlagStatus(RCC_FLAG_LPWRRST) == ENABLE) {
+	} else if (RCC_GetFlagStatus(RCC_FLAG_LPWRRST) == SET) {
 		source = MAL_RESET_SOURCE_SLEEP;
-	} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST) == ENABLE) {
+	} else if (RCC_GetFlagStatus(RCC_FLAG_PINRST) == SET) {
 		source = MAL_RESET_SOURCE_RESET_PIN;
 	}
 	// Reset source

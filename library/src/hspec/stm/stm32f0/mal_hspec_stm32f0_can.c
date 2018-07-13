@@ -124,6 +124,8 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
 	CAN_ITConfig(CAN, CAN_IT_FMP0, ENABLE);
 	CAN_ITConfig(CAN, CAN_IT_FMP1, ENABLE);
 	CAN_ITConfig(CAN, CAN_IT_TME, ENABLE);
+
+    return MAL_ERROR_OK;
 }
 
 mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init, mal_can_s *handle) {
@@ -170,6 +172,7 @@ mal_error_e mal_can_deinit(mal_can_s *handle) {
     mal_can_disable_interrupt(handle, NULL);
 	// Uninitialize interface
 	CAN_DeInit(CAN);
+    return MAL_ERROR_OK;
 }
 
 void CEC_CAN_IRQHandler(void) {
