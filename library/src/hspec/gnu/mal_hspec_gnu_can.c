@@ -95,6 +95,7 @@ void mal_hspec_gnu_can_push_rx_msg(mal_can_e interface, mal_can_msg_s *msg) {
 
 mal_error_e mal_can_deinit(mal_can_s *handle) {
     MAL_DEFS_UNUSED(handle);
+    return MAL_ERROR_OK;
 }
 
 MAL_DEFS_INLINE void mal_can_disable_interrupt(mal_can_s *handle, mal_can_interrupt_state_s *state) {
