@@ -53,9 +53,9 @@ def prepare_cmake_build(toolchain_path: str, optimization_level: str, source_pat
         command.append("cmake")
     # Check if make should be specified
     if make_path is not None:
-        command.append("-DCMAKE_MAKE_PROGRAM={}".format(make_path))
+        command.append("-DCMAKE_MAKE_PROGRAM=\"{}\"".format(make_path))
     command.append("-DCMAKE_BUILD_TYPE={}".format(build_type))
-    command.append("-DCMAKE_TOOLCHAIN_FILE={}".format(toolchain_path))
+    command.append("-DCMAKE_TOOLCHAIN_FILE=\"{}\"".format(toolchain_path))
     command.append("-DSET_OPTIMIZATION={}".format(optimization_level))
     if definitions is not None:
         for definition in definitions:
