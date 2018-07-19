@@ -93,28 +93,3 @@ def build_cmake_project(build_path: str, target: str, cmake_path: str = None, pa
     result = subprocess.call(string_command, shell=True)
     if result != 0:
         exit(result)
-
-
-def build_cmake_project2(build_path: str, target: str):
-    command = list()
-    command.append("cmd")
-    command.append("/c")
-
-    sub_command = list()
-    sub_command.append(r'set "PATH=%PATH%;C:\cygwin64\bin"')
-    sub_command.append("&&")
-    sub_command.append("C:\\Users\\olivi\\Downloads\\local\\bin\\cmake.exe")
-    sub_command.append("--build")
-    sub_command.append(build_path)
-    sub_command.append("--clean-first")
-    sub_command.append("--target")
-    sub_command.append(target)
-    sub_command.append("--")
-    sub_command.append("-j")
-    sub_command.append("4")
-    command.append("\"{}\"".format(" ".join(sub_command)))
-    final_command = " ".join(command)
-    print(final_command)
-    result = subprocess.call(final_command, shell=True)
-    if result != 0:
-        exit(result)
