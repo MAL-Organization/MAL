@@ -9,10 +9,18 @@
 	<description>MAL library</description>
 
 	<properties>
-		<build.configurations>STM32F072CB,STM32F767ZI,GNU</build.configurations>
+		<!-- <build.configurations>STM32F072CB,STM32F767ZI,GNU</build.configurations> -->
+		<build.configurations>GNU</build.configurations>
 		<build.toolchain.default>arm</build.toolchain.default>
 		<build.toolchain.gnu>cygwin</build.toolchain.gnu>
 		<build.optimization.levels>Ofast,Os,O3,O2,O1,O0</build.optimization.levels>
+		<cmake.cygwin.version>3.10.3.1</cmake.cygwin.version>
+		<cmake.cygwin.folder>${project.build.directory}/cmake-cygwin</cmake.cygwin.folder>
+		<build.make.default>${env.ARM_BUILD_TOOLS_HOME}/make.exe</build.make.default>
+		<build.make.gnu>${env.CYGWIN_PATH}/make.exe</build.make.gnu>
+		<build.cmake.default>${env.CMAKE_HOME}/cmake.exe</build.cmake.default>
+		<build.cmake.gnu>${cmake.cygwin.folder}/bin/cmake.exe</build.cmake.gnu>
+		<build.path.gnu>${env.CYGWIN_PATH}</build.path.gnu>
 		<path.to.doc>${basedir}/docs</path.to.doc>
 		<path.to.doc.resources>${basedir}/docs-resources</path.to.doc.resources>
 		<build.folder>${project.build.directory}/build</build.folder>
@@ -56,6 +64,25 @@
 			  <artifactId>maven-release-plugin</artifactId>
 			  <version>2.5.3</version>
 			</plugin>
+			<plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>install-cmake</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>https://github.com/MAL-Organization/cmake-cygwin/releases/download/${cmake.cygwin.version}/cmake-cygwin-${cmake.cygwin.version}.zip</url>
+							<unpack>true</unpack>
+							<outputDirectory>${cmake.cygwin.folder}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>

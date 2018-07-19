@@ -1,7 +1,7 @@
 import shutil
 import subprocess
 from collections import OrderedDict
-from typing import List
+from typing import List, Union
 
 
 def extract_properties(property_file_path: str) -> dict:
@@ -27,38 +27,94 @@ def clean_build_folder(build_folder_path: str):
     shutil.rmtree(build_folder_path, ignore_errors=True)
 
 
+def get_wrapped_command(path_additions: Union[List[str], None], command: List[str]):
+    command_wrapper = list()
+    if path_additions is not None:
+        command_wrapper.append("cmd")
+        command_wrapper.append("/c")
+        set_command = r'"set "PATH=%PATH%'
+        for path_addition in path_additions:
+            set_command += ";{}".format(path_addition)
+        set_command += '" && {}"'.format(" ".join(command))
+        command_wrapper.append(set_command)
+    else:
+        command_wrapper.append(" ".join(command))
+    return " ".join(command_wrapper)
+
+
 def prepare_cmake_build(toolchain_path: str, optimization_level: str, source_path: str, build_path: str,
-                        build_type: str = "Release", definitions: List[str] = None) -> str:
-    process_arguments = list()
-    process_arguments.append("cmake")
-    process_arguments.append("-DCMAKE_BUILD_TYPE={}".format(build_type))
-    process_arguments.append("-DCMAKE_TOOLCHAIN_FILE={}".format(toolchain_path))
-    process_arguments.append("-DSET_OPTIMIZATION={}".format(optimization_level))
+                        build_type: str = "Release", definitions: List[str] = None, make_path: str = None,
+                        path_additions: List[str] = None, cmake_path: str = None) -> str:
+    command = list()
+    # Choose cmake
+    if cmake_path is not None:
+        command.append(cmake_path)
+    else:
+        command.append("cmake")
+    # Check if make should be specified
+    if make_path is not None:
+        command.append("-DCMAKE_MAKE_PROGRAM={}".format(make_path))
+    command.append("-DCMAKE_BUILD_TYPE={}".format(build_type))
+    command.append("-DCMAKE_TOOLCHAIN_FILE={}".format(toolchain_path))
+    command.append("-DSET_OPTIMIZATION={}".format(optimization_level))
     if definitions is not None:
         for definition in definitions:
-            process_arguments.append("-D{}".format(definition))
-    process_arguments.append("-H{}".format(source_path))
-    process_arguments.append("-B{}".format(build_path))
-    process_arguments.append("-GCodeBlocks - Unix Makefiles")
+            command.append("-D{}".format(definition))
+    command.append("-H{}".format(source_path))
+    command.append("-B{}".format(build_path))
+    command.append("-G\"CodeBlocks - Unix Makefiles\"")
+
+    string_command = get_wrapped_command(path_additions, command)
     console_output = None
     try:
-        console_output = subprocess.check_output(process_arguments, shell=True)
+        console_output = subprocess.check_output(string_command, shell=True)
     except subprocess.CalledProcessError:
         exit(1)
     return console_output
 
 
-def build_cmake_project(build_path: str, target: str):
-    process_arguments = list()
-    process_arguments.append("cmake")
-    process_arguments.append("--build")
-    process_arguments.append(build_path)
-    process_arguments.append("--clean-first")
-    process_arguments.append("--target")
-    process_arguments.append(target)
-    process_arguments.append("--")
-    process_arguments.append("-j")
-    process_arguments.append("4")
-    result = subprocess.call(process_arguments)
+def build_cmake_project(build_path: str, target: str, cmake_path: str = None, path_additions: List[str] = None):
+    command = list()
+    # Choose cmake
+    if cmake_path is not None:
+        command.append(cmake_path)
+    else:
+        command.append("cmake")
+    command.append("--build")
+    command.append(build_path)
+    command.append("--clean-first")
+    command.append("--target")
+    command.append(target)
+    command.append("--")
+    command.append("-j")
+    command.append("4")
+
+    string_command = get_wrapped_command(path_additions, command)
+    result = subprocess.call(string_command, shell=True)
+    if result != 0:
+        exit(result)
+
+
+def build_cmake_project2(build_path: str, target: str):
+    command = list()
+    command.append("cmd")
+    command.append("/c")
+
+    sub_command = list()
+    sub_command.append(r'set "PATH=%PATH%;C:\cygwin64\bin"')
+    sub_command.append("&&")
+    sub_command.append("C:\\Users\\olivi\\Downloads\\local\\bin\\cmake.exe")
+    sub_command.append("--build")
+    sub_command.append(build_path)
+    sub_command.append("--clean-first")
+    sub_command.append("--target")
+    sub_command.append(target)
+    sub_command.append("--")
+    sub_command.append("-j")
+    sub_command.append("4")
+    command.append("\"{}\"".format(" ".join(sub_command)))
+    final_command = " ".join(command)
+    print(final_command)
+    result = subprocess.call(final_command, shell=True)
     if result != 0:
         exit(result)
