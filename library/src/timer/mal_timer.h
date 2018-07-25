@@ -27,7 +27,7 @@
 #include "std/mal_stdint.h"
 #include "std/mal_bool.h"
 #include "std/mal_types.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
 
 /**
@@ -41,133 +41,193 @@
  * platforms.
  */
 typedef enum {
-	MAL_TIMER_1 = 0,    //!< Timer 1
-	MAL_TIMER_2 = 1,    //!< Timer 2
-	MAL_TIMER_3 = 2,    //!< Timer 3
-	MAL_TIMER_4 = 3,    //!< Timer 4
-	MAL_TIMER_5 = 4,    //!< Timer 5
-	MAL_TIMER_6 = 5,    //!< Timer 6
-	MAL_TIMER_7 = 6,    //!< Timer 7
-	MAL_TIMER_8 = 7,    //!< Timer 8
-	MAL_TIMER_9 = 8,    //!< Timer 9
-	MAL_TIMER_10 = 9,   //!< Timer 10
-	MAL_TIMER_11 = 10,  //!< Timer 11
-	MAL_TIMER_12 = 11,  //!< Timer 12
-	MAL_TIMER_13 = 12,  //!< Timer 13
-	MAL_TIMER_14= 13,   //!< Timer 14
-	MAL_TIMER_15 = 14,  //!< Timer 15
-	MAL_TIMER_16 = 15,  //!< Timer 16
-	MAL_TIMER_17 = 16,  //!< Timer 17
-	MAL_TIMER_SIZE = 17,//!< Do not use.
-	MAL_TIMER_ANY       //!< Use to pick first available timer for initialization.
+    MAL_TIMER_1 = 0,    //!< Timer 1
+    MAL_TIMER_2 = 1,    //!< Timer 2
+    MAL_TIMER_3 = 2,    //!< Timer 3
+    MAL_TIMER_4 = 3,    //!< Timer 4
+    MAL_TIMER_5 = 4,    //!< Timer 5
+    MAL_TIMER_6 = 5,    //!< Timer 6
+    MAL_TIMER_7 = 6,    //!< Timer 7
+    MAL_TIMER_8 = 7,    //!< Timer 8
+    MAL_TIMER_9 = 8,    //!< Timer 9
+    MAL_TIMER_10 = 9,   //!< Timer 10
+    MAL_TIMER_11 = 10,  //!< Timer 11
+    MAL_TIMER_12 = 11,  //!< Timer 12
+    MAL_TIMER_13 = 12,  //!< Timer 13
+    MAL_TIMER_14= 13,   //!< Timer 14
+    MAL_TIMER_15 = 14,  //!< Timer 15
+    MAL_TIMER_16 = 15,  //!< Timer 16
+    MAL_TIMER_17 = 16,  //!< Timer 17
+    MAL_TIMER_SIZE = 17,//!< Do not use.
+    MAL_TIMER_ANY       //!< Use to pick first available timer for initialization.
 } mal_timer_e;
 
 /**
- * @brief Function pointer typdef for timer in task mode.
- * @param timer Will provide the timer executing the callback.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
+ * Timer handle that must be defined by hardware specific implementation. Used
+ * to access the timer functions.
  */
-typedef mal_error_e (*mal_timer_callback_t)(mal_timer_e timer);
+typedef struct MAL_TIMER mal_timer_s;
 
 /**
- * Initialization parameters of a PWM input.
+ * Timer PWM handle that must be defined by hardware specific implementation.
+ * Used to access the timer pwm functions.
+ */
+typedef struct MAL_TIMER_PWM mal_timer_pwm_s;
+
+/**
+ * Timer input capture handle that must be defined by hardware specific
+ * implementation. Used to access the timer input capture functions.
+ */
+typedef struct MAL_TIMER_INPUT_CAPTURE mal_timer_input_capture_s;
+
+/**
+ * @brief Function pointer typdef for timer in task mode.
+ * @param handle The given handle during initialization.
+ */
+typedef void (*mal_timer_callback_t)(void *handle);
+
+/**
+ * This structure is used to retain interrupt status between disable and
+ * restore. Must be defined by the hardware specific implementation.
+ */
+typedef struct MAL_TIMER_INTERRUPT_STATE mal_timer_interrupt_state_s;
+
+/**
+ * Information for reserved timers.
  */
 typedef struct {
-	mal_timer_e timer; /**< The timer to use for the PWM output.*/
-	mal_hertz_t frequency; /**< The frequency of the PWM.*/
-	mal_hertz_t delta; /**< The acceptable frequency delta.*/
-	const mal_gpio_s *pwm_io; /**< The gpio of the PWM output.*/
-} mal_timer_pwm_init_s;
+    bool is_available; //!< true if the timer is available, false otherwise.
+} mal_timer_state_s;
+
+/**
+ * Initialization parameters of a timer in task mode.
+ */
+typedef struct {
+    mal_timer_e timer; //!< The timer to use for the input capture.
+    mal_hertz_t frequency; //!< The frequency to count to.
+    mal_hertz_t delta; //!< Frequency error tolerance.
+    mal_timer_callback_t callback; //!< The callback to be executed on overflow.
+    void *callback_handle;
+} mal_timer_init_task_s;
+
+/**
+ * Initialization parameters of a PWM output.
+ */
+typedef struct {
+    mal_timer_e timer; /**< The timer to use for the PWM output.*/
+    mal_hertz_t frequency; /**< The frequency of the PWM.*/
+    mal_hertz_t delta; /**< The acceptable frequency delta.*/
+    mal_gpio_port_e port; /**< The port of the PWM GPIO to initialize.*/
+    uint8_t pin; /**< The pin of the port of the PWM GPIO to initialize. */
+} mal_timer_init_pwm_s;
 
 /**
  * Possible timer input triggers.
  */
 typedef enum {
-	MAL_TIMER_INPUT_RISING, //!< Rising event.
-	MAL_TIMER_INPUT_FALLING,//!< Falling event.
-	MAL_TIMER_INPUT_BOTH    //!< Rising and falling event.
+    MAL_TIMER_INPUT_RISING, //!< Rising event.
+    MAL_TIMER_INPUT_FALLING,//!< Falling event.
+    MAL_TIMER_INPUT_BOTH    //!< Rising and falling event.
 } mal_timer_input_e;
 
 /**
  * @brief Function pointer typdef for timer in input capture mode.
- * @param timer Will provide the timer executing the callback.
+ * @param handle The callback handle given during initialization.
  * @param count The captured count.
- * @return Return a status once you executed your callback. For now, nothing is
- * done with this status.
  */
-typedef mal_error_e (*mal_timer_input_capture_callback_t)(mal_timer_e timer, uint64_t count);
+typedef void (*mal_timer_input_capture_callback_t)(void *handle, uint64_t count);
 
 /**
  * Initialization parameters of a capture input.
  */
 typedef struct {
-	mal_timer_e timer; /**< The timer to use for the input capture.*/
-	mal_hertz_t frequency; /**< The frequency to count to.*/
-	const mal_gpio_s *input_io; /**< The gpio of the input capture.*/
-	mal_timer_input_e input_event; /**< The input event to capture.*/
-	uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
-	mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
-} mal_timer_intput_capture_init_s;
+    mal_timer_e timer; /**< The timer to use for the input capture.*/
+    mal_hertz_t frequency; /**< The frequency to count to.*/
+    mal_gpio_port_e port; /**< The port of the input capture GPIO to initialize.*/
+    uint8_t pin; /**< The pin of the port of the input captrure GPIO to initialize. */
+    mal_timer_input_e input_event; /**< The input event to capture.*/
+    uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
+    mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
+    void *callback_handle; /**< This will be passed back at callback execution.*/
+} mal_timer_init_intput_capture_s;
 
 /**
- * Structure that contains basic info about a timer.
+ * Initialization parameters of a timer in count mode.
  */
 typedef struct {
-	bool is_available; //!< true if the timer is available, false otherwise.
-	mal_hertz_t frequency; //!< Frequency of the timer.
-	mal_hertz_t delta; //!< Frequency error tolerance.
-	// Tick timer variables
-	volatile uint64_t tick_counter; //!< Contains the count of the timer in tick mode.
-} mal_timer_state_s;
+    mal_timer_e timer; /**< The timer to use for the count.*/
+    mal_hertz_t frequency; /**< The frequency to count at.*/
+} mal_timer_init_count_s;
 
 /**
- * Initialization parameters of a timer.
+ * @brief Macro to help subtract 2 timer values regardless of the resolution.
+ * The result will be count2 - count1 respecting the two's complement wrap
+ * around. This means that for an 8 bit resolution timer, 1 - 255 = 2.
+ * @param count2 The count 2 value. Should be the most recent count.
+ * @param count1 The count 1 value. Should be the oldest count.
+ * @param mask The value obtained by #mal_timer_get_count_mask.
+ * @return The result of the subtraction.
  */
-typedef struct {
-	mal_timer_e timer; //!< The timer to use for the input capture.
-	mal_hertz_t frequency; //!< The frequency to count to.
-	mal_hertz_t delta; //!< Frequency error tolerance.
-	mal_timer_callback_t callback; //!< The callback to be executed on overflow.
-} mal_timer_init_s;
+#define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-(count1)) & (mask))) & (mask))
 
 /**
- * Initialization parameters of a tick timer.
+ * Reserve a timer. This function is useful if you want to use
+ * #MAL_HSPEC_TIMER_ANY to reserve a random timer. This allows the use of a
+ * random timer when the specific timer is not important.
+ * @param timer The timer to reserve. Note that if a random timer is fine,
+ * #MAL_HSPEC_TIMER_ANY can be used.
+ * @param reserved_timer The actual timer reserved. Useful when timer is
+ * #MAL_HSPEC_TIMER_ANY.
+ * @return #MAL_ERROR_OK if timer is reserved, #MAL_ERROR_HARDWARE_UNAVAILABLE
+ * otherwise.
  */
-typedef struct {
-	mal_timer_e timer; //!< The timer to use for the tick count.
-	mal_hertz_t frequency; //!< The frequency at which the tick will increment.
-	mal_hertz_t delta; //!< Frequency error tolerance.
-} mal_timer_init_tick_s;
+mal_error_e mal_timer_reserve(mal_timer_e timer, mal_timer_e *reserved_timer);
 
 /**
  * @brief Disable interrupts for a timer.
- * @param timer The timer to disable the interrupt. Should be of type
- * ::mal_hspec_timer_e.
- * @return Returns true if interrupt was active before disabling it.
+ * @param timer The timer to disable the interrupt.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE bool mal_timer_disable_interrupt(mal_timer_e timer);
+MAL_DEFS_INLINE void mal_timer_disable_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state);
 
 /**
  * @brief Enable interrupts for a timer.
- * @param timer The timer to enable the interrupt. Should be of type
- * ::mal_hspec_timer_e.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
- * @return Nothing. This macro is meant to be standalone on a line. Do not
- * equate or use as a condition.
+ * @param timer The timer to restore the interrupt to.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_timer_enable_interrupt(mal_timer_e timer, bool active);
+MAL_DEFS_INLINE void mal_timer_restore_interrupt(mal_timer_s *handle, mal_timer_interrupt_state_s *state);
 
 /**
- * @brief Set the duty cycle of an initialized PWM IO.
- * @param timer The timer of the PWM IO.
- * @param gpio The GPIO the PWM is on.
- * @param duty_cyle A mal_ratio_t value representing the duty cycle on/off
- * ratio.
+ * @brief Initialize a timer that periodically calls a function (task).
+ * @param init Task timer initialize parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gpio, mal_ratio_t duty_cycle);
+mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle);
+
+/**
+ * @brief Initialize directly a timer that periodically calls a function
+ * (task).
+ * @param init Timer initialization parameters.
+ * @param direct_init A pointer to direct initialization parameters. See the
+ * hardware specific implementation to know what type this should be.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_direct_init_task(mal_timer_init_task_s *init, const void *direct_init, mal_timer_s *handle);
+
+/**
+ * @brief Initializes a timer and the IO as a PWM generator.
+ * @param init The initialize structure of the pwm.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent timer functions.
+ * @param pwm_handle The PWM handle to initialize. This handle is used to
+ * access subsequent PWM functions.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle);
 
 /**
  * @brief Get the resolution of timer. The resolution is number of bits for the
@@ -180,32 +240,12 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_e timer, const mal_gpio_s *gp
 mal_error_e mal_timer_get_resolution(mal_timer_e timer, uint8_t *resolution);
 
 /**
- * @brief Get the actual counting frequency of a timer.
- * @param timer The timer to get the frequency from.
- * @param frequency A pointer to a mal_hertz_t that will contain the counting
- * frequency.
+ * @brief Will return the mask to use to filter the count register values.
+ * @param timer
+ * @param mask A pointer to a uint64_t that will contain the mask;
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_get_count_frequency(mal_timer_e timer, mal_hertz_t *frequency);
-
-/**
- * @brief Macro to help subtract 2 timer values regardless of the resolution.
- * The result will be count2 - count1 respecting the two's complement wrap
- * around. This means that for an 8 bit resolution timer, 1 - 255 = 2.
- * @param count2 The count 2 value. Should be the most recent count.
- * @param count1 The count 1 value. Should be the oldest count.
- * @param mask The value obtained by #mal_timer_get_count_mask.
- * @return The result of the subtraction.
- */
-#define MAL_TIMER_SUB_COUNTS(count2, count1, mask)	(((count2) + ((-count1) & mask)) & mask)
-
-/**
- * @brief Get the count register of a timer.
- * @param timer The timer to get the count from.
- * @param count A pointer to a uint64_t. It will contain the count.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_get_count(mal_timer_e timer, uint64_t *count);
+mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask);
 
 /**
  * @brief Check if a timer is available for this MCU.
@@ -223,120 +263,40 @@ mal_error_e mal_timer_is_valid(mal_timer_e timer);
 mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size);
 
 /**
- * @brief Initialize a timer. Note that this method does support the any timer.
- * @param init Timer initialization parameters.
+ * @brief Set the duty cycle of an initialized PWM IO.
+ * @param handle The handle of the PWM IO.
+ * @param gpio The GPIO the PWM is on.
+ * @param duty_cyle A mal_ratio_t value representing the duty cycle on/off
+ * ratio.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle);
+
+/**
+ * @brief Get the actual counting frequency of a timer.
+ * @param handle The timer handle to get the frequency from.
+ * @param frequency A pointer to a mal_hertz_t that will contain the counting
+ * frequency.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init(mal_timer_init_s *init);
+mal_error_e mal_timer_get_count_frequency(mal_timer_s *handle, mal_hertz_t *frequency);
 
 /**
- * @brief Initialize directly a timer. Note that this method does support the
- * any timer. Using this function will reduce code size at the cost of
- * flexibility and safety. Usually use this in a code closer to final.
- * @param init Timer initialization parameters.
- * @param direct_init A pointer to direct initialization parameter. See the
- * hardware specific implementation to know what type this should be.
+ * @brief Get the count register of a timer.
+ * @param handle The timer handle to get the count from.
+ * @param count A pointer to a uint64_t. It will contain the count.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_direct_init(mal_timer_init_s *init, const void *direct_init);
+mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count);
 
 /**
- * @brief Initialize a timer as a simple tick counter. Use ::mal_timer_get_tick
- * to read ticks.
- * @param init Tick timer initialize parameters.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
+ * This is a simple timer initialization. You have to handle the overflow of the timer based on timer resolution.
+ * @param timer Timer count initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent timer functions.
  * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_tick(mal_timer_init_tick_s *init, mal_timer_e *handle);
-
-/**
- * @brief Function to initialize directly the timer. Using this function
- * will reduce code size at the cost of flexibility and safety. Usually use
- * this in a code closer to final.
- * @param init Tick timer initialize parameters.
- * @param direct_init A pointer to direct initialization parameter. See the
- * hardware specific implementation to know what type this should be.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_direct_init_tick(mal_timer_init_tick_s *init, const void *direct_init, mal_timer_e *handle);
-
-/**
- * This is a simple timer initialization. The main difference between this and
- * the tick timer is you have to handle yourself the overflow of the timer
- * based on timer resolution. This method is much faster however because it
- * doesn't rely on interrupts to work. Use this to time precise events.
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_count(mal_timer_e timer, mal_hertz_t frequency, mal_timer_e *handle);
-
-/**
- * @brief Similar to mal_timer_free, but will be unmanaged. This means this
- * timer will not be flagged as busy and the use of timer ANY will not work
- * properly.
- * @param timer The desired timer to initialize.
- * @param frequency The frequency to count at.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_count_unmanaged(mal_timer_e timer, mal_hertz_t frequency);
-
-/**
- * @brief Initialize a timer that periodically calls a function (task). Similar
- * to mal_timer_init, but will be unmanaged. This means this timer will not be
- * flagged as busy and the use of timer ANY will not work properly.
- * @param init Task timer initialize parameters.
- * @param handle This handle will return the used timer. Useful when using
- * #MAL_HSPEC_TIMER_ANY.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_task(mal_timer_init_s *init, mal_timer_e *handle);
-
-/**
- * @brief Return the tick of a timer when initialized in tick mode.
- * @param handle The timer to check for tick.
- * @return The tick count.
- */
-uint64_t mal_timer_get_tick(mal_timer_e handle);
-
-/**
- * @brief Frees a used timer.
- * @param timer The timer to free.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_free(mal_timer_e timer);
-
-/**
- * @brief Similar to mal_timer_free, but will be unmanaged. This means this
- * timer will not be flagged as busy and the use of timer ANY will not work
- * properly.
- * @param timer
- * @return
- */
-mal_error_e mal_timer_free_unmanaged(mal_timer_e timer);
-
-/**
- * @brief Initializes a timer and the IO as a PWM generator.
- * @param init The initialize structure of the pwm.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_pwm(mal_timer_pwm_init_s *init);
-
-/**
- * @brief Similar to mal_timer_init_pwm, but will be unmanaged. This means this
- * timer will not be flagged as busy and the use of timer ANY will not work
- * properly.
- * @param init The initialize structure of the pwm.
- * @return #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init);
+mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle);
 
 /**
  * @brief Returns the state of the timer.
@@ -348,31 +308,28 @@ mal_error_e mal_timer_init_pwm_unmanaged(mal_timer_pwm_init_s *init);
 mal_error_e mal_timer_get_state(mal_timer_e timer, mal_timer_state_s *state);
 
 /**
- * @brief Will return the mask to use to filter the count register values.
- * @param timer
- * @param mask A pointer to a uint64_t that will contain the mask;
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_timer_get_count_mask(mal_timer_e timer, uint64_t *mask);
-
-/**
  * @brief Initialize a timer as input capture timer.
  * @param init The initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access
+ * subsequent timer functions.
+ * @param input_capture_handle The input capture handle to initialize. This
+ * handle is used to access subsequent PWM functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_input_capture(mal_timer_intput_capture_init_s *init);
+mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, mal_timer_s *handle,
+                                         mal_timer_input_capture_s *input_capture_handle);
 
 /**
- * @brief Similar to mal_timer_init_input_capture, but will be unmanaged. This
- * means this timer will not be flagged as busy and the use of timer ANY will
- * not work properly.
- * @param The initialization parameters.
- * @return Returns #MAL_ERROR_OK on success.
+ * @brief Frees a used timer.
+ * @param timer The timer handle to free.
+ * @return #MAL_ERROR_OK on success.
  */
-mal_error_e mal_timer_init_input_capture_unmanaged(mal_timer_intput_capture_init_s *init);
+mal_error_e mal_timer_free(mal_timer_s *handle);
 
 /**
- * @}
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
  */
+#include "hspec/mal_hspec.h"
 
 #endif /* TIMER_MAL_TIMER_H_ */

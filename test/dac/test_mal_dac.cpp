@@ -25,7 +25,7 @@
 
 extern "C" {
 #include "dac/mal_dac.h"
-#include "hspec/mingw/mal_hspec_mingw_power.h"
+#include "hspec/gnu/mal_hspec_gnu_power.h"
 }
 
 #include "gtest/gtest.h"
@@ -36,25 +36,24 @@ class TestMalDac : public ::testing::Test {
 
 TEST_F(TestMalDac, VoltsToBits) {
 	mal_error_e result;
+	mal_dac_s handle;
 	// Setup power rail
 	mal_volts_t	vdda = MAL_TYPES_VOLTS_TO_MAL_VOLTS(3.3f);
-	mal_hspec_mingw_power_set_rail_voltage(MAL_POWER_RAIL_VDDA, vdda);
+	mal_hspec_gnu_power_set_rail_voltage(MAL_POWER_RAIL_VDDA, vdda);
 	// Test data
 	mal_dac_e test_dac = MAL_DAC_0;
 	uint8_t test_resolution = 16;
-	mal_gpio_s test_gpio;
-	test_gpio.port = MAL_GPIO_PORT_A;
-	test_gpio.pin = 0;
 	// Setup DAC
 	mal_dac_init_s init;
 	init.dac = test_dac;
-	init.gpio = &test_gpio;
+	init.port = MAL_GPIO_PORT_A;
+	init.pin = 0;
 	init.bit_resolution = test_resolution;
-	result = mal_dac_init(&init);
+	result = mal_dac_init(&init, &handle);
 	ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to initialize DAC";
 	// Test with half of maximum value
 	uint64_t conversion_result;
-	result = mal_dac_volts_to_bits(test_dac, vdda / 2, &conversion_result);
+	result = mal_dac_volts_to_bits(&handle, vdda / 2, &conversion_result);
 	ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to convert value";
 	ASSERT_EQ(conversion_result, 32767);
 }

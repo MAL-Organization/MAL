@@ -25,7 +25,7 @@
 
 #include "std/mal_error.h"
 #include "std/mal_stdint.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "std/mal_defs.h"
 
 /**
@@ -100,8 +100,10 @@ typedef mal_error_e (*mal_serial_rx_callback_t)(void *handle, uint16_t data);
  */
 typedef struct {
     mal_serial_port_e port; /**< The port to initialize.*/
-    const mal_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
-    const mal_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
+    mal_gpio_port_e rx_port; /**< The port of the RX GPIO.*/
+    uint8_t rx_pin; /**< The pin of the port of the RX GPIO.*/
+    mal_gpio_port_e tx_port; /**< The port of the TX GPIO.*/
+    uint8_t tx_pin; /**< The pin of the port of the TX GPIO.*/
     uint64_t baudrate; /**< The baudrate.*/
     mal_serial_data_size_e data_size; /**< The word size.*/
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
@@ -116,7 +118,7 @@ typedef struct {
  * This structure is used to retain interrupt status between disable and
  * enable. Must be defined by the hardware specific implementation.
  */
-typedef struct MAL_SERIAL_INTERRUPT mal_serial_interrupt_s;
+typedef struct MAL_SERIAL_INTERRUPT_STATE mal_serial_interrupt_state_s;
 
 /**
  * @brief Initialize the given serial interface with the given parameters.
@@ -139,17 +141,16 @@ mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data);
 /**
  * @brief Disable a serial port interrupt.
  * @param handle The port to disable the interrupt from.
- * @return Returns true if interrupt was active before disabling it.
+ * @param state The state to use to restore interrupts.
  */
-MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state);
 
 /**
  * @brief Enable a serial port interrupt.
  * @param handle The port to enable the interrupt from.
- * @param active A boolean that indicates if the interrupt should be activated.
- * Use the returned state of the disable function.
+ * @param state The state given by the disable function.
  */
-MAL_DEFS_INLINE void mal_serial_enable_interrupt(mal_serial_s *handle, mal_serial_interrupt_s *state);
+MAL_DEFS_INLINE void mal_serial_restore_interrupt(mal_serial_s *handle, mal_serial_interrupt_state_s *state);
 
 /**
  * This include is last because it defines hardware specific implementations of

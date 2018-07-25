@@ -1,0 +1,218 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github</groupId>
+	<artifactId>mal</artifactId>
+	<version>3.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>mal</name>
+	<description>MAL library</description>
+
+	<properties>
+		<build.configurations>STM32F072CB,STM32F767ZI,GNU</build.configurations>
+		<build.toolchain.default>arm</build.toolchain.default>
+		<build.toolchain.gnu>cygwin</build.toolchain.gnu>
+		<build.optimization.levels>Ofast,Os,O3,O2,O1,O0</build.optimization.levels>
+		<cmake.cygwin.version>3.10.3.1</cmake.cygwin.version>
+		<cmake.cygwin.folder>${project.build.directory}/cmake-cygwin</cmake.cygwin.folder>
+		<build.make.default>${env.ARM_BUILD_TOOLS_HOME}/make.exe</build.make.default>
+		<build.make.gnu>${env.CYGWIN_PATH}/make.exe</build.make.gnu>
+		<build.cmake.default>${env.CMAKE_HOME}/cmake.exe</build.cmake.default>
+		<build.cmake.gnu>${cmake.cygwin.folder}/bin/cmake.exe</build.cmake.gnu>
+		<build.path.gnu>${env.CYGWIN_PATH}</build.path.gnu>
+		<path.to.doc>${basedir}/docs</path.to.doc>
+		<path.to.doc.resources>${basedir}/docs-resources</path.to.doc.resources>
+		<build.folder>${project.build.directory}/build</build.folder>
+		<build.test.folder>${project.build.directory}/test-build</build.test.folder>
+		<build.test.toolchain>cygwin</build.test.toolchain>
+	</properties>
+
+	<scm>
+		<connection>scm:git:git@github.com:MAL-Organization/MAL.git</connection>
+        <url>scm:git:git@github.com:MAL-Organization/MAL.git</url>
+        <developerConnection>scm:git:git@github.com:MAL-Organization/MAL.git</developerConnection>
+		<tag>master</tag>
+	</scm>
+	
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+			</plugin>
+			<plugin>
+			  <artifactId>maven-release-plugin</artifactId>
+			  <version>2.5.3</version>
+			</plugin>
+			<plugin>
+				<groupId>com.googlecode.maven-download-plugin</groupId>
+				<artifactId>download-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>install-cmake</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>wget</goal>
+						</goals>
+						<configuration>
+							<url>https://github.com/MAL-Organization/cmake-cygwin/releases/download/${cmake.cygwin.version}/cmake-cygwin-${cmake.cygwin.version}.zip</url>
+							<unpack>true</unpack>
+							<outputDirectory>${cmake.cygwin.folder}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>build</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<echoproperties destfile="${project.build.directory}/initialize.properties" />
+								<exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\compile.py" />
+									<arg value="${project.build.directory}/initialize.properties" />
+								</exec>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+                        <id>default-test</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <target>
+                                <echoproperties destfile="${project.build.directory}/test.properties" />
+                                <exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\test.py" />
+									<arg value="${project.build.directory}/test.properties" />
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+					<execution>
+                        <id>generate-doc</id>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <target>
+                                <echoproperties destfile="${project.build.directory}/doc.properties" />
+                                <exec failifexecutionfails="true" executable="python3" failonerror="true">
+									<arg value="${project.build.directory}\..\build-scripts\generate_doc.py" />
+									<arg value="${project.build.directory}/doc.properties" />
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-install</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <target>
+                                <echoproperties destfile="${project.build.directory}/install.properties" />
+                                <exec failifexecutionfails="true" executable="java" failonerror="true">
+									<arg value="-jar" />
+									<arg value="${project.build.directory}\..\build-scripts\install\mal-install.jar" />
+									<arg value="${basedir}" />
+									<arg value="${settings.localRepository}" />
+									<arg value="${project.version}" />
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+				  <execution>
+					<id>assembly</id>
+					<phase>package</phase>
+					<goals>
+					  <goal>single</goal>
+					</goals>
+				  </execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+				</configuration>
+			</plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.shared</groupId>
+                        <artifactId>maven-filtering</artifactId>
+                        <version>1.3</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>prepare-doxygen</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${path.to.doc.resources}</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>Doxyfile</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+</project>

@@ -28,14 +28,21 @@ extern "C" {
 #include "timer/mal_timer.h"
 }
 
+#include <unistd.h>
 #include "test_mal_timer.h"
 
+static void timer_callback(void *handle);
+
 void TestMalTimer::SetUp() {
+    this->handle.used = false;
 	// Set up MAL library
 	mal_startup_top_level();
 }
 
 void TestMalTimer::TearDown() {
+    if (this->handle.used) {
+        mal_timer_free(&this->handle);
+    }
 }
 
 TEST_F(TestMalTimer, SubCounts) {
@@ -83,4 +90,28 @@ TEST_F(TestMalTimer, SubCounts) {
 	count2 = 1000000000200ULL;
 	result = MAL_TIMER_SUB_COUNTS(count2, count1, mask);
 	ASSERT_EQ(result, 100) << "Failed to subtract 64 bit values";
+}
+
+/**
+ * Timer mocking is for higher level applications. Make sure it works properly.
+ */
+TEST_F(TestMalTimer, Task) {
+	mal_error_e mal_result;
+	mal_timer_init_task_s task_init;
+	volatile uint32_t counter = 0;
+	task_init.timer = this->test_timer;
+	task_init.frequency = MAL_TYPES_HERTZ_TO_MAL_HERTZ(1000.0f);
+	task_init.delta = MAL_TYPES_HERTZ_TO_MAL_HERTZ(0);
+	task_init.callback = &timer_callback;
+	task_init.callback_handle = (void*)&counter;
+	mal_result = mal_timer_init_task(&task_init, &handle);
+	ASSERT_EQ(mal_result, MAL_ERROR_OK);
+	// Test counter
+    uint32_t count = counter;
+	sleep(1);
+	ASSERT_NE(count, counter);
+}
+
+static void timer_callback(void *handle) {
+	*((uint32_t*)handle) += 1;
 }

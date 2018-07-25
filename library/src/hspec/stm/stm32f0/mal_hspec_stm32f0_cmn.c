@@ -63,20 +63,21 @@ uint32_t mal_hspec_stm32f0_get_rcc_gpio_port(mal_gpio_port_e port) {
 	}
 }
 
-mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32f0_af_e af, uint8_t *function) {
+mal_error_e mal_hspec_stm32f0_get_pin_af(mal_gpio_port_e port, uint8_t pin, mal_hspec_stm32f0_af_e af,
+										 uint8_t *function) {
 	const mal_hspec_stm32f0_af_e (*afs)[MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE][MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE];
 	mal_error_e result;
 	int port_af, pin_af;
 
-	result = mal_hspec_stm32f0_get_port_afs(gpio->port, &afs);
+	result = mal_hspec_stm32f0_get_port_afs(port, &afs);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 
 	for (port_af = 0; port_af < MAL_HSPEC_STM32F0_GPIO_PORT_AF_SIZE; port_af++) {
 		for (pin_af = 0; pin_af < MAL_HSPEC_STM32F0_GPIO_PIN_AF_SIZE; pin_af++) {
-			if ((*afs)[gpio->pin][port_af][pin_af] == af) {
-				*function = port_af;
+			if ((*afs)[pin][port_af][pin_af] == af) {
+				*function = (uint8_t)port_af;
 				return MAL_ERROR_OK;
 			}
 		}
@@ -85,16 +86,16 @@ mal_error_e mal_hspec_stm32f0_get_pin_af(const mal_gpio_s *gpio, mal_hspec_stm32
 	return MAL_ERROR_HARDWARE_INVALID;
 }
 
-mal_error_e mal_hspec_stm32f0_get_timer_af(const mal_gpio_s *gpio, mal_timer_e timer, uint8_t *function) {
+mal_error_e mal_hspec_stm32f0_get_timer_af(mal_gpio_port_e port, uint8_t pin, mal_timer_e timer, uint8_t *function) {
 	const mal_hspec_stm32f0_af_e (*timer_afs)[MAL_GPIO_PORT_SIZE][MAL_HSPEC_STM32F0_GPIO_PORT_SIZE][MAL_TIMER_SIZE];
 	// Fetch timer alternate functions
 	mal_hspec_stm32f0_get_timer_afs(&timer_afs);
 	// Extract alternate function
-	mal_hspec_stm32f0_af_e target_af = (*timer_afs)[gpio->port][gpio->pin][timer];
+	mal_hspec_stm32f0_af_e target_af = (*timer_afs)[port][pin][timer];
 	// Check if it is a valid combinations
 	if (MAL_HSPEC_STM32F0_AF_NONE == target_af) {
 		return MAL_ERROR_HARDWARE_INVALID;
 	}
 	// Get alternate function
-	return mal_hspec_stm32f0_get_pin_af(gpio, target_af, function);
+	return mal_hspec_stm32f0_get_pin_af(port, pin, target_af, function);
 }

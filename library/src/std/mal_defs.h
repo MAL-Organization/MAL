@@ -29,20 +29,30 @@
  * @{
  */
 
-#ifdef MAL_MINGW
+#ifdef MAL_GNU
 
 /**
- * Skip inlines for MINGW.
+ * Skip inlines for GNU.
  */
 #define MAL_DEFS_INLINE
+
+/**
+ * Skip no return for GNU.
+ */
+#define MAL_DEFS_NO_RETURN
 
 #else
 
 #define MAL_DEFS_INLINE     __attribute__ ((gnu_inline)) inline
 
+#define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
+
 #endif
 
-#define MAL_DEFS_NO_RETURN  __attribute__ ((section(".after_vectors"),noreturn))
+/**
+ * Use to remove compiler/IDE warnings.
+ */
+#define MAL_DEFS_UNUSED(value) (void)(value)
 
 /**
  * @}

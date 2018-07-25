@@ -49,7 +49,7 @@ mal_error_e mal_flash_erase_page(uint32_t page) {
 }
 
 mal_error_e mal_flash_write_uint16_values(unsigned int start_address, uint16_t *values, uint32_t count) {
-	FLASH_Status result;
+	FLASH_Status result = FLASH_BUSY;
 	// Unlock flash registers
 	FLASH_Unlock();
 	// Clear pending flags
@@ -77,7 +77,7 @@ mal_error_e mal_flash_write_uint16_values(unsigned int start_address, uint16_t *
 }
 
 mal_error_e mal_flash_write_uint32_values(unsigned int start_address, uint32_t *values, uint32_t count) {
-	FLASH_Status result;
+	FLASH_Status result = FLASH_BUSY;
 	// Unlock flash registers
 	FLASH_Unlock();
 	// Clear pending flags
@@ -106,7 +106,7 @@ mal_error_e mal_flash_write_uint32_values(unsigned int start_address, uint32_t *
 
 unsigned int mal_flash_get_page_start_address(uint32_t page) {
 	uint32_t page_size = mal_flash_get_page_size(page);
-	uint64_t address = FLASH_START_ADDRESS + (page_size * page);
+	unsigned int address = FLASH_START_ADDRESS + (page_size * page);
 	return address;
 }
 
@@ -150,6 +150,6 @@ MAL_DEFS_INLINE uint64_t mal_flash_read_uint64(unsigned int address) {
     return *((uint64_t*)(int)(address));
 }
 
-MAL_DEFS_INLINE uint8_t mal_flash_read_int64(unsigned int address) {
+MAL_DEFS_INLINE int64_t mal_flash_read_int64(unsigned int address) {
     return *((int64_t*)(int)(address));
 }

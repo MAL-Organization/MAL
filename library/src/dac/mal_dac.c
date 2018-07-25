@@ -26,23 +26,23 @@
 #include "mal_dac.h"
 #include "power/mal_power.h"
 
-mal_error_e mal_dac_write_volts(mal_dac_e dac, mal_volts_t value) {
+mal_error_e mal_dac_write_volts(mal_dac_s *handle, mal_volts_t value) {
 	mal_error_e result;
 	// Convert value
 	uint64_t bit_value;
-	result = mal_dac_volts_to_bits(dac, value, &bit_value);
+	result = mal_dac_volts_to_bits(handle, value, &bit_value);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 
-	return mal_dac_write_bits(dac, bit_value);
+	return mal_dac_write_bits(handle, bit_value);
 }
 
-mal_error_e mal_dac_volts_to_bits(mal_dac_e dac, mal_volts_t value, uint64_t *bit_value) {
+mal_error_e mal_dac_volts_to_bits(mal_dac_s *handle, mal_volts_t value, uint64_t *bit_value) {
 	mal_error_e result;
 	// Get DAC resolution
 	uint8_t resolution;
-	result = mal_dac_resolution(dac, &resolution);
+	result = mal_dac_resolution(handle, &resolution);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

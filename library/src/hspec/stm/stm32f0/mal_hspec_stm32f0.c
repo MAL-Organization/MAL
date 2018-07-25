@@ -99,12 +99,10 @@ void mal_startup_hardware(void) {
 }
 
 mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
-	uint32_t timeout_counter;
-	uint32_t hserdy_status;
 	uint64_t src_clk_freq;
 	mal_system_clk_src_e clk_src = clk->src;
-	// This MCU does support floats natively, so frequency is in millihertz
-	uint32_t requested_frequency = clk->frequency / 1000;
+	// This MCU does not support floats natively, so frequency is in millihertz
+	uint32_t requested_frequency = (uint32_t)(MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(clk->frequency) / 1000ULL);
 	uint32_t target_frequency = requested_frequency;
 	// Choose clk source
 	switch (clk->src) {
@@ -114,7 +112,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 	case MAL_SYSTEM_CLK_SRC_EXTERNAL:
 		// Check if there is an external source
 		clk_src = MAL_SYSTEM_CLK_SRC_EXTERNAL;
-		src_clk_freq = mal_clock_get_external_clock_frequency() / 1000;
+		src_clk_freq = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(mal_clock_get_external_clock_frequency()) / 1000ULL;
 		if (0 == src_clk_freq) {
 			// No external, switch to internal
 			src_clk_freq = HSI_VALUE;
@@ -164,9 +162,8 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 		}
 		// PLL required, must select divider and multiplier
 		uint64_t freq_diff = UINT64_MAX;
-		uint32_t divider = 0;
-		uint64_t multiplier = 0;
-		int i, j;
+		int i = 0;
+		int j = 0;
 		for (i = 0; i < (sizeof(hse_prediv_values) / sizeof(uint32_t)); i++) {
 			for (j = 0; j < (sizeof(pll_mul_values) / sizeof(uint32_t)); j++) {
 				// Compute resulting system frequency
@@ -193,7 +190,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
 			}
 		}
 		// Adjust target frequency
-		target_frequency = target_frequency - freq_diff;
+		target_frequency = (uint32_t)(target_frequency - freq_diff);
 		// Set flash latency before switching
 		if (target_frequency > 24000000) {
 			FLASH_SetLatency(FLASH_Latency_1);

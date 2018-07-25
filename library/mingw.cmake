@@ -1,0 +1,14 @@
+set(MAL_TOOLCHAIN_NAME "mingw")
+
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_VERSION 1)
+set(CMAKE_CROSSCOMPILING 1)
+set(CMAKE_C_COMPILER_FORCED 1)
+set(CMAKE_CXX_COMPILER_FORCED 1)
+
+set(CMAKE_C_COMPILER mingw32-gcc)
+set(CMAKE_CXX_COMPILER mingw32-g++)
+# Change archiver
+set(CMAKE_AR mingw32-gcc-ar)
+set(CMAKE_RANLIB mingw32-gcc-ranlib)

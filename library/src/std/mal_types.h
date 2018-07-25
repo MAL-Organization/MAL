@@ -37,9 +37,9 @@
  * always convert 1.8 to 1800 regardless of if MAL_FLOAT is defined.
  */
 #ifdef MAL_FLOAT
-#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			((type)(value * 1000.0f))
+#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			((type)((value) * 1000.0f))
 #else
-#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			(value)
+#define __MAL_TYPES_TYPE_TO_MILLI(type, value)			(type)(value)
 #endif
 /**
  * @endcond
@@ -81,7 +81,7 @@
  * always convert 1.8 (1800) to the correct type representation.
  */
 #ifdef MAL_FLOAT
-#define __MAL_TYPES_MILLI_TO_TYPE(value)					((float)value / 1000.0f)
+#define __MAL_TYPES_MILLI_TO_TYPE(value)					((float)(value) / 1000.0f)
 #else
 #define __MAL_TYPES_MILLI_TO_TYPE(value)					(value)
 #endif
@@ -145,7 +145,7 @@ typedef int64_t mal_hertz_t;
  * Macro to convert a mal_hertz_t value to millihertz. This will always convert
  * 1.8Hz to 1800 regardless of if MAL_FLOAT is defined.
  */
-#define MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(value)				__MAL_TYPES_TYPE_TO_MILLI(mal_hertz_t, value)
+#define MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(value)				__MAL_TYPES_TYPE_TO_MILLI(uint64_t, value)
 
 /**
  * Macro to convert a mal_hertz_t value to hertz. This will always convert
@@ -193,7 +193,7 @@ typedef uint32_t mal_ratio_t;
  * @param value The value to compute a ratio of.
  * @return The result will be a float.
  */
-#define MAL_TYPES_RATIO_OF_FLOAT_VALUE(ratio, value)			(((float)ratio * (float)value) / (float)MAL_TYPES_RATIO_NORMALIZER)
+#define MAL_TYPES_RATIO_OF_FLOAT_VALUE(ratio, value)			(((float)(ratio) * (float)(value)) / (float)MAL_TYPES_RATIO_NORMALIZER)
 
 /**
  * @brief Macro to compute the ratio of value regardless of if MAL_FLOAT is
@@ -204,7 +204,7 @@ typedef uint32_t mal_ratio_t;
  * @return The result will be the given int_type.
  */
 #ifdef MAL_FLOAT
-#define MAL_TYPES_RATIO_OF_INT_VALUE(ratio, int_type, value)	((int_type)((ratio * (float)value) / MAL_TYPES_RATIO_NORMALIZER))
+#define MAL_TYPES_RATIO_OF_INT_VALUE(ratio, int_type, value)	((int_type)(((ratio) * (float)(value)) / MAL_TYPES_RATIO_NORMALIZER))
 #else
 #define	MAL_TYPES_RATIO_OF_INT_VALUE(ratio, int_type, value)	(((int_type)ratio * value) / (int_type)MAL_TYPES_RATIO_NORMALIZER)
 #endif
@@ -217,7 +217,7 @@ typedef uint32_t mal_ratio_t;
  * float. Ratio should be a value between 0 and norm.
  * @return The result will be a mal_ratio_t.
  */
-#define MAL_TYPES_FLOAT_RATIO_TO_RATIO(ratio, norm)				((mal_ratio_t)((ratio * (float)MAL_TYPES_RATIO_NORMALIZER) / norm))
+#define MAL_TYPES_FLOAT_RATIO_TO_RATIO(ratio, norm)				((mal_ratio_t)(((ratio) * (float)MAL_TYPES_RATIO_NORMALIZER) / (norm)))
 
 /**
  * @brief Macro to convert a custom int ratio (ratio / norm) to a
@@ -230,7 +230,7 @@ typedef uint32_t mal_ratio_t;
  * @return The result will be a mal_ratio_t.
  */
 #ifdef MAL_FLOAT
-#define MAL_TYPES_INT_RATIO_TO_RATIO(ratio, norm)				((mal_ratio_t)(((float)ratio * MAL_TYPES_RATIO_NORMALIZER) / (float)norm))
+#define MAL_TYPES_INT_RATIO_TO_RATIO(ratio, norm)				((mal_ratio_t)(((float)(ratio) * MAL_TYPES_RATIO_NORMALIZER) / (float)(norm)))
 #else
 #define MAL_TYPES_INT_RATIO_TO_RATIO(ratio, norm)				(((mal_ratio_t)ratio * MAL_TYPES_RATIO_NORMALIZER) / (mal_ratio_t)norm)
 #endif

@@ -37,8 +37,10 @@ mal_error_e mal_serial_buffer_init(mal_serial_buffer_handle_s *handle, mal_seria
     // Initialize port
     mal_serial_init_s serial_init;
     serial_init.port = init->port;
-    serial_init.rx_gpio = init->rx_gpio;
-    serial_init.tx_gpio = init->tx_gpio;
+    serial_init.rx_port = init->rx_port;
+    serial_init.rx_pin = init->rx_pin;
+    serial_init.tx_port = init->tx_port;
+    serial_init.tx_pin = init->tx_pin;
     serial_init.baudrate = init->baudrate;
     serial_init.data_size = init->data_size;
     serial_init.parity = init->parity;
@@ -57,24 +59,24 @@ mal_error_e mal_serial_buffer_init(mal_serial_buffer_handle_s *handle, mal_seria
 
 mal_error_e mal_serial_buffer_write(mal_serial_buffer_handle_s *handle, uint16_t data) {
     mal_error_e result;
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(&handle->serial_handle, &state);
     result = mal_serial_transfer(&handle->serial_handle, data);
     if (MAL_ERROR_HARDWARE_UNAVAILABLE == result) {
         // Port is busy writing, write to buffer
         result = mal_circular_buffer_write((mal_circular_buffer_s*)&handle->tx_buffer, &data);
     }
-    mal_serial_enable_interrupt(&handle->serial_handle, &state);
+    mal_serial_restore_interrupt(&handle->serial_handle, &state);
 
     return result;
 }
 
 mal_error_e mal_serial_buffer_read(mal_serial_buffer_handle_s *handle, uint16_t *data) {
     mal_error_e result;
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(&handle->serial_handle, &state);
     result = mal_circular_buffer_read((mal_circular_buffer_s*)&handle->rx_buffer, data);
-    mal_serial_enable_interrupt(&handle->serial_handle, &state);
+    mal_serial_restore_interrupt(&handle->serial_handle, &state);
 
     return result;
 }
@@ -96,20 +98,20 @@ static mal_error_e serial_rx_callback(void *handle, uint16_t data) {
 
 uint64_t mal_serial_buffer_get_rx_size(mal_serial_buffer_handle_s *handle) {
     uint64_t result;
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(&handle->serial_handle, &state);
     result = handle->rx_buffer.size;
-    mal_serial_enable_interrupt(&handle->serial_handle, &state);
+    mal_serial_restore_interrupt(&handle->serial_handle, &state);
 
     return result;
 }
 
 mal_error_e mal_serial_buffer_peek(mal_serial_buffer_handle_s *handle, uint64_t index, uint16_t *data) {
     mal_error_e result;
-    mal_serial_interrupt_s state;
+    mal_serial_interrupt_state_s state;
     mal_serial_disable_interrupt(&handle->serial_handle, &state);
     result = mal_circular_buffer_peek((mal_circular_buffer_s*)&handle->rx_buffer, index, data);
-    mal_serial_enable_interrupt(&handle->serial_handle, &state);
+    mal_serial_restore_interrupt(&handle->serial_handle, &state);
 
     return result;
 }

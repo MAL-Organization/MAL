@@ -37,8 +37,10 @@
  */
 typedef struct {
     mal_serial_port_e port; /**< The port to initialize.*/
-    const mal_gpio_s *rx_gpio; /**< The GPIO for the rx pin.*/
-    const mal_gpio_s *tx_gpio; /**< The GPIO for the tx pin.*/
+    mal_gpio_port_e rx_port; /**< The port of the RX GPIO.*/
+    uint8_t rx_pin; /**< The pin of the port of the RX GPIO.*/
+    mal_gpio_port_e tx_port; /**< The port of the TX GPIO.*/
+    uint8_t tx_pin; /**< The pin of the port of the TX GPIO.*/
     uint64_t baudrate; /**< The baudrate.*/
     mal_serial_data_size_e data_size; /**< The word size.*/
     mal_serial_stop_bits_e stop_bits; /**< Number of stop bits.*/
