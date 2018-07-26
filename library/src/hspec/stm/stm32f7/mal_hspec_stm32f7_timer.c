@@ -556,6 +556,8 @@ mal_error_e mal_timer_init_task(mal_timer_init_task_s *init, mal_timer_s *handle
     handle->task_callback = init->callback;
     handle->callback_handle = init->callback_handle;
     HAL_TIM_Base_Start_IT(&handle->hal_timer_handle);
+
+    return MAL_ERROR_OK;
 }
 
 static mal_error_e mal_hspec_stm32f7_timer_get_channel(mal_timer_e timer, mal_gpio_port_e port, uint8_t pin,
