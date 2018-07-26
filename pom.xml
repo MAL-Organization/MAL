@@ -9,7 +9,7 @@
 	<description>MAL library</description>
 
 	<properties>
-		<build.configurations>STM32F072CB,STM32F767ZI,GNU</build.configurations>
+		<build.configurations>STM32F072CB,STM32F765VI,STM32F767ZI,GNU</build.configurations>
 		<build.toolchain.default>arm</build.toolchain.default>
 		<build.toolchain.gnu>cygwin</build.toolchain.gnu>
 		<build.optimization.levels>Ofast,Os,O3,O2,O1,O0</build.optimization.levels>
