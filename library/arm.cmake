@@ -8,8 +8,8 @@ set(CMAKE_CROSSCOMPILING 1)
 set(CMAKE_C_COMPILER_FORCED 1)
 set(CMAKE_CXX_COMPILER_FORCED 1)
 
-set(CMAKE_C_COMPILER arm-none-eabi-gcc)
-set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
+set(CMAKE_C_COMPILER $ENV{ARM_HOME}/arm-none-eabi-gcc.exe)
+set(CMAKE_CXX_COMPILER $ENV{ARM_HOME}/arm-none-eabi-g++.exe)
 # Change archiver
-set(CMAKE_AR arm-none-eabi-ar)
-set(CMAKE_RANLIB arm-none-eabi-ranlib)
+set(CMAKE_AR $ENV{ARM_HOME}/arm-none-eabi-ar.exe)
+set(CMAKE_RANLIB $ENV{ARM_HOME}/arm-none-eabi-ranlib.exe)
