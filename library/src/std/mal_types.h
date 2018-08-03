@@ -106,7 +106,7 @@ typedef int64_t mal_volts_t;
  * Macro to convert a mal_volts_t value to millivolts. This will always convert
  * 1.8V to 1800 regardless of if MAL_FLOAT is defined.
  */
-#define MAL_TYPES_MAL_VOLTS_TO_MILLIVOLTS(value)				__MAL_TYPES_TYPE_TO_MILLI(mal_volts_t, value)
+#define MAL_TYPES_MAL_VOLTS_TO_MILLIVOLTS(value)				__MAL_TYPES_TYPE_TO_MILLI(uint64_t, value)
 
 /**
  * Macro to convert a mal_volts_t value to volts. This will always convert
