@@ -17,23 +17,7 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_
+#ifndef MAL_MAL_HSPEC_STM32F7_DMA_H
+#define MAL_MAL_HSPEC_STM32F7_DMA_H
 
-#include "stm32f7/stm32f7xx_hal_uart.h"
-#include "serial/mal_serial.h"
-#include "stm32f7/stm32f7xx_hal_dma.h"
-
-typedef struct MAL_SERIAL {
-    UART_HandleTypeDef hal_serial_handle;
-    DMA_HandleTypeDef hal_dma;
-} mal_serial_s;
-
-typedef struct MAL_SERIAL_INTERRUPT_STATE {
-
-} mal_serial_interrupt_state_s;
-
-mal_error_e mal_hspec_stm32f7_serial_get_alternate(mal_serial_port_e port, mal_gpio_port_e gpio_port, uint8_t pin,
-                                                   uint32_t *alternate);
-
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_SERIAL_H_ */
+#endif //MAL_MAL_HSPEC_STM32F7_DMA_H

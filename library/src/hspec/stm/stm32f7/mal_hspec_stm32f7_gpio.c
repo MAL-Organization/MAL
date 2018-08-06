@@ -198,12 +198,12 @@ mal_error_e mal_gpio_deinit(mal_gpio_s *gpio) {
 
 mal_error_e mal_hspec_stm32f7_gpio_init_alternate(mal_gpio_port_e port, uint8_t pin, uint32_t alternate) {
     mal_error_e mal_result;
-    // Enable input IO clock
+    // Enable IO clock
     mal_result = mal_hspec_stm32f7_gpio_enable_clock(port);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
-    // Set IO in input capture mode
+    // Set IO in alternate mode
     GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(port);
     GPIO_InitTypeDef gpio_init;
     gpio_init.Mode = GPIO_MODE_AF_PP;
