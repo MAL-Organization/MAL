@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f072_dma.c
- *
- *  Created on: Mar 1, 2018
- *      Author: Olivier
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.

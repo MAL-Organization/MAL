@@ -191,6 +191,8 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     }
     __HAL_UART_DISABLE(&handle->hal_serial_handle);
 
+    __HAL_LINKDMA(huart, hdmatx, hdma_tx);
+
     handle->hal_dma.Instance = ;
     handle->hal_dma.Init.Channel =
     HAL_DMA_Init()
