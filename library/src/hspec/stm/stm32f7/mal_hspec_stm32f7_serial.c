@@ -190,6 +190,76 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         return MAL_ERROR_INIT_FAILED;
     }
     __HAL_UART_DISABLE(&handle->hal_serial_handle);
+    // Try to reserve DMA channels
+    mal_result = mal_hspec_stm32f7_dma_get_serial_stream(init->port, &handle->tx_dma_stream, &handle->rx_dma_stream);
+    if (MAL_ERROR_OK != mal_result) {
+//        // Could not get proper DMA channels. Free reserved channels
+//        mal_hspec_stm32f0_dma_free_channel(handle->tx_dma_channel);
+//        mal_hspec_stm32f0_dma_free_channel(handle->rx_dma_channel);
+//        // Set interrupt mode
+//        handle->dma_mode = false;
+//        // Enable interrupts
+//        NVIC_EnableIRQ(uart_irq);
+//        USART_ITConfig(handle->usart_typedef, USART_IT_RXNE, ENABLE);
+    } else {
+        // Initialize DMA
+        // Enable DMA clocks
+        mal_hspec_stm32f7_dma_enable_clock(handle->tx_dma_stream);
+        mal_hspec_stm32f7_dma_enable_clock(handle->rx_dma_stream);
+        // Initialize TX
+        handle->hal_tx_dma.Instance = handle->tx_dma_stream->hal_stream;
+        handle->hal_tx_dma.Init.Channel = handle->tx_dma_stream->location->channel;
+        handle->hal_tx_dma.Init.Direction = DMA_MEMORY_TO_PERIPH;
+        handle->hal_tx_dma.Init.PeriphInc = DMA_PINC_DISABLE;
+        handle->hal_tx_dma.Init.MemInc = DMA_MINC_ENABLE;
+        handle->hal_tx_dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+        handle->hal_tx_dma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+        handle->hal_tx_dma.Init.Mode = DMA_NORMAL;
+        handle->hal_tx_dma.Init.Priority = DMA_PRIORITY_LOW;
+        handle->hal_tx_dma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        hal_result = HAL_DMA_Init(&handle->hal_tx_dma);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_INIT_FAILED;
+        }
+        // Initialize RX
+        handle->hal_tx_dma.Instance = handle->rx_dma_stream->hal_stream;
+        handle->hal_tx_dma.Init.Channel = handle->rx_dma_stream->location->channel;
+        handle->hal_tx_dma.Init.Direction = DMA_PERIPH_TO_MEMORY;
+        handle->hal_tx_dma.Init.PeriphInc = DMA_PINC_DISABLE;
+        handle->hal_tx_dma.Init.MemInc = DMA_MINC_ENABLE;
+        handle->hal_tx_dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+        handle->hal_tx_dma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+        handle->hal_tx_dma.Init.Mode = DMA_NORMAL;
+        handle->hal_tx_dma.Init.Priority = DMA_PRIORITY_HIGH;
+        handle->hal_tx_dma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        hal_result = HAL_DMA_Init(&handle->hal_tx_dma);
+        if (HAL_OK != hal_result) {
+            return MAL_ERROR_INIT_FAILED;
+        }
+        // Fetch DMA Irqs
+        IRQn_Type rx_irq = mal_hspec_stm32f0_dma_get_irq(handle->rx_dma_channel);
+        handle->nvic_mask = mal_hspec_stm32f0_nvic_add_irq(rx_irq, handle->nvic_mask);
+        handle->dma_tx_irq = mal_hspec_stm32f0_dma_get_irq(handle->tx_dma_channel);
+        handle->nvic_mask = mal_hspec_stm32f0_nvic_add_irq(handle->dma_tx_irq, handle->nvic_mask);
+        // Enable DMA RX interrupt
+        HAL_DMA_Start_IT()
+
+        mal_hspec_stm32f0_dma_set_callback(handle->tx_dma_channel,
+                                           &mal_hspec_stm32f0_serial_dma_callback,
+                                           handle);
+        mal_hspec_stm32f0_dma_set_callback(handle->rx_dma_channel,
+                                           &mal_hspec_stm32f0_serial_dma_callback,
+                                           handle);
+        NVIC_EnableIRQ(handle->dma_tx_irq);
+        NVIC_EnableIRQ(rx_irq);
+        DMA_ITConfig(handle->rx_dma_channel, DMA_IT_TC, ENABLE);
+        NVIC_EnableIRQ(uart_irq);
+        USART_ITConfig(handle->usart_typedef, USART_IT_IDLE, ENABLE);
+        DMA_Cmd(handle->rx_dma_channel, ENABLE);
+        // Enable DMA for UART
+        USART_DMACmd(handle->usart_typedef, USART_DMAReq_Rx | USART_DMAReq_Tx, ENABLE);
+    }
+
 
     __HAL_LINKDMA(huart, hdmatx, hdma_tx);
 

@@ -28,25 +28,31 @@
 
 #define MAL_HSPEC_STM32F7_DMA_CHANNEL_STREAM_SIZE   8
 
-typedef void (*mal_hspec_stm32f0_dma_irq_callback_t)(void *handle);
-
-typedef struct {
-    bool used;
-    DMA_HandleTypeDef *hal_dma;
-    mal_hspec_stm32f0_dma_irq_callback_t callback;
-    void *handle;
-} mal_hspec_stm32f7_dma_stream_s;
+typedef void (*mal_hspec_stm32f7_dma_irq_callback_t)(void *handle);
 
 typedef struct {
     uint8_t dma;
     uint8_t stream;
-    uint8_t channel;
+    uint32_t channel;
 } mal_hspec_stm32f7_dma_location_s;
 
-mal_error_e mal_hspec_stm32f0_dma_get_serial_channel(mal_serial_port_e port,
-                                                     uint32_t *tx_channel,
-                                                     DMA_Stream_TypeDef **tx_channel_stream,
-                                                     uint32_t *rx_channel,
-                                                     DMA_Stream_TypeDef **rx_channel_stream);
+typedef struct {
+    bool used;
+    DMA_Stream_TypeDef *hal_stream;
+    DMA_HandleTypeDef *hal_dma;
+    mal_hspec_stm32f7_dma_irq_callback_t callback;
+    void *handle;
+    const mal_hspec_stm32f7_dma_location_s *location;
+} mal_hspec_stm32f7_dma_stream_s;
+
+mal_error_e mal_hspec_stm32f7_dma_get_serial_stream(mal_serial_port_e port,
+                                                    mal_hspec_stm32f7_dma_stream_s **tx_channel_stream,
+                                                    mal_hspec_stm32f7_dma_stream_s **rx_channel_stream);
+
+mal_hspec_stm32f7_dma_stream_s *mal_hspec_stm32f7_dma_get_channel(mal_hspec_stm32f7_dma_stream_s *streams,
+                                                                  const mal_hspec_stm32f7_dma_location_s *locations,
+                                                                  uint8_t locations_size);
+
+void mal_hspec_stm32f7_dma_enable_clock(mal_hspec_stm32f7_dma_stream_s *stream);
 
 #endif //MAL_MAL_HSPEC_STM32F7_DMA_H
