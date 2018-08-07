@@ -22,7 +22,7 @@
 
 #include "stm32f7/stm32f7xx_hal_uart.h"
 #include "serial/mal_serial.h"
-#include "mal_hspec_stm32f7_dma.h"
+#include "mal_hspec_stm32f7_dma_definitions.h"
 
 #define MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE    8
 

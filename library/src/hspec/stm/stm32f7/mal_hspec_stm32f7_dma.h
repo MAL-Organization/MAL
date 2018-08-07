@@ -22,28 +22,9 @@
 
 #include "std/mal_error.h"
 #include "serial/mal_serial.h"
-#include "stm32f7/stm32f7xx_hal_dma.h"
-#include "std/mal_stdint.h"
-#include "std/mal_bool.h"
+#include "mal_hspec_stm32f7_dma_definitions.h"
 
 #define MAL_HSPEC_STM32F7_DMA_CHANNEL_STREAM_SIZE   8
-
-typedef void (*mal_hspec_stm32f7_dma_irq_callback_t)(void *handle);
-
-typedef struct {
-    uint8_t dma;
-    uint8_t stream;
-    uint32_t channel;
-} mal_hspec_stm32f7_dma_location_s;
-
-typedef struct {
-    bool used;
-    DMA_Stream_TypeDef *hal_stream;
-    DMA_HandleTypeDef *hal_dma;
-    mal_hspec_stm32f7_dma_irq_callback_t callback;
-    void *handle;
-    const mal_hspec_stm32f7_dma_location_s *location;
-} mal_hspec_stm32f7_dma_stream_s;
 
 mal_error_e mal_hspec_stm32f7_dma_get_serial_stream(mal_serial_port_e port,
                                                     mal_hspec_stm32f7_dma_stream_s **tx_channel_stream,

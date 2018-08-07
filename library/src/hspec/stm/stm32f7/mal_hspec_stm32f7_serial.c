@@ -20,12 +20,14 @@
 #include "mal_hspec_stm32f7_serial.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "mal_hspec_stm32f7_gpio.h"
+#include "mal_hspec_stm32f7_dma.h"
 
 static mal_error_e mal_hspec_stm32f7_serial_init_io(mal_serial_port_e port, mal_gpio_port_e gpio_port, uint8_t pin);
 static void mal_hspec_stm32f7_serial_handle_rx_dma(mal_serial_s *handle);
 static void mal_hspec_stm32f7_serial_tx_dma_callback(void *handle);
 static void mal_hspec_stm32f7_serial_rx_dma_callback(void *handle);
 static IRQn_Type mal_hspec_stm32f7_serial_get_irq(mal_serial_port_e port);
+static void mal_hspec_stm32f7_serial_interrupt(mal_serial_s *handle);
 
 static mal_serial_s *mal_hspec_stm32f7_serial_1;
 static mal_serial_s *mal_hspec_stm32f7_serial_2;
@@ -373,35 +375,35 @@ static void mal_hspec_stm32f7_serial_handle_rx_dma(mal_serial_s *handle) {
 }
 
 void USART1_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_1->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_1);
 }
 
 void USART2_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_2->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_2);
 }
 
 void USART3_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_3->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_3);
 }
 
 void UART4_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_4->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_4);
 }
 
 void UART5_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_5->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_5);
 }
 
 void USART6_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_6->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_6);
 }
 
 void UART7_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_7->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_7);
 }
 
 void UART8_IRQHandler(void) {
-    HAL_UART_IRQHandler(&mal_hspec_stm32f7_serial_8->hal_serial_handle);
+    mal_hspec_stm32f7_serial_interrupt(mal_hspec_stm32f7_serial_8);
 }
 
 static void mal_hspec_stm32f7_serial_interrupt(mal_serial_s *handle) {

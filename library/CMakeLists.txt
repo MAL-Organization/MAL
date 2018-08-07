@@ -131,11 +131,13 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_i2c.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_i2c.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_flash.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_flash.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_serial.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.h
-        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.c)
+        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma_definitions.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 # STM32F76 sections
-set(COMMON_STM32F76_SRCS ${COMMON_STM32F7_SRCS};src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_flash.c src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_serial.c src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_dma.c)
+set(COMMON_STM32F76_SRCS ${COMMON_STM32F7_SRCS};src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_flash.c
+        src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_serial.c
+        src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_dma.c)
 if(MAL_TOOLCHAIN_NAME STREQUAL "arm")
     # STM32F765VI section
     add_library(STM32F765VI ${COMMON_STM32F76_SRCS} src/hspec/stm/stm32f7/stm32f76/stm32f765vi/mal_hspec_stm32f765vi_flash.c)
