@@ -28,10 +28,14 @@
 
 typedef struct MAL_SERIAL {
     // Basic serial variables
+    bool active;
+    bool error;
+    bool dma_mode;
     mal_serial_tx_callback_t tx_callback;
     void *tx_callback_handle;
     mal_serial_rx_callback_t rx_callback;
     void *rx_callback_handle;
+    IRQn_Type uart_irq;
     // STM variables
     UART_HandleTypeDef hal_serial_handle;
     DMA_HandleTypeDef hal_tx_dma;
@@ -43,10 +47,14 @@ typedef struct MAL_SERIAL {
     volatile bool using_rx_buffer_1;
     mal_hspec_stm32f7_dma_stream_s *tx_dma_stream;
     mal_hspec_stm32f7_dma_stream_s *rx_dma_stream;
+    uint32_t tx_dma_flag;
+    uint32_t rx_dma_flag;
+    IRQn_Type dma_tx_irq;
 } mal_serial_s;
 
 typedef struct MAL_SERIAL_INTERRUPT_STATE {
-
+    uint32_t uart_state;
+    uint32_t dma_state;
 } mal_serial_interrupt_state_s;
 
 mal_error_e mal_hspec_stm32f7_serial_get_alternate(mal_serial_port_e port, mal_gpio_port_e gpio_port, uint8_t pin,

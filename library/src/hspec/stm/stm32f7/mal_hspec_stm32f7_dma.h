@@ -55,4 +55,18 @@ mal_hspec_stm32f7_dma_stream_s *mal_hspec_stm32f7_dma_get_channel(mal_hspec_stm3
 
 void mal_hspec_stm32f7_dma_enable_clock(mal_hspec_stm32f7_dma_stream_s *stream);
 
+IRQn_Type mal_hspec_stm32f7_dma_get_irq(mal_hspec_stm32f7_dma_stream_s *stream);
+
+void mal_hspec_stm32f7_dma_set_callback(mal_hspec_stm32f7_dma_stream_s *stream,
+                                        mal_hspec_stm32f7_dma_irq_callback_t callback,
+                                        void *handle);
+
+void mal_hspec_stm32f7_dma_start(mal_hspec_stm32f7_dma_stream_s *stream,
+                                 DMA_HandleTypeDef *hal_dma,
+                                 uint32_t source,
+                                 uint32_t destination,
+                                 uint32_t length);
+
+void mal_hspec_stm32f7_dma_free_channel(mal_hspec_stm32f7_dma_stream_s *stream);
+
 #endif //MAL_MAL_HSPEC_STM32F7_DMA_H

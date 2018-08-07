@@ -19,6 +19,8 @@
 
 #include "mal_hspec_stm32f7_dma.h"
 
+static void mal_hspec_stm32f7_dma_transfer_complete_callback(DMA_HandleTypeDef *hal_dma);
+
 mal_hspec_stm32f7_dma_stream_s *mal_hspec_stm32f7_dma_get_channel(mal_hspec_stm32f7_dma_stream_s *streams,
                                                                   const mal_hspec_stm32f7_dma_location_s *locations,
                                                                   uint8_t locations_size) {
@@ -37,4 +39,73 @@ mal_hspec_stm32f7_dma_stream_s *mal_hspec_stm32f7_dma_get_channel(mal_hspec_stm3
         return streams + stream_index;
     }
     return NULL;
+}
+
+IRQn_Type mal_hspec_stm32f7_dma_get_irq(mal_hspec_stm32f7_dma_stream_s *stream) {
+    switch ((uint32_t)stream->hal_stream) {
+        case DMA1_Stream0_BASE:
+            return DMA1_Stream0_IRQn;
+        case DMA1_Stream1_BASE:
+            return DMA1_Stream1_IRQn;
+        case DMA1_Stream2_BASE:
+            return DMA1_Stream2_IRQn;
+        case DMA1_Stream3_BASE:
+            return DMA1_Stream3_IRQn;
+        case DMA1_Stream4_BASE:
+            return DMA1_Stream4_IRQn;
+        case DMA1_Stream5_BASE:
+            return DMA1_Stream5_IRQn;
+        case DMA1_Stream6_BASE:
+            return DMA1_Stream6_IRQn;
+        case DMA1_Stream7_BASE:
+            return DMA1_Stream7_IRQn;
+        case DMA2_Stream0_BASE:
+            return DMA2_Stream0_IRQn;
+        case DMA2_Stream1_BASE:
+            return DMA2_Stream1_IRQn;
+        case DMA2_Stream2_BASE:
+            return DMA2_Stream2_IRQn;
+        case DMA2_Stream3_BASE:
+            return DMA2_Stream3_IRQn;
+        case DMA2_Stream4_BASE:
+            return DMA2_Stream4_IRQn;
+        case DMA2_Stream5_BASE:
+            return DMA2_Stream5_IRQn;
+        case DMA2_Stream6_BASE:
+            return DMA2_Stream6_IRQn;
+        default:
+        case DMA2_Stream7_BASE:
+            return DMA2_Stream7_IRQn;
+    }
+}
+
+void mal_hspec_stm32f7_dma_set_callback(mal_hspec_stm32f7_dma_stream_s *stream,
+                                        mal_hspec_stm32f7_dma_irq_callback_t callback,
+                                        void *handle) {
+    stream->callback = callback;
+    stream->handle = handle;
+}
+
+void mal_hspec_stm32f7_dma_start(mal_hspec_stm32f7_dma_stream_s *stream,
+                                 DMA_HandleTypeDef *hal_dma,
+                                 uint32_t source,
+                                 uint32_t destination,
+                                 uint32_t length) {
+    stream->hal_dma = hal_dma;
+    stream->hal_dma->Parent = stream;
+    stream->hal_dma->XferCpltCallback = &mal_hspec_stm32f7_dma_transfer_complete_callback;
+    HAL_DMA_Start_IT(hal_dma, source, destination, length);
+}
+
+static void mal_hspec_stm32f7_dma_transfer_complete_callback(DMA_HandleTypeDef *hal_dma) {
+    mal_hspec_stm32f7_dma_stream_s *stream = hal_dma->Parent;
+    stream->callback(stream->handle);
+}
+
+void mal_hspec_stm32f7_dma_free_channel(mal_hspec_stm32f7_dma_stream_s *stream) {
+    if (NULL != stream) {
+        stream->used = false;
+        stream->callback = NULL;
+        stream->handle = NULL;
+    }
 }

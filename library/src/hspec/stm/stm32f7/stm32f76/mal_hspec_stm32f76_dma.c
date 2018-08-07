@@ -319,3 +319,115 @@ void mal_hspec_stm32f7_dma_enable_clock(mal_hspec_stm32f7_dma_stream_s *stream) 
         __HAL_RCC_DMA2_CLK_ENABLE();
     }
 }
+
+void DMA1_Stream0_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[0].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream1_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[1].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream2_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[2].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream3_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[3].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream4_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[4].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream5_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[5].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream6_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[6].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA1_Stream7_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[7].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream0_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[8].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream1_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[9].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream2_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[10].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream3_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[11].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream4_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[12].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream5_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[13].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream6_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[14].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}
+
+void DMA2_Stream7_IRQHandler(void) {
+    DMA_HandleTypeDef *hal_dma = dma_streams[15].hal_dma;
+    if (NULL != hal_dma) {
+        HAL_DMA_IRQHandler(hal_dma);
+    }
+}

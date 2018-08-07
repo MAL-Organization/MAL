@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f0_nvic.c
- *
- *  Created on: Mar 7, 2018
- *      Author: Olivier
- */
-/*
  * Copyright (c) 2017 Olivier Allaire
  *
  * This file is part of MAL.
