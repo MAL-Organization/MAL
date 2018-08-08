@@ -191,6 +191,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     handle->hal_serial_handle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     handle->hal_serial_handle.Init.OverSampling = UART_OVERSAMPLING_16;
     handle->hal_serial_handle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+    handle->hal_serial_handle.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
     hal_result = HAL_UART_Init(&handle->hal_serial_handle);
     if (HAL_OK != hal_result) {
         return MAL_ERROR_INIT_FAILED;
@@ -254,9 +255,6 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         // Fetch DMA Irqs and flags
         handle->tx_dma_flag = __HAL_DMA_GET_TC_FLAG_INDEX(&handle->hal_tx_dma);
         handle->rx_dma_flag = __HAL_DMA_GET_TC_FLAG_INDEX(&handle->hal_rx_dma);
-
-
-
         IRQn_Type rx_irq = mal_hspec_stm32f7_dma_get_irq(handle->rx_dma_stream);
         handle->dma_tx_irq = mal_hspec_stm32f7_dma_get_irq(handle->tx_dma_stream);
         // Set DMA callbacks
@@ -269,6 +267,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         NVIC_EnableIRQ(handle->dma_tx_irq);
         NVIC_EnableIRQ(rx_irq);
         handle->dma_mode = true;
+        __HAL_UART_CLEAR_IT(&handle->hal_serial_handle, UART_CLEAR_IDLEF);
         __HAL_UART_ENABLE_IT(&handle->hal_serial_handle, UART_IT_IDLE);
         // Start reception
         mal_hspec_stm32f7_dma_start(handle->rx_dma_stream,

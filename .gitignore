@@ -15,3 +15,7 @@ build-scripts/.idea/
 build-scripts/CMakeFiles/
 qemu-test/.settings/language.settings.xml
 qemu-test/.settings/org.eclipse.cdt.codan.core.prefs
+examples/serial/loopback/.idea/
+examples/serial/loopback/cmake-debug/
+examples/serial/loopback/python-loopback/.idea/
+examples/serial/loopback/python-loopback/venv/

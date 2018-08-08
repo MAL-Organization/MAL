@@ -984,7 +984,7 @@ typedef struct
   * @param  _BAUD_ Baud rate set by the user
   * @retval Division result
   */
-#define UART_DIV_SAMPLING16(_PCLK_, _BAUD_)             ((((_PCLK_))+((_BAUD_)/2))/((_BAUD_)))
+#define UART_DIV_SAMPLING16(_PCLK_, _BAUD_)             (((_PCLK_))/((_BAUD_)))
 
 /** @brief  Check UART Baud rate
   * @param  BAUDRATE Baudrate specified by the user
