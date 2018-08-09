@@ -131,7 +131,7 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_i2c.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_i2c.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_flash.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_flash.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_serial.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.h
-        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma_definitions.h)
+        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dma_definitions.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_clock.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 # STM32F76 sections

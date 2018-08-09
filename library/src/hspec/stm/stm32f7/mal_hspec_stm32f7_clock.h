@@ -17,14 +17,17 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
+#ifndef MAL_MAL_HSPEC_STM32F7_CLOCK_H
+#define MAL_MAL_HSPEC_STM32F7_CLOCK_H
 
-#include "mal_hspec_stm32f7_timer.h"
-#include "mal_hspec_stm32f7_serial.h"
-#include "mal_hspec_stm32f7_gpio.h"
-#include "mal_hspec_stm32f7_can.h"
-#include "mal_hspec_stm32f7_i2c.h"
-#include "mal_hspec_stm32f7_clock.h"
+#include "std/mal_bool.h"
+#include "std/mal_types.h"
 
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */
+typedef struct MAL_CLOCK_CONFIG {
+    bool set_apb1;
+    mal_hertz_t apb1_frequency;
+    bool set_apb2;
+    mal_hertz_t apb2_frequency;
+} mal_clock_config_s;
+
+#endif //MAL_MAL_HSPEC_STM32F7_CLOCK_H
