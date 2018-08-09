@@ -42,8 +42,8 @@ typedef struct MAL_SERIAL {
     DMA_HandleTypeDef hal_rx_dma;
     // DMA variables
     uint16_t tx_buffer[MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE];
-    uint16_t rx_buffer_1[MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE];
-    uint16_t rx_buffer_2[MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE];
+    volatile uint16_t rx_buffer_1[MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE];
+    volatile uint16_t rx_buffer_2[MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE];
     volatile bool using_rx_buffer_1;
     mal_hspec_stm32f7_dma_stream_s *tx_dma_stream;
     mal_hspec_stm32f7_dma_stream_s *rx_dma_stream;

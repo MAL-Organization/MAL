@@ -238,17 +238,17 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             return MAL_ERROR_INIT_FAILED;
         }
         // Initialize RX
-        handle->hal_tx_dma.Instance = handle->rx_dma_stream->hal_stream;
-        handle->hal_tx_dma.Init.Channel = handle->rx_dma_stream->location->channel;
-        handle->hal_tx_dma.Init.Direction = DMA_PERIPH_TO_MEMORY;
-        handle->hal_tx_dma.Init.PeriphInc = DMA_PINC_DISABLE;
-        handle->hal_tx_dma.Init.MemInc = DMA_MINC_ENABLE;
-        handle->hal_tx_dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
-        handle->hal_tx_dma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
-        handle->hal_tx_dma.Init.Mode = DMA_NORMAL;
-        handle->hal_tx_dma.Init.Priority = DMA_PRIORITY_HIGH;
-        handle->hal_tx_dma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
-        hal_result = HAL_DMA_Init(&handle->hal_tx_dma);
+        handle->hal_rx_dma.Instance = handle->rx_dma_stream->hal_stream;
+        handle->hal_rx_dma.Init.Channel = handle->rx_dma_stream->location->channel;
+        handle->hal_rx_dma.Init.Direction = DMA_PERIPH_TO_MEMORY;
+        handle->hal_rx_dma.Init.PeriphInc = DMA_PINC_DISABLE;
+        handle->hal_rx_dma.Init.MemInc = DMA_MINC_ENABLE;
+        handle->hal_rx_dma.Init.PeriphDataAlignment = DMA_PDATAALIGN_HALFWORD;
+        handle->hal_rx_dma.Init.MemDataAlignment = DMA_MDATAALIGN_HALFWORD;
+        handle->hal_rx_dma.Init.Mode = DMA_NORMAL;
+        handle->hal_rx_dma.Init.Priority = DMA_PRIORITY_HIGH;
+        handle->hal_rx_dma.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+        hal_result = HAL_DMA_Init(&handle->hal_rx_dma);
         if (HAL_OK != hal_result) {
             return MAL_ERROR_INIT_FAILED;
         }
@@ -269,7 +269,9 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         handle->dma_mode = true;
         __HAL_UART_CLEAR_IT(&handle->hal_serial_handle, UART_CLEAR_IDLEF);
         __HAL_UART_ENABLE_IT(&handle->hal_serial_handle, UART_IT_IDLE);
+        NVIC_EnableIRQ(handle->uart_irq);
         // Start reception
+        handle->using_rx_buffer_1 = true;
         mal_hspec_stm32f7_dma_start(handle->rx_dma_stream,
                                     &handle->hal_rx_dma,
                                     (uint32_t)&handle->hal_serial_handle.Instance->RDR,
@@ -351,8 +353,8 @@ static void mal_hspec_stm32f7_serial_handle_rx_dma(mal_serial_s *handle) {
     // Disable channel to allow reconfiguration
     HAL_DMA_Abort(&handle->hal_rx_dma);
     // Start new transfer
-    uint16_t *new_buffer;
-    uint16_t *old_buffer;
+    volatile uint16_t *new_buffer;
+    volatile uint16_t *old_buffer;
     if (handle->using_rx_buffer_1) {
         new_buffer = handle->rx_buffer_2;
         old_buffer = handle->rx_buffer_1;
