@@ -53,7 +53,7 @@ typedef struct MAL_CLOCK_CONFIG mal_clock_config_s;
 typedef struct {
     mal_hertz_t frequency; /**< The frequency to run at.*/
     mal_system_clk_src_e src; /**< The source of the frequency.*/
-    mal_clock_config_s *clock_config; /**< If left NULL, the configuration is automatic. If specified, see hardware specific implementation for details.*/
+    const mal_clock_config_s *clock_config; /**< If left NULL, the configuration is automatic. If specified, see hardware specific implementation for details.*/
 } mal_system_clk_s;
 
 /**
