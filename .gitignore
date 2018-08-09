@@ -19,3 +19,5 @@ examples/serial/loopback/.idea/
 examples/serial/loopback/cmake-debug/
 examples/serial/loopback/python-loopback/.idea/
 examples/serial/loopback/python-loopback/venv/
+examples/uuid/.idea/
+examples/uuid/cmake-debug/
