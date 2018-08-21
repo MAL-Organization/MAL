@@ -43,11 +43,17 @@ typedef enum {
 } mal_system_clk_src_e;
 
 /**
+* Hardware clock configuration that must be defined by hardware specific implementation.
+*/
+typedef struct MAL_CLOCK_CONFIG mal_clock_config_s;
+
+/**
  * @brief Structure to define the system clock source.
  */
 typedef struct {
     mal_hertz_t frequency; /**< The frequency to run at.*/
     mal_system_clk_src_e src; /**< The source of the frequency.*/
+    const mal_clock_config_s *clock_config; /**< If left NULL, the configuration is automatic. If specified, see hardware specific implementation for details.*/
 } mal_system_clk_s;
 
 /**
@@ -84,6 +90,12 @@ mal_hertz_t mal_clock_get_external_clock_frequency(void);
  * @return Returns the system clock in frequency.
  */
 mal_hertz_t mal_clock_get_system_clock(void);
+
+/**
+ * This include is last because it defines hardware specific implementations of
+ * structures. If not included last, circular dependencies will arise.
+ */
+#include "hspec/mal_hspec.h"
 
 /**
  * @}

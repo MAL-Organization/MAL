@@ -25,7 +25,7 @@
 #include "stm32f7/stm32f7xx_hal_conf.h"
 #include "stm32f7/stm32f7xx_hal_flash_ex.h"
 
-#define MAL_HSPEC_STM32F7_CLOCK_MAX_FREQUENCY           216000000.0f
+#define MAL_HSPEC_STM32F7_CLOCK_MAX_FREQUENCY           216000000
 #define MAL_HSPEC_STM32F7_CLOCK_MAX_R_DIVIDER           7
 #define MAL_HSPEC_STM32F7_CLOCK_FLASH_LATENCY_GT27_STEP 30000000ULL
 #define MAL_HSPEC_STM32F7_CLOCK_FLASH_LATENCY_GT24_STEP 24000000ULL
@@ -33,6 +33,22 @@
 #define MAL_HSPEC_STM32F7_CLOCK_FLASH_LATENCY_GT18_STEP 20000000ULL
 
 static uint32_t mal_hspec_stm32f7_clock_get_flash_latency(uint64_t system_frequency);
+static uint32_t mal_hspec_stm32f7_clock_get_apb1_max_freq(uint64_t hclock);
+static uint32_t mal_hspec_stm32f7_clock_get_apb2_max_freq(uint64_t hclock);
+static uint32_t mal_hspec_stm32f7_clock_get_apb_divider(uint64_t hclock, uint64_t target, const uint8_t *dividers,
+                                                        const uint32_t *divider_settings, uint8_t size);
+
+static const uint8_t mal_hspec_stm32f7_clock_apb_dividers[] = {
+    1, 2, 4, 8, 16
+};
+
+static const uint32_t mal_hspec_stm32f7_clock_apb_settings[] = {
+    RCC_HCLK_DIV1,
+    RCC_HCLK_DIV2,
+    RCC_HCLK_DIV4,
+    RCC_HCLK_DIV8,
+    RCC_HCLK_DIV16
+};
 
 mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
     HAL_StatusTypeDef hal_result;
@@ -41,7 +57,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
     uint32_t flash_latency;
     mal_system_clk_src_e clk_src = clk->src;
     float src_clk_freq;
-    uint64_t target_frequency = clk->frequency;
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(clk->frequency) / 1000ULL;
     // Choose clk source
     switch (clk->src) {
     case MAL_SYSTEM_CLK_SRC_AUTO:
@@ -82,7 +98,7 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         clock_config.AHBCLKDivider = RCC_SYSCLK_DIV1;
         clock_config.APB1CLKDivider = RCC_HCLK_DIV1;
         clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
-        flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(clk->frequency);
+        flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(target_frequency);
         hal_result = HAL_RCC_ClockConfig(&clock_config, flash_latency);
         if (HAL_OK != hal_result) {
             return MAL_ERROR_CLOCK_ERROR;
@@ -94,11 +110,11 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         }
         // Find PLL configuration
         bool pll_valid = false;
-        uint64_t m_divider;
-        uint64_t n_multiplier;
-        uint64_t p_divider;
-        uint64_t q_divider;
-        uint64_t r_divider;
+        uint64_t m_divider = 0;
+        uint64_t n_multiplier = 0;
+        uint64_t p_divider = 0;
+        uint64_t q_divider = 0;
+        uint64_t r_divider = 0;
         for (m_divider = 2; m_divider <= 63; m_divider++) {
             for (n_multiplier = 50; n_multiplier <= 432; n_multiplier++) {
                 uint64_t vco = ((uint64_t)src_clk_freq / m_divider) * n_multiplier;
@@ -154,11 +170,11 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         } else {
             osc_config.PLL.PLLSource = RCC_PLLSOURCE_HSI;
         }
-        osc_config.PLL.PLLM = m_divider;
-        osc_config.PLL.PLLN = n_multiplier;
-        osc_config.PLL.PLLP = p_divider;
-        osc_config.PLL.PLLQ = q_divider;
-        osc_config.PLL.PLLR = r_divider;
+        osc_config.PLL.PLLM = (uint32_t)m_divider;
+        osc_config.PLL.PLLN = (uint32_t)n_multiplier;
+        osc_config.PLL.PLLP = (uint32_t)p_divider;
+        osc_config.PLL.PLLQ = (uint32_t)q_divider;
+        osc_config.PLL.PLLR = (uint32_t)r_divider;
         hal_result = HAL_RCC_OscConfig(&osc_config);
         if (HAL_OK != hal_result) {
             return MAL_ERROR_CLOCK_ERROR;
@@ -167,16 +183,41 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         clock_config.ClockType = RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
         clock_config.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
         clock_config.AHBCLKDivider = RCC_SYSCLK_DIV1;
-        // Select proper divider for APB1 and APB2
-        if (target_frequency <= 54000000ULL) {
-            clock_config.APB1CLKDivider = RCC_HCLK_DIV1;
-            clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
-        } else if (target_frequency <= 108000000ULL) {
-            clock_config.APB1CLKDivider = RCC_HCLK_DIV2;
-            clock_config.APB2CLKDivider = RCC_HCLK_DIV1;
+        // Select proper divider for APB1
+        bool auto_select_apb1 = clk->clock_config == NULL;
+        if (NULL != clk->clock_config) {
+            auto_select_apb1 = !clk->clock_config->set_apb1;
+        }
+        if (auto_select_apb1) {
+            clock_config.APB1CLKDivider = mal_hspec_stm32f7_clock_get_apb1_max_freq(target_frequency);
         } else {
-            clock_config.APB1CLKDivider = RCC_HCLK_DIV4;
-            clock_config.APB2CLKDivider = RCC_HCLK_DIV2;
+            // Find the highest divider that does give a lower frequency
+            uint64_t apb1_target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(clk->clock_config->apb1_frequency);
+            apb1_target_frequency /= 1000ULL;
+            clock_config.APB1CLKDivider = mal_hspec_stm32f7_clock_get_apb_divider(
+                    target_frequency,
+                    apb1_target_frequency,
+                    mal_hspec_stm32f7_clock_apb_dividers,
+                    mal_hspec_stm32f7_clock_apb_settings,
+                    sizeof(mal_hspec_stm32f7_clock_apb_dividers));
+        }
+        // Select proper divider for APB2
+        bool auto_select_apb2 = clk->clock_config == NULL;
+        if (NULL != clk->clock_config) {
+            auto_select_apb2 = !clk->clock_config->set_apb2;
+        }
+        if (auto_select_apb2) {
+            clock_config.APB2CLKDivider = mal_hspec_stm32f7_clock_get_apb2_max_freq(target_frequency);
+        } else {
+            // Find the highest divider that does give a lower frequency
+            uint64_t apb2_target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(clk->clock_config->apb2_frequency);
+            apb2_target_frequency /= 1000ULL;
+            clock_config.APB2CLKDivider = mal_hspec_stm32f7_clock_get_apb_divider(
+                    target_frequency,
+                    apb2_target_frequency,
+                    mal_hspec_stm32f7_clock_apb_dividers,
+                    mal_hspec_stm32f7_clock_apb_settings,
+                    sizeof(mal_hspec_stm32f7_clock_apb_dividers));
         }
         flash_latency = mal_hspec_stm32f7_clock_get_flash_latency(target_frequency);
         hal_result = HAL_RCC_ClockConfig(&clock_config, flash_latency);
@@ -191,6 +232,41 @@ mal_error_e mal_clock_set_system_clock_unmanaged(const mal_system_clk_s *clk) {
         return MAL_ERROR_CLOCK_ERROR;
     }
     return MAL_ERROR_OK;
+}
+
+static uint32_t mal_hspec_stm32f7_clock_get_apb1_max_freq(uint64_t hclock) {
+    if (hclock <= 54000000ULL) {
+        return RCC_HCLK_DIV1;
+    } else if (hclock <= 108000000ULL) {
+        return RCC_HCLK_DIV2;
+    } else {
+        return RCC_HCLK_DIV4;
+    }
+}
+
+static uint32_t mal_hspec_stm32f7_clock_get_apb2_max_freq(uint64_t hclock) {
+    if (hclock <= 108000000ULL) {
+        return RCC_HCLK_DIV1;
+    } else {
+        return RCC_HCLK_DIV2;
+    }
+}
+
+static uint32_t mal_hspec_stm32f7_clock_get_apb_divider(uint64_t hclock, uint64_t target, const uint8_t *dividers,
+                                                        const uint32_t *divider_settings, uint8_t size) {
+    uint8_t i;
+    for (i = 0; i < size; i++) {
+        uint64_t apb_frequency = hclock / dividers[i];
+        if (apb_frequency == target) {
+            return divider_settings[i];
+        } else if (apb_frequency < target) {
+            if (0 == i) {
+                return divider_settings[i];
+            }
+            return divider_settings[i - 1];
+        }
+    }
+    return divider_settings[size - 1];
 }
 
 static uint32_t mal_hspec_stm32f7_clock_get_flash_latency(uint64_t system_frequency) {

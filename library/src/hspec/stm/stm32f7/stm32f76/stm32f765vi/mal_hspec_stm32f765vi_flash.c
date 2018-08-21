@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -17,27 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_nvic.h"
-#include "cm0/core_cm0.h"
+#include "hspec/stm/stm32f7/mal_hspec_stm32f7_flash.h"
 
-uint32_t mal_hspec_stm32f0_nvic_add_irq(IRQn_Type irq, uint32_t mask) {
-    return mask | (1 << irq);
+uint32_t mal_hspec_stm32f7_flash_get_sector(uint32_t page) {
+    return page;
 }
 
-uint32_t mal_hspec_stm32f0_nvic_remove_irq(IRQn_Type irq, uint32_t mask) {
-    return mask & ~(1 << irq);
-}
-
-uint32_t mal_hspec_stm32f0_nvic_get_activity(uint32_t mask) {
-    return nvic_status & mask;
-}
-
-void mal_hspec_stm32f0_nvic_set(uint32_t mask) {
-    NVIC->ISER[0] = mask;
-    nvic_status |= mask;
-}
-
-void mal_hspec_stm32f0_nvic_clear(uint32_t mask) {
-    NVIC->ICER[0] = mask;
-    nvic_status &= ~mask;
+uint32_t mal_flash_get_page_count(void) {
+    if (mal_hspec_stm32f7_flash_is_dual_boot()) {
+        return 24;
+    }
+    return 12;
 }

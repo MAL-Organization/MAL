@@ -25,5 +25,6 @@
 #include "mal_hspec_stm32f7_gpio.h"
 #include "mal_hspec_stm32f7_can.h"
 #include "mal_hspec_stm32f7_i2c.h"
+#include "mal_hspec_stm32f7_clock.h"
 
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */

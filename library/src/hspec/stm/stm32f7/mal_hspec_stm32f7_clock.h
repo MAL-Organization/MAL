@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -17,27 +17,17 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "mal_hspec_stm32f0_nvic.h"
-#include "cm0/core_cm0.h"
+#ifndef MAL_MAL_HSPEC_STM32F7_CLOCK_H
+#define MAL_MAL_HSPEC_STM32F7_CLOCK_H
 
-uint32_t mal_hspec_stm32f0_nvic_add_irq(IRQn_Type irq, uint32_t mask) {
-    return mask | (1 << irq);
-}
+#include "std/mal_bool.h"
+#include "std/mal_types.h"
 
-uint32_t mal_hspec_stm32f0_nvic_remove_irq(IRQn_Type irq, uint32_t mask) {
-    return mask & ~(1 << irq);
-}
+typedef struct MAL_CLOCK_CONFIG {
+    bool set_apb1;
+    mal_hertz_t apb1_frequency;
+    bool set_apb2;
+    mal_hertz_t apb2_frequency;
+} mal_clock_config_s;
 
-uint32_t mal_hspec_stm32f0_nvic_get_activity(uint32_t mask) {
-    return nvic_status & mask;
-}
-
-void mal_hspec_stm32f0_nvic_set(uint32_t mask) {
-    NVIC->ISER[0] = mask;
-    nvic_status |= mask;
-}
-
-void mal_hspec_stm32f0_nvic_clear(uint32_t mask) {
-    NVIC->ICER[0] = mask;
-    nvic_status &= ~mask;
-}
+#endif //MAL_MAL_HSPEC_STM32F7_CLOCK_H

@@ -42,7 +42,11 @@ typedef enum {
     MAL_SERIAL_PORT_2 = 1,  //!< Port 2
     MAL_SERIAL_PORT_3 = 2,  //!< Port 3
     MAL_SERIAL_PORT_4 = 3,  //!< Port 4
-    MAL_SERIAL_PORT_SIZE = 4//!< Number of possible ports
+    MAL_SERIAL_PORT_5 = 4,  //!< Port 4
+    MAL_SERIAL_PORT_6 = 5,  //!< Port 4
+    MAL_SERIAL_PORT_7 = 6,  //!< Port 4
+    MAL_SERIAL_PORT_8 = 7,  //!< Port 4
+    MAL_SERIAL_PORT_SIZE = 8//!< Number of possible ports
 } mal_serial_port_e;
 
 /**

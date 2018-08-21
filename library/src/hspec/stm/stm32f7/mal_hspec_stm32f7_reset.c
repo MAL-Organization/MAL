@@ -25,6 +25,7 @@
 
 #include "reset/mal_reset.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
+#include "cm7/core_cm7.h"
 
 mal_reset_source_e mal_reset_get_source_unmanaged(void) {
     mal_reset_source_e source = MAL_RESET_SOURCE_UNKNOWN;
@@ -45,4 +46,8 @@ mal_reset_source_e mal_reset_get_source_unmanaged(void) {
     __HAL_RCC_CLEAR_RESET_FLAGS();
 
     return source;
+}
+
+void mal_reset_mcu(void) {
+    NVIC_SystemReset();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Olivier Allaire
+ * Copyright (c) 2015 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -16,28 +16,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "clock/mal_clock.h"
+#include "power/mal_power.h"
 
-#include "mal_hspec_stm32f0_nvic.h"
-#include "cm0/core_cm0.h"
+const mal_system_clk_s mal_target_system_clock = {
+		.frequency = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(216000000000ULL),
+		.src = MAL_SYSTEM_CLK_SRC_INTERNAL
+};
 
-uint32_t mal_hspec_stm32f0_nvic_add_irq(IRQn_Type irq, uint32_t mask) {
-    return mask | (1 << irq);
-}
+mal_hertz_t mal_external_clk_freq = MAL_TYPES_MILLIHERTZ_TO_MAL_HERTZ(0);
 
-uint32_t mal_hspec_stm32f0_nvic_remove_irq(IRQn_Type irq, uint32_t mask) {
-    return mask & ~(1 << irq);
-}
+mal_volts_t mal_hspec_power_rail_vdda_value = MAL_TYPES_MILLIVOLTS_TO_MAL_VOLTS(3300);
 
-uint32_t mal_hspec_stm32f0_nvic_get_activity(uint32_t mask) {
-    return nvic_status & mask;
-}
-
-void mal_hspec_stm32f0_nvic_set(uint32_t mask) {
-    NVIC->ISER[0] = mask;
-    nvic_status |= mask;
-}
-
-void mal_hspec_stm32f0_nvic_clear(uint32_t mask) {
-    NVIC->ICER[0] = mask;
-    nvic_status &= ~mask;
-}
+mal_volts_t mal_hspec_power_rail_vdd_value = MAL_TYPES_MILLIVOLTS_TO_MAL_VOLTS(3300);
