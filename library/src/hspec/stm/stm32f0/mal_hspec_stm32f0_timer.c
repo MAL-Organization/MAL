@@ -327,7 +327,7 @@ void TIM1_BRK_UP_TRG_COM_IRQHandler(void) {
 	// Clear interrupts
 	TIM_ClearFlag(TIM1, TIM_FLAG_Update);
 	// Handles interrupt
-	if (NULL != timer1) {
+	if (NULL != timer1 && NULL != timer1->callback) {
         timer1->callback(timer1->handle);
 	}
 }
@@ -353,7 +353,7 @@ void TIM2_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer2, cc_flags);
 	} else {
-        if (NULL != timer2) {
+        if (NULL != timer2  && NULL != timer2->callback) {
             timer2->callback(timer2->handle);
         }
 	}
@@ -380,7 +380,7 @@ void TIM3_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer3, cc_flags);
 	} else {
-        if (NULL != timer3) {
+        if (NULL != timer3 && NULL != timer3->callback) {
             timer3->callback(timer3->handle);
         }
 	}
@@ -389,7 +389,7 @@ void TIM3_IRQHandler(void) {
 void TIM6_DAC_IRQHandler(void) {
 	TIM_ClearFlag(TIM6, TIM_FLAG_Update);
 	// Handles tick
-    if (NULL != timer6) {
+    if (NULL != timer6 && NULL != timer6->callback) {
         timer6->callback(timer6->handle);
     }
 }
@@ -397,7 +397,7 @@ void TIM6_DAC_IRQHandler(void) {
 void TIM7_IRQHandler(void) {
 	TIM_ClearFlag(TIM7, TIM_FLAG_Update);
 	// Handles tick
-    if (NULL != timer7) {
+    if (NULL != timer7  && NULL != timer7->callback) {
         timer7->callback(timer7->handle);
     }
 }
@@ -414,7 +414,7 @@ void TIM14_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer14, cc_flags);
 	} else {
-        if (NULL != timer14) {
+        if (NULL != timer14 && NULL != timer14->callback) {
             timer14->callback(timer14->handle);
         }
 	}
@@ -435,7 +435,7 @@ void TIM15_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer15, cc_flags);
 	} else {
-        if (NULL != timer15) {
+        if (NULL != timer15 && NULL != timer15->callback) {
             timer15->callback(timer15->handle);
         }
 	}
@@ -453,7 +453,7 @@ void TIM16_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer16, cc_flags);
 	} else {
-        if (NULL != timer16) {
+        if (NULL != timer16 && NULL != timer16->callback) {
             timer16->callback(timer16->handle);
         }
 	}
@@ -471,7 +471,7 @@ void TIM17_IRQHandler(void) {
 	if (cc_flags) {
         mal_hspec_stm32f0_timer_input_capture_interrupt(timer17, cc_flags);
 	} else {
-        if (NULL != timer17) {
+        if (NULL != timer17 && NULL != timer17->callback) {
             timer17->callback(timer17->handle);
         }
 	}
