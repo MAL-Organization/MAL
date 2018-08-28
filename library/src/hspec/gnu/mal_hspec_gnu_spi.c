@@ -39,7 +39,7 @@ mal_error_e mal_spi_init_master(mal_spi_master_init_s *init, mal_spi_s *handle) 
 }
 
 mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
-	if (NULL == interfaces[handle->interface].active_msg) {
+	if (NULL != interfaces[handle->interface].active_msg) {
 		return MAL_ERROR_HARDWARE_UNAVAILABLE;
 	}
 	// Save message
@@ -57,7 +57,7 @@ mal_error_e mal_hspec_gnu_spi_get_msg(mal_spi_e interface, mal_spi_msg_s **msg) 
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_hspec_mingw_spi_end_transaction(mal_spi_e interface) {
+mal_error_e mal_hspec_gnu_spi_end_transaction(mal_spi_e interface) {
 	// Make sure message is not NULL
 	if (NULL == interfaces[interface].active_msg) {
 		return MAL_ERROR_EMPTY;
