@@ -21,8 +21,13 @@
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "mal_hspec_stm32f7_gpio.h"
 
+#define MAL_HSPEC_STM32F7_DATA_SIZE_MASK	0xF00
+
 static mal_error_e mal_hspec_stm32f7_spi_init_io(mal_spi_e interface, mal_gpio_port_e gpio_port, uint8_t pin);
 static IRQn_Type mal_hspec_stm32f7_spi_get_irq(mal_spi_e interface);
+static mal_error_e mal_hspec_stm32f7_spi_set_select_io(mal_spi_s *handle, bool selected);
+static void mal_hspec_stm32f7_spi_send_data(mal_spi_s *handle);
+static void mal_hspec_stm32f7_spi_handle_interrupt(mal_spi_s *handle);
 
 static mal_spi_s *mal_hspec_stm32f7_spi_1;
 static mal_spi_s *mal_hspec_stm32f7_spi_2;
@@ -260,4 +265,166 @@ static IRQn_Type mal_hspec_stm32f7_spi_get_irq(mal_spi_e interface) {
         default:
             return SPI6_IRQn;
     }
+}
+
+mal_error_e mal_spi_start_transaction(mal_spi_s *handle, mal_spi_msg_s *msg) {
+    mal_error_e result;
+    // Deactivate interrupt
+    mal_spi_interrupt_state_s state;
+    mal_spi_disable_interrupt(handle, &state);
+    // Check if interface is available
+    if (!handle->is_active) {
+        // Set active message
+        handle->active_msg = msg;
+        // Set select IO
+        result = mal_hspec_stm32f7_spi_set_select_io(handle, true);
+        if (MAL_ERROR_OK == result) {
+            // Set interface active
+            handle->is_active = true;
+            // Set data pointers
+            handle->out_data_ptr = 0;
+            handle->in_data_ptr = 0;
+            // Send first data byte
+            mal_hspec_stm32f7_spi_send_data(handle);
+            // Set interrupts active
+            __HAL_SPI_ENABLE_IT(&handle->hal_spi_handle, SPI_IT_TXE);
+            __HAL_SPI_ENABLE_IT(&handle->hal_spi_handle, SPI_IT_RXNE);
+        }
+    } else {
+        result = MAL_ERROR_HARDWARE_UNAVAILABLE;
+    }
+    // Restore interrupt
+    mal_spi_restore_interrupt(handle, &state);
+
+    return result;
+}
+
+static mal_error_e mal_hspec_stm32f7_spi_set_select_io(mal_spi_s *handle, bool selected) {
+    // Extract correct select IO and polarity
+    mal_gpio_s *select_io = NULL;
+    mal_spi_select_polarity_e polarity = MAL_SPI_SELECT_POLARITY_LOW;
+    // Check if the active message specifies an IO
+    if (NULL != handle->active_msg &&
+        NULL != handle->active_msg->select) {
+        select_io = handle->active_msg->select;
+        polarity = handle->active_msg->select_polarity;
+    } else {
+        if (MAL_SPI_SELECT_MODE_SOFTWARE == handle->select_mode) {
+            select_io = &handle->select;
+            polarity = handle->select_polarity;
+        }
+    }
+    // Nothing to do if no IO is specified. This can happen when the interface
+    // select is in user mode.
+    if (NULL == select_io) {
+        return MAL_ERROR_OK;
+    }
+    // Determine state IO based on select state and polarity
+    bool state = selected;
+    if (MAL_SPI_SELECT_POLARITY_LOW == polarity) {
+        state = !state;
+    }
+    // Set IO
+    return mal_gpio_set(select_io, state);
+}
+
+static void mal_hspec_stm32f7_spi_send_data(mal_spi_s *handle) {
+    // Get index
+    uint8_t index = handle->out_data_ptr++;
+    // Get next word
+    uint16_t data = handle->active_msg->data[index];
+    // Send the next data word
+    if ((handle->hal_spi_handle.Instance->CR2 & MAL_HSPEC_STM32F7_DATA_SIZE_MASK) > SPI_DATASIZE_8BIT) {
+        handle->hal_spi_handle.Instance->DR = data;
+    } else {
+        *((__IO uint8_t *)&handle->hal_spi_handle.Instance->DR) = (uint8_t)data;
+    }
+}
+
+MAL_DEFS_INLINE void mal_spi_disable_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
+    state->active = (bool)NVIC_GetActive(handle->irq);
+    NVIC_DisableIRQ(handle->irq);
+    __DSB();
+    __ISB();
+}
+
+MAL_DEFS_INLINE void mal_spi_restore_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
+    if (state->active) {
+        NVIC_EnableIRQ(handle->irq);
+    }
+}
+
+static void mal_hspec_stm32f7_spi_handle_interrupt(mal_spi_s *handle) {
+    // Check transmit empty buffer interrupt
+    if (__HAL_SPI_GET_FLAG(&handle->hal_spi_handle, SPI_FLAG_TXE)) {
+        // Check if we still have data to send
+        if (handle->out_data_ptr < handle->active_msg->data_length) {
+            mal_hspec_stm32f7_spi_send_data(handle);
+        }
+    }
+    // Check receiver not empty buffer interrupt
+    if (__HAL_SPI_GET_FLAG(&handle->hal_spi_handle, SPI_FLAG_RXNE)) {
+        // Get next index
+        uint8_t index = handle->in_data_ptr++;
+        // Read data
+        uint16_t data;
+        if ((handle->hal_spi_handle.Instance->CR2 & MAL_HSPEC_STM32F7_DATA_SIZE_MASK) > SPI_DATASIZE_8BIT) {
+            data = (uint16_t)handle->hal_spi_handle.Instance->DR;
+        } else {
+            data = *(__IO uint8_t *)&handle->hal_spi_handle.Instance->DR;
+        }
+        handle->active_msg->data[index] = data;
+
+        // Check if transaction is complete
+        if (handle->in_data_ptr >= handle->active_msg->data_length) {
+            // Deselect device
+            mal_hspec_stm32f7_spi_set_select_io(handle, false);
+            // Message transaction is complete
+            // Execute callback
+            mal_spi_msg_s *next_message = NULL;
+            if (NULL != handle->active_msg->callback) {
+                handle->active_msg->callback(handle->active_msg->handle, handle->active_msg, &next_message);
+            }
+            // Check if we have a new message
+            if (NULL == next_message) {
+                // No new message, set interface inactive
+                handle->is_active = false;
+                // Set interrupts inactive
+                __HAL_SPI_DISABLE_IT(&handle->hal_spi_handle, SPI_IT_TXE);
+                __HAL_SPI_DISABLE_IT(&handle->hal_spi_handle, SPI_IT_RXNE);
+                return;
+            }
+            // Set interface for next message
+            handle->active_msg = next_message;
+            // Set select IO
+            mal_hspec_stm32f7_spi_set_select_io(handle, true);
+            // Set data pointer
+            handle->out_data_ptr = 0;
+            handle->in_data_ptr = 0;
+        }
+    }
+}
+
+void SPI1_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_1);
+}
+
+void SPI2_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_2);
+}
+
+void SPI3_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_3);
+}
+
+void SPI4_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_4);
+}
+
+void SPI5_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_5);
+}
+
+void SPI6_IRQHandler(void) {
+    mal_hspec_stm32f7_spi_handle_interrupt(mal_hspec_stm32f7_spi_6);
 }
