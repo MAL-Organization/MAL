@@ -76,7 +76,7 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     RCC_ClkInitTypeDef clock_config;
     uint32_t flash_latency;
     HAL_RCC_GetClockConfig(&clock_config, &flash_latency);
-    uint64_t pclk = (uint64_t)HAL_RCC_GetPCLK1Freq() / (uint64_t)clock_config.APB1CLKDivider;
+    uint64_t pclk = (uint64_t)HAL_RCC_GetPCLK1Freq();
     // Initialize CAN module
     handle->hal_can_handle.Init.TimeTriggeredMode = DISABLE;
     handle->hal_can_handle.Init.AutoBusOff = ENABLE;
