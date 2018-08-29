@@ -20,6 +20,7 @@
 #include "mal_hspec_stm32f7_spi.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "mal_hspec_stm32f7_gpio.h"
+#include "gpio/mal_gpio.h"
 
 #define MAL_HSPEC_STM32F7_DATA_SIZE_MASK	0xF00
 

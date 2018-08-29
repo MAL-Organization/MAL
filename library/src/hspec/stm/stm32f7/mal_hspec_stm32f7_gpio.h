@@ -21,8 +21,10 @@
 #define MAL_MAL_HSPEC_STM32F7_GPIO_H
 
 #include "std/mal_stdint.h"
-#include "gpio/mal_gpio.h"
+#include "gpio/mal_gpio_definitions.h"
 #include "stm32f7/stm32f7xx_hal_gpio.h"
+#include "std/mal_error.h"
+#include "std/mal_bool.h"
 
 #define MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(pin) ((uint32_t)1 << (pin))
 
