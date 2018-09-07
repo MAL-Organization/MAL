@@ -343,7 +343,7 @@ static void mal_hspec_stm32f7_spi_send_data(mal_spi_s *handle) {
 }
 
 MAL_DEFS_INLINE void mal_spi_disable_interrupt(mal_spi_s *handle, mal_spi_interrupt_state_s *state) {
-    state->active = (bool)NVIC_GetActive(handle->irq);
+    state->active = (bool)NVIC_GetEnableIRQ(handle->irq);
     NVIC_DisableIRQ(handle->irq);
     __DSB();
     __ISB();
