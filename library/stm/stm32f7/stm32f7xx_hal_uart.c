@@ -2024,11 +2024,13 @@ HAL_StatusTypeDef UART_CheckIdleState(UART_HandleTypeDef *huart)
   if((huart->Instance->CR1 & USART_CR1_TE) == USART_CR1_TE)
   {
     /* Wait until TEACK flag is set */
-    if(UART_WaitOnFlagUntilTimeout(huart, USART_ISR_TEACK, RESET, tickstart, HAL_UART_TIMEOUT_VALUE) != HAL_OK)
-    {
-      /* Timeout Occurred */
-      return HAL_TIMEOUT;
-    }
+    // Olivier - Disabling the check for now, TEACK is not behaving the expected way and I cannot find documentation on
+    // that flag. Since the LL drivers don't do this check, I am seeing what is the impact of not doing it.
+//    if(UART_WaitOnFlagUntilTimeout(huart, USART_ISR_TEACK, RESET, tickstart, HAL_UART_TIMEOUT_VALUE) != HAL_OK)
+//    {
+//      /* Timeout Occurred */
+//      return HAL_TIMEOUT;
+//    }
   }
 
   /* Initialize the UART State */

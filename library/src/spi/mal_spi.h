@@ -52,7 +52,11 @@ typedef struct MAL_SPI_INTERRUPT_STATE mal_spi_interrupt_state_s;
 typedef enum {
     MAL_SPI_1 = 0,  //!< SPI interface 1
     MAL_SPI_2 = 1,  //!< SPI interface 2
-    MAL_SPI_SIZE = 2//!< Number of possible SPI interfaces
+    MAL_SPI_3 = 2,  //!< SPI interface 3
+    MAL_SPI_4 = 3,  //!< SPI interface 4
+    MAL_SPI_5 = 4,  //!< SPI interface 5
+    MAL_SPI_6 = 5,  //!< SPI interface 6
+    MAL_SPI_SIZE = 6//!< Number of possible SPI interfaces
 } mal_spi_e;
 
 /**

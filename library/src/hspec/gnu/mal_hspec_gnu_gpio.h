@@ -44,4 +44,6 @@ void mal_hspec_gnu_gpio_execute_callback(mal_gpio_port_e port, uint8_t pin);
 
 mal_error_e mal_hspec_gnu_set_mocked_gpio(mal_gpio_port_e port, uint8_t pin, bool value);
 
+bool mal_hspec_gnu_gpio_get_output(mal_gpio_port_e port, uint8_t pin);
+
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_GPIO_H_ */

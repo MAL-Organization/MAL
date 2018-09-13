@@ -24,6 +24,7 @@
  */
 
 #include "mal_hspec_stm32f7_gpio.h"
+#include "gpio/mal_gpio.h"
 #include "flash/mal_flash.h"
 #include "stm32f7/stm32f7xx_hal_rcc.h"
 #include "power/mal_power.h"

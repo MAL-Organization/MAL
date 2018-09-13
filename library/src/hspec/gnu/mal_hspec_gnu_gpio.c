@@ -78,6 +78,10 @@ mal_error_e mal_hspec_gnu_set_mocked_gpio(mal_gpio_port_e port, uint8_t pin, boo
 	return MAL_ERROR_OK;
 }
 
+bool mal_hspec_gnu_gpio_get_output(mal_gpio_port_e port, uint8_t pin) {
+	return gpio_array[port][pin].output;
+}
+
 mal_error_e mal_gpio_set(mal_gpio_s *gpio, bool value) {
 	gpio_array[gpio->port][gpio->pin].output = value;
 	if (gpio_array[gpio->port][gpio->pin].direction == MAL_GPIO_DIRECTION_OUT) {
