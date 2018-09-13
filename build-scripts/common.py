@@ -1,5 +1,7 @@
+import os
 import shutil
 import subprocess
+import time
 from collections import OrderedDict
 from typing import List, Union
 
@@ -24,7 +26,13 @@ def extract_properties(property_file_path: str) -> dict:
 
 
 def clean_build_folder(build_folder_path: str):
-    shutil.rmtree(build_folder_path, ignore_errors=True)
+    # For some reason, CMake seems to cause problems when deleting a folder, try to delete it multiple times
+    for i in range(3):
+        shutil.rmtree(build_folder_path, ignore_errors=True)
+        if not os.path.exists(build_folder_path):
+            return
+        # Wait 5 seconds in case cmake is still alive and keeping the folder busy
+        time.sleep(5)
 
 
 def get_wrapped_command(path_additions: Union[List[str], None], command: List[str]):
