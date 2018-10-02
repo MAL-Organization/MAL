@@ -39,6 +39,7 @@ static mal_serial_s *mal_hspec_stm32f7_serial_7;
 static mal_serial_s *mal_hspec_stm32f7_serial_8;
 
 mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
+    uint32_t i;
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
     RCC_PeriphCLKInitTypeDef pclk_init;
@@ -135,6 +136,11 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         default:
             return MAL_ERROR_HARDWARE_INVALID;
     }
+    // After the selection of the clock source, it appears that a delay is needed otherwise some USART initialisations
+    // are corrupted. I am out of time to investigate this. I hate to leave a poor man's sleep here, but it works :(
+    // - Olivier
+    i = 1000000;
+    while (i--!=0);
     // Initialize RX and TX GPIOs
     mal_result = mal_hspec_stm32f7_serial_init_io(init->port, init->tx_port, init->tx_pin);
     if (MAL_ERROR_OK != mal_result) {
@@ -438,13 +444,15 @@ static void mal_hspec_stm32f7_serial_interrupt(mal_serial_s *handle) {
     // Check for idle
     if (__HAL_UART_GET_FLAG(&handle->hal_serial_handle, UART_FLAG_IDLE) && handle->dma_mode) {
         __HAL_UART_CLEAR_IT(&handle->hal_serial_handle, UART_CLEAR_IDLEF);
-        // Disable serial interrupts
-        mal_serial_interrupt_state_s state;
-        mal_serial_disable_interrupt(handle, &state);
-        // Check for RX transfer complete
-        mal_hspec_stm32f7_serial_handle_rx_dma(handle);
-        // Restore interrupts
-        mal_serial_restore_interrupt(handle, &state);
+        if (__HAL_DMA_GET_COUNTER(&handle->hal_rx_dma) != MAL_HSPEC_STM32F7_SERIAL_DMA_BUFFER_SIZE) {
+            // Disable serial interrupts
+            mal_serial_interrupt_state_s state;
+            mal_serial_disable_interrupt(handle, &state);
+            // Check for RX transfer complete
+                mal_hspec_stm32f7_serial_handle_rx_dma(handle);
+            // Restore interrupts
+            mal_serial_restore_interrupt(handle, &state);
+        }
     }
 }
 
