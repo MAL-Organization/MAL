@@ -41,10 +41,10 @@ extern unsigned int __bss_regions_array_end;
 void mal_startup_hardware(void) {
     SystemInit();
     initialise_memory();
-    mal_clock_initialise_system_clock();
-    HAL_Init();
     SCB_EnableICache();
     SCB_EnableDCache();
+    HAL_Init();
+    mal_clock_initialise_system_clock();
 }
 
 // This code is copied from newlib.
