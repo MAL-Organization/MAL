@@ -39,7 +39,6 @@ static mal_serial_s *mal_hspec_stm32f7_serial_7;
 static mal_serial_s *mal_hspec_stm32f7_serial_8;
 
 mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
-    uint32_t i;
     mal_error_e mal_result;
     HAL_StatusTypeDef hal_result;
     RCC_PeriphCLKInitTypeDef pclk_init;
@@ -58,7 +57,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_2:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_USART2;
-            pclk_init.Usart1ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+            pclk_init.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -69,7 +68,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_3:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_USART3;
-            pclk_init.Usart1ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+            pclk_init.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -80,7 +79,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_4:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_UART4;
-            pclk_init.Usart1ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
+            pclk_init.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -91,7 +90,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_5:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_UART5;
-            pclk_init.Usart1ClockSelection = RCC_UART5CLKSOURCE_PCLK1;
+            pclk_init.Uart5ClockSelection = RCC_UART5CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -102,7 +101,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_6:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_USART6;
-            pclk_init.Usart1ClockSelection = RCC_USART6CLKSOURCE_PCLK2;
+            pclk_init.Usart6ClockSelection = RCC_USART6CLKSOURCE_PCLK2;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -113,7 +112,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_7:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_UART7;
-            pclk_init.Usart1ClockSelection = RCC_UART7CLKSOURCE_PCLK1;
+            pclk_init.Uart7ClockSelection = RCC_UART7CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -124,7 +123,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
             break;
         case MAL_SERIAL_PORT_8:
             pclk_init.PeriphClockSelection = RCC_PERIPHCLK_UART8;
-            pclk_init.Usart1ClockSelection = RCC_UART8CLKSOURCE_PCLK1;
+            pclk_init.Uart8ClockSelection = RCC_UART8CLKSOURCE_PCLK1;
             hal_result = HAL_RCCEx_PeriphCLKConfig(&pclk_init);
             if (HAL_OK != hal_result) {
                 return MAL_ERROR_CLOCK_ERROR;
@@ -136,11 +135,6 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         default:
             return MAL_ERROR_HARDWARE_INVALID;
     }
-    // After the selection of the clock source, it appears that a delay is needed otherwise some USART initialisations
-    // are corrupted. I am out of time to investigate this. I hate to leave a poor man's sleep here, but it works :(
-    // - Olivier
-    i = 1000000;
-    while (i--!=0);
     // Initialize RX and TX GPIOs
     mal_result = mal_hspec_stm32f7_serial_init_io(init->port, init->tx_port, init->tx_pin);
     if (MAL_ERROR_OK != mal_result) {
