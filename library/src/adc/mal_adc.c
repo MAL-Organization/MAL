@@ -1,11 +1,5 @@
 /*
- * mal_adc.c
- *
- *  Created on: Sep 11, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -57,4 +51,64 @@ mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_vol
 	// Compute value
 	*value = ((mal_volts_t)bit_value * vdda_value) / (mal_volts_t)maximum_value;
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_adc_from_channel(uint32_t adc, uint32_t channel, mal_adc_e *mal_adc) {
+    mal_error_e result;
+    // Get channel count
+    uint32_t channel_count;
+    result = mal_adc_get_channel_count(adc, &channel_count);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    // Compute MAL ADC
+    uint32_t adc_index = (channel_count * adc) + channel;
+    if (adc_index >= MAL_ADC_SIZE) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    *mal_adc = (mal_adc_e)adc_index;
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_adc_get_adc_from_enum(mal_adc_e mal_adc, uint32_t *adc) {
+    mal_error_e result;
+    uint32_t channel_count;
+    *adc = 0;
+    int64_t adc_index = mal_adc;
+    while (adc_index > 0) {
+        result = mal_adc_get_channel_count(*adc, &channel_count);
+        if (MAL_ERROR_OK != result) {
+            return result;
+        }
+        // Check if this is the correct ADC
+        if (adc_index < channel_count) {
+            return MAL_ERROR_OK;
+        }
+        // Move to the next adc
+        adc_index -= channel_count;
+        (*adc)++;
+    }
+    return MAL_ERROR_HARDWARE_INVALID;
+}
+
+mal_error_e mal_adc_get_channel_from_enum(mal_adc_e mal_adc, uint32_t *channel) {
+    mal_error_e result;
+    uint32_t adc;
+    result = mal_adc_get_adc_from_enum(mal_adc, &adc);
+    if (MAL_ERROR_OK != result) {
+        return result;
+    }
+    uint32_t current_adc;
+    uint32_t channel_count;
+    *channel = 0;
+    uint32_t adc_index = mal_adc;
+    for (current_adc = 0; current_adc < adc; current_adc++) {
+        result = mal_adc_get_channel_count(current_adc, &channel_count);
+        if (MAL_ERROR_OK != result) {
+            return result;
+        }
+    }
+    *channel += adc_index;
+
+    return MAL_ERROR_HARDWARE_INVALID;
 }
