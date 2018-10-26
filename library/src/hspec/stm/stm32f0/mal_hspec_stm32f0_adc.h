@@ -22,13 +22,24 @@
 
 #include "std/mal_stdint.h"
 #include "adc/mal_adc.h"
+#include "utils/mal_circular_buffer.h"
+#include "std/mal_bool.h"
+
+#define MAL_HSPEC_STM32F0_ADC_CHANNEL_COUNT 16
 
 typedef struct MAL_ADC {
-    uint32_t adc_channel;
-    uint8_t  resolution;
+    uint8_t resolution;
+    bool active;
+    volatile mal_circular_buffer_s async_channels_buffer;
+    mal_adc_channel_s *async_channels[MAL_HSPEC_STM32F0_ADC_CHANNEL_COUNT];
+} mal_adc_s;
+
+typedef struct MAL_ADC_CHANNEL {
+    mal_adc_s *adc;
+    uint32_t channel;
     mal_adc_read_callback_t callback;
     void *callback_handle;
-} mal_adc_s;
+} mal_adc_channel_s;
 
 typedef struct MAL_ADC_INTERRUPT_STATE {
     bool active;

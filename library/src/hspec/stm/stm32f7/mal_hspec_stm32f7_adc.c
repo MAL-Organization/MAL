@@ -291,6 +291,11 @@ static void mal_hspec_stm32f7_adc_handle_irq(mal_adc_s *adc) {
     uint32_t value = HAL_ADC_GetValue(&adc->hal_adc);
     channel->callback(channel->callback_handle, channel, value);
     // Start a new conversion if queued
+    result = mal_circular_buffer_peek((mal_circular_buffer_s*)&adc->async_channels_buffer, 0, channel);
+    if (MAL_ERROR_OK != result) {
+        adc->active = false;
+        return;
+    }
     HAL_StatusTypeDef hal_result;
     hal_result = HAL_ADC_ConfigChannel(&channel->adc->hal_adc, &channel->hal_channel_config);
     if (HAL_OK != hal_result) {

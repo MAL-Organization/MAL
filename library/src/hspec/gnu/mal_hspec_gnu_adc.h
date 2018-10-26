@@ -23,17 +23,24 @@
 #include "adc/mal_adc.h"
 
 typedef struct MAL_ADC {
-    mal_adc_e adc;
+    mal_adc_init_s init;
 } mal_adc_s;
+
+typedef struct MAL_ADC_CHANNEL {
+    mal_adc_channel_init_s init;
+    mal_adc_s *adc;
+    mal_adc_read_callback_t callback;
+    void *callback_handle;
+} mal_adc_channel_s;
 
 typedef struct MAL_ADC_INTERRUPT_STATE {
 
 } mal_adc_interrupt_state_s;
 
-void mal_hspec_gnu_adc_set_value(mal_adc_e adc, float value);
+void mal_hspec_gnu_adc_set_value(mal_adc_e adc, mal_adc_channel_e channel, float value);
 
-void mal_hspec_gnu_adc_do_async(mal_adc_e adc);
+void mal_hspec_gnu_adc_do_async(mal_adc_e adc, mal_adc_channel_e channel);
 
-bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc);
+bool mal_hspec_gnu_adc_peek_async(mal_adc_e adc, mal_adc_channel_e channel);
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_ADC_H_ */
