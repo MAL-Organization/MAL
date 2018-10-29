@@ -17,17 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
-#define HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_
+#ifndef MAL_MAL_HSPEC_STM32F7_DAC_H
+#define MAL_MAL_HSPEC_STM32F7_DAC_H
 
-#include "mal_hspec_stm32f7_timer.h"
-#include "mal_hspec_stm32f7_serial.h"
-#include "mal_hspec_stm32f7_gpio.h"
-#include "mal_hspec_stm32f7_can.h"
-#include "mal_hspec_stm32f7_i2c.h"
-#include "mal_hspec_stm32f7_clock.h"
-#include "mal_hspec_stm32f7_spi.h"
-#include "mal_hspec_stm32f7_adc.h"
-#include "mal_hspec_stm32f7_dac.h"
+#include "stm32f7/stm32f7xx_hal_dac.h"
+#include "std/mal_stdint.h"
 
-#endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */
+typedef struct MAL_DAC {
+    uint32_t channel;
+    DAC_HandleTypeDef *hal_dac;
+} mal_dac_s;
+
+#endif //MAL_MAL_HSPEC_STM32F7_DAC_H
