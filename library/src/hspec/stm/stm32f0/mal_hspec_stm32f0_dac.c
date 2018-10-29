@@ -57,10 +57,10 @@ mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
 	initialized = true;
 	// Initialize handle
     switch (init->dac) {
-        case MAL_DAC_1:
+        case MAL_DAC_0:
             handle->set_channel_data = &DAC_SetChannel1Data;
             break;
-        case MAL_DAC_2:
+        case MAL_DAC_1:
             handle->set_channel_data = &DAC_SetChannel2Data;
             break;
         default:
