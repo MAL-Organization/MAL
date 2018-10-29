@@ -78,6 +78,15 @@ mal_error_e mal_dac_write_bits(mal_dac_s *handle, uint64_t value);
 mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution);
 
 /**
+ * @brief Get the maximum resolution of the DAC.
+ * @param dac The DAC to get the resolution from.
+ * @param resolution A pointer of type uint8_t that will contain the
+ * resolution.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_dac_maximum_resolution(mal_dac_e dac, uint8_t *resolution);
+
+/**
  * @brief Initialize a DAC.
  * @param init The initialization parameters.
  * @param handle The handle to initialize. Use this handle to access subsequent
