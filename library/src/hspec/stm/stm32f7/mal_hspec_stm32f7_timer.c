@@ -25,6 +25,7 @@
 #include "clock/mal_clock.h"
 #include "stm32f7/stm32f7xx_hal_gpio_ex.h"
 #include "mal_hspec_stm32f7_gpio.h"
+#include "std/mal_math.h"
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
@@ -1009,6 +1010,7 @@ mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, 
 
 mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle) {
     mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
     // Execute common initialization
     mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle);
     if (MAL_ERROR_OK != mal_result) {
@@ -1039,19 +1041,24 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
     if (smallest_cycle > 0.5f) {
         smallest_cycle = 1.0f - duty_cycle;
     }
-    float pulse_length = smallest_cycle * minimum_period;
-    // Find the proper filter value
+    // The 0.5 is to leave some margin. Maybe this could be a parameter later on?
+    float pulse_length = smallest_cycle * minimum_period * 0.5f;
+    // Find the proper filter values
+    TIM_ClockConfigTypeDef clock_config;
+    clock_config.ClockFilter = 0;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     uint32_t clock_prescaler_shift;
     float timer_period = 1.0f / (float)timer_frequency;
+    float smallest_diff = MAXFLOAT;
     for (clock_prescaler_shift = 0;clock_prescaler_shift <= 2; clock_prescaler_shift++) {
         // Compute fdts period
         uint32_t clock_prescaler = (uint32_t)1 << clock_prescaler_shift;
         float fdts_period = timer_period * (float)clock_prescaler;
         uint32_t filter;
-        for (filter = 1; filter <= 15; filter++) {
+        for (filter = 0; filter <= 15; filter++) {
             // Determine filtering clock source
             float filtering_period = timer_period;
-            if (filter > 3) {
+            if ((filter > 3) || (0 == filter)) {
                 filtering_period = fdts_period;
             }
             // Determine filtering frequency prescaler
@@ -1088,6 +1095,8 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
             float filtering_period_multiple;
             switch (filter) {
                 case 0:
+                    filtering_period_multiple = 1.0f;
+                    break;
                 case 1:
                     filtering_period_multiple = 2.0f;
                     break;
@@ -1109,18 +1118,60 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
                     filtering_period_multiple = 8.0f;
                     break;
             }
+            // Finally, compute minimum pulse length that will be allowed through the filter
+            float minimum_event_time = filtering_period * filtering_prescaler * filtering_period_multiple;
+            // Check if filter event is too big
+            if (minimum_event_time >= pulse_length) {
+                continue;
+            }
+            // Check if this is the best filter setting
+            float diff = pulse_length - minimum_event_time;
+            if (diff >= smallest_diff) {
+                continue;
+            }
+            smallest_diff = diff;
+            // A possible config found
+            clock_config.ClockFilter = filter;
+            switch (clock_prescaler_shift) {
+                case 0:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+                    break;
+                case 1:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
+                    break;
+                default:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+                    break;
+            }
         }
     }
+    // Get timer channel
+    uint32_t timer_channel;
+    mal_result = mal_hspec_stm32f7_timer_get_channel(init->timer, init->port, init->pin, &timer_channel);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
     // Configure clock source
-    TIM_ClockConfigTypeDef clock_config;
-    clock_config.ClockSource =
-    HAL_TIM_ConfigClockSource(&handle->hal_timer_handle, );
+    if (TIM_CHANNEL_1 == timer_channel) {
+        clock_config.ClockSource = TIM_CLOCKSOURCE_TI1;
+    } else if (TIM_CHANNEL_2 == timer_channel) {
+        clock_config.ClockSource = TIM_CLOCKSOURCE_TI2;
+    } else {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    clock_config.ClockPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+    clock_config.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+    hal_result = HAL_TIM_ConfigClockSource(&handle->hal_timer_handle, &clock_config);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_INIT_FAILED;
+    }
     // Fetch mask to get max period
     uint64_t mask;
     mal_result = mal_timer_get_count_mask(init->timer, &mask);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
+    // Initialise timer
     handle->hal_timer_handle.Init.Prescaler = 0;
     handle->hal_timer_handle.Init.Period = (uint32_t)mask;
     handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -1128,6 +1179,13 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
     handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     handle->hal_timer_handle.Init.RepetitionCounter = 0;
     handle->hal_timer_handle.Parent = handle;
+    hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_COUNT;
+
+    return MAL_ERROR_OK;
 }
 
 mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {
