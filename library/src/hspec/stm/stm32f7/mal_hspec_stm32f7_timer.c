@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f7_timer.c
- *
- *  Created on: May 7, 2018
- *      Author: olivi
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
@@ -1011,6 +1005,129 @@ mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, 
     HAL_TIM_IC_Start_IT(&handle->hal_timer_handle, channel);
 
     return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle) {
+    mal_error_e mal_result;
+    // Execute common initialization
+    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialize input
+    mal_result = mal_hspec_stm32f7_timer_init_io(init->timer, init->port, init->pin);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(init->timer, &timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    if (timer_frequency <= 0) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Determine pulse length
+    float maximum_frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(init->maximum_frequency);
+    if (0.0f == maximum_frequency) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    float minimum_period = 1.0f / maximum_frequency;
+    float duty_cycle = (float)init->duty_cycle / (float)MAL_TYPES_RATIO_NORMALIZER;
+    float smallest_cycle = duty_cycle;
+    if (smallest_cycle > 0.5f) {
+        smallest_cycle = 1.0f - duty_cycle;
+    }
+    float pulse_length = smallest_cycle * minimum_period;
+    // Find the proper filter value
+    uint32_t clock_prescaler_shift;
+    float timer_period = 1.0f / (float)timer_frequency;
+    for (clock_prescaler_shift = 0;clock_prescaler_shift <= 2; clock_prescaler_shift++) {
+        // Compute fdts period
+        uint32_t clock_prescaler = (uint32_t)1 << clock_prescaler_shift;
+        float fdts_period = timer_period * (float)clock_prescaler;
+        uint32_t filter;
+        for (filter = 1; filter <= 15; filter++) {
+            // Determine filtering clock source
+            float filtering_period = timer_period;
+            if (filter > 3) {
+                filtering_period = fdts_period;
+            }
+            // Determine filtering frequency prescaler
+            float filtering_prescaler;
+            switch (filter) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    filtering_prescaler = 1.0f;
+                    break;
+                case 4:
+                case 5:
+                    filtering_prescaler = 2.0f;
+                    break;
+                case 6:
+                case 7:
+                    filtering_prescaler = 4.0f;
+                    break;
+                case 8:
+                case 9:
+                    filtering_prescaler = 8.0f;
+                    break;
+                case 10:
+                case 11:
+                case 12:
+                    filtering_prescaler = 16.0f;
+                    break;
+                default:
+                    filtering_prescaler = 32.0f;
+                    break;
+            }
+            // Determine filtering period multiple
+            float filtering_period_multiple;
+            switch (filter) {
+                case 0:
+                case 1:
+                    filtering_period_multiple = 2.0f;
+                    break;
+                case 2:
+                    filtering_period_multiple = 4.0f;
+                    break;
+                case 10:
+                case 13:
+                    filtering_period_multiple = 5.0f;
+                    break;
+                case 4:
+                case 6:
+                case 8:
+                case 11:
+                case 14:
+                    filtering_period_multiple = 6.0f;
+                    break;
+                default:
+                    filtering_period_multiple = 8.0f;
+                    break;
+            }
+        }
+    }
+    // Configure clock source
+    TIM_ClockConfigTypeDef clock_config;
+    clock_config.ClockSource =
+    HAL_TIM_ConfigClockSource(&handle->hal_timer_handle, );
+    // Fetch mask to get max period
+    uint64_t mask;
+    mal_result = mal_timer_get_count_mask(init->timer, &mask);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    handle->hal_timer_handle.Init.Prescaler = 0;
+    handle->hal_timer_handle.Init.Period = (uint32_t)mask;
+    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    handle->hal_timer_handle.Parent = handle;
 }
 
 mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {

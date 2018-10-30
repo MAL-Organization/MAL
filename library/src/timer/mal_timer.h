@@ -144,12 +144,20 @@ typedef struct {
     mal_timer_e timer; /**< The timer to use for the input capture.*/
     mal_hertz_t frequency; /**< The frequency to count to.*/
     mal_gpio_port_e port; /**< The port of the input capture GPIO to initialize.*/
-    uint8_t pin; /**< The pin of the port of the input captrure GPIO to initialize. */
+    uint8_t pin; /**< The pin of the port of the input capture GPIO to initialize. */
     mal_timer_input_e input_event; /**< The input event to capture.*/
     uint8_t input_divider; /**< Specifies after how many events the capture happens.*/
     mal_timer_input_capture_callback_t callback; /**< The callback to be executed when capture occurs.*/
     void *callback_handle; /**< This will be passed back at callback execution.*/
 } mal_timer_init_intput_capture_s;
+
+typedef struct {
+    mal_timer_e timer; /**< The timer to use for the count.*/
+    mal_gpio_port_e port; /**< The port of the count GPIO to initialize.*/
+    uint8_t pin; /**< The pin of the port of the count GPIO to initialize. */
+    mal_hertz_t maximum_frequency; /**< Maximum expected frequency. This is used to configure input filters if available.*/
+    mal_ratio_t duty_cycle; /**< The duty cycle of the input frequency. This is used to configure input filters if available.*/
+} mal_timer_init_count_input_s;
 
 /**
  * Initialization parameters of a timer in count mode.
@@ -291,12 +299,19 @@ mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count);
 
 /**
  * This is a simple timer initialization. You have to handle the overflow of the timer based on timer resolution.
- * @param timer Timer count initialization parameters.
- * @param handle The handle to initialize. This handle is used to access
- * subsequent timer functions.
+ * @param init Timer count initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access subsequent timer functions.
  * @return #MAL_ERROR_OK on success.
  */
 mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle);
+
+/**
+ * Initialise a timer which will count pulses from an input.
+ * @param init Timer input count initialization parameters.
+ * @param handle The handle to initialize. This handle is used to access subsequent timer functions.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle);
 
 /**
  * @brief Returns the state of the timer.
