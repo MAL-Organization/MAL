@@ -44,7 +44,7 @@ mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
     }
     // Choose DAC channel
     uint32_t channel = DAC_CHANNEL_1;
-    if (MAL_DAC_1 != init->dac) {
+    if (MAL_DAC_0 != init->dac) {
         channel = DAC_CHANNEL_2;
     }
     // Initialize DAC
@@ -53,10 +53,10 @@ mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
         if (HAL_OK != hal_result) {
             return MAL_ERROR_INIT_FAILED;
         }
-        hal_result = HAL_DAC_Start(&mal_hspec_stm32f7_dac, channel);
-        if (HAL_OK != hal_result) {
-            return MAL_ERROR_INIT_FAILED;
-        }
+    }
+    hal_result = HAL_DAC_Start(&mal_hspec_stm32f7_dac, channel);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_INIT_FAILED;
     }
     // Flag that this was at least initialized once
     initialized = true;
