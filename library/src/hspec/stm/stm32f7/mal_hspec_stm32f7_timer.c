@@ -1027,6 +1027,8 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
+    // This frequency is in mHz, bring this back to Hz
+    timer_frequency /= 1000;
     if (timer_frequency <= 0) {
         return MAL_ERROR_OPERATION_INVALID;
     }
@@ -1161,6 +1163,8 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
     }
     clock_config.ClockPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
     clock_config.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+    TIM_TI1_SetConfig(handle->hal_timer_handle.Instance, TIM_ICPOLARITY_RISING, TIM_ICSELECTION_DIRECTTI,
+                      clock_config.ClockFilter);
     hal_result = HAL_TIM_ConfigClockSource(&handle->hal_timer_handle, &clock_config);
     if (HAL_OK != hal_result) {
         return MAL_ERROR_INIT_FAILED;
@@ -1176,7 +1180,6 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
     handle->hal_timer_handle.Init.Period = (uint32_t)mask;
     handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
     handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
     handle->hal_timer_handle.Init.RepetitionCounter = 0;
     handle->hal_timer_handle.Parent = handle;
     hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
@@ -1184,6 +1187,10 @@ mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_t
         return MAL_ERROR_HARDWARE_INVALID;
     }
     handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_COUNT;
+    hal_result = HAL_TIM_Base_Start(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
 
     return MAL_ERROR_OK;
 }
