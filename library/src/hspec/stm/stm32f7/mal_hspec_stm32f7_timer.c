@@ -1217,58 +1217,72 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
     switch (handle->timer) {
         case MAL_TIMER_1:
             __HAL_RCC_TIM1_FORCE_RESET();
+            __HAL_RCC_TIM1_RELEASE_RESET();
             timer1_handle = NULL;
             break;
         case MAL_TIMER_2:
             __HAL_RCC_TIM2_FORCE_RESET();
+            __HAL_RCC_TIM2_RELEASE_RESET();
             timer2_handle = NULL;
             break;
         case MAL_TIMER_3:
             __HAL_RCC_TIM3_FORCE_RESET();
+            __HAL_RCC_TIM3_RELEASE_RESET();
             timer3_handle = NULL;
             break;
         case MAL_TIMER_4:
             __HAL_RCC_TIM4_FORCE_RESET();
+            __HAL_RCC_TIM4_RELEASE_RESET();
             timer4_handle = NULL;
             break;
         case MAL_TIMER_5:
             __HAL_RCC_TIM5_FORCE_RESET();
+            __HAL_RCC_TIM5_RELEASE_RESET();
             timer5_handle = NULL;
             break;
         case MAL_TIMER_6:
             __HAL_RCC_TIM6_FORCE_RESET();
+            __HAL_RCC_TIM6_RELEASE_RESET();
             timer6_handle = NULL;
             break;
         case MAL_TIMER_7:
             __HAL_RCC_TIM7_FORCE_RESET();
+            __HAL_RCC_TIM7_RELEASE_RESET();
             timer7_handle = NULL;
             break;
         case MAL_TIMER_8:
             __HAL_RCC_TIM8_FORCE_RESET();
+            __HAL_RCC_TIM8_RELEASE_RESET();
             timer8_handle = NULL;
             break;
         case MAL_TIMER_9:
             __HAL_RCC_TIM9_FORCE_RESET();
+            __HAL_RCC_TIM9_RELEASE_RESET();
             timer9_handle = NULL;
             break;
         case MAL_TIMER_10:
             __HAL_RCC_TIM10_FORCE_RESET();
+            __HAL_RCC_TIM10_RELEASE_RESET();
             timer10_handle = NULL;
             break;
         case MAL_TIMER_11:
             __HAL_RCC_TIM11_FORCE_RESET();
+            __HAL_RCC_TIM11_RELEASE_RESET();
             timer11_handle = NULL;
             break;
         case MAL_TIMER_12:
             __HAL_RCC_TIM12_FORCE_RESET();
+            __HAL_RCC_TIM12_RELEASE_RESET();
             timer12_handle = NULL;
             break;
         case MAL_TIMER_13:
             __HAL_RCC_TIM13_FORCE_RESET();
+            __HAL_RCC_TIM13_RELEASE_RESET();
             timer13_handle = NULL;
             break;
         case MAL_TIMER_14:
             __HAL_RCC_TIM14_FORCE_RESET();
+            __HAL_RCC_TIM14_RELEASE_RESET();
             timer14_handle = NULL;
             break;
         default:
