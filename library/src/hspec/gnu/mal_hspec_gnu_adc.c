@@ -70,6 +70,12 @@ mal_error_e mal_adc_resolution(mal_adc_s *handle, uint8_t *resolution) {
 	return MAL_ERROR_OK;
 }
 
+mal_error_e mal_adc_maximum_resolution(mal_adc_e adc, uint8_t *resolution) {
+	MAL_DEFS_UNUSED(adc);
+	*resolution = 32;
+    return MAL_ERROR_OK;
+}
+
 void mal_hspec_gnu_adc_set_value(mal_adc_e adc, mal_adc_channel_e channel, float value) {
 	adc_array[adc].channels[channel].value = value;
 }
