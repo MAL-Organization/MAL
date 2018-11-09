@@ -41,7 +41,19 @@ typedef struct MAL_TIMER_INPUT_CAPTURE {
 
 } mal_timer_input_capture_s;
 
+/**
+ * Is true by default. When true, the passage of time will be simulated by a thread. If false, user must manually
+ * control the timer.
+ */
+extern bool mal_hspec_gnu_timer_emulated;
+
 mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  mal_gpio_port_e port, uint8_t pin,
                                                           uint64_t value);
+
+uint32_t mal_hspec_gnu_timer_get_count(mal_timer_e timer);
+
+void mal_hspec_gnu_timer_set_count(mal_timer_e timer, uint32_t count);
+
+void mal_hspec_gnu_timer_restore_default_emulation(void);
 
 #endif /* HSPEC_GNU_MAL_HSPEC_GNU_TIMER_H_ */
