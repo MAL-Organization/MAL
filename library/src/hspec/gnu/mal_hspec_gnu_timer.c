@@ -127,10 +127,20 @@ mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *hand
 		return mal_timer_init_task(&task_init, handle);
 	}
 	// Time is not emulated
+	handle->timer = init->timer;
+	handle->used = true;
 	gnu_timers[init->timer].timer = init->timer;
 	gnu_timers[init->timer].frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(init->frequency);
 	gnu_timers[init->timer].count = 0;
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle) {
+    handle->timer = init->timer;
+    handle->used = true;
+    gnu_timers[init->timer].timer = init->timer;
+    gnu_timers[init->timer].count = 0;
+    return MAL_ERROR_OK;
 }
 
 uint32_t mal_hspec_gnu_timer_get_count(mal_timer_e timer) {
