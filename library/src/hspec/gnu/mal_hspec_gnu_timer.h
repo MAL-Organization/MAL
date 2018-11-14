@@ -30,7 +30,7 @@ typedef struct MAL_TIMER {
 } mal_timer_s;
 
 typedef struct MAL_TIMER_PWM {
-
+    mal_ratio_t duty_cycle;
 } mal_timer_pwm_s;
 
 typedef struct MAL_TIMER_INTERRUPT_STATE {
