@@ -1,8 +1,8 @@
 /**
  * @file mal_adc.h
  * @author Olivier Allaire
- * @date September 11 2015
- * @copyright Copyright (c) 2015 Olivier Allaire
+ * @date October 24 2018
+ * @copyright Copyright (c) 2018 Olivier Allaire
  * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
@@ -38,10 +38,14 @@
  */
 
 /**
-* ADC handle that must be defined by hardware specific implementation. Used
-* to access the ADC functions.
+* ADC handle that must be defined by hardware specific implementation. Used to access the ADC functions.
 */
 typedef struct MAL_ADC mal_adc_s;
+
+/**
+* ADC channel handle that must be defined by hardware specific implementation. Used to access the ADC channel functions.
+*/
+typedef struct MAL_ADC_CHANNEL mal_adc_channel_s;
 
 /**
  * This structure is used to retain interrupt status between disable and
@@ -56,66 +60,100 @@ typedef enum {
 	MAL_ADC_0 = 0,   //!< MAL_ADC_0
 	MAL_ADC_1 = 1,   //!< MAL_ADC_1
 	MAL_ADC_2 = 2,   //!< MAL_ADC_2
-	MAL_ADC_3 = 3,   //!< MAL_ADC_3
-	MAL_ADC_4 = 4,   //!< MAL_ADC_4
-	MAL_ADC_5 = 5,   //!< MAL_ADC_5
-	MAL_ADC_6 = 6,   //!< MAL_ADC_6
-	MAL_ADC_7 = 7,   //!< MAL_ADC_7
-	MAL_ADC_8 = 8,   //!< MAL_ADC_8
-	MAL_ADC_9 = 9,   //!< MAL_ADC_9
-	MAL_ADC_10 = 10, //!< MAL_ADC_10
-	MAL_ADC_11 = 11, //!< MAL_ADC_11
-	MAL_ADC_12 = 12, //!< MAL_ADC_12
-	MAL_ADC_13 = 13, //!< MAL_ADC_13
-	MAL_ADC_14 = 14, //!< MAL_ADC_14
-	MAL_ADC_15 = 15, //!< MAL_ADC_15
-	MAL_ADC_SIZE = 16//!< MAL_ADC_SIZE
+    MAL_ADC_SIZE = 3
 } mal_adc_e;
+
+/**
+ * The possible channels within an ADC
+ */
+typedef enum {
+    MAL_ADC_CHANNEL_0 = 0,
+    MAL_ADC_CHANNEL_1 = 1,
+    MAL_ADC_CHANNEL_2 = 2,
+    MAL_ADC_CHANNEL_3 = 3,
+    MAL_ADC_CHANNEL_4 = 4,
+    MAL_ADC_CHANNEL_5 = 5,
+    MAL_ADC_CHANNEL_6 = 6,
+    MAL_ADC_CHANNEL_7 = 7,
+    MAL_ADC_CHANNEL_8 = 8,
+    MAL_ADC_CHANNEL_9 = 9,
+    MAL_ADC_CHANNEL_10 = 10,
+    MAL_ADC_CHANNEL_11 = 11,
+    MAL_ADC_CHANNEL_12 = 12,
+    MAL_ADC_CHANNEL_13 = 13,
+    MAL_ADC_CHANNEL_14 = 14,
+    MAL_ADC_CHANNEL_15 = 15,
+    MAL_ADC_CHANNEL_SIZE = 16
+} mal_adc_channel_e;
 
 /**
  * The initialization parameters of an ADC.
  */
 typedef struct {
 	mal_adc_e adc; /**< To ADC to initialize.*/
-	mal_gpio_port_e port; /**< The port of the ADC GPIO to initialize.*/
-	uint8_t pin; /**< The pin of the port of the ADC GPIO to initialize. */
 	uint8_t bit_resolution; /**< The resolution of the ADC.*/
 } mal_adc_init_s;
+
+typedef struct {
+    mal_adc_channel_e channel; /**< The ADC channel to initialize.*/
+    mal_gpio_port_e port; /**< The port of the ADC channel to initialize.*/
+    uint8_t pin; /**< The pin of the port of the ADC channel to initialize. */
+} mal_adc_channel_init_s;
 
 /**
  * @brief This callback will be executed when an ADC read is complete.
  * @param handle The handle given for the callback.
+ * @param channel The channel executing the callback.
  * @param value The value read.
  */
-typedef void (*mal_adc_read_callback_t)(void *handle, uint64_t value);
+typedef void (*mal_adc_read_callback_t)(void *handle, mal_adc_channel_s *channel, uint64_t value);
 
 /**
- * @brief Read an ADC.
- * @param handle The ADC handle to read from.
+ * @brief Initialize an ADC.
+ * @param init The initialization parameters.
+ * @param adc The handle to initialize. This handle is used to access
+ * subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_adc_init(mal_adc_init_s *init, mal_adc_s *adc);
+
+/**
+ * @brief Initialise a channel of a ADC.
+ * @param init The initialization parameters.
+ * @param adc The initialised ADC to initialise a channel from.
+ * @param channel The channel handle to initialise. This handle is used to access subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_adc_channel_init(mal_adc_channel_init_s *init, mal_adc_s *adc, mal_adc_channel_s *channel);
+
+/**
+ * @brief Read an ADC channel.
+ * @param channel The ADC channel to read from.
  * @param value A pointer of type uint64_t that that will contain the data
  * read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_bits(mal_adc_s *handle, uint64_t *value);
+mal_error_e mal_adc_read_bits(mal_adc_channel_s *channel, uint64_t *value);
 
 /**
  * @brief Get the resolution of the ADC.
- * @param handle The ADC to get the resolution from.
+ * @param adc The ADC to get the resolution from.
  * @param resolution A pointer of type uint8_t that will contain the
  * resolution.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_resolution(mal_adc_s *handle, uint8_t *resolution);
+mal_error_e mal_adc_resolution(mal_adc_s *adc, uint8_t *resolution);
 
 /**
- * @brief Start an async read. A callback will be executed once the read is
- * complete.
- * @param handle The ADC to read from.
+ * @brief Start an async read. A callback will be executed once the read is complete. If an the ADC of that channel is
+ * busy for another channel, requested will be queued. If a request for that channel is queued,
+ * #MAL_ERROR_HARDWARE_UNAVAILABLE will be returned.
+ * @param channel The ADC channel to read from.
  * @param callback The callback to execute once the read is complete.
- * @param callback_handle This handle will be passed to the callback funtion.
+ * @param callback_handle This handle will be passed to the callback function.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_async_read(mal_adc_s *handle, mal_adc_read_callback_t callback, void *callback_handle);
+mal_error_e mal_adc_async_read(mal_adc_channel_s *channel, mal_adc_read_callback_t callback, void *callback_handle);
 
 /**
  * @brief Disable interrupts for an ADC.
@@ -144,30 +182,22 @@ MAL_DEFS_INLINE void mal_adc_restore_interrupt(mal_adc_s *handle, mal_adc_interr
 mal_error_e mal_adc_maximum_resolution(mal_adc_e adc, uint8_t *resolution);
 
 /**
- * @brief Initialize an ADC.
- * @param init The initialization parameters.
- * @param handle The handle to initialize. This handle is used to access
- * subsequent functions.
- * @return Returns #MAL_ERROR_OK on success.
- */
-mal_error_e mal_adc_init(mal_adc_init_s *init, mal_adc_s *handle);
-
-/**
- * @brief Read an ADC values, but as volts instead of LSBs.
- * @param handle The ADC to read from.
+ * @brief Read an ADC value, but as volts instead of LSBs.
+ * @param adc The ADC to which the channel is associated.
+ * @param channel The ADC channel to read from.
  * @param value The value read.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_read_volts(mal_adc_s *handle, mal_volts_t *value);
+mal_error_e mal_adc_read_volts(mal_adc_s *adc, mal_adc_channel_s *channel, mal_volts_t *value);
 
 /**
- * @brief Convert a bit value of an ADC to volts.
- * @param handle The ADC from which the bit value was read from.
+ * @brief Converts a bit value of an ADC to volts.
+ * @param adc The ADC from which the bit value was read from.
  * @param bit_value The value read rom the ADC.
  * @param value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value);
+mal_error_e mal_adc_bits_to_volts(mal_adc_s *adc, uint64_t bit_value, mal_volts_t *value);
 
 /**
  * This include is last because it defines hardware specific implementations of

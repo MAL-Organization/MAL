@@ -1,11 +1,5 @@
 /*
- * mal_adc.c
- *
- *  Created on: Sep 11, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -26,23 +20,23 @@
 #include "mal_adc.h"
 #include "power/mal_power.h"
 
-mal_error_e mal_adc_read_volts(mal_adc_s *handle, mal_volts_t *value) {
+mal_error_e mal_adc_read_volts(mal_adc_s *adc, mal_adc_channel_s *channel, mal_volts_t *value) {
 	mal_error_e result;
 	// Read bit value
 	uint64_t bit_value;
-	result = mal_adc_read_bits(handle, &bit_value);
+	result = mal_adc_read_bits(channel, &bit_value);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
 
-	return mal_adc_bits_to_volts(handle, bit_value, value);
+	return mal_adc_bits_to_volts(adc, bit_value, value);
 }
 
-mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value) {
+mal_error_e mal_adc_bits_to_volts(mal_adc_s *adc, uint64_t bit_value, mal_volts_t *value) {
 	mal_error_e result;
 	// Get ADC resolution
 	uint8_t resolution;
-	result = mal_adc_resolution(handle, &resolution);
+	result = mal_adc_resolution(adc, &resolution);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}

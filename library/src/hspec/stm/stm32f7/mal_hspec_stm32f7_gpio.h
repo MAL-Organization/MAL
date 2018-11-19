@@ -47,4 +47,6 @@ GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port);
 
 mal_error_e mal_hspec_stm32f7_gpio_init_alternate(mal_gpio_port_e port, uint8_t pin, uint32_t alternate);
 
+mal_error_e mal_hspec_stm32f7_gpio_init_analog(mal_gpio_port_e port, uint8_t pin);
+
 #endif //MAL_MAL_HSPEC_STM32F7_GPIO_H

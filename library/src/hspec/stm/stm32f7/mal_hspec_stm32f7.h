@@ -27,5 +27,7 @@
 #include "mal_hspec_stm32f7_i2c.h"
 #include "mal_hspec_stm32f7_clock.h"
 #include "mal_hspec_stm32f7_spi.h"
+#include "mal_hspec_stm32f7_adc.h"
+#include "mal_hspec_stm32f7_dac.h"
 
 #endif /* HSPEC_STM_STM32F7_MAL_HSPEC_STM32F7_H_ */

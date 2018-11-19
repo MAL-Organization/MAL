@@ -44,3 +44,9 @@ mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution) {
 	*resolution = dac_array[handle->dac].init.bit_resolution;
 	return MAL_ERROR_OK;
 }
+
+mal_error_e mal_dac_maximum_resolution(mal_dac_e dac, uint8_t *resolution) {
+	MAL_DEFS_UNUSED(dac);
+	*resolution = 12;
+	return MAL_ERROR_OK;
+}

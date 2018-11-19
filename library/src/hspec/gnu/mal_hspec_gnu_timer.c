@@ -44,6 +44,12 @@ static void count_timer_callback(void *handle);
 static mal_timer_e available_timers[MAL_TIMER_SIZE];
 static gnu_timer_s gnu_timers[MAL_TIMER_SIZE];
 
+bool mal_hspec_gnu_timer_emulated = true;
+
+void mal_hspec_gnu_timer_restore_default_emulation(void) {
+	mal_hspec_gnu_timer_emulated = true;
+}
+
 mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size) {
 	// Initialize timers
 	for (int i = 0; i < MAL_TIMER_SIZE; i++) {
@@ -111,13 +117,38 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
 }
 
 mal_error_e mal_timer_init_count(mal_timer_init_count_s *init, mal_timer_s *handle) {
-    mal_timer_init_task_s task_init;
-    task_init.timer = init->timer;
-    task_init.frequency = init->frequency;
-    task_init.delta = 0;
-    task_init.callback = &count_timer_callback;
-    task_init.callback_handle = &gnu_timers[init->timer].timer;
-	return mal_timer_init_task(&task_init, handle);
+	if (mal_hspec_gnu_timer_emulated) {
+		mal_timer_init_task_s task_init;
+		task_init.timer = init->timer;
+		task_init.frequency = init->frequency;
+		task_init.delta = 0;
+		task_init.callback = &count_timer_callback;
+		task_init.callback_handle = &gnu_timers[init->timer].timer;
+		return mal_timer_init_task(&task_init, handle);
+	}
+	// Time is not emulated
+	handle->timer = init->timer;
+	handle->used = true;
+	gnu_timers[init->timer].timer = init->timer;
+	gnu_timers[init->timer].frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(init->frequency);
+	gnu_timers[init->timer].count = 0;
+	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle) {
+    handle->timer = init->timer;
+    handle->used = true;
+    gnu_timers[init->timer].timer = init->timer;
+    gnu_timers[init->timer].count = 0;
+    return MAL_ERROR_OK;
+}
+
+uint32_t mal_hspec_gnu_timer_get_count(mal_timer_e timer) {
+	return gnu_timers[timer].count;
+}
+
+void mal_hspec_gnu_timer_set_count(mal_timer_e timer, uint32_t count) {
+	gnu_timers[timer].count = count;
 }
 
 static void count_timer_callback(void *handle) {
@@ -162,6 +193,19 @@ mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  ma
                                                           uint64_t value) {
     void *handle = gnu_timers[timer].intput_capture_cb_handles[port][pin];
 	gnu_timers[timer].intput_capture_cb[port][pin](handle, value);
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle) {
+    handle->timer = init->timer;
+    handle->used = true;
+    gnu_timers[init->timer].timer = init->timer;
+    gnu_timers[init->timer].count = 0;
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle) {
+    handle->duty_cycle = duty_cycle;
     return MAL_ERROR_OK;
 }
 

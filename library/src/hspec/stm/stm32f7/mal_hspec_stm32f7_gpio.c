@@ -216,3 +216,22 @@ mal_error_e mal_hspec_stm32f7_gpio_init_alternate(mal_gpio_port_e port, uint8_t 
 
     return MAL_ERROR_OK;
 }
+
+mal_error_e mal_hspec_stm32f7_gpio_init_analog(mal_gpio_port_e port, uint8_t pin) {
+    mal_error_e mal_result;
+    // Enable IO clock
+    mal_result = mal_hspec_stm32f7_gpio_enable_clock(port);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Set IO in alternate mode
+    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(port);
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode = GPIO_MODE_ANALOG;
+    gpio_init.Pull = GPIO_NOPULL;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init.Pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(pin);
+    HAL_GPIO_Init(hal_port, &gpio_init);
+
+    return MAL_ERROR_OK;
+}

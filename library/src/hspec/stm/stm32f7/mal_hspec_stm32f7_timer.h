@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f7_timer.h
- *
- *  Created on: May 8, 2018
- *      Author: olivi
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
@@ -35,7 +29,8 @@
 typedef enum {
     MAL_HSPEC_STM32F7_TIMER_MODE_BASIC,
     MAL_HSPEC_STM32F7_TIMER_MODE_PWM,
-    MAL_HSPEC_STM32F7_TIMER_MODE_COUNT
+    MAL_HSPEC_STM32F7_TIMER_MODE_COUNT,
+    MAL_HSPEC_STM32F7_TIMER_MODE_INPUT_COUNT
 } mal_hspec_stm32f7_timer_mode_e;
 
 typedef struct MAL_TIMER {

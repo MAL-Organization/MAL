@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f7_timer.c
- *
- *  Created on: May 7, 2018
- *      Author: olivi
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
@@ -31,6 +25,7 @@
 #include "clock/mal_clock.h"
 #include "stm32f7/stm32f7xx_hal_gpio_ex.h"
 #include "mal_hspec_stm32f7_gpio.h"
+#include "std/mal_math.h"
 
 static IRQn_Type mal_hspec_stm32f7_timer_get_update_irq(mal_timer_e timer);
 static mal_error_e mal_hspec_stm32f7_timer_get_input_clk(mal_timer_e timer, uint64_t *clock);
@@ -1013,6 +1008,193 @@ mal_error_e mal_timer_init_input_capture(mal_timer_init_intput_capture_s *init, 
     return MAL_ERROR_OK;
 }
 
+mal_error_e mal_timer_init_input_count(mal_timer_init_count_input_s *init, mal_timer_s *handle) {
+    mal_error_e mal_result;
+    HAL_StatusTypeDef hal_result;
+    // Execute common initialization
+    mal_result = mal_hspec_stm32f7_timer_common_init(init->timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialize input
+    mal_result = mal_hspec_stm32f7_timer_init_io(init->timer, init->port, init->pin);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(init->timer, &timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // This frequency is in mHz, bring this back to Hz
+    timer_frequency /= 1000;
+    if (timer_frequency <= 0) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Determine pulse length
+    float maximum_frequency = MAL_TYPES_MAL_HERTZ_TO_HERTZ(init->maximum_frequency);
+    if (0.0f == maximum_frequency) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    float minimum_period = 1.0f / maximum_frequency;
+    float duty_cycle = (float)init->duty_cycle / (float)MAL_TYPES_RATIO_NORMALIZER;
+    float smallest_cycle = duty_cycle;
+    if (smallest_cycle > 0.5f) {
+        smallest_cycle = 1.0f - duty_cycle;
+    }
+    // The 0.5 is to leave some margin. Maybe this could be a parameter later on?
+    float pulse_length = smallest_cycle * minimum_period * 0.5f;
+    // Find the proper filter values
+    TIM_ClockConfigTypeDef clock_config;
+    clock_config.ClockFilter = 0;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    uint32_t clock_prescaler_shift;
+    float timer_period = 1.0f / (float)timer_frequency;
+    float smallest_diff = MAXFLOAT;
+    for (clock_prescaler_shift = 0;clock_prescaler_shift <= 2; clock_prescaler_shift++) {
+        // Compute fdts period
+        uint32_t clock_prescaler = (uint32_t)1 << clock_prescaler_shift;
+        float fdts_period = timer_period * (float)clock_prescaler;
+        uint32_t filter;
+        for (filter = 0; filter <= 15; filter++) {
+            // Determine filtering clock source
+            float filtering_period = timer_period;
+            if ((filter > 3) || (0 == filter)) {
+                filtering_period = fdts_period;
+            }
+            // Determine filtering frequency prescaler
+            float filtering_prescaler;
+            switch (filter) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    filtering_prescaler = 1.0f;
+                    break;
+                case 4:
+                case 5:
+                    filtering_prescaler = 2.0f;
+                    break;
+                case 6:
+                case 7:
+                    filtering_prescaler = 4.0f;
+                    break;
+                case 8:
+                case 9:
+                    filtering_prescaler = 8.0f;
+                    break;
+                case 10:
+                case 11:
+                case 12:
+                    filtering_prescaler = 16.0f;
+                    break;
+                default:
+                    filtering_prescaler = 32.0f;
+                    break;
+            }
+            // Determine filtering period multiple
+            float filtering_period_multiple;
+            switch (filter) {
+                case 0:
+                    filtering_period_multiple = 1.0f;
+                    break;
+                case 1:
+                    filtering_period_multiple = 2.0f;
+                    break;
+                case 2:
+                    filtering_period_multiple = 4.0f;
+                    break;
+                case 10:
+                case 13:
+                    filtering_period_multiple = 5.0f;
+                    break;
+                case 4:
+                case 6:
+                case 8:
+                case 11:
+                case 14:
+                    filtering_period_multiple = 6.0f;
+                    break;
+                default:
+                    filtering_period_multiple = 8.0f;
+                    break;
+            }
+            // Finally, compute minimum pulse length that will be allowed through the filter
+            float minimum_event_time = filtering_period * filtering_prescaler * filtering_period_multiple;
+            // Check if filter event is too big
+            if (minimum_event_time >= pulse_length) {
+                continue;
+            }
+            // Check if this is the best filter setting
+            float diff = pulse_length - minimum_event_time;
+            if (diff >= smallest_diff) {
+                continue;
+            }
+            smallest_diff = diff;
+            // A possible config found
+            clock_config.ClockFilter = filter;
+            switch (clock_prescaler_shift) {
+                case 0:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+                    break;
+                case 1:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
+                    break;
+                default:
+                    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+                    break;
+            }
+        }
+    }
+    // Get timer channel
+    uint32_t timer_channel;
+    mal_result = mal_hspec_stm32f7_timer_get_channel(init->timer, init->port, init->pin, &timer_channel);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Configure clock source
+    if (TIM_CHANNEL_1 == timer_channel) {
+        clock_config.ClockSource = TIM_CLOCKSOURCE_TI1;
+    } else if (TIM_CHANNEL_2 == timer_channel) {
+        clock_config.ClockSource = TIM_CLOCKSOURCE_TI2;
+    } else {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    clock_config.ClockPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+    clock_config.ClockPrescaler = TIM_CLOCKPRESCALER_DIV1;
+    TIM_TI1_SetConfig(handle->hal_timer_handle.Instance, TIM_ICPOLARITY_RISING, TIM_ICSELECTION_DIRECTTI,
+                      clock_config.ClockFilter);
+    hal_result = HAL_TIM_ConfigClockSource(&handle->hal_timer_handle, &clock_config);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_INIT_FAILED;
+    }
+    // Fetch mask to get max period
+    uint64_t mask;
+    mal_result = mal_timer_get_count_mask(init->timer, &mask);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialise timer
+    handle->hal_timer_handle.Init.Prescaler = 0;
+    handle->hal_timer_handle.Init.Period = (uint32_t)mask;
+    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    handle->hal_timer_handle.Parent = handle;
+    hal_result = HAL_TIM_Base_Init(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+    handle->mode = MAL_HSPEC_STM32F7_TIMER_MODE_COUNT;
+    hal_result = HAL_TIM_Base_Start(&handle->hal_timer_handle);
+    if (HAL_OK != hal_result) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
+
+    return MAL_ERROR_OK;
+}
+
 mal_error_e mal_timer_get_count(mal_timer_s *handle, uint64_t *count) {
     *count = handle->hal_timer_handle.Instance->CNT;
     return MAL_ERROR_OK;
@@ -1035,58 +1217,72 @@ mal_error_e mal_timer_free(mal_timer_s *handle) {
     switch (handle->timer) {
         case MAL_TIMER_1:
             __HAL_RCC_TIM1_FORCE_RESET();
+            __HAL_RCC_TIM1_RELEASE_RESET();
             timer1_handle = NULL;
             break;
         case MAL_TIMER_2:
             __HAL_RCC_TIM2_FORCE_RESET();
+            __HAL_RCC_TIM2_RELEASE_RESET();
             timer2_handle = NULL;
             break;
         case MAL_TIMER_3:
             __HAL_RCC_TIM3_FORCE_RESET();
+            __HAL_RCC_TIM3_RELEASE_RESET();
             timer3_handle = NULL;
             break;
         case MAL_TIMER_4:
             __HAL_RCC_TIM4_FORCE_RESET();
+            __HAL_RCC_TIM4_RELEASE_RESET();
             timer4_handle = NULL;
             break;
         case MAL_TIMER_5:
             __HAL_RCC_TIM5_FORCE_RESET();
+            __HAL_RCC_TIM5_RELEASE_RESET();
             timer5_handle = NULL;
             break;
         case MAL_TIMER_6:
             __HAL_RCC_TIM6_FORCE_RESET();
+            __HAL_RCC_TIM6_RELEASE_RESET();
             timer6_handle = NULL;
             break;
         case MAL_TIMER_7:
             __HAL_RCC_TIM7_FORCE_RESET();
+            __HAL_RCC_TIM7_RELEASE_RESET();
             timer7_handle = NULL;
             break;
         case MAL_TIMER_8:
             __HAL_RCC_TIM8_FORCE_RESET();
+            __HAL_RCC_TIM8_RELEASE_RESET();
             timer8_handle = NULL;
             break;
         case MAL_TIMER_9:
             __HAL_RCC_TIM9_FORCE_RESET();
+            __HAL_RCC_TIM9_RELEASE_RESET();
             timer9_handle = NULL;
             break;
         case MAL_TIMER_10:
             __HAL_RCC_TIM10_FORCE_RESET();
+            __HAL_RCC_TIM10_RELEASE_RESET();
             timer10_handle = NULL;
             break;
         case MAL_TIMER_11:
             __HAL_RCC_TIM11_FORCE_RESET();
+            __HAL_RCC_TIM11_RELEASE_RESET();
             timer11_handle = NULL;
             break;
         case MAL_TIMER_12:
             __HAL_RCC_TIM12_FORCE_RESET();
+            __HAL_RCC_TIM12_RELEASE_RESET();
             timer12_handle = NULL;
             break;
         case MAL_TIMER_13:
             __HAL_RCC_TIM13_FORCE_RESET();
+            __HAL_RCC_TIM13_RELEASE_RESET();
             timer13_handle = NULL;
             break;
         case MAL_TIMER_14:
             __HAL_RCC_TIM14_FORCE_RESET();
+            __HAL_RCC_TIM14_RELEASE_RESET();
             timer14_handle = NULL;
             break;
         default:

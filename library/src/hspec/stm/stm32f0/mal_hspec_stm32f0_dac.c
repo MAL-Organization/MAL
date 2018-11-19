@@ -57,10 +57,10 @@ mal_error_e mal_dac_init(mal_dac_init_s *init, mal_dac_s *handle) {
 	initialized = true;
 	// Initialize handle
     switch (init->dac) {
-        case MAL_DAC_1:
+        case MAL_DAC_0:
             handle->set_channel_data = &DAC_SetChannel1Data;
             break;
-        case MAL_DAC_2:
+        case MAL_DAC_1:
             handle->set_channel_data = &DAC_SetChannel2Data;
             break;
         default:
@@ -77,6 +77,14 @@ mal_error_e mal_dac_write_bits(mal_dac_s *handle, uint64_t value) {
 
 mal_error_e mal_dac_resolution(mal_dac_s *handle, uint8_t *resolution) {
     MAL_DEFS_UNUSED(handle);
+    *resolution = 12;
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_dac_maximum_resolution(mal_dac_e dac, uint8_t *resolution) {
+    if (dac > MAL_DAC_1) {
+        return MAL_ERROR_HARDWARE_INVALID;
+    }
     *resolution = 12;
     return MAL_ERROR_OK;
 }

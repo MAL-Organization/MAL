@@ -17,18 +17,15 @@
  * along with MAL.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "timer/mal_timer.h"
-#include "std/mal_defs.h"
+#ifndef MAL_MAL_HSPEC_STM32F7_DAC_H
+#define MAL_MAL_HSPEC_STM32F7_DAC_H
 
-mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle) {
-    MAL_DEFS_UNUSED(init);
-    MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(pwm_handle);
-	return MAL_ERROR_OK;
-}
+#include "stm32f7/stm32f7xx_hal_dac.h"
+#include "std/mal_stdint.h"
 
-mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle) {
-    MAL_DEFS_UNUSED(handle);
-    MAL_DEFS_UNUSED(duty_cycle);
-	return MAL_ERROR_OK;
-}
+typedef struct MAL_DAC {
+    uint32_t channel;
+    DAC_HandleTypeDef *hal_dac;
+} mal_dac_s;
+
+#endif //MAL_MAL_HSPEC_STM32F7_DAC_H
