@@ -103,6 +103,7 @@ typedef struct {
 /**
  * @brief This callback will be executed when an ADC read is complete.
  * @param handle The handle given for the callback.
+ * @param channel The channel executing the callback.
  * @param value The value read.
  */
 typedef void (*mal_adc_read_callback_t)(void *handle, mal_adc_channel_s *channel, uint64_t value);
@@ -110,12 +111,19 @@ typedef void (*mal_adc_read_callback_t)(void *handle, mal_adc_channel_s *channel
 /**
  * @brief Initialize an ADC.
  * @param init The initialization parameters.
- * @param handle The handle to initialize. This handle is used to access
+ * @param adc The handle to initialize. This handle is used to access
  * subsequent functions.
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_adc_init(mal_adc_init_s *init, mal_adc_s *adc);
 
+/**
+ * @brief Initialise a channel of a ADC.
+ * @param init The initialization parameters.
+ * @param adc The initialised ADC to initialise a channel from.
+ * @param channel The channel handle to initialise. This handle is used to access subsequent functions.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
 mal_error_e mal_adc_channel_init(mal_adc_channel_init_s *init, mal_adc_s *adc, mal_adc_channel_s *channel);
 
 /**
@@ -175,6 +183,7 @@ mal_error_e mal_adc_maximum_resolution(mal_adc_e adc, uint8_t *resolution);
 
 /**
  * @brief Read an ADC value, but as volts instead of LSBs.
+ * @param adc The ADC to which the channel is associated.
  * @param channel The ADC channel to read from.
  * @param value The value read.
  * @return Returns #MAL_ERROR_OK on success.
@@ -183,12 +192,12 @@ mal_error_e mal_adc_read_volts(mal_adc_s *adc, mal_adc_channel_s *channel, mal_v
 
 /**
  * @brief Converts a bit value of an ADC to volts.
- * @param handle The ADC from which the bit value was read from.
+ * @param adc The ADC from which the bit value was read from.
  * @param bit_value The value read rom the ADC.
  * @param value The converted value.
  * @return Returns #MAL_ERROR_OK on success.
  */
-mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value);
+mal_error_e mal_adc_bits_to_volts(mal_adc_s *adc, uint64_t bit_value, mal_volts_t *value);
 
 /**
  * This include is last because it defines hardware specific implementations of

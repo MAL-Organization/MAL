@@ -65,8 +65,8 @@ mal_error_e mal_adc_read_bits(mal_adc_channel_s *channel, uint64_t *value) {
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_adc_resolution(mal_adc_s *handle, uint8_t *resolution) {
-	*resolution = handle->init.bit_resolution;
+mal_error_e mal_adc_resolution(mal_adc_s *adc, uint8_t *resolution) {
+	*resolution = adc->init.bit_resolution;
 	return MAL_ERROR_OK;
 }
 

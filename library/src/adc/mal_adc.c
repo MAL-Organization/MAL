@@ -32,11 +32,11 @@ mal_error_e mal_adc_read_volts(mal_adc_s *adc, mal_adc_channel_s *channel, mal_v
 	return mal_adc_bits_to_volts(adc, bit_value, value);
 }
 
-mal_error_e mal_adc_bits_to_volts(mal_adc_s *handle, uint64_t bit_value, mal_volts_t *value) {
+mal_error_e mal_adc_bits_to_volts(mal_adc_s *adc, uint64_t bit_value, mal_volts_t *value) {
 	mal_error_e result;
 	// Get ADC resolution
 	uint8_t resolution;
-	result = mal_adc_resolution(handle, &resolution);
+	result = mal_adc_resolution(adc, &resolution);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
