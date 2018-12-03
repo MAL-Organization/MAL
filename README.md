@@ -24,7 +24,7 @@ Doing a build still require manual steps in order to publish to GitHub
 The build script run Eclipse in headless mode. You need a fully working Eclipse workspace in order to do a build. Here is how to get there.
 * Install Java JDK
 * Install maven
- * Add maven to Path environment variable
+** Add maven to Path environment variable
 * Install python 3
  * Add the following path to Path environment variable: [PathToPython3]
  * Create a python3 executable
