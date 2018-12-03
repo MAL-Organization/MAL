@@ -9,7 +9,7 @@ from common import extract_properties
 if __name__ == '__main__':
     properties = extract_properties(sys.argv[1])
     # Erase current documentation
-    shutil.rmtree(properties["path.to.doc"])
+    shutil.rmtree(properties["path.to.doc"], ignore_errors=True)
     # Generate documentation
     process_arguments = list()
     process_arguments.append("doxygen")

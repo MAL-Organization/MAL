@@ -22,24 +22,26 @@ Doing a build still require manual steps in order to publish to GitHub
 
 ## Environment setup
 The build script run Eclipse in headless mode. You need a fully working Eclipse workspace in order to do a build. Here is how to get there.
-* Install last GNU ARM Toolchain by following this: http://gnuarmeclipse.github.io/toolchain/install/
-* Install the GNU ARM Windows build tool by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/
-* Install MinGW with the latest release here: https://sourceforge.net/projects/mingw/files/Installer/
- * Install base and g++
- * Add the following path to Path environment variable: [PathToMinGW]/bin
-* Download and install pyhton3
- * Add the following path to Path environment variable: [PathToPython3]
-* If not present install Java JDK
+* Install Java JDK
 * Install maven
-* Download and unzip latest Eclipse CDT package, found here: http://www.eclipse.org/downloads/packages/
-* Launch Eclipse and create a new workspace
-* Install GNU ARM Eclipse plugin by following this: http://gnuarmeclipse.github.io/plugins/install/
-* Install the Unit Test plugin for CDT from your CDT update site.
-* Make sure Global tools path are set properly by following this: http://gnuarmeclipse.github.io/windows-build-tools/install/#check-the-global-tools-path
-* Checkout the MAL repo
-* In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
-* Select root directory, click Browse... > Select the library folder in the MAL repo > Ok > Finish
-* In Eclipse in the project Explorer section, right click > Import > General > Existing Projects into Workspace > Next
-* Select root directory, click Browse... > Select the test folder in the MAL repo > Ok > Finish
-* Install git and make sure the path of the executable is the Path environment variable.
-* Voila, you are ready to develop and build
+ * Add maven to Path environment variable
+* Install python 3
+ * Add the following path to Path environment variable: [PathToPython3]
+ * Create a python3 executable
+* Install cmake
+ * Create CMAKE_HOME environment variable. This should point to the bin folder of cmake.
+* Install the GNU ARM toolchain
+ * Create the ARM_HOME environment variable. This should point to the bin folder of the toolchain.
+ * Create the GCC_ARM_HOME environment variable. This point to [PathToToolchain]/lib/gcc/[VERSION]
+* Install the GNU ARM Windows build tools by following this: https://gnu-mcu-eclipse.github.io/windows-build-tools/install/
+ * Create the ARM_BUILD_TOOLS_HOME environment variable. This should point to the bin folder of the tools.
+* Install cygwin
+ * Install package make
+ * Install package gcc-core
+ * Install package gcc-g++
+ * Install package curl
+ * Create CYGWIN_PATH environment variable. This should point to the bin folder of cygwin.
+* Install doxygen
+ * Add doxygen to Path environment variable
+* Install git
+ * Add git to Path environment variable
