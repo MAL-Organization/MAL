@@ -28,7 +28,7 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
 * Install python 3
   * Add the following path to Path environment variable: [PathToPython3]
   * Create a python3 executable
-* Install cmake
+* Install cmake (Tested with cmake 3.10)
   * Create CMAKE_HOME environment variable. This should point to the bin folder of cmake.
 * Install the GNU ARM toolchain
   * Create the ARM_HOME environment variable. This should point to the bin folder of the toolchain.
