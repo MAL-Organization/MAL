@@ -111,6 +111,7 @@ mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_ha
 
 	gpio_array[init->port][init->pin].event = init->event;
 	gpio_array[init->port][init->pin].callback = init->callback;
+	gpio_array[init->port][init->pin].callback_handle = init->handle;
 
 	event_handle->gpio_handle = gpio_handle;
 
