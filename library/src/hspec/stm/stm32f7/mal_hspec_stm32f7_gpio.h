@@ -27,6 +27,7 @@
 #include "std/mal_bool.h"
 
 #define MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(pin) ((uint32_t)1 << (pin))
+#define MAL_HSPEC_STM32F7_GPIO_PORT_SIZE        16
 
 typedef struct MAL_GPIO {
     GPIO_TypeDef *hal_port;
@@ -34,7 +35,11 @@ typedef struct MAL_GPIO {
 } mal_gpio_s;
 
 typedef struct MAL_GPIO_EVENT {
-
+    mal_gpio_s *mal_gpio;
+    mal_gpio_event_callback_t callback;
+    void *callback_handle;
+    IRQn_Type irq;
+    uint8_t pin;
 } mal_gpio_event_s;
 
 typedef struct MAL_GPIO_INTERRUPT_STATE {
