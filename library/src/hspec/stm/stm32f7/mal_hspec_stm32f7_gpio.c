@@ -236,8 +236,14 @@ mal_error_e mal_hspec_stm32f7_gpio_init_analog(mal_gpio_port_e port, uint8_t pin
 
 mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_handle, mal_gpio_event_s *event_handle) {
     mal_error_e mal_result;
-    // Enable clock and select port
-    mal_result = mal_hspec_stm32f7_gpio_enable_clock(init->port);
+    // Initialise GPIO as input
+    mal_gpio_init_s gpio_init;
+    gpio_init.port = init->port;
+    gpio_init.pin = init->pin;
+    gpio_init.direction = MAL_GPIO_DIRECTION_IN;
+    gpio_init.pupd = init->pupd;
+    gpio_init.speed = init->speed;
+    mal_result = mal_gpio_init(&gpio_init, gpio_handle);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
@@ -296,7 +302,7 @@ mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
 }
 
 MAL_DEFS_INLINE void mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
-    state->active = (bool)NVIC_GetActive(handle->irq);
+    state->active = (bool)NVIC_GetEnableIRQ(handle->irq);
     NVIC_DisableIRQ(handle->irq);
     __DSB();
     __ISB();
