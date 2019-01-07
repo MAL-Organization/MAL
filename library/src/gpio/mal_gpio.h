@@ -100,12 +100,6 @@ typedef enum {
 } mal_gpio_event_e;
 
 /**
- * @brief GPIO event callback.
- * @param handle The handle given during initialization.
- */
-typedef void (*mal_gpio_event_callback_t)(void *handle);
-
-/**
  * Parameters to initialize an event.
  */
 typedef struct {

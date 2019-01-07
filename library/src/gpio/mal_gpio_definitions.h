@@ -44,7 +44,11 @@ typedef enum {
     MAL_GPIO_PORT_SIZE = 9 //!< MAL_PORT_SIZE
 } mal_gpio_port_e;
 
-
+/**
+ * @brief GPIO event callback.
+ * @param handle The handle given during initialization.
+ */
+typedef void (*mal_gpio_event_callback_t)(void *handle);
 
 /** @}*/
 

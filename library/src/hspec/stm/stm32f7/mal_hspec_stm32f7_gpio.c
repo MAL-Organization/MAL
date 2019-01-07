@@ -1,10 +1,4 @@
 /*
- * mal_hspec_stm32f7_gpio.c
- *
- *  Created on: May 7, 2018
- *      Author: olivi
- */
-/*
  * Copyright (c) 2018 Olivier Allaire
  *
  * This file is part of MAL.
@@ -30,6 +24,10 @@
 #include "power/mal_power.h"
 
 static mal_error_e mal_hspec_stm32f7_gpio_get_speed(uint64_t speed, uint32_t *speed_setting);
+static void mal_hspec_stm32f7_gpio_handle_exti_interrupt(uint16_t hal_pin, uint8_t pin);
+static IRQn_Type mal_hspec_stm32f7_gpio_get_exti_irq(uint8_t pin);
+
+static mal_gpio_event_s *mal_hspec_stm32f7_gpio_events[MAL_HSPEC_STM32F7_GPIO_PORT_SIZE];
 
 GPIO_TypeDef* mal_hspec_stm32f7_gpio_get_hal_port(mal_gpio_port_e port) {
     switch (port) {
@@ -234,4 +232,154 @@ mal_error_e mal_hspec_stm32f7_gpio_init_analog(mal_gpio_port_e port, uint8_t pin
     HAL_GPIO_Init(hal_port, &gpio_init);
 
     return MAL_ERROR_OK;
+}
+
+mal_error_e mal_gpio_event_init(mal_gpio_event_init_s *init, mal_gpio_s *gpio_handle, mal_gpio_event_s *event_handle) {
+    mal_error_e mal_result;
+    // Initialise GPIO as input
+    mal_gpio_init_s gpio_init;
+    gpio_init.port = init->port;
+    gpio_init.pin = init->pin;
+    gpio_init.direction = MAL_GPIO_DIRECTION_IN;
+    gpio_init.pupd = init->pupd;
+    gpio_init.speed = init->speed;
+    mal_result = mal_gpio_init(&gpio_init, gpio_handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Initialize handle
+    event_handle->mal_gpio = gpio_handle;
+    event_handle->pin = init->pin;
+    event_handle->irq = mal_hspec_stm32f7_gpio_get_exti_irq(init->pin);
+    event_handle->callback = init->callback;
+    event_handle->callback_handle = init->handle;
+    mal_hspec_stm32f7_gpio_events[init->pin] = event_handle;
+    // Get port and pin
+    GPIO_TypeDef *hal_port = mal_hspec_stm32f7_gpio_get_hal_port(init->port);
+    uint32_t hal_pin = MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(init->pin);
+    // Configure GPIO
+    GPIO_InitTypeDef hal_gpio_init;
+    hal_gpio_init.Alternate = 0;
+    hal_gpio_init.Pin = hal_pin;
+    switch (init->event) {
+        case MAL_GPIO_EVENT_RISING:
+            hal_gpio_init.Mode = GPIO_MODE_IT_RISING;
+            break;
+        case MAL_GPIO_EVENT_FALLING:
+            hal_gpio_init.Mode = GPIO_MODE_IT_FALLING;
+            break;
+        default:
+            hal_gpio_init.Mode = GPIO_MODE_IT_RISING_FALLING;
+            break;
+    }
+    if (MAL_GPIO_PUPD_PU == init->pupd) {
+        hal_gpio_init.Pull = GPIO_PULLUP;
+    } else if (MAL_GPIO_PUPD_PD == init->pupd) {
+        hal_gpio_init.Pull = GPIO_PULLDOWN;
+    } else {
+        hal_gpio_init.Pull = GPIO_NOPULL;
+    }
+    HAL_GPIO_Init(hal_port, &hal_gpio_init);
+    // Enable interrupt
+    mal_gpio_interrupt_state_s state;
+    state.active = true;
+    mal_gpio_event_restore_interrupt(event_handle, &state);
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_gpio_event_remove(mal_gpio_event_s *handle) {
+    // Disable interrupt
+    mal_gpio_interrupt_state_s state;
+    mal_gpio_event_disable_interrupt(handle, &state);
+    // Remove event
+    mal_hspec_stm32f7_gpio_events[handle->pin] = NULL;
+    // Disable EXTI
+    HAL_GPIO_DeInit(handle->mal_gpio->hal_port, MAL_HSPEC_STM32F7_GPIO_GET_HAL_PIN(handle->pin));
+    // Enable interrupt
+    mal_gpio_event_restore_interrupt(handle, &state);
+
+    return MAL_ERROR_OK;
+}
+
+MAL_DEFS_INLINE void mal_gpio_event_disable_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
+    state->active = (bool)NVIC_GetEnableIRQ(handle->irq);
+    NVIC_DisableIRQ(handle->irq);
+    __DSB();
+    __ISB();
+}
+
+MAL_DEFS_INLINE void mal_gpio_event_restore_interrupt(mal_gpio_event_s *handle, mal_gpio_interrupt_state_s *state) {
+    if (state->active) {
+        NVIC_EnableIRQ(handle->irq);
+    }
+}
+
+static IRQn_Type mal_hspec_stm32f7_gpio_get_exti_irq(uint8_t pin) {
+    switch (pin) {
+        case 0:
+            return EXTI0_IRQn;
+        case 1:
+            return EXTI1_IRQn;
+        case 2:
+            return EXTI2_IRQn;
+        case 3:
+            return EXTI3_IRQn;
+        case 4:
+            return EXTI4_IRQn;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+            return EXTI9_5_IRQn;
+        default:
+            return EXTI15_10_IRQn;
+    }
+}
+
+void EXTI0_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_0, 0);
+}
+
+void EXTI1_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_1, 1);
+}
+
+void EXTI2_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_2, 2);
+}
+
+void EXTI3_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_3, 3);
+}
+
+void EXTI4_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_4, 4);
+}
+
+void EXTI9_5_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_5, 5);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_6, 6);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_7, 7);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_8, 8);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_9, 9);
+}
+
+void EXTI15_10_IRQHandler(void) {
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_10, 10);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_11, 11);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_12, 12);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_13, 13);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_14, 14);
+    mal_hspec_stm32f7_gpio_handle_exti_interrupt(GPIO_PIN_15, 15);
+}
+
+static void mal_hspec_stm32f7_gpio_handle_exti_interrupt(uint16_t hal_pin, uint8_t pin) {
+    if(__HAL_GPIO_EXTI_GET_IT(hal_pin) != RESET) {
+        mal_gpio_event_s *event = mal_hspec_stm32f7_gpio_events[pin];
+        __HAL_GPIO_EXTI_CLEAR_IT(hal_pin);
+        if (NULL != event) {
+            event->callback(event->callback_handle);
+        }
+    }
 }
