@@ -1,8 +1,8 @@
 /**
  * @file mal_e3prom.h
  * @author Olivier Allaire
- * @date September 6 2016
- * @copyright Copyright (c) 2015 Olivier Allaire
+ * @date January 14 2019
+ * @copyright Copyright (c) 2019 Olivier Allaire
  * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@
 
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
+#include "std/mal_bool.h"
 
 /**
  * This address is reserved for the state of sections of e3prom.
@@ -96,6 +97,16 @@ typedef struct {
 } mal_e3prom_s;
 
 /**
+ * Function used to filter values during a transfer of page. This allows to delete values in the e3prom.
+ * @param handle The handle given with the function pointer.
+ * @param e3prom The e3prom doing the page transfer.
+ * @param key The key (address) to being transferred.
+ * @param value The value being transferred.
+ * @return Returns true to keep the value, false to discard it.
+ */
+typedef bool (*mal_e3prom_filter_t)(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+
+/**
  * This function initializes the e3prom.
  * @param init The initialization parameters.
  * @param e3prom The e3prom variable to use for other operations.
@@ -121,5 +132,15 @@ mal_error_e mal_e3prom_get_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t *v
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+
+/**
+ * This function triggers a page transfer to allow filtering of the e3prom. Using the filter, you basically delete
+ * elements from the e3prom.
+ * @param e3prom The e3prom to filter.
+ * @param filter The filtering function.
+ * @param handle The handle to pass to the filter.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, void *handle);
 
 #endif /* UTILS_MAL_E3PROM_H_ */
