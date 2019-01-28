@@ -52,11 +52,74 @@ mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object) {
 	return MAL_ERROR_EMPTY;
 }
 
+mal_error_e mal_pool_allocate_array(mal_pool_s *pool, uint64_t array_size, void **array_start) {
+	// Validate array size
+	if (array_size <= 0) {
+		return MAL_ERROR_OPERATION_INVALID;
+	} else if (1 == array_size) {
+		return mal_pool_allocate(pool, array_start);
+	}
+	// Find array
+	uint64_t start_index;
+	for (start_index = 0; start_index < pool->size; start_index++) {
+		if (!pool->objects[start_index].is_free) {
+			continue;
+		}
+		// Start index found, check if there is enough space ahead.
+		uint64_t index;
+		bool found = true;
+		for (index = 1; index < array_size; index++) {
+			// Validate current index
+			uint64_t current_index = start_index + index;
+			if (current_index >= pool->size) {
+				return MAL_ERROR_NOT_FOUND;
+			}
+			// Check if index is free
+			if (pool->objects[current_index].is_free) {
+				continue;
+			}
+			// Array is not long enough, move start index forward to prevent check this space too many times.
+			start_index = current_index;
+			found = false;
+			break;
+		}
+		if (!found) {
+			continue;
+		}
+		// Array found, allocate
+		*array_start = pool->objects[start_index].object;
+		for (index = 0; index < array_size; index++) {
+			uint64_t current_index = start_index + index;
+			pool->objects[current_index].is_free = false;
+		}
+		return MAL_ERROR_OK;
+	}
+	return MAL_ERROR_NOT_FOUND;
+}
+
 void mal_pool_free(mal_pool_s *pool, void *object) {
 	uint64_t index;
 	for (index = 0; index < pool->size; index++) {
 		if (pool->objects[index].object == object) {
 			pool->objects[index].is_free = true;
+		}
+	}
+}
+
+void mal_pool_free_array(mal_pool_s *pool, void *array_start, uint64_t array_size) {
+	uint64_t start_index;
+	for (start_index = 0; start_index < pool->size; start_index++) {
+		if (pool->objects[start_index].object != array_start) {
+			continue;
+		}
+		// Free all array
+		uint64_t index;
+		for (index = 0; index < array_size; index++) {
+			uint64_t current_index = start_index + index;
+			if (current_index >= pool->size) {
+				return;
+			}
+			pool->objects[current_index].is_free = true;
 		}
 	}
 }
