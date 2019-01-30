@@ -32,6 +32,7 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
   * Create CMAKE_HOME environment variable. This should point to the bin folder of cmake.
 * Install the GNU ARM toolchain
   * Create the ARM_HOME environment variable. This should point to the bin folder of the toolchain.
+    * Make sure to use forward slash for this path
   * Create the GCC_ARM_HOME environment variable. This point to [PathToToolchain]/lib/gcc/[VERSION]
 * Install the GNU ARM Windows build tools by following this: https://gnu-mcu-eclipse.github.io/windows-build-tools/install/
   * Create the ARM_BUILD_TOOLS_HOME environment variable. This should point to the bin folder of the tools.
@@ -41,6 +42,7 @@ The build script run Eclipse in headless mode. You need a fully working Eclipse 
   * Install package gcc-g++
   * Install package curl
   * Create CYGWIN_PATH environment variable. This should point to the bin folder of cygwin.
+    * Make sure to use forward slash for this path
 * Install doxygen
   * Add doxygen to Path environment variable
 * Install git
