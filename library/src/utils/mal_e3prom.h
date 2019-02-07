@@ -59,6 +59,10 @@ typedef struct {
 	uint32_t secondary_page_count;	//!< The number of pages for the secondary section.
 } mal_e3prom_init_s;
 
+typedef struct {
+	mal_e3prom_init_s e3prom_init;
+} mal_async_e3prom_init_s;
+
 /**
  * These are the possible states for the primary and secondary section.
  */
@@ -95,6 +99,10 @@ typedef struct {
 	mal_e3prom_section_s sections[MAL_E3PROM_SECTION_SIZE];	//!< The sections of e3prom.
 	mal_e3prom_section_e active_section;					//!< The currently active section.
 } mal_e3prom_s;
+
+typedef struct {
+	mal_e3prom_s e3prom;
+} mal_async_e3prom_s;
 
 /**
  * Function used to filter values during a transfer of page. This allows to delete values in the e3prom.
@@ -142,5 +150,11 @@ mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t 
  * @return Returns #MAL_ERROR_OK on success.
  */
 mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, void *handle);
+
+mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3prom_s *async_e3prom);
+
+mal_error_e mal_async_e3prom_get_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t *value);
+
+mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value);
 
 #endif /* UTILS_MAL_E3PROM_H_ */

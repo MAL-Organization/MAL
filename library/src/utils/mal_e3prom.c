@@ -41,6 +41,7 @@ static mal_error_e mal_e3prom_write_section_value(mal_e3prom_s *e3prom, mal_e3pr
 static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommissioning, mal_e3prom_filter_t filter,
                                                    void *filter_handle);
 static mal_error_e mal_e3prom_erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
+static mal_error_e mal_e3prom_common_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
 
 mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
 	mal_error_e result;
@@ -184,6 +185,15 @@ static mal_error_e mal_e3prom_erase_section(mal_e3prom_s *e3prom, mal_e3prom_sec
 	return mal_e3prom_write_section_value(e3prom, section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ERASED, false);
 }
 
+static mal_error_e mal_e3prom_common_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
+	// Users cannot write state
+	if (MAL_E3PROM_STATE_KEY == key) {
+		return MAL_ERROR_OPERATION_INVALID;
+	}
+	// Try to write value to active sector
+	return mal_e3prom_write_section_value(e3prom, e3prom->active_section, key, value, true);
+}
+
 mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
 	mal_error_e result;
 	// Users cannot write state
@@ -191,7 +201,7 @@ mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t 
 		return MAL_ERROR_OPERATION_INVALID;
 	}
 	// Try to write value to active sector
-	result = mal_e3prom_write_section_value(e3prom, e3prom->active_section, key, value, true);
+	result = mal_e3prom_common_write_value(e3prom, key, value);
 	if (MAL_ERROR_OK == result) {
 		return result;
 	}
@@ -329,4 +339,29 @@ static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool sk
 
 mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, void *handle) {
     return mal_e3prom_switch_active_sector(e3prom, false, filter, handle);
+}
+
+mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3prom_s *async_e3prom) {
+	return mal_e3prom_init(&init->e3prom_init, &async_e3prom->e3prom);
+}
+
+mal_error_e mal_async_e3prom_get_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t *value) {
+	return mal_e3prom_get_value(&async_e3prom->e3prom, key, value);
+}
+
+mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value) {
+	mal_error_e result;
+	// Users cannot write state
+	if (MAL_E3PROM_STATE_KEY == key) {
+		return MAL_ERROR_OPERATION_INVALID;
+	}
+	// Try to write value to active sector
+	result = mal_e3prom_common_write_value(&async_e3prom->e3prom, key, value);
+	if (MAL_ERROR_OK == result) {
+		return result;
+	}
+	// Make sure the write did not fail in an unexpected way
+	if (MAL_ERROR_FULL != result) {
+		return result;
+	}
 }
