@@ -43,6 +43,7 @@
 #include "std/mal_stdint.h"
 #include "std/mal_error.h"
 #include "std/mal_bool.h"
+#include "mal_pool.h"
 
 /**
  * This address is reserved for the state of sections of e3prom.
@@ -60,8 +61,9 @@ typedef struct {
 } mal_e3prom_init_s;
 
 typedef struct {
-	mal_e3prom_init_s e3prom_init;
-} mal_async_e3prom_init_s;
+	uint32_t key;
+	uint32_t value;
+} mal_async_e3prom_pending_write_s;
 
 /**
  * These are the possible states for the primary and secondary section.
@@ -100,10 +102,6 @@ typedef struct {
 	mal_e3prom_section_e active_section;					//!< The currently active section.
 } mal_e3prom_s;
 
-typedef struct {
-	mal_e3prom_s e3prom;
-} mal_async_e3prom_s;
-
 /**
  * Function used to filter values during a transfer of page. This allows to delete values in the e3prom.
  * @param handle The handle given with the function pointer.
@@ -113,6 +111,42 @@ typedef struct {
  * @return Returns true to keep the value, false to discard it.
  */
 typedef bool (*mal_e3prom_filter_t)(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+
+typedef struct MAL_ASYNC_E3PROM mal_async_e3prom_s;
+
+typedef void (*mal_async_e3prom_filter_complete_t)(void *handle, mal_async_e3prom_s *async_e3prom);
+
+typedef struct MAL_ASYNC_E3PROM {
+	mal_e3prom_s e3prom;
+	// Sector switch variables
+	uint64_t secsw_previous_key_address;
+	uint64_t burst_size;
+	bool switch_in_progress;
+	mal_e3prom_filter_t active_filter;
+	mal_async_e3prom_filter_complete_t active_filter_complete;
+	void *active_filter_handle;
+	// Pending writes variables
+	mal_pool_s pending_writes_pool;
+	// Pending filters variables
+	mal_pool_s pending_filters_pool;
+} mal_async_e3prom_s;
+
+typedef struct {
+	mal_e3prom_filter_t filter;
+	mal_async_e3prom_filter_complete_t filter_complete;
+	void *handle;
+} mal_async_e3prom_pending_filter_s;
+
+typedef struct {
+	mal_e3prom_init_s e3prom_init;
+	uint64_t burst_size;
+	mal_async_e3prom_pending_write_s *pending_write_array;
+	mal_pool_object_s *pending_write_object_array;
+	uint64_t pending_write_array_size;
+	mal_async_e3prom_pending_filter_s *pending_filter_array;
+	mal_pool_object_s *pending_filter_object_array;
+	uint64_t pending_filter_array_size;
+} mal_async_e3prom_init_s;
 
 /**
  * This function initializes the e3prom.
@@ -156,5 +190,10 @@ mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3pro
 mal_error_e mal_async_e3prom_get_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t *value);
 
 mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value);
+
+mal_error_e mal_async_e3prom_process(mal_async_e3prom_s *async_e3prom);
+
+mal_error_e mal_async_e3prom_filter(mal_async_e3prom_s *async_e3prom, mal_e3prom_filter_t filter,
+		                            mal_async_e3prom_filter_complete_t filter_complete, void *handle);
 
 #endif /* UTILS_MAL_E3PROM_H_ */

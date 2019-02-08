@@ -42,6 +42,13 @@ static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool sk
                                                    void *filter_handle);
 static mal_error_e mal_e3prom_erase_section(mal_e3prom_s *e3prom, mal_e3prom_section_e section);
 static mal_error_e mal_e3prom_common_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+static uint64_t mal_e3prom_get_previous_section_last_address(mal_e3prom_s *e3prom);
+static mal_error_e mal_e3prom_switch_active_sector_step(mal_e3prom_s *e3prom, uint64_t step_burst_size,
+														uint64_t *previous_key_address, mal_e3prom_filter_t filter,
+														void *filter_handle);
+static mal_error_e mal_async_e3prom_save_pending_write(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value);
+static mal_e3prom_section_e mal_e3prom_get_previous_section(mal_e3prom_s *e3prom);
+static mal_error_e mal_async_e3prom_handle_pending_writes(mal_async_e3prom_s *async_e3prom);
 
 mal_error_e mal_e3prom_init(mal_e3prom_init_s *init, mal_e3prom_s *e3prom) {
 	mal_error_e result;
@@ -253,19 +260,17 @@ static mal_error_e mal_e3prom_write_section_value(mal_e3prom_s *e3prom, mal_e3pr
 	return mal_flash_write_uint32_values((unsigned int)value_address, &value, 1);
 }
 
-static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommissioning,
-                                                   mal_e3prom_filter_t filter, void *filter_handle) {
+static mal_error_e mal_e3prom_start_active_sector_switch(mal_e3prom_s *e3prom, bool skip_decommissioning) {
 	mal_error_e result;
 	// Make the active section decommissioned.
 	if (!skip_decommissioning) {
 		result = mal_e3prom_write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY,
-                                                MAL_E3PROM_STATE_DECOMMISSIONED, false);
+												MAL_E3PROM_STATE_DECOMMISSIONED, false);
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
 	}
 	// Switch active sector pointer
-	mal_e3prom_section_e previous_section = e3prom->active_section;
 	if (MAL_E3PROM_SECTION_PRIMARY == e3prom->active_section) {
 		e3prom->active_section = MAL_E3PROM_SECTION_SECONDARY;
 	} else {
@@ -280,31 +285,56 @@ static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool sk
 		}
 	}
 	// Change state to initializing
-	result = mal_e3prom_write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY,
-                                            MAL_E3PROM_STATE_INITIALIZING, false);
-	if (MAL_ERROR_OK != result) {
-		return result;
+	return mal_e3prom_write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY,
+			                              MAL_E3PROM_STATE_INITIALIZING, false);
+}
+
+static mal_e3prom_section_e mal_e3prom_get_previous_section(mal_e3prom_s *e3prom) {
+	mal_e3prom_section_e previous_section = MAL_E3PROM_SECTION_PRIMARY;
+	if (MAL_E3PROM_SECTION_PRIMARY == e3prom->active_section) {
+		previous_section = MAL_E3PROM_SECTION_SECONDARY;
 	}
+	return previous_section;
+}
+
+static uint64_t mal_e3prom_get_previous_section_last_address(mal_e3prom_s *e3prom) {
+	// Determine previous section
+	mal_e3prom_section_e previous_section = mal_e3prom_get_previous_section(e3prom);
+	uint32_t step = sizeof(uint32_t) * 2;
+	return e3prom->sections[previous_section].last_address - (step * MAL_E3PROM_STATE_SECTOR_BUFFER);
+}
+
+static mal_error_e mal_e3prom_switch_active_sector_step(mal_e3prom_s *e3prom, uint64_t step_burst_size,
+		                                                uint64_t *previous_key_address, mal_e3prom_filter_t filter,
+		                                                void *filter_handle) {
+	mal_error_e result;
 	// Copy values from previous sector
-	uint64_t previous_key_address;
+	mal_e3prom_section_e previous_section = mal_e3prom_get_previous_section(e3prom);
+	uint64_t step_counter = 0;
 	uint32_t step = sizeof(uint32_t) * 2;
 	uint64_t previous_start_address = mal_flash_get_page_start_address(e3prom->sections[previous_section].start_page);
-	uint64_t previous_last_address = e3prom->sections[previous_section].last_address - (step * MAL_E3PROM_STATE_SECTOR_BUFFER);
+	uint64_t previous_last_address = mal_e3prom_get_previous_section_last_address(e3prom);
 	uint64_t active_start_address = mal_flash_get_page_start_address(e3prom->sections[e3prom->active_section].start_page);
 	uint64_t active_last_address = e3prom->sections[e3prom->active_section].last_address - (step * MAL_E3PROM_STATE_SECTOR_BUFFER);
-	for (previous_key_address = previous_last_address;
-		 previous_key_address >= previous_start_address && previous_key_address <= previous_last_address;
-		 previous_key_address -= step) {
-		uint32_t previous_key = mal_flash_read_uint32((unsigned int)previous_key_address);
+	for (; (*previous_key_address >= previous_start_address) && (*previous_key_address <= previous_last_address);
+		 *previous_key_address -= step) {
+		step_counter++;
+		uint32_t previous_key = mal_flash_read_uint32((unsigned int)*previous_key_address);
 		// Check if key value should be transferred
-		if (MAL_E3PROM_EMPTY_KEY == previous_key || MAL_E3PROM_STATE_KEY == previous_key) {
+		if ((MAL_E3PROM_EMPTY_KEY == previous_key) || (MAL_E3PROM_STATE_KEY == previous_key)) {
+			if (step_counter >= step_burst_size) {
+				return MAL_ERROR_IN_PROGRESS;
+			}
 			continue;
 		}
 		// Check if this value should be filtered
-		uint64_t previous_value_address = previous_key_address + sizeof(uint32_t);
+		uint64_t previous_value_address = *previous_key_address + sizeof(uint32_t);
 		uint32_t previous_value = mal_flash_read_uint32((unsigned int)previous_value_address);
 		if (NULL != filter) {
 			if (!filter(filter_handle, e3prom, previous_key, previous_value)) {
+				if (step_counter >= step_burst_size) {
+					return MAL_ERROR_IN_PROGRESS;
+				}
 				continue;
 			}
 		}
@@ -324,6 +354,9 @@ static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool sk
 			}
 		}
 		if (key_found) {
+			if (step_counter >= step_burst_size) {
+				return MAL_ERROR_IN_PROGRESS;
+			}
 			continue;
 		}
 		// Value was not transferred, write key value
@@ -331,10 +364,26 @@ static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool sk
 		if (MAL_ERROR_OK != result) {
 			return result;
 		}
+		// Check burst size
+		if (step_counter >= step_burst_size) {
+			return MAL_ERROR_IN_PROGRESS;
+		}
 	}
 	// Change state to active
 	return mal_e3prom_write_section_value(e3prom, e3prom->active_section, MAL_E3PROM_STATE_KEY, MAL_E3PROM_STATE_ACTIVE,
-                                          false);
+										  false);
+}
+
+static mal_error_e mal_e3prom_switch_active_sector(mal_e3prom_s *e3prom, bool skip_decommissioning,
+                                                   mal_e3prom_filter_t filter, void *filter_handle) {
+	mal_error_e result;
+	// Make the active section decommissioned.
+	result = mal_e3prom_start_active_sector_switch(e3prom, skip_decommissioning);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	uint64_t previous_key_address = mal_e3prom_get_previous_section_last_address(e3prom);
+	return mal_e3prom_switch_active_sector_step(e3prom, UINT64_MAX, &previous_key_address, filter, filter_handle);
 }
 
 mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, void *handle) {
@@ -342,11 +391,60 @@ mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, 
 }
 
 mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3prom_s *async_e3prom) {
+	// Initialise async sector switch variables
+	async_e3prom->burst_size = init->burst_size;
+	async_e3prom->switch_in_progress = false;
+	async_e3prom->active_filter = NULL;
+	async_e3prom->active_filter_handle = NULL;
+	// Initialise pending write pool
+	mal_pool_init(init->pending_write_object_array, init->pending_write_array_size, (uint8_t*)init->pending_write_array,
+			      sizeof(mal_async_e3prom_pending_write_s), &async_e3prom->pending_writes_pool);
+	// Initialise pending filter pool
+	mal_pool_init(init->pending_filter_object_array, init->pending_filter_array_size,
+			      (uint8_t*)init->pending_filter_array, sizeof(mal_async_e3prom_pending_filter_s),
+			      &async_e3prom->pending_filters_pool);
+	// Initialise E3PROM
 	return mal_e3prom_init(&init->e3prom_init, &async_e3prom->e3prom);
 }
 
 mal_error_e mal_async_e3prom_get_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t *value) {
-	return mal_e3prom_get_value(&async_e3prom->e3prom, key, value);
+	// Check if a switch is in progress
+	if (!async_e3prom->switch_in_progress) {
+		return mal_e3prom_get_value(&async_e3prom->e3prom, key, value);
+	}
+	// Check pending writes
+	uint64_t index;
+	mal_async_e3prom_pending_write_s *pending_write;
+	MAL_POOL_FOR_EACH(&async_e3prom->pending_writes_pool, index, pending_write) {
+		if (pending_write->key == key) {
+			*value = pending_write->value;
+			return MAL_ERROR_OK;
+		}
+	}
+	// Read in previous sector
+	mal_e3prom_section_e previous_section = mal_e3prom_get_previous_section(&async_e3prom->e3prom);
+	return mal_e3prom_get_section_value(&async_e3prom->e3prom, previous_section, key, value);
+}
+
+static mal_error_e mal_async_e3prom_save_pending_write(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value) {
+	mal_error_e result;
+	// Make sure key is not already pending
+	uint64_t index;
+	mal_async_e3prom_pending_write_s *pending_write;
+	MAL_POOL_FOR_EACH(&async_e3prom->pending_writes_pool, index, pending_write) {
+		if (pending_write->key == key) {
+			pending_write->value = value;
+			return MAL_ERROR_OK;
+		}
+	}
+	// Save pending write
+	result = mal_pool_allocate(&async_e3prom->pending_writes_pool, (void**)&pending_write);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	pending_write->key = key;
+	pending_write->value = value;
+	return MAL_ERROR_OK;
 }
 
 mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint32_t key, uint32_t value) {
@@ -354,6 +452,10 @@ mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint3
 	// Users cannot write state
 	if (MAL_E3PROM_STATE_KEY == key) {
 		return MAL_ERROR_OPERATION_INVALID;
+	}
+	// Make sure a sector switch is not in progress
+	if (async_e3prom->switch_in_progress) {
+		return mal_async_e3prom_save_pending_write(async_e3prom, key, value);
 	}
 	// Try to write value to active sector
 	result = mal_e3prom_common_write_value(&async_e3prom->e3prom, key, value);
@@ -364,4 +466,133 @@ mal_error_e mal_async_e3prom_write_value(mal_async_e3prom_s *async_e3prom, uint3
 	if (MAL_ERROR_FULL != result) {
 		return result;
 	}
+	// Save write as pending
+	result = mal_async_e3prom_save_pending_write(async_e3prom, key, value);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	// Start sector switch
+	result = mal_e3prom_start_active_sector_switch(&async_e3prom->e3prom, false);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	async_e3prom->secsw_previous_key_address = mal_e3prom_get_previous_section_last_address(&async_e3prom->e3prom);
+	result = mal_e3prom_switch_active_sector_step(&async_e3prom->e3prom, async_e3prom->burst_size,
+												   &async_e3prom->secsw_previous_key_address, NULL, NULL);
+	if (MAL_ERROR_IN_PROGRESS == result) {
+		async_e3prom->switch_in_progress = true;
+		result = MAL_ERROR_OK;
+	} else if (MAL_ERROR_OK == result) {
+		// We can do pending write
+		result = mal_async_e3prom_handle_pending_writes(async_e3prom);
+	}
+	return result;
+}
+
+static mal_error_e mal_async_e3prom_handle_pending_writes(mal_async_e3prom_s *async_e3prom) {
+	mal_error_e result = MAL_ERROR_OK;
+	mal_error_e step_result;
+	uint64_t index;
+	mal_async_e3prom_pending_write_s *pending_write;
+	MAL_POOL_FOR_EACH(&async_e3prom->pending_writes_pool, index, pending_write) {
+		step_result = mal_async_e3prom_write_value(async_e3prom, pending_write->key, pending_write->value);
+		if (MAL_ERROR_OK != step_result) {
+			result = step_result;
+		}
+	}
+	mal_pool_flush(&async_e3prom->pending_writes_pool);
+	return result;
+}
+
+mal_error_e mal_async_e3prom_process(mal_async_e3prom_s *async_e3prom) {
+	mal_error_e result = MAL_ERROR_OK;
+	mal_error_e step_result;
+	// Handle async switches
+	if (async_e3prom->switch_in_progress) {
+		// Execute burst
+		result = mal_e3prom_switch_active_sector_step(&async_e3prom->e3prom,
+				                                      async_e3prom->burst_size,
+													   &async_e3prom->secsw_previous_key_address,
+													   async_e3prom->active_filter,
+													   async_e3prom->active_filter_handle);
+		// Check if transfer is complete
+		if (MAL_ERROR_OK == result) {
+			// Execute complete callback
+			mal_async_e3prom_pending_filter_s *next_pending_filter = NULL;
+			if (NULL != async_e3prom->active_filter_complete) {
+				async_e3prom->active_filter_complete(async_e3prom->active_filter_handle, async_e3prom);
+				// Remove filter
+				uint64_t index;
+				mal_async_e3prom_pending_filter_s *current_pending_filter;
+				MAL_POOL_FOR_EACH(&async_e3prom->pending_filters_pool, index, current_pending_filter) {
+					if ((current_pending_filter->filter == async_e3prom->active_filter) &&
+					    (current_pending_filter->handle == async_e3prom->active_filter_handle)) {
+						// Remove this filter
+						mal_pool_free(&async_e3prom->pending_filters_pool, current_pending_filter);
+						continue;
+					}
+					// Save for next filter
+					if (NULL == next_pending_filter) {
+						next_pending_filter = current_pending_filter;
+					}
+				}
+			}
+			// Cleanup
+			async_e3prom->switch_in_progress = false;
+			async_e3prom->active_filter = NULL;
+			async_e3prom->active_filter_complete = NULL;
+			async_e3prom->active_filter_handle = NULL;
+			result = mal_async_e3prom_handle_pending_writes(async_e3prom);
+			// Start next filter
+			if (NULL != next_pending_filter) {
+				step_result = mal_async_e3prom_filter(async_e3prom, next_pending_filter->filter,
+						                              next_pending_filter->filter_complete,
+						                              next_pending_filter->handle);
+				if (MAL_ERROR_OK != step_result) {
+					result = step_result;
+				}
+			}
+		} else if (MAL_ERROR_IN_PROGRESS == result) {
+			// This is normal, this burst did not finish the transfer
+			result = MAL_ERROR_OK;
+		}
+	}
+	return result;
+}
+
+mal_error_e mal_async_e3prom_filter(mal_async_e3prom_s *async_e3prom, mal_e3prom_filter_t filter,
+									mal_async_e3prom_filter_complete_t filter_complete, void *handle) {
+
+	mal_error_e result;
+	if (!async_e3prom->switch_in_progress) {
+		// Make the active section decommissioned.
+		result = mal_e3prom_start_active_sector_switch(&async_e3prom->e3prom, false);
+		if (MAL_ERROR_OK != result) {
+			return result;
+		}
+		async_e3prom->secsw_previous_key_address = mal_e3prom_get_previous_section_last_address(&async_e3prom->e3prom);
+		result = mal_e3prom_switch_active_sector_step(&async_e3prom->e3prom, async_e3prom->burst_size,
+													   &async_e3prom->secsw_previous_key_address, filter, handle);
+		if (MAL_ERROR_IN_PROGRESS == result) {
+			async_e3prom->switch_in_progress = true;
+			async_e3prom->active_filter = filter;
+			async_e3prom->active_filter_complete = filter_complete;
+			async_e3prom->active_filter_handle = handle;
+			result = MAL_ERROR_OK;
+		} else if (MAL_ERROR_OK == result) {
+			// Execute complete callback
+			filter_complete(handle, async_e3prom);
+		}
+		return result;
+	}
+	// Save pending filter
+	mal_async_e3prom_pending_filter_s *pending_filter;
+	result = mal_pool_allocate(&async_e3prom->pending_writes_pool, (void**)&pending_filter);
+	if (MAL_ERROR_OK != result) {
+		return result;
+	}
+	pending_filter->filter = filter;
+	pending_filter->filter_complete = filter_complete;
+	pending_filter->handle = handle;
+	return MAL_ERROR_OK;
 }
