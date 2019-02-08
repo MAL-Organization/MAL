@@ -395,6 +395,7 @@ mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3pro
 	async_e3prom->burst_size = init->burst_size;
 	async_e3prom->switch_in_progress = false;
 	async_e3prom->active_filter = NULL;
+	async_e3prom->active_filter_complete = NULL;
 	async_e3prom->active_filter_handle = NULL;
 	// Initialise pending write pool
 	mal_pool_init(init->pending_write_object_array, init->pending_write_array_size, (uint8_t*)init->pending_write_array,
@@ -587,7 +588,7 @@ mal_error_e mal_async_e3prom_filter(mal_async_e3prom_s *async_e3prom, mal_e3prom
 	}
 	// Save pending filter
 	mal_async_e3prom_pending_filter_s *pending_filter;
-	result = mal_pool_allocate(&async_e3prom->pending_writes_pool, (void**)&pending_filter);
+	result = mal_pool_allocate(&async_e3prom->pending_filters_pool, (void**)&pending_filter);
 	if (MAL_ERROR_OK != result) {
 		return result;
 	}
