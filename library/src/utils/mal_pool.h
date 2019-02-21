@@ -2,7 +2,7 @@
  * @file mal_pool.h
  * @author Olivier Allaire
  * @date October 4 2015
- * @copyright Copyright (c) 2015 Olivier Allaire
+ * @copyright Copyright (c) 2019 Olivier Allaire
  * @par This file is part of MAL.
  *
  * MAL is free software: you can redistribute it and/or modify
@@ -76,11 +76,29 @@ void mal_pool_init(mal_pool_object_s *object_pool, uint64_t pool_size, uint8_t *
 mal_error_e mal_pool_allocate(mal_pool_s *pool, void **object);
 
 /**
+ * @brief This function will attempt to allocate a free object array.
+ * @param pool The pool of objects to allocate from.
+ * @param array_size The size of the array in number of objects.
+ * @param array_start If a free contiguous array of object is found, this will point to the first object.
+ * @return If an array is found, #MAL_ERROR_OK will be returned.
+ * #MAL_ERROR_EMPTY will be returned if no free object remains.
+ */
+mal_error_e mal_pool_allocate_array(mal_pool_s *pool, uint64_t array_size, void **array_start);
+
+/**
  * @brief This function will free an allocated object.
  * @param pool The pool to free the object from.
  * @param object The object to free.
  */
 void mal_pool_free(mal_pool_s *pool, void *object);
+
+/**
+ * @brief This function will free an allocated object.
+ * @param pool The pool to free the object from.
+ * @param array_start The array to free.
+ * @param array_size The size of the array to free.
+ */
+void mal_pool_free_array(mal_pool_s *pool, void *array_start, uint64_t array_size);
 
 /**
  * This will reset all objects as free.

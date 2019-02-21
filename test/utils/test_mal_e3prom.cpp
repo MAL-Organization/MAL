@@ -1,11 +1,5 @@
 /*
- * test_mal_e3prom.cpp
- *
- *  Created on: Sep 8, 2016
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2019 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -37,35 +31,47 @@ protected:
 	static const int second_page_size = 256;
 	mal_hspec_gnu_flash_info_s flash_info;
 
-	virtual void SetUp() {
-		// Set flash info
-		this->flash_info.page_count = 4;
-		this->flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * this->flash_info.page_count);
-		this->flash_info.pages[0].size = (uint32_t)this->first_page_size;
-		this->flash_info.pages[1].size = (uint32_t)this->second_page_size;
-		this->flash_info.pages[2].size = (uint32_t)this->first_page_size;
-		this->flash_info.pages[3].size = (uint32_t)this->second_page_size;
-		mal_hspec_gnu_flash_set_flash(&this->flash_info);
-	}
+    void SetUp();
+    void TearDown();
 
-	virtual void TearDown() {
-		free(this->flash_info.pages);
-	}
+    static bool filter_key_2(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
 
+    mal_e3prom_s e3prom;
 };
+
+void TestMalE3prom::SetUp() {
+    mal_error_e result;
+    // Set flash info
+    this->flash_info.page_count = 4;
+    this->flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * this->flash_info.page_count);
+    this->flash_info.pages[0].size = (uint32_t)this->first_page_size;
+    this->flash_info.pages[1].size = (uint32_t)this->second_page_size;
+    this->flash_info.pages[2].size = (uint32_t)this->first_page_size;
+    this->flash_info.pages[3].size = (uint32_t)this->second_page_size;
+    mal_hspec_gnu_flash_set_flash(&this->flash_info);
+    // Initialize e3prom
+    mal_e3prom_init_s init;
+    init.primary_start_page = 0;
+    init.primary_page_count = 2;
+    init.secondary_start_page = 2;
+    init.secondary_page_count = 2;
+    result = mal_e3prom_init(&init, &e3prom);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+}
+
+void TestMalE3prom::TearDown() {
+    free(this->flash_info.pages);
+}
+
+bool TestMalE3prom::filter_key_2(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
+    MAL_DEFS_UNUSED(handle);
+    MAL_DEFS_UNUSED(e3prom);
+    MAL_DEFS_UNUSED(value);
+    return 2 != key;
+}
 
 TEST_F(TestMalE3prom, InitWithErasedFlash) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
-	// Initialize e3prom
-	mal_e3prom_init_s init;
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	result = mal_e3prom_init(&init, &e3prom);
-	// Check result
-	ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to initialize E3PROM";
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Make sure primary section state is active
@@ -82,16 +88,8 @@ TEST_F(TestMalE3prom, InitWithErasedFlash) {
 
 TEST_F(TestMalE3prom, InitWithPrimaryActive) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
 	mal_e3prom_init_s init;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
-	// Now, the emulated flash is initialized. We will reinitialize to make
-	// sure the e3prom handles initialized flash.
+	// The emulated flash is initialized. We will reinitialize to make sure the e3prom handles initialized flash.
 	init.primary_start_page = 0;
 	init.primary_page_count = 2;
 	init.secondary_start_page = 2;
@@ -110,14 +108,6 @@ TEST_F(TestMalE3prom, InitWithPrimaryActive) {
 
 TEST_F(TestMalE3prom, WriteAndRead) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
-	mal_e3prom_init_s init;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// We will write 4 different times
 	for (uint32_t i = 0; i < 4; i++) {
 		uint32_t test_value = 0x42 * i;
@@ -149,14 +139,6 @@ TEST_F(TestMalE3prom, WriteAndRead) {
 
 TEST_F(TestMalE3prom, SwitchSectionOnce) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
-	mal_e3prom_init_s init;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
@@ -175,14 +157,6 @@ TEST_F(TestMalE3prom, SwitchSectionOnce) {
 
 TEST_F(TestMalE3prom, SwitchSectionTwice) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
-	mal_e3prom_init_s init;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
@@ -212,14 +186,7 @@ TEST_F(TestMalE3prom, SwitchSectionTwice) {
 
 TEST_F(TestMalE3prom, InitWithSecondaryActive) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
 	mal_e3prom_init_s init;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
@@ -254,15 +221,8 @@ TEST_F(TestMalE3prom, InitWithSecondaryActive) {
 
 TEST_F(TestMalE3prom, InitWithPrimaryDecommissioned) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
 	mal_e3prom_init_s init;
 	uint32_t value;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
@@ -315,15 +275,8 @@ TEST_F(TestMalE3prom, InitWithPrimaryDecommissioned) {
 
 TEST_F(TestMalE3prom, InitWithSecondaryDecommissioned) {
 	mal_error_e result;
-	mal_e3prom_s e3prom;
 	mal_e3prom_init_s init;
 	uint32_t value;
-	// Initialize e3prom to get primary active
-	init.primary_start_page = 0;
-	init.primary_page_count = 2;
-	init.secondary_start_page = 2;
-	init.secondary_page_count = 2;
-	mal_e3prom_init(&init, &e3prom);
 	// Make sure primary section is active
 	ASSERT_EQ(e3prom.active_section, MAL_E3PROM_SECTION_PRIMARY) << "Primary section should be active";
 	// Write enough times to switch sections
@@ -383,4 +336,45 @@ TEST_F(TestMalE3prom, InitWithSecondaryDecommissioned) {
 	result = mal_e3prom_get_value(&e3prom, 0, &value);
 	ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to read value";
 	ASSERT_EQ(value, last_secondary_value) << "Value mismatch when restoring secondary decommissioned";
+}
+
+TEST_F(TestMalE3prom, Filter) {
+    mal_error_e result;
+    // Write 3 values
+    uint32_t test_key_1 = 1;
+    uint32_t test_value_1 = 41;
+    result = mal_e3prom_write_value(&this->e3prom, test_key_1, test_value_1);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    uint32_t test_key_2 = 2;
+    uint32_t test_value_2 = 42;
+    result = mal_e3prom_write_value(&this->e3prom, test_key_2, test_value_2);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    uint32_t test_key_3 = 3;
+    uint32_t test_value_3 = 43;
+    result = mal_e3prom_write_value(&this->e3prom, test_key_3, test_value_3);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    // Make sure all 3 values can be read
+    uint32_t value;
+    result = mal_e3prom_get_value(&this->e3prom, test_key_1, &value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(value, test_value_1);
+    result = mal_e3prom_get_value(&this->e3prom, test_key_2, &value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(value, test_value_2);
+    result = mal_e3prom_get_value(&this->e3prom, test_key_3, &value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(value, test_value_3);
+    // Filter second value
+    result = mal_e3prom_filter(&this->e3prom, this->filter_key_2, this);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    // Make sure value 1 and 3 can still be read
+    result = mal_e3prom_get_value(&this->e3prom, test_key_1, &value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(value, test_value_1);
+    result = mal_e3prom_get_value(&this->e3prom, test_key_3, &value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(value, test_value_3);
+    // Make sure 2 was removed
+    result = mal_e3prom_get_value(&this->e3prom, test_key_2, &value);
+    ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
 }

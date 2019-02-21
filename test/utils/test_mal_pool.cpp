@@ -1,11 +1,5 @@
 /*
- * test_mal_pool.cpp
- *
- *  Created on: May 13, 2016
- *      Author: olivi
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2019 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -29,41 +23,43 @@ extern "C" {
 
 
 #include "gtest/gtest.h"
-#include <stdint.h>
 
 class TestMalPool : public ::testing::Test {
 protected:
-	static const int pool_objects_buffer_size = 10 * sizeof(mal_pool_object_s);
+	static const int pool_size = 10;
+	static const int pool_objects_buffer_size = pool_size * sizeof(mal_pool_object_s);
 	uint8_t *pool_objects_buffer = NULL;
-	static const int objects_buffer_size = 10 * sizeof(uint32_t);
+	static const int objects_buffer_size = pool_size * sizeof(uint32_t);
 	uint8_t *objects_buffer = NULL;
 	mal_pool_s test_pool;
 
-	virtual void SetUp() {
-		// Reserve pool objects
-		this->pool_objects_buffer = (uint8_t*)malloc(this->pool_objects_buffer_size);
-		// Initialize pool objects
-		for (int i = 0; i < this->pool_objects_buffer_size; i++) {
-			this->pool_objects_buffer[i] = 0;
-		}
-		// Reserve objects
-		this->objects_buffer = (uint8_t*)malloc(this->objects_buffer_size);
-		// Initialize objects
-		for (int i = 0; i < this->objects_buffer_size; i++) {
-			this->objects_buffer[i] = 0;
-		}
-		// Initialize pool
-		mal_pool_init((mal_pool_object_s*)this->pool_objects_buffer,
-					  this->pool_objects_buffer_size / sizeof(mal_pool_object_s),
-					  this->objects_buffer, sizeof(uint32_t), &this->test_pool);
-	}
-
-	virtual void TearDown() {
-		free(this->pool_objects_buffer);
-		free(this->objects_buffer);
-	}
+	void SetUp();
+	void TearDown();
 
 };
+
+void TestMalPool::SetUp() {
+	// Reserve pool objects
+	this->pool_objects_buffer = (uint8_t*)malloc((size_t)this->pool_objects_buffer_size);
+	// Initialize pool objects
+	for (int i = 0; i < this->pool_objects_buffer_size; i++) {
+		this->pool_objects_buffer[i] = 0;
+	}
+	// Reserve objects
+	this->objects_buffer = (uint8_t*)malloc((size_t)this->objects_buffer_size);
+	// Initialize objects
+	for (int i = 0; i < this->objects_buffer_size; i++) {
+		this->objects_buffer[i] = 0;
+	}
+	// Initialize pool
+	mal_pool_init((mal_pool_object_s*)this->pool_objects_buffer, (uint64_t)this->pool_size, this->objects_buffer,
+			      sizeof(uint32_t), &this->test_pool);
+}
+
+void TestMalPool::TearDown() {
+	free(this->pool_objects_buffer);
+	free(this->objects_buffer);
+}
 
 TEST_F(TestMalPool, Allocate) {
 	mal_error_e result;
@@ -82,6 +78,63 @@ TEST_F(TestMalPool, Allocate) {
 	for (uint32_t i = 1; i < this->objects_buffer_size / sizeof(uint32_t); i++) {
 		ASSERT_EQ(*(((uint32_t*)this->objects_buffer) + i), 0);
 	}
+}
+
+TEST_F(TestMalPool, AllocateAndFreeArray) {
+	mal_error_e result;
+	uint32_t *test_object;
+	// Allocate array
+	result = mal_pool_allocate_array(&this->test_pool, (uint64_t)this->pool_size, (void**)&test_object);
+	ASSERT_EQ(result, MAL_ERROR_OK);
+	// Check state
+	for (int i = 0; i < this->test_pool.size; i++) {
+		ASSERT_FALSE(this->test_pool.objects[i].is_free) << "Object " << i << " should not be free.";
+	}
+	// Set values
+	for (int i = 0; i < this->test_pool.size; i++) {
+		test_object[i] = (uint32_t)(0x42 + i);
+		// Check pool
+		ASSERT_EQ(*((uint32_t *) this->test_pool.objects[i].object), 0x42 + i);
+	}
+	// Free array
+	mal_pool_free_array(&this->test_pool, test_object, (uint64_t)this->pool_size);
+	for (int i = 0; i < this->test_pool.size; i++) {
+		ASSERT_TRUE(this->test_pool.objects[i].is_free) << "Object " << i << " should be free.";
+	}
+	// Test too large array
+	result = mal_pool_allocate_array(&this->test_pool, (uint64_t)(this->pool_size + 1), (void**)&test_object);
+	ASSERT_NE(result, MAL_ERROR_OK);
+	for (int i = 0; i < this->test_pool.size; i++) {
+		ASSERT_TRUE(this->test_pool.objects[i].is_free) << "Object " << i << " should be free.";
+	}
+	// Make sure pool searches for a free spot. [F N F N F N F F F F]
+	this->test_pool.objects[1].is_free = false;
+	this->test_pool.objects[3].is_free = false;
+	this->test_pool.objects[5].is_free = false;
+	result = mal_pool_allocate_array(&this->test_pool, (uint64_t)3, (void**)&test_object);
+	ASSERT_EQ(result, MAL_ERROR_OK);
+	ASSERT_TRUE(this->test_pool.objects[0].is_free);
+	ASSERT_FALSE(this->test_pool.objects[1].is_free);
+	ASSERT_TRUE(this->test_pool.objects[2].is_free);
+	ASSERT_FALSE(this->test_pool.objects[3].is_free);
+	ASSERT_TRUE(this->test_pool.objects[4].is_free);
+	ASSERT_FALSE(this->test_pool.objects[5].is_free);
+	ASSERT_FALSE(this->test_pool.objects[6].is_free);
+	ASSERT_FALSE(this->test_pool.objects[7].is_free);
+	ASSERT_FALSE(this->test_pool.objects[8].is_free);
+	ASSERT_TRUE(this->test_pool.objects[9].is_free);
+	ASSERT_EQ(this->test_pool.objects[6].object, test_object);
+	mal_pool_free_array(&this->test_pool, test_object, (uint64_t)3);
+	ASSERT_TRUE(this->test_pool.objects[0].is_free);
+	ASSERT_FALSE(this->test_pool.objects[1].is_free);
+	ASSERT_TRUE(this->test_pool.objects[2].is_free);
+	ASSERT_FALSE(this->test_pool.objects[3].is_free);
+	ASSERT_TRUE(this->test_pool.objects[4].is_free);
+	ASSERT_FALSE(this->test_pool.objects[5].is_free);
+	ASSERT_TRUE(this->test_pool.objects[6].is_free);
+	ASSERT_TRUE(this->test_pool.objects[7].is_free);
+	ASSERT_TRUE(this->test_pool.objects[8].is_free);
+	ASSERT_TRUE(this->test_pool.objects[9].is_free);
 }
 
 TEST_F (TestMalPool, Free) {
@@ -124,7 +177,7 @@ TEST_F (TestMalPool, GetNext) {
 		result = mal_pool_allocate(&this->test_pool, (void**)&test_object);
 		ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to allocate";
 		// Set value equal to index
-		*test_object = index;
+		*test_object = (uint32_t)index;
 	}
 	// Free every other object
 	uint32_t free_count = 0;
@@ -134,7 +187,7 @@ TEST_F (TestMalPool, GetNext) {
 		free_count++;
 	}
 	// Test get next function
-	uint32_t expected_test_count = this->test_pool.size - free_count;
+	uint32_t expected_test_count = (uint32_t)(this->test_pool.size - free_count);
 	uint32_t expected_value = 1;
 	uint32_t test_count = 0;
 	index = 0;
@@ -155,7 +208,7 @@ TEST_F (TestMalPool, GetNext) {
 }
 
 TEST_F (TestMalPool, ForEach) {
-	mal_error_e result;
+	mal_error_e result = MAL_ERROR_OK;
 	uint64_t index;
 	uint32_t *test_object;
 	// Fill pool
@@ -163,7 +216,7 @@ TEST_F (TestMalPool, ForEach) {
 		result = mal_pool_allocate(&this->test_pool, (void**)&test_object);
 		ASSERT_EQ(result, MAL_ERROR_OK) << "Failed to allocate";
 		// Set value equal to index
-		*test_object = index;
+		*test_object = (uint32_t)index;
 	}
 	// Free every other object
 	uint32_t free_count = 0;
@@ -173,7 +226,7 @@ TEST_F (TestMalPool, ForEach) {
 		free_count++;
 	}
 	// Test for each
-	uint32_t expected_test_count = this->test_pool.size - free_count;
+	uint32_t expected_test_count = (uint32_t)(this->test_pool.size - free_count);
 	uint32_t expected_value = 1;
 	uint32_t test_count = 0;
 	MAL_POOL_FOR_EACH(&this->test_pool, index, test_object) {
