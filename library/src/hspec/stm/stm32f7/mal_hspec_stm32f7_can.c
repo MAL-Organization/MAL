@@ -96,9 +96,9 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
-    handle->hal_can_handle.Init.TimeSeg1 = (uint8_t)(tseg1 - 1);
-    handle->hal_can_handle.Init.TimeSeg2 = (uint8_t)(tseg2 - 1);
-    handle->hal_can_handle.Init.SyncJumpWidth = (uint8_t)(sjw - 1);
+    handle->hal_can_handle.Init.TimeSeg1 = tseg1 << 16;
+    handle->hal_can_handle.Init.TimeSeg2 = (uint32_t)tseg2 << 20;
+    handle->hal_can_handle.Init.SyncJumpWidth = sjw << 24;
     handle->hal_can_handle.Init.Prescaler = (uint16_t)prescaler;
     hal_result = HAL_CAN_Init(&handle->hal_can_handle);
     if (HAL_OK != hal_result) {
