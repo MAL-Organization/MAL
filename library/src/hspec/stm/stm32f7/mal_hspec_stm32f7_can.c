@@ -72,6 +72,7 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    mal_hspec_stm_bcan_init_filter_banks(&handle->filter_banks);
     // Get clock configurations
     RCC_ClkInitTypeDef clock_config;
     uint32_t flash_latency;
