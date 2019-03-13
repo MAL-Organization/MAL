@@ -344,10 +344,10 @@ MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interr
         NVIC_EnableIRQ(handle->f0_irq);
     }
     if (state->f1_irq_state) {
-        NVIC_EnableIRQ(handle->f0_irq);
+        NVIC_EnableIRQ(handle->f1_irq);
     }
     if (state->tx_irq_state) {
-        NVIC_EnableIRQ(handle->f0_irq);
+        NVIC_EnableIRQ(handle->tx_irq);
     }
 }
 
