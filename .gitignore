@@ -21,3 +21,7 @@ examples/serial/loopback/python-loopback/.idea/
 examples/serial/loopback/python-loopback/venv/
 examples/uuid/.idea/
 examples/uuid/cmake-debug/
+
+examples/can/transmit/\.idea/
+
+examples/can/transmit/build-debug/

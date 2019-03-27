@@ -72,6 +72,7 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    mal_hspec_stm_bcan_init_filter_banks(&handle->filter_banks);
     // Get clock configurations
     RCC_ClkInitTypeDef clock_config;
     uint32_t flash_latency;
@@ -95,9 +96,9 @@ mal_error_e mal_can_init(mal_can_init_s *init, mal_can_s *handle) {
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
-    handle->hal_can_handle.Init.TimeSeg1 = (uint8_t)(tseg1 - 1);
-    handle->hal_can_handle.Init.TimeSeg2 = (uint8_t)(tseg2 - 1);
-    handle->hal_can_handle.Init.SyncJumpWidth = (uint8_t)(sjw - 1);
+    handle->hal_can_handle.Init.TimeSeg1 = tseg1 << 16;
+    handle->hal_can_handle.Init.TimeSeg2 = (uint32_t)tseg2 << 20;
+    handle->hal_can_handle.Init.SyncJumpWidth = sjw << 24;
     handle->hal_can_handle.Init.Prescaler = (uint16_t)prescaler;
     hal_result = HAL_CAN_Init(&handle->hal_can_handle);
     if (HAL_OK != hal_result) {
@@ -343,10 +344,10 @@ MAL_DEFS_INLINE void mal_can_restore_interrupt(mal_can_s *handle, mal_can_interr
         NVIC_EnableIRQ(handle->f0_irq);
     }
     if (state->f1_irq_state) {
-        NVIC_EnableIRQ(handle->f0_irq);
+        NVIC_EnableIRQ(handle->f1_irq);
     }
     if (state->tx_irq_state) {
-        NVIC_EnableIRQ(handle->f0_irq);
+        NVIC_EnableIRQ(handle->tx_irq);
     }
 }
 
