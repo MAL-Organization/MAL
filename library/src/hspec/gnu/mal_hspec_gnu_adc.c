@@ -46,6 +46,7 @@ mal_error_e mal_adc_channel_init(mal_adc_channel_init_s *init, mal_adc_s *adc, m
     channel->init = *init;
     channel->adc = adc;
     adc_array[adc->init.adc].channels[init->channel].channel = channel;
+    channel->callback = NULL;
     return MAL_ERROR_OK;
 }
 
