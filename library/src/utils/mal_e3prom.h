@@ -109,11 +109,32 @@ typedef struct {
  * Function used to filter values during a transfer of page. This allows to delete values in the e3prom.
  * @param handle The handle given with the function pointer.
  * @param e3prom The e3prom doing the page transfer.
- * @param key The key (address) to being transferred.
+ * @param key The key (address) being transferred.
  * @param value The value being transferred.
  * @return Returns true to keep the value, false to discard it.
  */
 typedef bool (*mal_e3prom_filter_t)(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+
+/**
+ * Possible results for a search delegate.
+ */
+typedef enum {
+	MAL_E3PROM_SEARCH_RESULT_CONTINUE,	//!< Return this value to continue the search.
+	MAL_E3PROM_SEARCH_RESULT_FOUND		//!< Return this value to end the search.
+} mal_e3prom_search_result_e;
+
+/**
+ * Function used to search the e3prom. Note that because an e3prom can contain multiple entries of the same key, it is
+ * up to the delegate to determine if a value is stale (not the latest) or fresh (the latest). This is left to the
+ * delegate to prevent excessive RAM usage by the e3prom.
+ * @param handle The handle given with the function pointer.
+ * @param e3prom The e3prom to search.
+ * @param key The key (address) being searched.
+ * @param value The value being searched.
+ * @return The search result.
+ */
+typedef mal_e3prom_search_result_e (*mal_e3prom_search_delegate_t)(void *handle, mal_e3prom_s *e3prom, uint32_t key,
+		                                                           uint32_t value);
 
 /// @cond SKIP
 typedef struct MAL_ASYNC_E3PROM mal_async_e3prom_s;
@@ -125,6 +146,19 @@ typedef struct MAL_ASYNC_E3PROM mal_async_e3prom_s;
  * @param async_e3prom The e3prom doing the page transfer.
  */
 typedef void (*mal_async_e3prom_filter_complete_t)(void *handle, mal_async_e3prom_s *async_e3prom);
+
+/**
+ * Function used to search the e3prom. Note that because an e3prom can contain multiple entries of the same key, it is
+ * up to the delegate to determine if a value is stale (not the latest) or fresh (the latest). This is left to the
+ * delegate to prevent excessive RAM usage by the e3prom.
+ * @param handle The handle given with the function pointer.
+ * @param async_e3prom The e3prom to search.
+ * @param key The key (address) being searched.
+ * @param value The value being searched.
+ * @return The search result.
+ */
+typedef mal_e3prom_search_result_e (*mal_async_e3prom_search_delegate_t)(void *handle, mal_async_e3prom_s *async_e3prom,
+		                                                                 uint32_t key, uint32_t value);
 
 /**
  * The variables of the asynchronous e3prom.
@@ -205,6 +239,18 @@ mal_error_e mal_e3prom_write_value(mal_e3prom_s *e3prom, uint32_t key, uint32_t 
 mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, void *handle);
 
 /**
+ * Allows to search the e3prom for a or multiple values. This may be used to prevent multiple passes of the flash where
+ * the e3prom data is stored. Note that because an e3prom can contain multiple entries of the same key, it is up to the
+ * delegate to determine if a value is stale (not the latest) or fresh (the latest). This is left to the delegate to
+ * prevent excessive RAM usage by the e3prom.
+ * @param e3prom The e3prom to search.
+ * @param search_delegate The search delegate to control the search.
+ * @param handle The handle given to the delegate during the search.
+ * @return #MAL_ERROR_OK on success or #MAL_ERROR_NOT_FOUND.
+ */
+mal_error_e mal_e3prom_search(mal_e3prom_s *e3prom, mal_e3prom_search_delegate_t search_delegate, void *handle);
+
+/**
  * This function initialises the asynchronous e3prom. The goal of the asynchronous e3prom is to prevent blocking
  * function calls to the e3prom. This occurs when a section switch is necessary. The draw back is to increase the
  * likelihood of loosing data during a page switch since it makes the operation longer. If the operation is longer, it
@@ -258,5 +304,19 @@ mal_error_e mal_async_e3prom_process(mal_async_e3prom_s *async_e3prom);
  */
 mal_error_e mal_async_e3prom_filter(mal_async_e3prom_s *async_e3prom, mal_e3prom_filter_t filter,
 		                            mal_async_e3prom_filter_complete_t filter_complete, void *handle);
+
+/**
+ * Allows to search the  async e3prom for a or multiple values. This may be used to prevent multiple passes of the flash 
+ * where the e3prom data is stored. Note that because an e3prom can contain multiple entries of the same key, it is up 
+ * to the delegate to determine if a value is stale (not the latest) or fresh (the latest). This is left to the delegate 
+ * to prevent excessive RAM usage by the e3prom. Also note that this operation is not async.
+ * @param e3prom The e3prom to search.
+ * @param search_delegate The search delegate to control the search.
+ * @param handle The handle given to the delegate during the search.
+ * @return #MAL_ERROR_OK on success or #MAL_ERROR_NOT_FOUND.
+ */
+mal_error_e mal_async_e3prom_search(mal_async_e3prom_s *async_e3prom, 
+		                            mal_async_e3prom_search_delegate_t search_delegate, 
+		                            void *handle);
 
 #endif /* UTILS_MAL_E3PROM_H_ */
