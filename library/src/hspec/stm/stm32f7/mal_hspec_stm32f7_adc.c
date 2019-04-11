@@ -211,13 +211,16 @@ mal_error_e mal_adc_async_read(mal_adc_channel_s *channel, mal_adc_read_callback
         if (HAL_OK == hal_result) {
             hal_result = HAL_ADC_Start_IT(&channel->adc->hal_adc);
             if (HAL_OK == hal_result) {
+                channel->adc->active = true;
                 // Force interrupt to active
                 state.active = true;
+            } else {
+                result = MAL_ERROR_HARDWARE_UNAVAILABLE;
             }
         }
     }
     mal_adc_restore_interrupt(channel->adc, &state);
-    return MAL_ERROR_OK;
+    return result;
 }
 
 MAL_DEFS_INLINE void mal_adc_disable_interrupt(mal_adc_s *handle, mal_adc_interrupt_state_s *state) {
@@ -291,7 +294,7 @@ static void mal_hspec_stm32f7_adc_handle_irq(mal_adc_s *adc) {
     uint32_t value = HAL_ADC_GetValue(&adc->hal_adc);
     channel->callback(channel->callback_handle, channel, value);
     // Start a new conversion if queued
-    result = mal_circular_buffer_peek((mal_circular_buffer_s*)&adc->async_channels_buffer, 0, channel);
+    result = mal_circular_buffer_peek((mal_circular_buffer_s*)&adc->async_channels_buffer, 0, &channel);
     if (MAL_ERROR_OK != result) {
         adc->active = false;
         return;
