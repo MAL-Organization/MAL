@@ -42,17 +42,24 @@ protected:
     static bool filter_key_3(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
     static void filter_complete(void *handle, mal_async_e3prom_s *async_e3prom);
 
+    static mal_e3prom_search_result_e search(void *handle, mal_async_e3prom_s *async_e3prom, uint32_t key,
+                                             uint32_t value);
+
     mal_async_e3prom_pending_write_s pending_write_array[TEST_MAL_ASYNC_E3PROM_PENDING_WRITE_ARRAY_SIZE];
     mal_pool_object_s pending_write_object_array[TEST_MAL_ASYNC_E3PROM_PENDING_WRITE_ARRAY_SIZE];
     mal_async_e3prom_pending_filter_s pending_filter_array[TEST_MAL_ASYNC_E3PROM_PENDING_FILTER_ARRAY_SIZE];
     mal_pool_object_s pending_filter_object_array[TEST_MAL_ASYNC_E3PROM_PENDING_FILTER_ARRAY_SIZE];
     mal_async_e3prom_s async_e3prom;
     bool filter_complete_called;
+    uint32_t search_count;
+    uint32_t search_key;
+    uint32_t search_value;
 };
 
 void TestMalAsyncE3prom::SetUp() {
     mal_error_e result;
     this->filter_complete_called = false;
+    this->search_count = 0;
     // Set flash info
     this->flash_info.page_count = 4;
     this->flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * this->flash_info.page_count);
@@ -100,6 +107,18 @@ void TestMalAsyncE3prom::filter_complete(void *handle, mal_async_e3prom_s *async
     MAL_DEFS_UNUSED(async_e3prom);
     TestMalAsyncE3prom *test = (TestMalAsyncE3prom*)handle;
     test->filter_complete_called = true;
+}
+
+mal_e3prom_search_result_e TestMalAsyncE3prom::search(void *handle, mal_async_e3prom_s *async_e3prom, uint32_t key,
+                                                      uint32_t value) {
+    MAL_DEFS_UNUSED(async_e3prom);
+    TestMalAsyncE3prom *test = (TestMalAsyncE3prom*)handle;
+    test->search_count++;
+    if (test->search_key == key) {
+        test->search_value = value;
+        return MAL_E3PROM_SEARCH_RESULT_FOUND;
+    }
+    return MAL_E3PROM_SEARCH_RESULT_CONTINUE;
 }
 
 TEST_F(TestMalAsyncE3prom, WriteAndRead) {
@@ -373,4 +392,31 @@ TEST_F(TestMalAsyncE3prom, FilterPending) {
     ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
     result = mal_async_e3prom_get_value(&this->async_e3prom, test_key_3, &value);
     ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+}
+
+TEST_F(TestMalAsyncE3prom, Search) {
+    mal_error_e result;
+    // Search for a not existing value
+    this->search_count = 0;
+    this->search_key = 0;
+    result = mal_async_e3prom_search(&this->async_e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+    uint32_t min_search_count = this->search_count;
+    // Write value to have an existing one
+    uint32_t test_key = 0x42;
+    uint32_t test_value = 1;
+    result = mal_async_e3prom_write_value(&this->async_e3prom, test_key, test_value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    // Make sure search goes through all values
+    this->search_count = 0;
+    result = mal_async_e3prom_search(&this->async_e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+    ASSERT_EQ(this->search_count, min_search_count + 1);
+    // Search for stored value
+    this->search_count = 0;
+    this->search_key = test_key;
+    this->search_value = test_value + 1;
+    result = mal_async_e3prom_search(&this->async_e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(this->search_value, test_value);
 }

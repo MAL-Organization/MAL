@@ -390,6 +390,28 @@ mal_error_e mal_e3prom_filter(mal_e3prom_s *e3prom, mal_e3prom_filter_t filter, 
     return mal_e3prom_switch_active_sector(e3prom, false, filter, handle);
 }
 
+mal_error_e mal_e3prom_search(mal_e3prom_s *e3prom, mal_e3prom_search_delegate_t search_delegate, void *handle) {
+	uint64_t key_address;
+	uint64_t start_address = mal_flash_get_page_start_address(e3prom->sections[e3prom->active_section].start_page);
+	uint64_t last_address = e3prom->sections[e3prom->active_section].last_address;
+	uint32_t step = sizeof(uint32_t) * 2;
+	for (key_address = last_address;
+		 key_address >= start_address && key_address <= last_address;
+		 key_address -= step) {
+		uint32_t key = mal_flash_read_uint32((unsigned int)key_address);
+		if (MAL_E3PROM_EMPTY_KEY == key) {
+			continue;
+		}
+		uint64_t value_address = key_address + sizeof(uint32_t);
+		uint32_t value = mal_flash_read_uint32((unsigned int)value_address);
+		mal_e3prom_search_result_e result = search_delegate(handle, e3prom, key, value);
+		if (MAL_E3PROM_SEARCH_RESULT_FOUND == result) {
+			return MAL_ERROR_OK;
+		}
+	}
+	return MAL_ERROR_NOT_FOUND;
+}
+
 mal_error_e mal_async_e3prom_init(mal_async_e3prom_init_s *init, mal_async_e3prom_s *async_e3prom) {
 	// Initialise async sector switch variables
 	async_e3prom->burst_size = init->burst_size;
@@ -596,4 +618,40 @@ mal_error_e mal_async_e3prom_filter(mal_async_e3prom_s *async_e3prom, mal_e3prom
 	pending_filter->filter_complete = filter_complete;
 	pending_filter->handle = handle;
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_async_e3prom_search(mal_async_e3prom_s *async_e3prom,
+									mal_async_e3prom_search_delegate_t search_delegate,
+									void *handle) {
+	// Check pending writes
+	uint64_t index;
+	mal_async_e3prom_pending_write_s *pending_write;
+	MAL_POOL_FOR_EACH(&async_e3prom->pending_writes_pool, index, pending_write) {
+		mal_e3prom_search_result_e result = search_delegate(handle, async_e3prom, pending_write->key, 
+				                                            pending_write->value);
+		if (MAL_E3PROM_SEARCH_RESULT_FOUND == result) {
+			return MAL_ERROR_OK;
+		}
+	}
+	// Search active section
+	uint64_t key_address;
+	mal_e3prom_section_e active_section = async_e3prom->e3prom.active_section;
+	uint64_t start_address = mal_flash_get_page_start_address(async_e3prom->e3prom.sections[active_section].start_page);
+	uint64_t last_address = async_e3prom->e3prom.sections[active_section].last_address;
+	uint32_t step = sizeof(uint32_t) * 2;
+	for (key_address = last_address;
+		 key_address >= start_address && key_address <= last_address;
+		 key_address -= step) {
+		uint32_t key = mal_flash_read_uint32((unsigned int)key_address);
+		if (MAL_E3PROM_EMPTY_KEY == key) {
+			continue;
+		}
+		uint64_t value_address = key_address + sizeof(uint32_t);
+		uint32_t value = mal_flash_read_uint32((unsigned int)value_address);
+		mal_e3prom_search_result_e result = search_delegate(handle, async_e3prom, key, value);
+		if (MAL_E3PROM_SEARCH_RESULT_FOUND == result) {
+			return MAL_ERROR_OK;
+		}
+	}
+	return MAL_ERROR_NOT_FOUND;
 }

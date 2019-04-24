@@ -35,12 +35,17 @@ protected:
     void TearDown();
 
     static bool filter_key_2(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
+    static mal_e3prom_search_result_e search(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value);
 
     mal_e3prom_s e3prom;
+    uint32_t search_count;
+    uint32_t search_key;
+    uint32_t search_value;
 };
 
 void TestMalE3prom::SetUp() {
     mal_error_e result;
+    this->search_count = 0;
     // Set flash info
     this->flash_info.page_count = 4;
     this->flash_info.pages = (mal_hspec_gnu_flash_page_info_s*)malloc(sizeof(mal_hspec_gnu_flash_page_info_s) * this->flash_info.page_count);
@@ -68,6 +73,17 @@ bool TestMalE3prom::filter_key_2(void *handle, mal_e3prom_s *e3prom, uint32_t ke
     MAL_DEFS_UNUSED(e3prom);
     MAL_DEFS_UNUSED(value);
     return 2 != key;
+}
+
+mal_e3prom_search_result_e TestMalE3prom::search(void *handle, mal_e3prom_s *e3prom, uint32_t key, uint32_t value) {
+    MAL_DEFS_UNUSED(e3prom);
+    TestMalE3prom *test = (TestMalE3prom*)handle;
+    test->search_count++;
+    if (test->search_key == key) {
+        test->search_value = value;
+        return MAL_E3PROM_SEARCH_RESULT_FOUND;
+    }
+    return MAL_E3PROM_SEARCH_RESULT_CONTINUE;
 }
 
 TEST_F(TestMalE3prom, InitWithErasedFlash) {
@@ -377,4 +393,31 @@ TEST_F(TestMalE3prom, Filter) {
     // Make sure 2 was removed
     result = mal_e3prom_get_value(&this->e3prom, test_key_2, &value);
     ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+}
+
+TEST_F(TestMalE3prom, Search) {
+    mal_error_e result;
+    // Search for a not existing value
+    this->search_count = 0;
+    this->search_key = 0;
+    result = mal_e3prom_search(&this->e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+    uint32_t min_search_count = this->search_count;
+    // Write value to have an existing one
+    uint32_t test_key = 0x42;
+    uint32_t test_value = 1;
+    result = mal_e3prom_write_value(&this->e3prom, test_key, test_value);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    // Make sure search goes through all values
+    this->search_count = 0;
+    result = mal_e3prom_search(&this->e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_NOT_FOUND);
+    ASSERT_EQ(this->search_count, min_search_count + 1);
+    // Search for stored value
+    this->search_count = 0;
+    this->search_key = test_key;
+    this->search_value = test_value + 1;
+    result = mal_e3prom_search(&this->e3prom, this->search, this);
+    ASSERT_EQ(result, MAL_ERROR_OK);
+    ASSERT_EQ(this->search_value, test_value);
 }
