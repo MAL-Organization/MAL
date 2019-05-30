@@ -50,10 +50,11 @@ set(UTILS_SRCS src/utils/mal_circular_buffer.c src/utils/mal_circular_buffer.h s
         src/utils/mal_e3prom.h src/utils/mal_pool.c src/utils/mal_pool.h)
 set(UUID_SRCS src/uuid/mal_uuid.h)
 set(WATCHDOG_SRCS src/watchdog/mal_watchdog.c src/watchdog/mal_watchdog.h)
+set(RAM_SRCS src/ram/mal_ram.c src/ram/mal_ram.h)
 #Common source files to all configurations
 set(COMMON_SRCS ${UTILS_SRCS};${ADC_SRCS};${CAN_SRCS};${CLOCK_SRCS};${DAC_SRCS};${FLASH_SRCS};${GPIO_SRCS};
         ${HSPEC_SRCS};${I2C_SRCS};${POWER_SRCS};${RESET_SRCS};${SERIAL_SRCS};${SPI_SRCS};${STARTUP_SRCS};${STD_SRCS};
-        ${TIMER_SRCS};${UUID_SRCS};${WATCHDOG_SRCS})
+        ${TIMER_SRCS};${UUID_SRCS};${WATCHDOG_SRCS};${RAM_SRCS})
 
 set(COMMON_OPTIONS ${OPTIMIZATION_LVL};${DEBUG_LVL};-Wall)
 
@@ -92,7 +93,7 @@ set(COMMON_ARM_OPTIONS ${COMMON_OPTIONS};-mthumb;-fmessage-length=0;-fsigned-cha
 # STM sections
 set(COMMON_STM_INCS ${COMMON_ARM_INCS};stm)
 set(COMMON_STM_SRCS ${COMMON_ARM_SRCS};src/hspec/stm/mal_hspec_stm.h;src/hspec/stm/mal_hspec_stm_bcan.h;
-        src/hspec/stm/mal_hspec_stm_bcan.c)
+        src/hspec/stm/mal_hspec_stm_bcan.c src/hspec/stm/mal_hspec_stm_ram.c)
 set(COMMON_STM_DEFS -DMAL_STM)
 # STM32F0 sections
 file(GLOB_RECURSE STM32F0_SP_SOURCES "stm/stm32f0/*.c" "stm/stm32f0/*.h")
@@ -110,7 +111,7 @@ set(COMMON_STM32F0_SRCS ${COMMON_STM_SRCS};${STM32F0_SP_SOURCES};src/hspec/stm/s
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_timer.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_uuid.c;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_watchdog.c;src/hspec/stm/stm32f0/mal_hspec_stm32f0_adc.h;
         src/hspec/stm/stm32f0/mal_hspec_stm32f0_dac.h;src/hspec/stm/stm32f0/mal_hspec_stm32f0_gpio.h;
-        src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.h;cmsis/cm0/core_cm0.h;cmsis/cm0/core_cm0.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_clock.h)
+        src/hspec/stm/stm32f0/mal_hspec_stm32f0_spi.h;cmsis/cm0/core_cm0.h;cmsis/cm0/core_cm0.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_clock.h src/hspec/stm/stm32f0/mal_hspec_stm32f0_ram.c src/hspec/stm/stm32f0/mal_hspec_stm32f0_ram.h)
 set(COMMON_STM32F0_OPTIONS -mcpu=cortex-m0;-mfloat-abi=soft;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F0_DEFS ${COMMON_STM_DEFS};-DMAL_STM32F0;-DUSE_STDPERIPH_DRIVER)
 # STM32F072 sections
@@ -135,13 +136,13 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_clock.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_uuid.c
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_spi.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_spi.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_adc.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_adc.h
-        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.h)
+        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.h)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 # STM32F76 sections
 set(COMMON_STM32F76_SRCS ${COMMON_STM32F7_SRCS};src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_flash.c
         src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_serial.c
-        src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_dma.c)
+        src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_dma.c src/hspec/stm/stm32f7/stm32f76/mal_hspec_stm32f76_ram.c)
 # STM32F765V sections
 set(COMMON_STM32F765V_SRCS ${COMMON_STM32F76_SRCS} src/hspec/stm/stm32f7/stm32f76/stm32f765v/mal_hspec_stm32f765v_spi.c)
 

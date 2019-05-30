@@ -25,3 +25,7 @@ examples/uuid/cmake-debug/
 examples/can/transmit/\.idea/
 
 examples/can/transmit/build-debug/
+
+examples/ram/\.idea/
+
+examples/ram/build-debug/

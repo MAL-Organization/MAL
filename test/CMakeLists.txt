@@ -23,5 +23,5 @@ add_executable(mal-test
         utils/test_mal_e3prom.cpp
         utils/test_mal_pool.cpp
         utils/test_mal_async_e3prom.cpp
-        main.cpp)
+        main.cpp ram/test_mal_ram.cpp)
 target_link_libraries(mal-test ${MAL_LIB_PATH})
