@@ -32,6 +32,8 @@ protected:
     void TearDown();
 };
 
+const unsigned int TestMalRam::ram_size;
+
 void TestMalRam::SetUp() {
     mal_hspec_gnu_ram_stack_start = 0x20000000;
     mal_hspec_gnu_ram_stack_end = mal_hspec_gnu_ram_stack_start + this->ram_size - 1;
@@ -50,9 +52,12 @@ TEST_F(TestMalRam, InitStackMonitor) {
     }
 }
 
+TEST_F(TestMalRam, GetStackSize) {
+    ASSERT_EQ(mal_ram_get_stack_size(), this->ram_size);
+}
+
 TEST_F(TestMalRam, GetStackUsage) {
-    unsigned int stack_size = mal_ram_get_stack_size();
-    // Initial call should 100%
+    // Initial call should be 0%
     mal_ratio_t value;
     value = mal_ram_get_stack_usage();
     ASSERT_EQ(MAL_TYPES_RATIO_OF_INT_VALUE(value, uint8_t, 100), 0U);
@@ -63,7 +68,6 @@ TEST_F(TestMalRam, GetStackUsage) {
     value = mal_ram_get_stack_usage();
     ASSERT_EQ(MAL_TYPES_RATIO_OF_INT_VALUE(value, uint8_t, 100), 10U);
     // Use 50%
-    // Use 10%
     for (unsigned int i = 0; i < (this->ram_size / 2); i++) {
         mal_hspec_gnu_ram_simulated_ram[this->ram_size - i - 1] = MAL_RAM_STACK_MARKER + 1;
     }
