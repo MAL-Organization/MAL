@@ -169,7 +169,8 @@ mal_error_e mal_can_direct_init(mal_can_init_s *init, const void *direct_init, m
 
 mal_error_e mal_can_deinit(mal_can_s *handle) {
 	// Disable interrupt
-    mal_can_disable_interrupt(handle, NULL);
+    mal_can_interrupt_state_s state;
+    mal_can_disable_interrupt(handle, &state);
 	// Uninitialize interface
 	CAN_DeInit(CAN);
     return MAL_ERROR_OK;
