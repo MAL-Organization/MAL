@@ -30,6 +30,7 @@
 #include "stm32f7/stm32f7xx.h"
 
 static void initialise_memory(void);
+void mal_stm32f7_relocate_vector_table(void);
 
 // Code from newlib.
 // defined in linker script
@@ -45,6 +46,8 @@ void mal_startup_hardware(void) {
     SCB_EnableDCache();
     HAL_Init();
     mal_clock_initialise_system_clock();
+    // Relocate vector table
+    mal_stm32f7_relocate_vector_table();
 }
 
 // This code is copied from newlib.
