@@ -136,7 +136,7 @@ set(COMMON_STM32F7_SRCS ${COMMON_STM_SRCS};src/hspec/stm/stm32f7/mal_hspec_stm32
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_clock.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_uuid.c
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_spi.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_spi.h
         src/hspec/stm/stm32f7/mal_hspec_stm32f7_adc.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_adc.h
-        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.h)
+        src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_dac.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.c src/hspec/stm/stm32f7/mal_hspec_stm32f7_ram.h src/hspec/stm/stm32f7/mal_hspec_stm32f7_watchdog.c)
 set(COMMON_STM32F7_OPTIONS -mcpu=cortex-m7;${COMMON_ARM_OPTIONS})
 set(COMMON_STM32F7_DEFS ${COMMON_STM_DEFS};-DMAL_FLOAT;-DMAL_STM32F7;-DUSE_HAL_DRIVER)
 # STM32F76 sections
