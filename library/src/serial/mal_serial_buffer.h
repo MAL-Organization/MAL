@@ -61,6 +61,13 @@ typedef struct {
 } mal_serial_buffer_handle_s;
 
 /**
+ * @brief This function will uninitialize a serial buffer.
+ * @param handle The handle to the serial buffer.
+ * @return Returns #MAL_ERROR_OK on success.
+ */
+#define mal_serial_buffer_deinit(buffer) mal_can_deinit(&((buffer)->serial_handle))
+
+/**
  * @brief Initialize a serial buffer and the given port.
  * @param handle The handle of the serial buffer.
  * @param init The initialization parameters.

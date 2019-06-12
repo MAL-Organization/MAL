@@ -262,6 +262,13 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     return MAL_ERROR_OK;
 }
 
+mal_error_e mal_serial_dispose(mal_serial_s *handle) {
+    mal_serial_interrupt_state_s state;
+    mal_serial_disable_interrupt(handle, &state);
+    USART_DeInit(handle->usart_typedef);
+    return MAL_ERROR_OK;
+}
+
 void USART1_IRQHandler(void) {
     mal_hspec_stm32f0_serial_interrupt(port_usart1);
 }

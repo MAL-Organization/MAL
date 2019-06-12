@@ -133,6 +133,13 @@ typedef struct MAL_SERIAL_INTERRUPT_STATE mal_serial_interrupt_state_s;
 mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init);
 
 /**
+ * @brief Dispose of the serial interface to free the hardware.
+ * @param handle The serial interface to dispose of.
+ * @return #MAL_ERROR_OK on success.
+ */
+mal_error_e mal_serial_dispose(mal_serial_s *handle);
+
+/**
  * @brief Send data on the given port. Note that this is not a blocking call.
  * Use the callback to get the result.
  * @param handle The port to use.

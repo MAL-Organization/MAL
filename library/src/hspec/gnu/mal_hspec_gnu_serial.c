@@ -31,6 +31,11 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     return MAL_ERROR_OK;
 }
 
+mal_error_e mal_serial_dispose(mal_serial_s *handle) {
+    MAL_DEFS_UNUSED(handle);
+    return MAL_ERROR_OK;
+}
+
 mal_error_e mal_serial_transfer(mal_serial_s *handle, uint16_t data) {
     mal_error_e result;
     // Write to buffer

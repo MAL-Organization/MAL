@@ -286,6 +286,19 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
     return MAL_ERROR_OK;
 }
 
+mal_error_e mal_serial_dispose(mal_serial_s *handle) {
+    // Disable interrupts
+    mal_serial_interrupt_state_s state;
+    mal_serial_disable_interrupt(handle, &state);
+    // Disable interface
+    __HAL_UART_DISABLE(&handle->hal_serial_handle);
+    handle->hal_serial_handle.Instance->CR1 = 0x0U;
+    handle->hal_serial_handle.Instance->CR2 = 0x0U;
+    handle->hal_serial_handle.Instance->CR3 = 0x0U;
+
+    return MAL_ERROR_OK;
+}
+
 static mal_error_e mal_hspec_stm32f7_serial_init_io(mal_serial_port_e port, mal_gpio_port_e gpio_port, uint8_t pin) {
     mal_error_e mal_result;
     uint32_t alternate;
