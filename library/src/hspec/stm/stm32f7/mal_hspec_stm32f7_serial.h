@@ -50,6 +50,7 @@ typedef struct MAL_SERIAL {
     uint32_t tx_dma_flag;
     uint32_t rx_dma_flag;
     IRQn_Type dma_tx_irq;
+    IRQn_Type dma_rx_irq;
 } mal_serial_s;
 
 typedef struct MAL_SERIAL_INTERRUPT_STATE {

@@ -65,7 +65,7 @@ typedef struct {
  * @param handle The handle to the serial buffer.
  * @return Returns #MAL_ERROR_OK on success.
  */
-#define mal_serial_buffer_deinit(buffer) mal_can_deinit(&((buffer)->serial_handle))
+#define mal_serial_buffer_dispose(buffer) mal_serial_dispose(&((buffer)->serial_handle))
 
 /**
  * @brief Initialize a serial buffer and the given port.

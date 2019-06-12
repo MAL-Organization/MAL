@@ -255,7 +255,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
         // Fetch DMA Irqs and flags
         handle->tx_dma_flag = __HAL_DMA_GET_TC_FLAG_INDEX(&handle->hal_tx_dma);
         handle->rx_dma_flag = __HAL_DMA_GET_TC_FLAG_INDEX(&handle->hal_rx_dma);
-        IRQn_Type rx_irq = mal_hspec_stm32f7_dma_get_irq(handle->rx_dma_stream);
+        handle->dma_rx_irq = mal_hspec_stm32f7_dma_get_irq(handle->rx_dma_stream);
         handle->dma_tx_irq = mal_hspec_stm32f7_dma_get_irq(handle->tx_dma_stream);
         // Set DMA callbacks
         mal_hspec_stm32f7_dma_set_callback(handle->tx_dma_stream,
@@ -265,7 +265,7 @@ mal_error_e mal_serial_init(mal_serial_s *handle, mal_serial_init_s *init) {
                                            &mal_hspec_stm32f7_serial_rx_dma_callback,
                                            handle);
         NVIC_EnableIRQ(handle->dma_tx_irq);
-        NVIC_EnableIRQ(rx_irq);
+        NVIC_EnableIRQ(handle->dma_rx_irq);
         handle->dma_mode = true;
         __HAL_UART_CLEAR_IT(&handle->hal_serial_handle, UART_CLEAR_IDLEF);
         __HAL_UART_ENABLE_IT(&handle->hal_serial_handle, UART_IT_IDLE);
@@ -530,6 +530,7 @@ MAL_DEFS_INLINE void mal_serial_disable_interrupt(mal_serial_s *handle, mal_seri
     if (handle->dma_mode) {
         state->dma_state = NVIC_GetEnableIRQ(handle->dma_tx_irq);
         NVIC_DisableIRQ(handle->dma_tx_irq);
+        NVIC_DisableIRQ(handle->dma_rx_irq);
     }
     __DSB();
     __ISB();
@@ -541,5 +542,6 @@ MAL_DEFS_INLINE void mal_serial_restore_interrupt(mal_serial_s *handle, mal_seri
     }
     if (handle->dma_mode && state->dma_state) {
         NVIC_EnableIRQ(handle->dma_tx_irq);
+        NVIC_EnableIRQ(handle->dma_rx_irq);
     }
 }
