@@ -21,10 +21,7 @@
 #include "stm32f7/stm32f7xx_hal_iwdg.h"
 #include "std/mal_bool.h"
 
-static IWDG_HandleTypeDef mal_hspec_stm32f7_watchdog_hal;
-
 mal_error_e mal_watchdog_init(uint32_t timeout_ms) {
-    HAL_StatusTypeDef hal_result;
     // Find prescaler and reload values
     // Prescaler values can only be power of 2 from 4 to 256
     bool found = false;
@@ -78,18 +75,20 @@ mal_error_e mal_watchdog_init(uint32_t timeout_ms) {
         return MAL_ERROR_CLOCK_ERROR;
     }
     // Initialise
-    mal_hspec_stm32f7_watchdog_hal.Instance = IWDG;
-    mal_hspec_stm32f7_watchdog_hal.Init.Prescaler = prescaler;
-    mal_hspec_stm32f7_watchdog_hal.Init.Reload = reload;
-    mal_hspec_stm32f7_watchdog_hal.Init.Window = IWDG_WINDOW_DISABLE;
-    hal_result = HAL_IWDG_Init(&mal_hspec_stm32f7_watchdog_hal);
-    if (HAL_OK != hal_result) {
-        return MAL_ERROR_HARDWARE_INVALID;
+    IWDG->KR = IWDG_KEY_ENABLE;
+    IWDG->KR = IWDG_KEY_WRITE_ACCESS_ENABLE;
+    IWDG->PR = prescaler;
+    IWDG->RLR = reload;
+    // Fixme find non blocking way
+    while(RESET != IWDG->SR);
+    if(IWDG_WINDOW_DISABLE != IWDG->WINR) {
+        IWDG->WINR = IWDG_WINDOW_DISABLE;
+    } else {
+        IWDG->KR = IWDG_KEY_RELOAD;
     }
-    HAL_IWDG_Refresh(&mal_hspec_stm32f7_watchdog_hal);
     return MAL_ERROR_OK;
 }
 
 void mal_watchdog_feed(void) {
-    HAL_IWDG_Refresh(&mal_hspec_stm32f7_watchdog_hal);
+    IWDG->KR = IWDG_KEY_RELOAD;
 }
