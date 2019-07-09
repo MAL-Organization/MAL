@@ -280,6 +280,17 @@ mal_error_e mal_timer_get_valid_timers(const mal_timer_e **timers, uint8_t *size
 mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle);
 
 /**
+ * @brief Set the frequency of an initialized timer..
+ * @param handle The handle of the timer.
+ * @param frequency The frequency to set.
+ * @param delta The error tolerated in the frequency to set.
+ * @return #MAL_ERROR_OK on success.
+ * @note If changing the frequency for a timer with PWM IOs, the duty cycle should be reset for these IOs. after this
+ * change.
+ */
+mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta);
+
+/**
  * @brief Set the frequency of an initialized timer. Note that implementations of timer init methods strive to find the
  * most precise timer divider for the given frequency. This method is method is meant for speed, hence it will not
  * search for the most optimal settings and instead used the settings found during the init to simplify the computation.
@@ -291,7 +302,7 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
  * @note If changing the frequency for a timer with PWM IOs, the duty cycle should be reset for these IOs. after this
  * change.
  */
-mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta);
+mal_error_e mal_timer_fast_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta);
 
 /**
  * @brief Get the actual counting frequency of a timer.

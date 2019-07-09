@@ -689,7 +689,7 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
 	return MAL_ERROR_OK;
 }
 
-mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+mal_error_e mal_timer_fast_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
     mal_error_e mal_result;
     // Get timer input clock
     uint64_t timer_frequency;
