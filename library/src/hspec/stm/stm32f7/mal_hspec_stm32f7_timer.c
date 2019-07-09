@@ -435,6 +435,9 @@ static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer,
         if (min_prescaler > (UINT16_MAX + 1)) {
             continue;
         }
+        if (min_prescaler <= 0) {
+            min_prescaler = 1;
+        }
         for (prescaler = min_prescaler; prescaler <= max_prescaler; prescaler++) {
             uint64_t potential_frequency = timer_frequency / ((uint64_t)period * (uint64_t)prescaler);
             uint64_t actual_delta;
@@ -909,6 +912,8 @@ mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, 
     uint64_t new_prescaler = timer_frequency / (period * target_frequency);
     if (new_prescaler >= (UINT16_MAX + 1)) {
         return MAL_ERROR_OPERATION_INVALID;
+    } else if (new_prescaler <= 0) {
+        new_prescaler = 1;
     }
     // Check if the new frequency would be within the delta
     uint64_t potential_frequency = timer_frequency / (period * new_prescaler);
