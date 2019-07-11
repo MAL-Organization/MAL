@@ -40,6 +40,9 @@ static mal_error_e mal_hspec_stm32f7_timer_common_count_init(mal_timer_e timer, 
                                                              mal_hertz_t frequency);
 static mal_error_e mal_hspec_stm32f7_timer_init_io(mal_timer_e timer, mal_gpio_port_e port, uint8_t pin);
 static IRQn_Type mal_hspec_stm32f7_timer_get_compare_irq(mal_timer_e timer);
+static mal_error_e mal_hspec_stm32f7_timer_get_update_init_values(mal_timer_s *handle, mal_hertz_t frequency,
+                                                                  mal_hertz_t delta, uint32_t *prescaler,
+                                                                  uint32_t *period);
 
 static const mal_timer_e valid_timers[] = {
     MAL_TIMER_1,
@@ -382,38 +385,56 @@ static bool mal_hspec_stm32f7_timer_is_used(mal_timer_e timer) {
     return false;
 }
 
-static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
-                                                              mal_hertz_t frequency, mal_hertz_t delta) {
+static mal_error_e mal_hspec_stm32f7_timer_get_update_init_values(mal_timer_s *handle, mal_hertz_t frequency,
+                                                                  mal_hertz_t delta, uint32_t *prescaler,
+                                                                  uint32_t *period) {
     mal_error_e mal_result;
-    // Check if timer is already initialized
-    bool validate_parameters = mal_hspec_stm32f7_timer_is_used(timer);
-    // Execute common initialization
-    mal_result = mal_hspec_stm32f7_timer_common_init(timer, handle);
-    if (MAL_ERROR_OK != mal_result) {
-        return mal_result;
-    }
     // Get timer input clock
     uint64_t timer_frequency;
-    mal_result = mal_hspec_stm32f7_timer_get_input_clk(timer, &timer_frequency);
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(handle->timer, &timer_frequency);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
     // Fetch mask to get max period
     uint64_t mask;
-    mal_result = mal_timer_get_count_mask(timer, &mask);
+    mal_result = mal_timer_get_count_mask(handle->timer, &mask);
     if (MAL_ERROR_OK != mal_result) {
         return mal_result;
     }
     // Try to find proper settings for requested frequency
     uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
     uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(delta);
-    uint32_t prescaler = 0;
-    uint32_t period;
     bool found = false;
+    uint64_t max_prescaler_target_frequency = target_frequency - target_delta;
+    uint64_t min_prescaler_target_frequency = target_frequency + target_delta;
     uint64_t smallest_delta = UINT64_MAX;
-    for (period = (uint32_t)mask; period > 0; period--) {
-        for (prescaler = 1; prescaler <= (UINT16_MAX + 1); prescaler++) {
-            uint64_t potential_frequency = timer_frequency / ((uint64_t)period * (uint64_t)prescaler);
+    uint64_t max_period = timer_frequency / max_prescaler_target_frequency;
+    if (max_period > mask) {
+        max_period = mask;
+    }
+    uint64_t min_period = timer_frequency / ((UINT16_MAX + 1) * min_prescaler_target_frequency);
+    if (min_period <= 0) {
+        min_period = 1;
+    }
+    for (*period = (uint32_t)max_period; *period >= min_period; (*period)--) {
+        uint64_t intermediate_frequency = timer_frequency / *period;
+        // Check valid prescaler range for this value
+        uint32_t max_prescaler = intermediate_frequency / max_prescaler_target_frequency;
+        if (max_prescaler <= 0) {
+            continue;
+        }
+        if (max_prescaler > (UINT16_MAX + 1)) {
+            max_prescaler = (UINT16_MAX + 1);
+        }
+        uint32_t min_prescaler = intermediate_frequency / min_prescaler_target_frequency;
+        if (min_prescaler > (UINT16_MAX + 1)) {
+            continue;
+        }
+        if (min_prescaler <= 0) {
+            min_prescaler = 1;
+        }
+        for (*prescaler = min_prescaler; *prescaler <= max_prescaler; (*prescaler)++) {
+            uint64_t potential_frequency = timer_frequency / ((uint64_t)*period * (uint64_t)*prescaler);
             uint64_t actual_delta;
             if (potential_frequency >= target_frequency) {
                 actual_delta = potential_frequency - target_frequency;
@@ -443,7 +464,25 @@ static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer,
         return MAL_ERROR_HARDWARE_INVALID;
     }
     // Remove one because register is 0 based.
-    prescaler -= 1;
+    *prescaler -= 1;
+
+    return MAL_ERROR_OK;
+}
+
+static mal_error_e mal_hspec_stm32f7_timer_common_update_init(mal_timer_e timer, mal_timer_s *handle,
+                                                              mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    // Check if timer is already initialized
+    bool validate_parameters = mal_hspec_stm32f7_timer_is_used(timer);
+    // Execute common initialization
+    mal_result = mal_hspec_stm32f7_timer_common_init(timer, handle);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Try to find proper settings for requested frequency
+    uint32_t period;
+    uint32_t prescaler;
+    mal_result = mal_hspec_stm32f7_timer_get_update_init_values(handle, frequency, delta, &prescaler, &period);
     // Validate or set
     if (validate_parameters) {
         if ((handle->hal_timer_handle.Init.Prescaler != prescaler) ||
@@ -868,6 +907,66 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
     if (HAL_OK != hal_result) {
         return MAL_ERROR_HARDWARE_INVALID;
     }
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    mal_result = mal_hspec_stm32f7_timer_get_update_init_values(handle, frequency, delta,
+                                                                &handle->hal_timer_handle.Init.Prescaler,
+                                                                &handle->hal_timer_handle.Init.Period);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    TIM_Base_SetConfig(handle->hal_timer_handle.Instance, &handle->hal_timer_handle.Init);
+
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_fast_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f7_timer_get_input_clk(handle->timer, &timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    // Try to find proper settings for requested frequency
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
+    uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(delta);
+    uint64_t period = handle->hal_timer_handle.Instance->ARR;
+    uint64_t new_prescaler = timer_frequency / (period * target_frequency);
+    if (new_prescaler >= (UINT16_MAX + 1)) {
+        return MAL_ERROR_OPERATION_INVALID;
+    } else if (new_prescaler <= 0) {
+        new_prescaler = 1;
+    }
+    // Check if the new frequency would be within the delta
+    uint64_t potential_frequency = timer_frequency / (period * new_prescaler);
+    uint64_t actual_delta;
+    if (potential_frequency >= target_frequency) {
+        actual_delta = potential_frequency - target_frequency;
+    } else {
+        actual_delta = target_frequency - potential_frequency;
+    }
+    if (actual_delta > target_delta) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Remove one because register is 0 based.
+    new_prescaler -= 1;
+    // Set timer
+    handle->hal_timer_handle.Init.Prescaler = new_prescaler;
+    handle->hal_timer_handle.Init.Period = period;
+    handle->hal_timer_handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    handle->hal_timer_handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    handle->hal_timer_handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    handle->hal_timer_handle.Init.RepetitionCounter = 0;
+    TIM_Base_SetConfig(handle->hal_timer_handle.Instance, &handle->hal_timer_handle.Init);
+
     return MAL_ERROR_OK;
 }
 

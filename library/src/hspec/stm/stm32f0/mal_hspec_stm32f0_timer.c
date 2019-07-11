@@ -1,11 +1,5 @@
 /*
- * mal_hspec_stm32f0_timer.c
- *
- *  Created on: Jun 24, 2015
- *      Author: Olivier
- */
-/*
- * Copyright (c) 2015 Olivier Allaire
+ * Copyright (c) 2019 Olivier Allaire
  *
  * This file is part of MAL.
  *
@@ -693,6 +687,47 @@ mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t du
 	handle->set_compare(handle->timer_handle->stm_handle, compare_value);
 
 	return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_fast_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+    mal_error_e mal_result;
+    // Get timer input clock
+    uint64_t timer_frequency;
+    mal_result = mal_hspec_stm32f0_timer_get_input_clk(&timer_frequency);
+    if (MAL_ERROR_OK != mal_result) {
+        return mal_result;
+    }
+    timer_frequency *= 1000;
+    // Try to find proper settings for requested frequency
+    uint64_t target_frequency = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(frequency);
+    uint64_t target_delta = MAL_TYPES_MAL_HERTZ_TO_MILLIHERTZ(delta);
+    uint64_t period = handle->stm_handle->ARR;
+    uint64_t new_prescaler = timer_frequency / (period * target_frequency);
+    if (new_prescaler >= (UINT16_MAX + 1)) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Check if the new frequency would be within the delta
+    uint64_t potential_frequency = timer_frequency / (period * new_prescaler);
+    uint64_t actual_delta;
+    if (potential_frequency >= target_frequency) {
+        actual_delta = potential_frequency - target_frequency;
+    } else {
+        actual_delta = target_frequency - potential_frequency;
+    }
+    if (actual_delta > target_delta) {
+        return MAL_ERROR_OPERATION_INVALID;
+    }
+    // Remove one because register is 0 based.
+    new_prescaler -= 1;
+    // Set timer
+    TIM_TimeBaseInitTypeDef time_base;
+    TIM_TimeBaseStructInit(&time_base);
+    time_base.TIM_CounterMode = TIM_CounterMode_Up;
+    time_base.TIM_Prescaler = (uint16_t)new_prescaler;
+    time_base.TIM_Period = period;
+    TIM_TimeBaseInit(handle->stm_handle, &time_base);
+
+    return MAL_ERROR_OK;
 }
 
 static mal_error_e mal_hspec_stm32f0_timer_get_count_time_base(TIM_TimeBaseInitTypeDef *time_base,

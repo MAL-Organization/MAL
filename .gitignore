@@ -33,3 +33,7 @@ examples/ram/build-debug/
 examples/watchdog/\.idea/
 
 examples/watchdog/build-debug/
+
+examples/timer/pwm/\.idea/
+
+examples/timer/pwm/build-debug/

@@ -197,11 +197,21 @@ mal_error_e mal_hspec_gnu_timer_do_input_capture_callback(mal_timer_e timer,  ma
 }
 
 mal_error_e mal_timer_init_pwm(mal_timer_init_pwm_s *init, mal_timer_s *handle, mal_timer_pwm_s *pwm_handle) {
+    MAL_DEFS_UNUSED(pwm_handle);
     handle->timer = init->timer;
     handle->used = true;
     gnu_timers[init->timer].timer = init->timer;
     gnu_timers[init->timer].count = 0;
     return MAL_ERROR_OK;
+}
+mal_error_e mal_timer_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+    MAL_DEFS_UNUSED(delta);
+    gnu_timers[handle->timer].frequency = frequency;
+    return MAL_ERROR_OK;
+}
+
+mal_error_e mal_timer_fast_set_frequency(mal_timer_s *handle, mal_hertz_t frequency, mal_hertz_t delta) {
+    return mal_timer_set_frequency(handle, frequency, delta);
 }
 
 mal_error_e mal_timer_set_pwm_duty_cycle(mal_timer_pwm_s *handle, mal_ratio_t duty_cycle) {
